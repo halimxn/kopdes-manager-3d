@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { IntegerInput } from '@/components/ui/IntegerInput';
 import { Field } from '@/components/ui/Field';
 import { Textarea } from '@/components/ui/Input';
 import { DateInput } from '@/components/ui/DateField';
@@ -1126,9 +1127,10 @@ export function Editor({
               'quantity',
             ].includes(field);
             const numeric = score || quantity || field === 'amount' || field === 'price' || field === 'duration';
+            const FieldInput = quantity || field === 'amount' || field === 'price' ? IntegerInput : Input;
             return (
               <Field key={field} className="field-item" id={`${headingId}-${field}`} label={label}>
-                <Input
+                <FieldInput
                   id={`${headingId}-${field}`}
                   key={
                     field === 'book_quantity'

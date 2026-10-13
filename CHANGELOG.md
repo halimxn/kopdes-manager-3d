@@ -2,6 +2,12 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Pemisah ribuan pada input angka — 13 Oktober 2026
+
+- Nominal kas, harga, dan jumlah stok otomatis memakai titik pemisah ribuan saat diketik, ditempel, atau membuka data lama. Formulir dan draf tetap menyimpan angka tanpa titik; PIN, telepon, serta kode tetap memakai input sebelumnya.
+- Kolom wajib, bilangan bulat, minimum/maksimum, stok buku read-only, dan posisi kursor tetap ditangani; Backspace pada pemisah tidak macet.
+- Suite lengkap 376 tes / 60 berkas lulus; setelah menambah tes penyimpanan nominal ke API, seluruh 49 tes formulir diulang dan lulus (cakupan akhir 377 kasus). Typecheck, lint, dan build produksi lulus. Browser formulir kas diperiksa pada 360/768/1024/1440 px tanpa galat konsol. Perangkat fisik dan cloud belum diuji.
+
 ## Rapikan mobile dan panel Dunia Koperasi — 13 Oktober 2026
 
 - Selisih kas mendapat baris penuh di Beranda pada ponsel; label dan nominal tidak lagi dipaksa muat dalam kolom sempit. Ringkasan buku memisahkan label, nilai, dan keterangan; judul tugas panjang membungkus.

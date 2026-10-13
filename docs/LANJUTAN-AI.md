@@ -12,10 +12,12 @@
 - Dunia: `/dunia-koperasi` memakai `MonitoringDashboard` (lima lokasi: Pulau, Kantor, Gerai, Gudang, Cold storage). Dok bawah Detail/Ringkasan/Daftar/Agenda (pilihan pemilik). Pratinjau `/dev/dunia-3d?contoh=1`.
 - Web: sistem gaya baru bahasa dunia 3D di `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`); lantai per ruang lewat `data-ruang` di `AppShell.tsx`; ikon dua nada `components/ui/Ikon3D.tsx`. Laci detail dan Terkait di `features/records/`. Konteks produk desain di `PRODUCT.md`.
 - Mode demo `npm run dev:demo` (port bisa diatur `-- -p 3200`); seed `supabase/seed/SEED_DATA_CONTOH.sql` dan `HAPUS_DATA_CONTOH.sql` dijalankan pemilik.
-- Paket sebelumnya (cadangan/aturan dan alur fitur) sudah digabung ke `main` lewat PR #1, CI lulus. Paket aktif di `tampilan/rapikan-mobile`: nominal kas, rutinitas, tombol/kartu mobile, latar PIN, dan panel dunia yang berulang. Perubahan rutinitas serta Input pilihan yang sudah ada secara lokal dimasukkan ke paket tampilan ini; perubahan lokal lainnya tetap dipertahankan. Tidak ada migrasi baru; migrasi 9 belum diverifikasi pada proyek cloud.
+- Paket sebelumnya (cadangan/aturan dan alur fitur) sudah digabung ke `main` lewat PR #1, CI lulus. Paket mobile sudah digabung lewat PR #2 (`7f4dc8b`), CI lulus: nominal kas, rutinitas, tombol/kartu mobile, latar PIN, dan panel dunia yang berulang. Perubahan rutinitas serta Input pilihan yang sudah ada secara lokal dimasukkan ke paket tampilan ini; perubahan lokal lainnya tetap dipertahankan. Tidak ada migrasi baru; migrasi 9 belum diverifikasi pada proyek cloud.
 - Graphify opsional menurut AGENTS; aturan turunan menunjuk ke sana. CI menjalankan `lint:ui`; skill memakai rute pratinjau dan ukuran pemeriksaan yang sama.
-- Browser lokal: nominal dan susunan mobile diperiksa juga pada 390/430 px; pergantian panel dunia diperiksa pada lima lokasi agar hanya satu isi panel terlihat. Bukti dan batasan pemeriksaan paket di STATUS. Paket tampilan aktif belum di-push/deploy.
+- Browser lokal: nominal dan susunan mobile diperiksa juga pada 390/430 px; pergantian panel dunia diperiksa pada lima lokasi agar hanya satu isi panel terlihat. Bukti dan batasan pemeriksaan paket di STATUS. Paket mobile sudah di main; deploy belum diverifikasi.
 - Verifikasi paket mobile: 372 tes / 59 berkas, typecheck, lint tanpa peringatan, `lint:ui`, dan build produksi lulus. Belum ada pemeriksaan perangkat fisik atau UAT cloud untuk perubahan ini.
+
+Paket aktif `tampilan/pemisah-ribuan`: nominal kas, harga, jumlah stok dengan titik ribuan; nilai formulir/draf tetap mentah. Suite lengkap 376 tes lulus, lalu 49 tes formulir lulus termasuk kasus API tambahan (cakupan akhir 377). Typecheck, lint, dan build produksi lulus. Browser formulir kas 360/768/1024/1440 px diperiksa; paket belum di-push/deploy.
 
 ## Lanjutan
 

@@ -41,8 +41,17 @@ it('tugas cepat menyimpan penanggung jawab dan gerai untuk dunia', async () => {
 
 it('harga barang adalah angka nonnegatif dan gerai langsung tersedia', () => {
   render(<Editor entity="inventory-items" workspace={popupWorkspace} onClose={() => {}} onSaved={async () => {}} />);
-  const price = screen.getByRole('spinbutton', { name: 'Harga satuan (Rp)' });
+  const price = screen.getByRole('textbox', { name: 'Harga satuan (Rp)' });
   expect(price.getAttribute('min')).toBe('0');
   expect(price.closest('details')).toBeNull();
   expect(screen.getByRole('button', { name: /^Gerai:/ }).closest('details')).toBeNull();
+});
+
+it('nominal terformat disimpan ke API sebagai angka tanpa titik', async () => {
+  const { container } = render(<Editor entity="cash-entries" item={popupWorkspace['cash-entries']![0]} workspace={popupWorkspace} onClose={() => {}} onSaved={async () => {}} />);
+  const amount = screen.getByRole('textbox', { name: 'Nominal (Rp)' }) as HTMLInputElement;
+  fireEvent.change(amount, { target: { value: '1250000' } });
+  expect(amount.value).toBe('1.250.000');
+  fireEvent.submit(container.querySelector('form')!);
+  await waitFor(() => expect(api).toHaveBeenCalledWith('cash-entries', expect.objectContaining({ data: expect.objectContaining({ amount: 1250000 }) })));
 });

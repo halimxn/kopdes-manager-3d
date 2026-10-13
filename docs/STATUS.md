@@ -4,6 +4,8 @@ Keadaan terkini saja; timpa bagian yang berubah. Log per paket di [CHANGELOG](..
 
 ## Halaman operasional
 
+Nominal kas, harga, dan jumlah stok memakai titik pemisah ribuan saat input; formulir/draf menyimpan angka mentah. Tes mencakup validasi, kursor, Backspace, read-only, dan penyimpanan nominal ke API. Browser formulir kas diperiksa pada 360/768/1024/1440 px; perangkat fisik dan cloud belum diuji.
+
 Proyek fleksibel; tugas daftar/papan/kalender/Gantt/harian; milestone, subtugas, dependensi, pengulangan; catatan terformat; kegiatan; rapat dengan tautan pengguna dan unduhan ICS; dokumen; risiko dan isu; tim dan pelatihan; mitra; laporan snapshot; profil/PIN/cadangan; anggota, buku kas, barang, stok opname, pengiriman, mutasi stok. Riwayat proyek di `/proyek?tab=riwayat`.
 
 Belum tersedia: editor blok bebas, kolaborasi real-time, PWA/offline, unggah berkas, baseline/jalur kritis, penjadwalan otomatis dependensi, POS, akuntansi lengkap, simpan pinjam. Kas hanya uang masuk/keluar tercatat; opname tidak mengubah stok otomatis.
@@ -40,4 +42,4 @@ Target Supabase baru milik pemilik. Migrasi 8 (pengiriman/mutasi stok) sudah dij
 
 ## Git
 
-Repo `kopdes-manager-3d`, cabang utama `main`, riwayat dimulai bersih 11 Oktober 2026. Dua paket audit sudah digabung lewat PR #1 (`c3b01a9`). Paket tampilan aktif di `tampilan/rapikan-mobile`; perubahan lokal yang tidak dimasukkan tetap dipertahankan. Cabang fitur bertopik (lihat [CONTRIBUTING](../CONTRIBUTING.md)); commit tanpa atribusi AI; push dan deploy hanya bila pemilik meminta.
+Repo `kopdes-manager-3d`, cabang utama `main`, riwayat dimulai bersih 11 Oktober 2026. Dua paket audit digabung lewat PR #1 (`c3b01a9`); paket mobile dan panel dunia lewat PR #2 (`7f4dc8b`), CI lulus. Paket input angka aktif di `tampilan/pemisah-ribuan`, belum di-push. Perubahan lokal pengguna tetap dipertahankan. Cabang fitur bertopik (lihat [CONTRIBUTING](../CONTRIBUTING.md)); commit tanpa atribusi AI; push dan deploy hanya bila pemilik meminta.
