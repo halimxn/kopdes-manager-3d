@@ -3,7 +3,8 @@
 /* ---------- Tombol ---------- */
 .ui-btn,
 a.button,
-button.button {
+button.button,
+label.button {
   --btn-bg: var(--surface);
   --btn-fg: var(--ink);
   --btn-line: var(--line-strong);
@@ -31,7 +32,8 @@ button.button {
     color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), transform var(--dur-fast);
 }
 .ui-btn:hover,
-a.button:hover {
+a.button:hover,
+label.button:hover {
   border-color: var(--brand-soft-border);
   background: var(--surface-2);
   text-decoration: none;
@@ -106,6 +108,7 @@ textarea.ui-input,
   box-shadow: var(--focus-ring);
 }
 :where(input[type='checkbox'], input[type='radio']) { width: 18px; height: 18px; accent-color: var(--brand); }
+.ui-check { flex-shrink: 0; margin: 0; cursor: pointer; }
 
 .ui-field { display: grid; gap: 6px; min-width: 0; }
 .ui-field-label { color: var(--ink); font-size: var(--fs-meta); font-weight: 600; }
@@ -171,7 +174,9 @@ textarea.ui-input,
 .custom-select-check { color: var(--brand); }
 
 /* ---------- Tanggal ---------- */
-.ui-date { position: relative; min-width: 0; }
+.ui-date { position: relative; display: grid; gap: 6px; min-width: 0; }
+/* Label tanggal sama dengan label kolom lain (field-caption) */
+.ui-date > label { color: var(--ink); font-size: var(--fs-meta); font-weight: 600; }
 .ui-date-control { position: relative; }
 .ui-date-native { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); opacity: 0; pointer-events: none; }
 .ui-btn.ui-date-trigger {

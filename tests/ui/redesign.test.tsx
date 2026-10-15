@@ -152,7 +152,7 @@ describe('Fitur Redesain Behance', () => {
     );
 
     expect(screen.getByText('KD-44006')).toBeTruthy();
-    expect(screen.getByText('DIBUAT OLEH')).toBeTruthy();
+    expect(screen.getByText('Dibuat oleh')).toBeTruthy();
     expect(screen.getByText('Penanggung jawab')).toBeTruthy();
     expect(screen.queryByText('PEMANGKU / TIM')).toBeNull();
     expect(screen.getByText(/membuat tugas ini/)).toBeTruthy();

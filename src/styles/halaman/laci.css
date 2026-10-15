@@ -128,7 +128,6 @@ dialog.task-detail-drawer[open] { display: block; }
 .priority-flag-icon { color: var(--ink-subtle); }
 .priority-tinggi .priority-flag-icon { color: var(--warn); }
 .priority-mendesak .priority-flag-icon { color: var(--late); }
-.drawer-prop-calendar-icon { color: var(--ink-subtle); }
 .drawer-date-inline-input { max-width: 200px; }
 .prop-user-chip { gap: 8px; }
 .prop-avatar { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-ink); font-size: 11.5px; font-weight: 750; }
@@ -250,6 +249,11 @@ dialog.editor > form { display: flex; flex: 1 1 auto; flex-direction: column; mi
   .task-detail-panel { padding: 8px 16px 24px; }
   .drawer-top-bar { margin: 0 -16px; padding: 12px 16px 10px; }
   .drawer-prop-row { grid-template-columns: 110px minmax(0, 1fr); }
+  /* Ponsel: bilah aksi satu baris; label Jadwal/Formulir/Hapus disembunyikan secara visual, tetap terbaca pembaca layar */
+  .drawer-top-bar { flex-wrap: nowrap; }
+  .drawer-top-bar .btn-drawer-action span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .drawer-top-bar .btn-drawer-action.ui-btn { width: 40px; padding: 0; }
+  .prop-user-role { display: none; }
   .record-dl > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   dialog.editor { width: 100vw; max-height: 94dvh; margin: auto 0 0; border-radius: var(--r-xl) var(--r-xl) 0 0; }
   .form-grid, .inline-creator-row { grid-template-columns: minmax(0, 1fr); }

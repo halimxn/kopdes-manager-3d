@@ -1151,7 +1151,7 @@ export function Editor({
                         : entity === 'meetings' && field === 'title'
                           ? 'Contoh: Rapat Evaluasi Bulanan & Koordinasi Gerai'
                           : entity === 'meetings' && field === 'location'
-                            ? 'Contoh: Ruang Rapat Kantor Koperasi KDMP Puntukrejo'
+                            ? 'Contoh: Ruang rapat kantor koperasi'
                             : entity === 'meetings' && field === 'meeting_url'
                               ? 'https://meet.google.com/abc-defg-hij atau tautan Zoom'
                               : entity === 'meetings' && field === 'participants'

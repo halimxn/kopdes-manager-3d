@@ -50,7 +50,7 @@
 .backup-box p { color: var(--ink-muted); font-size: 13px; }
 .box-head { display: flex; align-items: center; gap: 8px; color: var(--brand); }
 .box-head strong { color: var(--ink); }
-.restore-upload-label { position: relative; cursor: pointer; }
+.restore-upload-label { position: relative; justify-self: stretch; white-space: normal; cursor: pointer; }
 
 @media (max-width: 900px) {
   .settings-content-grid { grid-template-columns: minmax(0, 1fr); }

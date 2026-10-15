@@ -1597,7 +1597,7 @@ export function Records({
                         <li key={dec.id}>
                           <span className="decision-title">{String(dec.data.title)}</span>
                           {dec.data.reason ? (
-                            <span className="decision-reason"> · {String(dec.data.reason)}</span>
+                            <span className="decision-reason">{String(dec.data.reason)}</span>
                           ) : null}
                         </li>
                       ))}

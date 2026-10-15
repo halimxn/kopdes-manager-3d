@@ -17,7 +17,6 @@ import {
   Plus,
   Send,
   Trash2,
-  Calendar,
   Flag,
   ExternalLink,
   Link2,
@@ -504,7 +503,6 @@ export function TaskDetailDrawer({
             <div className="drawer-prop-row">
               <span className="drawer-prop-label">Tenggat</span>
               <div className="drawer-prop-control date-prop-editable" title="Ubah tanggal tenggat tugas">
-                <Calendar size={13} className="drawer-prop-calendar-icon" />
                 <DateInput
                   aria-label="Tenggat tugas"
                   className="drawer-date-inline-input"
@@ -536,9 +534,9 @@ export function TaskDetailDrawer({
 
             {/* Dibuat Oleh */}
             <div className="drawer-prop-row">
-              <span className="drawer-prop-label">DIBUAT OLEH</span>
+              <span className="drawer-prop-label">Dibuat oleh</span>
               <div className="drawer-prop-control prop-user-chip">
-                <span className="prop-avatar prop-avatar-creator">M</span>
+                <span className="prop-avatar prop-avatar-creator">{managerName.charAt(0).toUpperCase()}</span>
                 <span className="prop-user-name">{managerName}</span>
                 <span className="prop-user-role">Catatan pribadi</span>
               </div>
