@@ -35,6 +35,7 @@ import { today, addDays, formatDate } from '@/lib/date';
 import { cashSummary, rupiah } from '../operations/ledger';
 import { meetingJoinUrl } from '../meetings/meeting';
 import { WeekBarChart, TaskDonutChart } from '@/components/charts/DashboardCharts';
+import { ModulUsahaHarian } from './ModulUsahaHarian';
 import { Select } from '@/components/ui/Select';
 
 const routineSchema = z.array(z.object({ id: z.string(), time: z.string(), title: z.string() }));
@@ -602,6 +603,8 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
             />
           </div>
         </section>
+
+        <ModulUsahaHarian />
       </div>
 
       {/* ── Modal Atur Rutinitas Manajer ─────────────────── */}

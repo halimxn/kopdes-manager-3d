@@ -252,3 +252,24 @@
   .routine-config-item > .ui-btn { grid-column: 2; grid-row: 1 / 3; padding: 0; }
   .routine-modal-footer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Usaha harian (migrasi 10): penjualan gerai 7 hari dan kehadiran hari ini */
+.beranda-modul .lebar-penuh { grid-column: 1 / -1; }
+.jual { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: stretch; gap: 18px; flex: 1; }
+.jual-grafik { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; min-height: 120px; }
+.jual-grafik > div { display: grid; grid-template-rows: 1fr auto; justify-items: center; gap: 6px; min-width: 0; }
+.jual-grafik i { align-self: end; width: 100%; max-width: 22px; border-radius: 5px 5px 2px 2px; background: var(--pastel-mentega-ink); opacity: 0.55; }
+.jual-grafik .is-hari-ini i { opacity: 1; }
+.jual-grafik small { color: var(--ink-subtle); font-size: 11.5px; font-weight: 600; }
+.jual-daftar { display: grid; align-self: end; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.jual-daftar li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.jual-daftar li:last-child { border-bottom: 0; }
+.jual-daftar span { overflow: hidden; color: var(--ink-muted); text-overflow: ellipsis; white-space: nowrap; }
+.jual-daftar b { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hadir-ringkas { margin-bottom: 6px; }
+.hadir-ringkas .pil { min-height: 30px; font-size: 13px; }
+.beranda-tanggal.is-hadir { background: var(--ok-bg); color: var(--ok); }
+.beranda-baris .record-avatar { flex-shrink: 0; }
+@container halaman (max-width: 520px) {
+  .jual { grid-template-columns: 1fr; }
+}
