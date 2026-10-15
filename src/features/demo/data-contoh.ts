@@ -166,6 +166,7 @@ export function dataContoh(hariIni: string): ItemContoh[] {
       assignee: staf[[8, 4, 1, 3][i]].nama,
       start_date: tgl(-60 + i * 7),
       target_date: tgl(30 + i * 20),
+      budget: [15_000_000, 6_000_000, 0, 0][i],
       description: `Proyek contoh: ${title.toLowerCase()}.`,
     }),
   );
@@ -441,6 +442,8 @@ export function dataContoh(hariIni: string): ItemContoh[] {
       category,
       account: g.r() < 0.7 ? 'Kas tunai' : 'Rekening koperasi',
       member_id: category === 'Simpanan' ? g.pilih(anggota) : '',
+      // Upah bongkar muat dan perawatan freezer dibebankan ke proyek gudang (contoh realisasi anggaran).
+      workstream_id: category === 'Upah' || category === 'Perawatan' ? proyek[1] : '',
       unit_id: category === 'Penjualan' ? unitAktif(title.includes('apotek') ? 1 : 0) : '',
       reference_number: `KAS-${String(30 + d).padStart(3, '0')}`,
     });

@@ -212,3 +212,22 @@
   .projects-intro-banner > .ui-btn { width: 100%; }
   .form-row-2 { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Anggaran proyek: rencana vs uang keluar tercatat di buku kas */
+.project-budget { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.project-budget-kepala { display: flex; align-items: center; gap: 10px; }
+.project-budget-kepala h2 { margin: 0; font-size: 15px; font-weight: 700; }
+.project-budget-kepala .modul-tautan { margin-left: auto; }
+.project-budget-angka { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; }
+.project-budget-angka div { display: grid; gap: 2px; min-width: 0; padding: 10px 12px; border-radius: var(--r-md); background: var(--surface-2); }
+.project-budget-angka dt { color: var(--ink-muted); font-size: 12px; }
+.project-budget-angka dd { margin: 0; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.project-budget-angka dd.is-lebih { color: var(--late); }
+.project-budget-bar { display: flex; align-items: center; gap: 10px; }
+.project-budget-bar .ui-progress { flex: 1 1 auto; }
+.project-budget-bar .ui-progress > span.is-lebih { background: var(--late); }
+.project-budget-bar small { color: var(--ink-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.project-budget-catatan { margin: 0; color: var(--ink-muted); font-size: 13px; }
+@container halaman (max-width: 560px) {
+  .project-budget-angka { grid-template-columns: 1fr; }
+}

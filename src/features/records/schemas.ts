@@ -63,6 +63,11 @@ export const schemas = {
       priority: z.enum(['rendah', 'normal', 'tinggi', 'mendesak']).default('normal'),
       start_date: optionalDate,
       target_date: optionalDate,
+      // Rencana biaya proyek; 0 = belum diisi. Realisasi dihitung dari buku kas bertaut proyek.
+      budget: z.preprocess(
+        (value) => (value === '' ? 0 : typeof value === 'string' ? Number(value) : value),
+        z.number().int().min(0).max(1_000_000_000_000).default(0),
+      ),
       color: z
         .string()
         .regex(/^#[\da-fA-F]{6}$/)
@@ -344,6 +349,7 @@ export const schemas = {
       amount: money,
       category: title,
       account: title,
+      workstream_id: ref,
       unit_id: ref,
       member_id: ref,
       item_id: ref,

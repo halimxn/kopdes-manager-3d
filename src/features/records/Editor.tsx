@@ -204,7 +204,7 @@ export function Editor({
       start_date: today(),
       title: '',
     };
-  const optionalFields = fields.filter((field) => ['members', 'cash-entries', 'inventory-items'].includes(entity) && ['member_id','item_id','unit_id','reference_number','link','notes','contact','address','price'].includes(field) && !(entity === 'inventory-items' && ['unit_id', 'price'].includes(field)));
+  const optionalFields = fields.filter((field) => ['members', 'cash-entries', 'inventory-items'].includes(entity) && ['member_id','item_id','unit_id','workstream_id','reference_number','link','notes','contact','address','price'].includes(field) && !(entity === 'inventory-items' && ['unit_id', 'price'].includes(field)));
   // Tim: rupa dan kedudukan hanya dipakai karakter Dunia Koperasi, dikelompokkan terpisah.
   const worldFields =
     entity === 'staff'
@@ -1126,8 +1126,9 @@ export function Editor({
               'counted_quantity',
               'quantity',
             ].includes(field);
-            const numeric = score || quantity || field === 'amount' || field === 'price' || field === 'duration';
-            const FieldInput = quantity || field === 'amount' || field === 'price' ? IntegerInput : Input;
+            const money = field === 'amount' || field === 'price' || field === 'budget';
+            const numeric = score || quantity || money || field === 'duration';
+            const FieldInput = quantity || money ? IntegerInput : Input;
             return (
               <Field key={field} className="field-item" id={`${headingId}-${field}`} label={label}>
                 <FieldInput
@@ -1181,13 +1182,13 @@ export function Editor({
                               ? 'number'
                               : 'text'
                   }
-                  min={field === 'duration' ? 15 : field === 'quantity' ? 1 : quantity || field === 'price' ? 0 : numeric ? 1 : undefined}
+                  min={field === 'duration' ? 15 : field === 'quantity' ? 1 : quantity || field === 'price' || field === 'budget' ? 0 : numeric ? 1 : undefined}
                   max={
                     field === 'duration'
                       ? 480
                       : score
                         ? 5
-                        : field === 'amount'
+                        : field === 'amount' || field === 'budget'
                           ? 1_000_000_000_000
                           : quantity
                             ? 1_000_000_000
