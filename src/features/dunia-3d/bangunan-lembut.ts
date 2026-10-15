@@ -101,8 +101,3 @@ export function bangunanLembut(jenis: JenisBangunan) {
   return g;
 }
 
-/** Tinggi puncak dinding (tanpa atap) untuk menaruh papan nama dan kotak klik. */
-export function tinggiBangunan(jenis: JenisBangunan) {
-  const r = RUPA_BANGUNAN[jenis];
-  return r.h + (r.lantai === 2 ? 0.15 + r.h * 0.85 : 0);
-}

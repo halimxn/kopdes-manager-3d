@@ -78,15 +78,6 @@ export function tanaman(skala = 1) {
   return g;
 }
 
-/** Lampu dinding berpendar dengan cahaya titik hangat yang benar-benar menerangi dinding. */
-/**
- * Lampu dinding berpendar. Tanpa PointLight: setiap lampu titik memperberat semua material di layar,
- * jadi cahaya hangatnya cukup dari emissive dan cahaya kunci adegan.
- */
-export function lampuDinding() {
-  return grup(di(kotak(0.36, 0.42, 0.16, WARNA.kuning, 0.12, 0.9), 0, 0, 0));
-}
-
 /** Jendela untuk dinding; tebal kecil, ditempel di permukaan dinding. */
 export function jendela(w = 1.5, h = 1.2) {
   return grup(
@@ -102,13 +93,6 @@ export function pintu() {
     di(kotak(0.95, 2.15, 0.06, WARNA.kayu, 0.05), 0, 0.05, 0.05),
     di(bola(0.06, WARNA.kuning), 0.36, 1.1, 0.12),
   );
-}
-
-export function papanPengumuman() {
-  const g = grup(di(kotak(1.4, 0.95, 0.08, 0xcf9e6a, 0.05), 0, 0, 0));
-  const kertas = [WARNA.putih, WARNA.kuning, WARNA.sage, 0xf6b6c2];
-  kertas.forEach((w, i) => g.add(di(kotak(0.3, 0.32, 0.03, w, 0.01), -0.42 + i * 0.28, 0.3 + (i % 2) * 0.22, 0.05)));
-  return g;
 }
 
 export function dispenser() {

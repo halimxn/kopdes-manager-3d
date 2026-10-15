@@ -4,11 +4,9 @@ import { addDays, formatDate } from '@/lib/date';
 import type { Entity, Item } from '../records/schemas';
 import {
   activeDeliveries,
-  coldRackIds,
   deliverySteps,
   isBelowMinimum,
   meetingTimeline,
-  rackIds,
   truckWaitingNote,
   type TruckSpot,
   type WorldModel,
@@ -324,7 +322,6 @@ export function roomStats(id: Bidang, ctx: Konteks): Statistik[] {
   ];
 }
 
-export type RakId = (typeof rackIds)[number] | (typeof coldRackIds)[number];
 export function rackItems(model: WorldModel, rack: string): Item[] {
   const racks = model.inventory.racks as Record<string, Item[]>;
   const cold = model.inventory.coldRacks as Record<string, Item[]>;

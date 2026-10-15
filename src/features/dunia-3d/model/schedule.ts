@@ -12,16 +12,6 @@ export type NpcPlan = {
   reason: string;
 };
 
-export const npcActivityNames: Record<NpcActivity, string> = {
-  rapat: 'Ikut rapat',
-  briefing: 'Briefing pagi',
-  bongkar: 'Bongkar muat',
-  kerja: 'Bekerja di meja',
-  istirahat: 'Istirahat',
-  keliling: 'Keliling',
-  pulang: 'Di luar jam kerja',
-};
-
 const minutesOf = (time: string) => {
   const [hour, minute] = time.split(':').map(Number);
   return hour * 60 + minute;

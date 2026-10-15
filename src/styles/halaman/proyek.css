@@ -43,7 +43,6 @@
 .project-card.pastel-purple { --proj: var(--pastel-purple-text); --proj-bg: var(--pastel-purple-bg); }
 .project-card.pastel-emerald { --proj: var(--ok); --proj-bg: var(--ok-bg); }
 .project-card.pastel-amber { --proj: var(--warn); --proj-bg: var(--warn-bg); }
-.project-card.pastel-rose { --proj: var(--late); --proj-bg: var(--late-bg); }
 :root.dark .project-card { --proj-bg: color-mix(in srgb, var(--proj) 18%, transparent); }
 .project-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .project-badge-cluster { display: flex; flex-wrap: wrap; gap: 6px; }
