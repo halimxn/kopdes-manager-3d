@@ -60,6 +60,11 @@ Arahan langsung pemilik terbaru mengatasi konflik. Jangan membuat kontrak gaya d
 
 - `main` selalu lulus tes dan bisa dibangun. Kerjakan paket di cabang bertopik, lalu gabungkan lewat pull request.
 - Nama cabang menjelaskan pekerjaan, bukan alat atau orang: `fitur/<topik>`, `perbaikan/<topik>`, `tampilan/<topik>`, `dokumen/<topik>`, `rapikan/<topik>`. Huruf kecil, kata dipisah tanda hubung. Jangan memakai awalan nama AI atau pribadi (mis. `codex/`, `claude/`).
+- Satu cabang kerja aktif untuk semua AI (Claude, Codex, Antigravity, dll.):
+  1. Sebelum mulai, jalankan `git status -sb` dan `git branch`. Bila ada cabang kerja yang belum masuk `main`, lanjutkan di cabang itu; jangan membuat cabang baru.
+  2. Cabang baru hanya dibuat dari `main` terbaru yang bersih, untuk paket baru.
+  3. Setelah paket masuk `main`, hapus cabangnya di lokal dan remote.
+  4. Jangan meninggalkan perubahan belum di-commit di akhir sesi; commit di cabang kerja (boleh belum di-push).
 - Satu paket = satu commit atau beberapa commit kecil. Pesan: judul ringkas bahasa Indonesia, baris kosong, isi yang menjelaskan alasan. Tanpa baris atribusi AI.
 - Jangan force-push ke `main`, jangan menulis ulang riwayat yang sudah dibagikan. Push dan deploy hanya atas permintaan pemilik. Panduan lengkap: `CONTRIBUTING.md`.
 
