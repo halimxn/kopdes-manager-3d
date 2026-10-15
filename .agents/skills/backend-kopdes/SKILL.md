@@ -1,6 +1,6 @@
 ---
 name: backend-kopdes
-description: Data dan backend Kopdes — hub_records, skema Zod/katalog, API, migrasi SQL Supabase, tes PGlite, kemampuan server. Pakai saat menambah domain, kolom, migrasi, atau aksi server.
+description: Wajib dipakai saat mengubah data atau server Kopdes — skema Zod/katalog (src/features/records), hub_records, API src/app/api, useWorkspace/pemuatan data halaman, migrasi SQL Supabase, tes database PGlite, kemampuan server (capabilities), cadangan/impor CSV, atau keluhan data tidak muncul/halaman lambat memuat data.
 ---
 
 # Backend Kopdes
@@ -13,6 +13,10 @@ Acuan: `AGENTS.md` (keamanan), `docs/ARSITEKTUR.md`, `docs/MIGRASI-SQL.md`, `doc
 - Entitas baru butuh migrasi: daftar `hub_records_entity_check`, `hub_check_relations` untuk `*_id`, trigger validasi, fungsi `*_ready()` untuk pemeriksaan kemampuan.
 - Penyimpanan lewat `service.save`; aksi yang harus atomik memakai fungsi SQL (contoh `hub_post_stock_movement`) yang hanya untuk `service_role`.
 - Domain yang butuh migrasi: daftar di `operationEntities`/`logisticsEntities`, disaring di `useWorkspace`, keadaan "belum aktif" ditampilkan.
+
+## Pemuatan data halaman
+- `useWorkspace` meminta hanya entitas halaman (`pageEntities` di `workspace/workspace-scope.ts`), 50 per halaman, paralel, dengan cache per halaman. Entitas baru untuk sebuah halaman: tambahkan di `pageEntities`, bukan memuat semua.
+- `capabilities` di-cache sekali per sesi browser (`invalidateWorkspaceCache()` mengosongkannya); jangan memintanya lagi per halaman.
 
 ## Migrasi
 - Berkas bernomor baru di `supabase/migrations/`; satu transaksi; tidak menghapus data.

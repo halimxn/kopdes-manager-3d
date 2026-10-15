@@ -51,7 +51,7 @@ Arahan langsung pemilik terbaru mengatasi konflik. Jangan membuat kontrak gaya d
 
 1. Periksa Git dan pertahankan perubahan pengguna.
 2. Implementasikan paket kerja konkret dan dapat diverifikasi.
-3. Untuk perubahan kode jalankan `npm test`, `npm run typecheck`, `npm run lint`, `npm run lint:ui`, `npm run build`. Untuk dokumentasi saja, periksa diff dan tautan tanpa mengklaim tes baru. Boleh `npm test -- --maxWorkers=2`; cakupan tetap seluruh suite.
+3. Untuk perubahan kode jalankan `npm test`, `npm run typecheck`, `npm run lint`, `npm run lint:ui`, `npm run build`, lalu `npm run ukur:bundel` (JS awal halaman ≤ 300 KB). Perubahan tampilan juga `npm run audit:tampilan -- <lebar> <tinggi>` dengan `npm run dev:demo -- -p 3200` berjalan. Untuk dokumentasi saja, periksa diff dan tautan tanpa mengklaim tes baru. Boleh `npm test -- --maxWorkers=2`; cakupan tetap seluruh suite.
 4. Periksa singkat UI yang berubah pada ukuran relevan (`npm run dev:demo` memberi data contoh tanpa Supabase).
 5. Catat paket di CHANGELOG. STATUS dan LANJUTAN-AI hanya berisi keadaan terkini: timpa bagian yang berubah. Perbarui checklist yang benar-benar selesai.
 6. Laporkan hasil dan batasan secara jujur; tes lama bukan bukti fitur baru selesai. Jangan menandai pemeriksaan perangkat yang belum dilakukan.
@@ -71,7 +71,7 @@ Arahan langsung pemilik terbaru mengatasi konflik. Jangan membuat kontrak gaya d
 ## Skill dan peta kode untuk semua AI
 
 - Skill proyek: `.claude/skills/` (Claude Code) dan salinannya `.agents/skills/` (Codex, Antigravity, agen lain). Ubah di `.claude/skills`, lalu jalankan `node scripts/sync-skills.mjs`; `clean-code` bersumber di `.agents/skills`. Sumber/lisensi pihak ketiga: `.claude/skills/SUMBER.md`.
-- Skill utama: hemat-token, dunia-koperasi, ui-ux-kopdes, backend-kopdes, clean-code; opsional caveman, grill-me/grilling. AI tanpa dukungan skill cukup membaca SKILL.md yang relevan.
+- Skill utama: hemat-token, dunia-koperasi, ui-ux-kopdes, backend-kopdes, clean-code; opsional caveman, grill-me/grilling. Skill global `ponytail` (perubahan terkecil yang lengkap; `ponytail-review`/`ponytail-audit` untuk tinjauan) dipasang pemilik untuk Claude, Codex, dan Antigravity. AI tanpa dukungan skill cukup membaca SKILL.md yang relevan.
 - Ubah aturan hanya di AGENTS.md. CLAUDE.md dan GEMINI.md mengimpor berkas ini (@AGENTS.md) dan hanya menambah bagian Graphify; `.cursor/rules/` dan `.agents/rules/` menunjuk ke sini.
 - Hook Graphify lokal (`.claude/settings.json`, `.codex/`, `.gemini/settings.json`) berisi path komputer pemilik dan tidak di-commit.
 - rtk (dipasang global oleh pemilik) meringkas keluaran shell. Bila galat terpotong, jalankan `rtk proxy <perintah>`.
