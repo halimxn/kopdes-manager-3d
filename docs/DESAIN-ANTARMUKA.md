@@ -7,7 +7,7 @@ Arahan 10 Oktober 2026: dunia meniru panel logistik referensi, dan **seluruh web
 | Permukaan | Gaya dan sumber |
 |---|---|
 | Dunia Koperasi `/dunia-koperasi` | Diorama lembut, kartu mengambang, menu lokasi/cuaca. `src/features/dunia-3d/monitoring.css`. |
-| Halaman operasional | Gaya Kebun: kanvas #F4F5F0, kartu putih bergaris tipis, menu samping hijau tua #0F2A24, sorotan limau #C5E86C, Manrope; terang/gelap. Sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
+| Halaman operasional | Gaya Teal: latar #F2F4F8, kartu putih besar membulat, rel ikon pil + panel kelompok, aksi teal #12937F, pastel biru/merah muda/persik/mint, Figtree; terang/gelap. Sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
 
 Pilihan palet lama tidak dipakai lagi: semua palet tersimpan tampil dengan tema biru yang sama, dan Pengaturan hanya memilih terang/gelap/sistem. Status tetap memakai warna semantik (hijau aman, kuning peringatan, merah terlambat) plus teks.
 
@@ -17,15 +17,15 @@ Seluruh palet, komposisi kartu, scene, karakter, waktu, kendaraan dan rencana up
 
 ## Halaman operasional
 
-- **Gaya Kebun (16 Oktober 2026)**, dipilih pemilik dari kanvas desain (Senja, Rapi, Bersih, Mint, Lembut, Teduh, Kebun):
-  - Kanvas `#F4F5F0`, kartu putih garis `#E3E7DF`, bayangan sangat tipis; teks hijau tua `#13201C`; mode gelap hijau malam `#0E1513` dengan aksi limau.
-  - Menu samping hijau tua `#0F2A24` berlabel (sekitar 30 halaman tetap terbaca namanya); halaman aktif berupa pil limau `#C5E86C`. Token `--sisi-*` dan `--limau*`.
-  - Tombol utama hijau tua berteks limau (`--brand` + `--brand-text`); tautan hijau `--brand-ink`. Nama token lama (`--brand-*`, `--pastel-*`) dipertahankan agar semua halaman ikut.
-  - Huruf Manrope (paket `@fontsource-variable/manrope`, tanpa unduhan Google saat build), angka `tabular-nums`.
-  - Ikon `Ikon3D` hijau dari token `--ikon-awal/--ikon-akhir/--ikon-isi` (terang di menu samping gelap).
-  - Satu tombol "+ Tambah" di bilah atas (dan + di dok ponsel); kepala halaman tidak mengulang tombol tambah.
-- **Anatomi modul** (`.modul` di `komponen.css`): kartu putih bergaris tipis, kepala = judul tebal + tautan hijau di kanan, isi, aksi di dasar. Tanpa ikon pastel di kepala.
-- **Beranda**: tanggal + pil ringkasan (terlambat, jatuh tempo hari ini, rapat berikutnya); pita jam 07–18 (rutinitas bisa dicentang dan rapat dalam satu garis waktu, penanda sekarang; di area < 640 px menjadi daftar); antrean kerja dikelompokkan Terlambat/Hari ini/Besok/Berikutnya (saringan Terlambat/Selesai dan grafik tetap menampilkan daftar datar); kolom samping kas bulan berjalan (panel gelap, uang masuk/keluar tercatat, bukan saldo), perlu perhatian, kegiatan terbaru; linimasa proyek 2 minggu ke belakang sampai 8 minggu ke depan dengan milestone berikutnya; penjualan gerai, kehadiran (migrasi 10) dan grafik pekerjaan.
+- **Gaya Teal (16 Oktober 2026)**, dipilih pemilik dari referensi task manager Dribbble (menggantikan Senja dan Kebun yang dinilai belum cukup segar):
+  - Latar `#F2F4F8`, kartu putih besar (sudut 22 px) tanpa garis dengan bayangan lembut; teks biru tua `#1F2233`; mode gelap biru malam `#0F1218` dengan aksi teal terang.
+  - Navigasi tablet/desktop: rel ikon pil di kiri (`components/layout/RelNavigasi.tsx`). Ikon kelompok (Ruang kerja, Buku koperasi, Gerai & laporan, Koordinasi & berkas, Favorit) membuka panel berisi nama halaman + keterangan; Beranda, Dunia, Pengaturan, Panduan langsung. Halaman aktif = lingkaran teal. Ponsel: dok bawah + lembar menu.
+  - Bilah atas: pil cari (Ctrl K), Dunia Koperasi, tombol "+ Tambah" teal, lonceng, tema, pil profil.
+  - Aksi teal `--brand`; empat pastel `--pastel-biru/pink/mentega(persik)/mint` (+ `-ink`) dan warna isi grafik `--grafik-biru/pink/persik/mint/ungu/redup`.
+  - Huruf Figtree (paket `@fontsource-variable/figtree`, tanpa unduhan Google saat build), angka `tabular-nums`.
+  - Infografis di setiap halaman: cincin progres (`components/charts/Cincin.tsx`), batang pil, donut, bilah bertumpuk; setiap grafik punya teks nilai atau `aria-label`.
+- **Anatomi modul** (`.modul` di `komponen.css`): kartu putih besar membulat, kepala = judul tebal + tautan teal di kanan, isi, aksi di dasar.
+- **Beranda**: sapaan + tanggal + pil ringkasan; empat kartu sorot (progres hari ini teal dengan cincin, tugas terbuka dengan bilah status bertumpuk, uang masuk bulan ini dengan batang per pekan, proyek aktif dengan cincin rata-rata progres); grafik pekerjaan (batang pil + donut) dan agenda hari ini berupa kartu pastel (rutinitas bisa dicentang, rapat merah muda); kartu proyek pastel (target, milestone, progres, sisa waktu); antrean kerja per tenggat + kas bulan ini (mint/persik) + perlu perhatian; penjualan gerai, kehadiran (migrasi 10), kegiatan terbaru.
 
 - **Pola tata letak (11 Oktober 2026)**: tabel = judul teks rata kiri dengan ikon/avatar di kiri, kolom selebar isi, aksi satu baris (ikon bila lebih dari dua); kartu daftar = tinggi rata per baris, aksi di dasar kartu dipisah garis tipis, informasi tidak diulang antara cip dan badan kartu; tabel Tugas/Kegiatan tampil sebagai kartu bila area halaman < 900 px (container query, bukan lebar layar, karena sidebar), dan Buku koperasi memakai tampilan kartu di layar < 1280 px. Warna hanya untuk status (lencana lembut), bukan garis aksen kartu. Satu set warna: biru tema untuk aksen dan kategori; token `--pastel-emerald/rose/amber-*` hanya untuk status selesai/terlambat/perlu perhatian; abu untuk netral. Judul halaman = ikon halaman + 22 px tebal; kode dan jam memakai angka rata (`tabular-nums`).
 

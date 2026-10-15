@@ -2,6 +2,20 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Gaya Teal paket 1: kerangka dan Beranda infografis — 16 Oktober 2026
+
+- Pemilik menilai gaya Kebun yang terpasang "tidak fresh, konsep sama" karena hanya warna yang berganti. Dipilih arah Teal ala task manager Dribbble, navigasi rel ikon + panel, dan urutan kerangka + Beranda dulu.
+- Token baru: latar lembut `#F2F4F8`, kartu putih besar membulat tanpa garis, teal `#12937F`, pastel biru/merah muda/persik/mint dan warna isi grafik `--grafik-*`, huruf Figtree (paket lokal; Manrope dilepas). Mode gelap biru malam dengan aksi teal terang.
+- Menu samping diganti rel ikon pil (`RelNavigasi.tsx`): ikon kelompok membuka panel berisi nama halaman dan keterangan, proyek berjalan, dan favorit; Escape/klik luar menutup panel. Ponsel tetap memakai dok bawah dan lembar menu.
+- Bilah atas: pil cari (Ctrl K), Dunia Koperasi, tombol "+ Tambah" teal, lonceng, tema, pil profil. Pintasan Ctrl+B dihapus bersama menu samping.
+- Beranda disusun ulang penuh infografis: kartu sorot (progres hari ini teal dengan cincin, tugas terbuka dengan bilah status bertumpuk, uang masuk dengan batang per pekan, proyek aktif dengan cincin rata-rata), grafik pekerjaan berbatang pil + donut, agenda pastel (rutinitas tetap bisa dicentang), kartu proyek pastel dengan progres dan sisa waktu, antrean kerja, kas, perhatian, usaha harian, kegiatan. Komponen baru `components/charts/Cincin.tsx`.
+- Panel Dunia 3D dan pin memakai teal lewat token `monitoring.css`; ikon `Ikon3D` teal lewat token.
+- Verifikasi: 405 tes / 67 berkas, typecheck, lint, `lint:ui`, build lulus; JS awal 244 KB. Diperiksa di demo pada 1024 px (termasuk panel rel) dan lebar panel 629 px (tata letak ponsel), terang dan gelap. 1440 px hanya diukur lewat skrip (lebar konten 1270 px), audit 360/768/1440 belum dijalankan. Halaman lain baru ikut token; penyusunan ulangnya paket berikutnya.
+
+## Gaya Kebun (dibatalkan pemilik) — 16 Oktober 2026
+
+- Token Kebun, menu samping hijau tua, dan Beranda pita jam sempat dipasang (commit `a94db68`), lalu diganti gaya Teal di paket berikutnya atas permintaan pemilik.
+
 ## Pengingat, laporan bulanan, anggaran proyek, administrasi usaha — 15 Oktober 2026
 
 - Lonceng pengingat di bilah atas (semua halaman): tenggat terlambat/hari ini/besok, rapat 7 hari, dokumen akan habis, isu, tinjauan risiko, stok minimum, selisih opname. Dimuat sekali per sesi setelah halaman tampil; angka baru hilang setelah panel dibuka.

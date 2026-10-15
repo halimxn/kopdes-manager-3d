@@ -19,7 +19,7 @@ Kontrak gaya, data, dan peta kode: `docs/DUNIA-KOPERASI.md`. Model dibangun dari
 - Dunia tidak menulis data; aksi membuka formulir web (`?baru=1&isi.<kolom>=`).
 - Render hanya saat perubahan atau selama figur/kamera bergerak; tanpa loop idle. Reduced-motion: langsung di tempat.
 - Three.js hanya dimuat di halaman dunia (`MonitoringDashboard` lewat `next/dynamic` di `WorkspacePage`); jangan mengimpor modul dunia dari halaman operasional (cek `npm run ukur:bundel`).
-- Pin (≤5) hanya untuk hal yang perlu perhatian. Dunia selalu terang, kartu bergaya Kebun (hijau-abu muda, garis tipis, teks hijau tua), aksen hijau `--mt-blue` (nama lama, nilai hijau), pin hijau, huruf Manrope (`--font-sans`). Warna judul di panel dikunci ke `--mt-ink` agar tidak mewarisi mode gelap web.
+- Pin (≤5) hanya untuk hal yang perlu perhatian. Dunia selalu terang, kartu bergaya Teal (latar lembut, kartu putih, teks biru tua), aksen teal `--mt-blue` (nama lama, nilai teal), pin teal, huruf Figtree (`--font-sans`). Warna judul di panel dikunci ke `--mt-ink` agar tidak mewarisi mode gelap web.
 - Panel Ringkasan: KPI + grafik ringkas per lokasi di `grafik-lokasi.tsx` (batang CSS murni, tanpa pustaka grafik).
 
 ## Verifikasi

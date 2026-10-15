@@ -456,19 +456,18 @@ dialog.ui-modal h2 { font-size: 19px; }
   .form-actions > :only-child { grid-column: 1 / -1; }
 }
 
-/* ---------- Modul (anatomi Kebun): kartu putih bergaris tipis, kepala judul + tautan, isi, kaki aksi ---------- */
+/* ---------- Modul (anatomi Teal): kartu putih besar membulat tanpa garis, kepala judul + tautan, isi, kaki aksi ---------- */
 .modul {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 20px;
-  border: 1px solid var(--line);
+  padding: 22px;
   border-radius: var(--r-lg);
   background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow);
 }
 .modul-kepala { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
-.modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 700; letter-spacing: -0.01em; }
+.modul-kepala h2 { margin: 0; font-size: var(--fs-h2); font-weight: 750; letter-spacing: -0.01em; }
 .modul-ikon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; }
 .modul-ikon.pastel-biru { background: var(--pastel-biru); color: var(--pastel-biru-ink); }
 .modul-ikon.pastel-pink { background: var(--pastel-pink); color: var(--pastel-pink-ink); }

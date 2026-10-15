@@ -34,7 +34,7 @@ Seluruh data kerja hidup di **Dunia Koperasi**: diorama kantor 3D yang membaca c
 ## Brand Commitments
 
 - Nama produk: Kopdes Manager 3D; di dalam aplikasi: "Dunia Koperasi" untuk diorama.
-- Web memakai gaya "Kebun": kanvas hijau-abu sangat muda `#F4F5F0`, kartu putih bergaris tipis, menu samping hijau tua `#0F2A24` berlabel dengan halaman aktif limau `#C5E86C`, tombol utama hijau tua berteks limau, huruf Manrope (keputusan pemilik 16 Oktober 2026, setelah membandingkan Senja, Rapi, Bersih, Mint, Lembut, Teduh, dan Kebun). Menu berlabel dipilih karena ada sekitar 30 halaman; pita jam dan antrean kerja dibaca setiap pagi. Ikon dua nada hijau (`Ikon3D`).
+- Web memakai gaya "Teal" ala task manager Dribbble: latar abu-lavender lembut `#F2F4F8`, kartu putih besar membulat tanpa garis, rel ikon pil di kiri dengan panel kelompok berlabel, teal `#12937F` untuk aksi dan kartu utama, empat pastel (biru, merah muda, persik, mint) untuk kategori dan infografis, huruf Figtree (keputusan pemilik 16 Oktober 2026, setelah membandingkan Senja, Rapi, Bersih, Mint, Lembut, Teduh, Kebun, lalu memilih referensi task manager teal). Rel ikon + panel menjaga sekitar 30 halaman tetap mudah dicari. Ikon dua nada teal (`Ikon3D`).
 - Tampilan seimbang di semua perangkat: grid modul dengan tinggi rata; setiap data yang tampil harus bisa ditindaklanjuti; tidak ada tombol aksi ganda.
 - Bahasa UI langsung, ringkas, tanpa slogan motivasi.
 

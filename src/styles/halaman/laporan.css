@@ -107,7 +107,7 @@
 
 @media print {
   body { background: #fff; }
-  .no-print, .manager-sidebar, .manager-topbar, .tablet-rail, .ui-bottom-nav, .mobile-app-sheet, .mobile-sheet-backdrop { display: none !important; }
+  .no-print, .rel, .rel-panel, .manager-topbar, .ui-bottom-nav, .mobile-app-sheet, .mobile-sheet-backdrop { display: none !important; }
   .manager-shell { padding: 0 !important; }
   .manager-main { padding: 0; }
   .manager-main::before, .manager-main::after { display: none; }

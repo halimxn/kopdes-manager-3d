@@ -10,7 +10,6 @@ import { navigation } from '@/features/records/catalog';
 import { isProjectHistory } from '@/features/projects/project-lifecycle';
 import type { Workspace } from '@/features/workspace/useWorkspace';
 import {
-  Menu,
   Search,
   Plus,
   Moon,
@@ -19,12 +18,12 @@ import {
   X,
   Sparkles,
 } from 'lucide-react';
-import { Ikon3D } from '@/components/ui/Ikon3D';
 import { usePreference } from '@/lib/usePreference';
 import { WorkspaceSearch } from '@/features/workspace/WorkspaceSearch';
-import { ArrowUpRight, Star, ChevronDown, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { ArrowUpRight, Star } from 'lucide-react';
 import { IkonHalaman } from '@/components/ui/IkonHalaman';
 import { ManagerActionModal } from './ManagerActionModal';
+import { RelNavigasi } from './RelNavigasi';
 import { Modal } from '@/components/ui/Modal';
 import { Notifikasi } from '@/features/notifikasi/Notifikasi';
 
@@ -100,15 +99,9 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
   const path = usePathname(),
     query = useSearchParams();
   const [favoriteText, setFavoriteText] = usePreference('hub-favorites', '/hari-ini|/tugas');
-  const [collapsedText, setCollapsedText] = usePreference('hub-nav-collapsed', '');
-  const [desktopSidebarHidden, setDesktopSidebarHidden] = usePreference(
-    'hub-sidebar-desktop-collapsed',
-    'false',
-  );
   const favorites = favoriteText
     .split('|')
     .filter((href) => navigation.some(([url]) => url === href));
-  const collapsed = collapsedText.split('|').filter(Boolean);
   const { theme, toggleTheme } = useTheme();
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [menu, setMenu] = useState(false),
@@ -148,13 +141,6 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
         event.preventDefault();
         dialog.current?.showModal();
       }
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'b') {
-        const target = event.target as HTMLElement | null;
-        if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
-        event.preventDefault();
-        const currentHidden = localStorage.getItem('hub-sidebar-desktop-collapsed') === 'true';
-        setDesktopSidebarHidden(currentHidden ? 'false' : 'true');
-      }
       if (event.key === 'Escape') {
         setMenu(false);
         document.querySelectorAll('details[open]').forEach((el) => el.removeAttribute('open'));
@@ -182,33 +168,25 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
       window.removeEventListener('keydown', key);
       document.removeEventListener('click', clickOutside);
     };
-  }, [setDesktopSidebarHidden, router]);
+  }, [router]);
   const name = String(workspace?.organization?.[0]?.data.manager || 'Manajer');
+  async function kunci() {
+    try {
+      await api('auth/pin', { action: 'logout' });
+      resetAuthNavigation('/pin');
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
   const current = navigation.find(([href]) => href === path)?.[1] || 'Ruang kerja';
   if (path === '/dunia-koperasi') return <>{children}</>;
   return (
-    <div className={`manager-shell ${desktopSidebarHidden === 'true' ? 'sidebar-collapsed' : ''}`}>
+    <div className="manager-shell">
       <a className="skip" href="#main">
         Lewati navigasi
       </a>
       <header className="manager-topbar">
         <div className="topbar-left-cluster">
-          <Button
-            type="button"
-            className="topbar-nav-menu-btn"
-            aria-label="Buka menu navigasi"
-            title="Menu navigasi (Ctrl+B)"
-            onClick={() => {
-              if (window.innerWidth >= 1024) {
-                setDesktopSidebarHidden(desktopSidebarHidden === 'true' ? 'false' : 'true');
-              } else {
-                setMenu(!menu);
-              }
-            }}
-          >
-            {desktopSidebarHidden === 'true' ? <PanelLeftOpen size={18} /> : <Menu size={18} />}
-            <span className="topbar-menu-label">Menu</span>
-          </Button>
           <Link
             href="/beranda"
             className="manager-profile"
@@ -249,6 +227,11 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         <div className="manager-actions">
+          <button type="button" className="topbar-cari" aria-label="Cari halaman atau catatan" onClick={() => dialog.current?.showModal()}>
+            <Search size={17} aria-hidden="true" />
+            <span>Cari tugas, anggota, barang…</span>
+            <kbd>Ctrl K</kbd>
+          </button>
           <Link href="/dunia-koperasi" className="topbar-world-link" aria-label="Dunia Koperasi" title="Buka Dunia Koperasi">
             <IkonHalaman href="/dunia-koperasi" size={22} />
             <span>Dunia Koperasi</span>
@@ -261,12 +244,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
             aria-label="Tambah catatan"
           >
             <Plus size={18} />
-          </Button>
-          <Button
-            aria-label="Cari halaman atau catatan"
-            onClick={() => dialog.current?.showModal()}
-          >
-            <Search size={19} />
+            <span className="topbar-tambah-teks">Tambah</span>
           </Button>
           <Notifikasi />
 
@@ -277,255 +255,19 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           >
             {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
           </Button>
-          <Button
-            className="desktop-lock"
-            aria-label="Kunci aplikasi"
-            onClick={async () => {
-              try {
-                await api('auth/pin', { action: 'logout' });
-                resetAuthNavigation('/pin');
-              } catch (e) {
-                setError((e as Error).message);
-              }
-            }}
-          >
-            <LockKeyhole size={18} />
-          </Button>
+          <Link href="/pengaturan" className="topbar-profil" aria-label={`Profil ${name}`} title="Profil dan pengaturan">
+            <span className="manager-avatar-badge">{name[0] || 'M'}</span>
+            <span className="topbar-profil-nama">{name}</span>
+          </Link>
         </div>
       </header>
-      <nav className="tablet-rail" aria-label="Navigasi tablet">
-        <Link
-          href="/beranda"
-          aria-label="Beranda"
-          title="Beranda"
-          className={`tablet-rail-link ${path === '/beranda' ? 'is-active' : ''}`}
-        >
-          <IkonHalaman href="/beranda" size={26} />
-          <span className="tablet-rail-text">Beranda</span>
-        </Link>
-        <Link
-          href="/hari-ini"
-          aria-label="Hari ini"
-          title="Hari ini"
-          className={`tablet-rail-link ${path === '/hari-ini' ? 'is-active' : ''}`}
-        >
-          <IkonHalaman href="/hari-ini" size={26} />
-          <span className="tablet-rail-text">Hari ini</span>
-        </Link>
-        <Link
-          href="/tugas"
-          aria-label="Tugas"
-          title="Tugas"
-          className={`tablet-rail-link ${path === '/tugas' ? 'is-active' : ''}`}
-        >
-          <IkonHalaman href="/tugas" size={26} />
-          <span className="tablet-rail-text">Tugas</span>
-        </Link>
-        <Link
-          href="/jurnal"
-          aria-label="Kegiatan"
-          title="Kegiatan"
-          className={`tablet-rail-link ${path === '/jurnal' ? 'is-active' : ''}`}
-        >
-          <IkonHalaman href="/jurnal" size={26} />
-          <span className="tablet-rail-text">Kegiatan</span>
-        </Link>
-        <Button
-          type="button"
-          aria-label="Buka semua halaman"
-          aria-expanded={menu}
-          onClick={() => setMenu(!menu)}
-          className={`tablet-rail-link tablet-rail-menu-btn ${menu ? 'is-active' : ''}`}
-          title="Buka menu lengkap"
-        >
-          <Menu size={20} />
-          <span className="tablet-rail-text">Menu</span>
-        </Button>
-      </nav>
-      <aside className={`manager-sidebar ${menu ? 'is-open' : ''}`} aria-label="Semua halaman">
-        <div className="manager-sidebar-brand">
-          <Link href="/beranda" className="sidebar-brand-link" onClick={() => setMenu(false)}>
-            <div className="sidebar-brand-emblem">
-              <Ikon3D kind="kantor" size={40} />
-            </div>
-            <div
-              className="sidebar-brand-info"
-              title={String(workspace?.organization?.[0]?.data.title || 'Koperasi')}
-            >
-              <strong>
-                {getCoopShortName(String(workspace?.organization?.[0]?.data.title || ''))}
-              </strong>
-              <small>Ruang kerja manajer</small>
-            </div>
-          </Link>
-          <div className="sidebar-brand-actions">
-            <Button
-              type="button"
-              className="desktop-sidebar-collapse-btn"
-              aria-label="Sembunyikan menu samping (Ctrl+B)"
-              title="Sembunyikan menu samping (Ctrl+B)"
-              onClick={() => setDesktopSidebarHidden('true')}
-            >
-              <PanelLeftClose size={18} />
-            </Button>
-            <Button
-              className="close-navigation"
-              aria-label="Tutup navigasi"
-              onClick={() => setMenu(false)}
-            >
-              <X size={18} />
-            </Button>
-          </div>
-        </div>
-
-        <Button
-          type="button"
-          className="sidebar-search-trigger"
-          onClick={() => {
-            setMenu(false);
-            dialog.current?.showModal();
-          }}
-        >
-          <Search size={14} />
-          <span>Cari di ruang kerja</span>
-          <kbd>Ctrl K</kbd>
-        </Button>
-
-        <div className="manager-sidebar-nav-scroll">
-          {favorites.length > 0 && (
-            <section className="manager-sidebar-section sidebar-favorites-group">
-              <h2 className="sidebar-section-title">
-                <span>Favorit</span>
-              </h2>
-              <nav className="sidebar-nav-list">
-                {favorites.map((href) => {
-                  const label = navigation.find(([url]) => url === href)?.[1] || href;
-                  const isActive = path === href;
-                  return (
-                    <Link
-                      key={href}
-                      href={href}
-                      aria-label={label}
-                      title={label}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={`sidebar-nav-item ${isActive ? 'is-active' : ''}`}
-                      onClick={() => setMenu(false)}
-                    >
-                      <span className="sidebar-item-icon">
-                        <IkonHalaman href={href} size={22} />
-                      </span>
-                      <span className="sidebar-item-label">{label}</span>
-                      <Star
-                        size={11}
-                        className="sidebar-item-star-badge"
-                        fill="var(--tone-warn-text)"
-                        color="var(--tone-warn-text)"
-                      />
-                    </Link>
-                  );
-                })}
-              </nav>
-            </section>
-          )}
-          {sections.map(([label, paths]) => (
-            <section key={label} className="manager-sidebar-section">
-              <h2 className="sidebar-section-title">
-                <Button
-                  className="sidebar-group-toggle"
-                  aria-expanded={!collapsed.includes(label)}
-                  onClick={() =>
-                    setCollapsedText(
-                      (collapsed.includes(label)
-                        ? collapsed.filter((value) => value !== label)
-                        : [...collapsed, label]
-                      ).join('|'),
-                    )
-                  }
-                >
-                  {label}
-                  <ChevronDown size={14} />
-                </Button>
-              </h2>
-              <nav className="sidebar-nav-list" hidden={collapsed.includes(label)}>
-                {paths.map((href) => {
-                  const isActive = path === href;
-                  return (
-                    <Link
-                      key={href}
-                      href={href}
-                      aria-label={navigation.find(([url]) => url === href)?.[1]}
-                      title={navigation.find(([url]) => url === href)?.[1]}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={`sidebar-nav-item ${isActive ? 'is-active' : ''}`}
-                      onClick={() => setMenu(false)}
-                    >
-                      <span className="sidebar-item-icon">
-                        <IkonHalaman href={href} size={22} />
-                      </span>
-                      <span className="sidebar-item-label">
-                        {navigation.find(([url]) => url === href)?.[1]}
-                      </span>
-                      {isActive && <span className="sidebar-item-dot" />}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </section>
-          ))}
-          <section className="manager-sidebar-section">
-            <div className="sidebar-section-head-row">
-              <h2 className="sidebar-section-title">Proyek saya</h2>
-              <Link
-                href="/proyek"
-                className="sidebar-section-add"
-                onClick={() => setMenu(false)}
-                title="Buka Proyek"
-                aria-label="Buka proyek"
-              >
-                <Plus size={14} />
-              </Link>
-            </div>
-            {workspace ? (
-              <div className="sidebar-projects-list">
-                {(workspace.workstreams || [])
-                  .filter((p) => !isProjectHistory(p))
-                  .map((p) => (
-                    <Link
-                      className="manager-project-link"
-                      key={p.id}
-                      href={`/proyek?id=${encodeURIComponent(p.id)}`}
-                      onClick={() => setMenu(false)}
-                    >
-                      <span
-                        className="project-dot"
-                        style={{ backgroundColor: String(p.data.color || 'var(--brand)') }}
-                      />
-                      <span className="project-title">{String(p.data.title)}</span>
-                    </Link>
-                  ))}
-              </div>
-            ) : (
-              <small className="sidebar-empty-note">Proyek belum dimuat.</small>
-            )}
-            {workspace && !workspace.workstreams?.some((p) => !isProjectHistory(p)) && (
-              <small className="sidebar-empty-note">Tidak ada proyek berjalan.</small>
-            )}
-          </section>
-        </div>
-
-        <div className="sidebar-footer-card">
-          <div className="sidebar-profile-row">
-            <span className="sidebar-avatar">{name[0]}</span>
-            <div className="sidebar-profile-info">
-              <strong>{name}</strong>
-              <small>Manajer koperasi</small>
-            </div>
-          </div>
-        </div>
-      </aside>
-      {menu && (
-        <Button className="manager-shade" aria-label="Tutup menu" onClick={() => setMenu(false)} />
-      )}
+      <RelNavigasi
+        path={path}
+        favorit={favorites}
+        proyek={workspace ? (workspace.workstreams || []).filter((p) => !isProjectHistory(p)) : null}
+        subjudul={getNavSubtitle}
+        onKunci={kunci}
+      />
       <main className="manager-main" id="main" tabIndex={-1}>
         {error && (
           <p role="alert" className="notice error">
@@ -537,7 +279,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
       {shortcutHelp && <Modal className="shortcut-help-dialog" onDismiss={() => setShortcutHelp(false)} aria-labelledby="shortcut-title">
         <h2 id="shortcut-title">Pintasan keyboard</h2>
         <p><kbd>N</kbd> Buat tugas · <kbd>T</kbd> Hari ini · <kbd>?</kbd> Bantuan</p>
-        <p><kbd>Ctrl/⌘ K</kbd> Cari · <kbd>Ctrl/⌘ B</kbd> Menu samping · <kbd>Esc</kbd> Tutup</p>
+        <p><kbd>Ctrl/⌘ K</kbd> Cari · <kbd>Esc</kbd> Tutup</p>
         <Button type="button" onClick={() => setShortcutHelp(false)}>Tutup bantuan</Button>
       </Modal>}
       <BottomNav path={path} calendar={query.get('view') === 'kalender'} menu={menu} onAction={() => setActionModalOpen(true)} onMenu={() => setMenu(!menu)} />
@@ -641,14 +383,9 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
             <Button
               type="button"
               className="mobile-sheet-footer-btn"
-              onClick={async () => {
+              onClick={() => {
                 setMenu(false);
-                try {
-                  await api('auth/pin', { action: 'logout' });
-                  resetAuthNavigation('/pin');
-                } catch (e) {
-                  setError((e as Error).message);
-                }
+                void kunci();
               }}
             >
               <LockKeyhole size={17} />

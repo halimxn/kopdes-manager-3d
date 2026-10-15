@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import '@fontsource-variable/manrope';
+import '@fontsource-variable/figtree';
 import './globals.css';
 import '../styles/token.css';
 import '../styles/dasar.css';
