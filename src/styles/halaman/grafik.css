@@ -86,11 +86,10 @@
 .ui-btn.dash-bar-col:hover, .ui-btn.dash-bar-col[aria-pressed='true'] { background: var(--surface-2); }
 .dash-bar-count { font-size: 11.5px; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
 .dash-bar-count.zero-value { color: var(--ink-subtle); }
-.dash-bar-track { position: relative; display: flex; align-items: flex-end; width: 14px; overflow: hidden; border-radius: var(--r-full); background: var(--grafik-redup); }
-.dash-bar-fill { width: 100%; border-radius: var(--r-full); background: var(--brand-soft-2); }
-.bar-today .dash-bar-fill,
-.ui-btn.dash-bar-col:hover .dash-bar-fill,
-.ui-btn.dash-bar-col[aria-pressed='true'] .dash-bar-fill { background: var(--brand); }
+.dash-bar-track { position: relative; display: flex; align-items: flex-end; width: min(28px, 70%); overflow: hidden; border-radius: 8px; background: var(--surface-3); }
+.dash-bar-fill { width: 100%; border-radius: 8px; background: linear-gradient(180deg, var(--brand-bright), var(--brand)); }
+.bar-today .dash-bar-track { box-shadow: inset 0 0 0 1.5px var(--pastel-mentega-ink); }
+.bar-today .dash-bar-fill { background: linear-gradient(180deg, var(--pastel-mentega), var(--pastel-mentega-ink)); }
 .dash-bar-labels-wrap { position: relative; display: grid; justify-items: center; gap: 2px; }
 .dash-bar-label { color: var(--ink-muted); font-size: 11.5px; font-weight: 600; }
 .dash-bar-daynum { color: var(--ink-subtle); font-size: 11px; }

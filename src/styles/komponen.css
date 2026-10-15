@@ -48,9 +48,9 @@ label.button:hover {
 .ui-btn.primary,
 a.button.primary {
   --btn-bg: var(--brand);
-  --btn-fg: var(--brand-text);
+  --btn-fg: var(--on-brand);
   --btn-line: var(--brand);
-  box-shadow: 0 1px 2px rgba(15, 42, 36, 0.2), 0 6px 14px rgba(15, 42, 36, 0.14);
+  box-shadow: 0 1px 2px rgba(33, 72, 199, 0.25), 0 6px 14px rgba(47, 91, 234, 0.22);
 }
 .ui-btn[data-variant='primary']:hover,
 .ui-btn.primary:hover,
@@ -262,7 +262,7 @@ dialog.ui-modal {
   overscroll-behavior: contain;
 }
 dialog.ui-modal[open] { animation: muncul-dialog 260ms var(--ease-out); }
-dialog.ui-modal::backdrop { background: var(--scrim); backdrop-filter: blur(3px); }
+dialog.ui-modal::backdrop { background: rgba(11, 21, 51, 0.38); backdrop-filter: blur(3px); }
 dialog.ui-modal > .section-head { margin-bottom: 16px; }
 dialog.ui-modal h2 { font-size: 19px; }
 @media (max-width: 767px) {
@@ -456,24 +456,25 @@ dialog.ui-modal h2 { font-size: 19px; }
   .form-actions > :only-child { grid-column: 1 / -1; }
 }
 
-/* ---------- Modul (anatomi Teal): kartu putih besar membulat tanpa garis, kepala judul + tautan, isi, kaki aksi ---------- */
+/* ---------- Modul (anatomi Senja): kepala berikon pastel, isi, kaki aksi ---------- */
 .modul {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 22px;
+  padding: 20px;
+  border: 1px solid var(--line);
   border-radius: var(--r-lg);
   background: var(--surface);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
 }
 .modul-kepala { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
-.modul-kepala h2 { margin: 0; font-size: var(--fs-h2); font-weight: 750; letter-spacing: -0.01em; }
+.modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 650; letter-spacing: -0.01em; }
 .modul-ikon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; }
 .modul-ikon.pastel-biru { background: var(--pastel-biru); color: var(--pastel-biru-ink); }
 .modul-ikon.pastel-pink { background: var(--pastel-pink); color: var(--pastel-pink-ink); }
 .modul-ikon.pastel-mentega { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
 .modul-ikon.pastel-mint { background: var(--pastel-mint); color: var(--pastel-mint-ink); }
-.modul-tautan { margin-left: auto; color: var(--brand-ink); font-size: 13px; font-weight: 700; text-decoration: none; }
-.modul-tautan:hover { color: var(--ink); text-decoration: none; }
+.modul-tautan { margin-left: auto; color: var(--ink-muted); font-size: 13px; font-weight: 600; text-decoration: none; }
+.modul-tautan:hover { color: var(--brand-ink); text-decoration: none; }
 .modul-kaki { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 14px; }
 @media (max-width: 767px) { .modul { padding: 16px; } }

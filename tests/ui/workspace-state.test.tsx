@@ -199,25 +199,22 @@ it('a query-only navigation switches task views while preserving local filters',
   expect(screen.getByRole('button', { name: 'Prioritas: Tinggi' })).toBeTruthy();
 });
 
-it('rel ikon membuka panel kelompok berlabel dan lembar menu ponsel tetap inert', () => {
+it('at 1024px the menu toggles the desktop sidebar and closed mobile navigation is inert', () => {
+  vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1024);
   render(
     <AppShell>
       <p>Isi ruang kerja</p>
     </AppShell>,
   );
-  const grup = screen.getByRole('button', { name: 'Buku koperasi' });
-  fireEvent.click(grup);
-  expect(grup.getAttribute('aria-expanded')).toBe('true');
-  const panel = screen.getByRole('dialog', { name: 'Buku koperasi' });
-  const links = panel.querySelectorAll('.rel-panel-item');
-  expect(links.length).toBeGreaterThan(5);
-  expect([...links].every((link) => Boolean(link.getAttribute('aria-label')))).toBe(true);
-  expect(screen.getByRole('link', { name: 'Buku kas' }).getAttribute('href')).toBe('/keuangan');
-  fireEvent.keyDown(document, { key: 'Escape' });
-  expect(screen.queryByRole('dialog', { name: 'Buku koperasi' })).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Buka menu navigasi' }));
+  expect(document.querySelector('.manager-shell')?.classList.contains('sidebar-collapsed')).toBe(
+    true,
+  );
   const sheet = document.querySelector('.mobile-app-sheet')!;
   expect(sheet.hasAttribute('inert')).toBe(true);
   expect(sheet.getAttribute('aria-hidden')).toBe('true');
+  const links = document.querySelectorAll('.sidebar-nav-item');
+  expect([...links].every((link) => Boolean(link.getAttribute('aria-label')))).toBe(true);
 });
 
 it('pagination deduplicates records and preserves loaded pages when revisiting a scope', async () => {

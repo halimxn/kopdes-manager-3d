@@ -189,7 +189,7 @@ dialog.editor {
   box-shadow: var(--shadow-lg);
 }
 dialog.editor[open] { display: flex; animation: muncul-dialog 260ms var(--ease-out); }
-dialog.editor::backdrop { background: var(--scrim); backdrop-filter: blur(3px); }
+dialog.editor::backdrop { background: rgba(11, 21, 51, 0.38); backdrop-filter: blur(3px); }
 dialog.editor > form { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; width: 100%; }
 .editor-modal-head { flex-wrap: nowrap; padding: 18px 22px; border-bottom: 1px solid var(--line); }
 .editor-title-wrap { display: flex; align-items: center; gap: 12px; min-width: 0; }

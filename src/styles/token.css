@@ -1,88 +1,73 @@
 /*
-  Token sistem gaya Kopdes Manager 3D — "Teal" (keputusan pemilik 16 Oktober 2026, menggantikan Senja dan Kebun).
-  Gaya task manager modern: latar abu-lavender lembut, kartu putih besar membulat, rel ikon pil di kiri,
-  teal untuk aksi dan kartu utama, empat pastel (biru, merah muda, persik, mint) untuk kategori dan
-  infografis, huruf Figtree. Status selalu bertuliskan. Nama variabel lama dipertahankan agar semua halaman ikut.
+  Token sistem gaya Kopdes Manager 3D — "Senja" (keputusan pemilik 15 Oktober 2026).
+  Kanvas krem hangat, kartu putih, aksi biru #2F5BEA, empat pastel (biru, merah muda,
+  mentega, mint) untuk modul dan kategori, huruf Hanken Grotesk. Status selalu bertuliskan.
 */
 :root {
   color-scheme: light;
-  --scrim: rgba(22, 27, 45, 0.36);
+  --scrim: rgba(34, 24, 16, 0.32);
   /* Isi di atas warna merek/status, kilau merek, sinyal kuning, jalur Gantt, toast */
-  --on-brand: #ffffff;
-  --brand-bright: #3cc2a8;
-  --sinyal: #f5b83d;
-  --jalur-rencana: #dff3ee;
-  --titik-rencana: #a9dccf;
-  --titik-selesai: #6fd3a8;
-  --toast-bg: #1f2233;
-  --toast-fg: #ffffff;
-  --toast-aksi: #7fe0c9;
-
-  /* Sorotan: teal muda untuk pilihan aktif dan nilai tertinggi */
-  --limau: #12937f;
-  --limau-soft: #dff3ee;
-  --limau-ink: #ffffff;
-
-  /* Kartu utama teal (pengganti panel gelap) */
-  --sisi-bg: #12937f;
-  --sisi-hover: #0f7f6e;
-  --sisi-kartu: rgba(255, 255, 255, 0.14);
-  --sisi-garis: rgba(255, 255, 255, 0.22);
-  --sisi-ink: #e6f7f3;
-  --sisi-ink-kuat: #ffffff;
-  --sisi-muted: #bfe8df;
+  --on-brand: #fff;
+  --brand-bright: #6b8cff;
+  --sinyal: #e8b33a;
+  --jalur-rencana: #e8eefd;
+  --titik-rencana: #c6d3fb;
+  --titik-selesai: #8fcfb2;
+  --toast-bg: #221e1c;
+  --toast-fg: #fff;
+  --toast-aksi: #a8bbff;
 
   /* Huruf */
-  --font-sans: 'Figtree Variable', 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  --fs-title: 30px;
-  --fs-h2: 18px;
-  --fs-h3: 17px;
+  --fs-title: 28px;
+  --fs-h2: 17px;
+  --fs-h3: 16px;
   --fs-body: 14px;
   --fs-meta: 12.5px;
   --fs-cap: 11.5px;
   --lh-tight: 1.25;
   --lh-body: 1.5;
 
-  /* Permukaan */
-  --canvas: #f2f4f8;
-  --canvas-deep: #e6e9f1;
+  /* Permukaan: kanvas = dinding kantor, kartu = panel putih dunia */
+  --canvas: #faf7f4;
+  --canvas-deep: #f3eee9;
   --surface: #ffffff;
-  --surface-2: #f7f8fb;
-  --surface-3: #eef0f6;
-  --wall: #f2f4f8;
-  --wall-deep: #f2f4f8;
+  --surface-2: #fbf8f5;
+  --surface-3: #f3eee9;
+  --wall: #faf7f4;
+  --wall-deep: #faf7f4;
 
   /* Tinta */
-  --ink: #1f2233;
-  --ink-heading: #161927;
-  --ink-muted: #5d6478;
-  --ink-subtle: #6b7286;
+  --ink: #221e1c;
+  --ink-heading: #1a1614;
+  --ink-muted: #665d57;
+  --ink-subtle: #7f756e;
   --ink-inverse: #ffffff;
 
   /* Garis */
-  --line: #e8ebf2;
-  --line-strong: #d9dde8;
+  --line: #efe8e1;
+  --line-strong: #e2d8ce;
 
-  /* Aksi: teal */
-  --brand: #12937f;
-  --brand-hover: #0f7f6e;
-  --brand-press: #0c6a5c;
-  --brand-soft: #dff3ee;
-  --brand-soft-2: #cbece3;
-  --brand-soft-border: #a9dccf;
-  --brand-ink: #0f7a69;
+  /* Aksen biru dunia */
+  --brand: #2f5bea;
+  --brand-hover: #2148c7;
+  --brand-press: #1b3cab;
+  --brand-soft: #e8eefd;
+  --brand-soft-2: #dbe4fc;
+  --brand-soft-border: #c9d6fb;
+  --brand-ink: #2448c7;
   --brand-text: #ffffff;
   --brand-contrast: #ffffff;
-  --focus-ring: 0 0 0 3px rgba(18, 147, 127, 0.3);
+  --focus-ring: 0 0 0 3px rgba(47, 91, 234, 0.28);
 
-  /* Aksen hangat kedua (nama lama) */
-  --wood: #fde6d2;
-  --wood-deep: #f0a35e;
-  --wood-edge: #d98a45;
-  --wood-soft: #fdf1e6;
+  /* Kayu lantai diorama: aksen hangat kedua */
+  --wood: #f3dfa2;
+  --wood-deep: #d9b45a;
+  --wood-edge: #c9a24a;
+  --wood-soft: #fff3cc;
 
-  /* Lantai ruang (nama lama): sama dengan kanvas */
+  /* Lantai ruang (sisa gaya dunia lama): kini sama dengan kanvas */
   --lantai-kerja: var(--canvas);
   --lantai-kegiatan: var(--canvas);
   --lantai-buku: var(--canvas);
@@ -93,56 +78,53 @@
   --lantai-garis: transparent;
 
   /* Status — hanya untuk makna, tidak sebagai hiasan */
-  --ok: #1f7a48;
-  --ok-bg: #dcf3e6;
-  --ok-line: #b6e2c8;
-  --late: #c2412d;
-  --late-bg: #fde8e3;
-  --late-line: #f7c7bb;
-  --warn: #8a5a00;
-  --warn-bg: #fdf0d5;
-  --warn-line: #f2d59a;
+  --ok: #1f6e52;
+  --ok-bg: #e4f4ee;
+  --ok-line: #c3e6d6;
+  --late: #b9461a;
+  --late-bg: #fde7dc;
+  --late-line: #f8cdb8;
+  --warn: #8a6400;
+  --warn-bg: #fff3cc;
+  --warn-line: #f3dfa2;
   --info: var(--brand-ink);
   --info-bg: var(--brand-soft);
-  --neutral-bg: #eef0f6;
+  --neutral-bg: #f3eee9;
 
-  /* Bentuk dan kedalaman: sudut besar, bayangan lembut */
+  /* Bentuk dan kedalaman */
   --r-xs: 6px;
-  --r-sm: 10px;
-  --r-md: 14px;
-  --r-lg: 22px;
-  --r-xl: 26px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 22px;
   --r-full: 999px;
-  --shadow-sm: 0 1px 2px rgba(31, 34, 51, 0.04);
-  --shadow: 0 1px 2px rgba(31, 34, 51, 0.04), 0 10px 24px -12px rgba(31, 34, 51, 0.1);
-  --shadow-md: 0 2px 4px rgba(31, 34, 51, 0.04), 0 16px 34px -16px rgba(31, 34, 51, 0.18);
-  --shadow-lg: 0 28px 60px -20px rgba(22, 27, 45, 0.3);
-  --shadow-dock: 0 14px 34px -10px rgba(31, 34, 51, 0.22);
+  --shadow-sm: 0 1px 2px rgba(60, 40, 20, 0.05);
+  --shadow: 0 1px 2px rgba(60, 40, 20, 0.04), 0 6px 18px rgba(60, 40, 20, 0.05);
+  --shadow-md: 0 2px 4px rgba(60, 40, 20, 0.05), 0 12px 30px rgba(60, 40, 20, 0.08);
+  --shadow-lg: 0 24px 60px rgba(40, 26, 14, 0.18);
+  --shadow-dock: 0 12px 32px rgba(60, 40, 20, 0.14);
 
   /* Gerak */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 120ms;
   --dur: 200ms;
 
-  /* Tata letak: rel ikon 72 px + jarak */
-  --rel-w: 72px;
-  --sidebar-w: 104px;
-  --topbar-h: 72px;
-  --page-max: 1320px;
+  /* Tata letak */
+  --sidebar-w: 240px;
+  --topbar-h: 64px;
+  --page-max: 1200px;
   --gutter: 28px;
   --touch: 44px;
   --dock-h: 72px;
 
-  /* Ikon dua nada (Ikon3D) */
-  --ikon-isi: #dff3ee;
-  --ikon-awal: #3cc2a8;
-  --ikon-akhir: #0f7a69;
+  /* Ikon dua nada */
+  --ikon-isi: #e8eefd;
 
   /* Alias untuk gaya inline di komponen (jangan tambah alias baru) */
   --success: var(--ok);
   --danger: var(--late);
   --tone-success-text: var(--ok);
-  --tone-success-accent: #2fb36b;
+  --tone-success-accent: #22a55a;
   --tone-warn-text: var(--warn);
   --tone-danger-text: var(--late);
   --tone-info-text: var(--brand-ink);
@@ -158,68 +140,53 @@
   --pastel-blue-text: var(--brand-ink);
   --pastel-blue-bg: var(--brand-soft);
   --pastel-blue-border: var(--brand-soft-border);
-  --pastel-purple-text: #6a4fc7;
-  --pastel-purple-bg: #ece8fd;
-  /* Pastel kategori + warna isi grafik: biru (info/setor), merah muda (rapat), persik (stok/pengiriman/kas keluar),
-     mint (selesai/uang masuk) */
-  --pastel-biru: #e3f0fd;
-  --pastel-biru-ink: #1f6fb8;
-  --pastel-pink: #fbe0ec;
-  --pastel-pink-ink: #a83a68;
-  --pastel-mentega: #fde6d2;
-  --pastel-mentega-ink: #a4501b;
-  --pastel-mint: #d8f2e4;
-  --pastel-mint-ink: #1f7a48;
-  --grafik-biru: #5aa9f0;
-  --grafik-pink: #e86fa3;
-  --grafik-persik: #f39a55;
-  --grafik-mint: #3cc28a;
-  --grafik-ungu: #8b72e8;
-  --grafik-redup: #e5e8f1;
+  --pastel-purple-text: #a0315f;
+  --pastel-purple-bg: #fce7ef;
+  /* Pastel Senja: biru (aksi), merah muda (rapat), mentega (rutinitas/stok), mint (selesai/uang masuk) */
+  --pastel-biru: #e8eefd;
+  --pastel-biru-ink: #2448c7;
+  --pastel-pink: #fce7ef;
+  --pastel-pink-ink: #a0315f;
+  --pastel-mentega: #fff3cc;
+  --pastel-mentega-ink: #8a6400;
+  --pastel-mint: #e4f4ee;
+  --pastel-mint-ink: #1f6e52;
 }
 
 :root.dark {
   color-scheme: dark;
   --scrim: rgba(0, 0, 0, 0.55);
-  --on-brand: #06231e;
-  --brand-bright: #7fe0c9;
-  --jalur-rencana: #123630;
-  --titik-rencana: #2e6b5f;
+  --jalur-rencana: #1f2a4d;
+  --titik-rencana: #4a5fa8;
   --titik-selesai: #3f9e78;
-  --toast-bg: #eef0f6;
-  --toast-fg: #161927;
-  --toast-aksi: #0f7a69;
-  --limau: #3cc8ae;
-  --limau-soft: #123630;
-  --limau-ink: #06231e;
-  --sisi-bg: #0f5f53;
-  --sisi-hover: #0d5247;
-  --canvas: #0f1218;
-  --canvas-deep: #0b0d12;
-  --surface: #171b23;
-  --surface-2: #1b2029;
-  --surface-3: #212733;
-  --wall: #0f1218;
-  --wall-deep: #0f1218;
-  --ink: #eceff6;
+  --toast-bg: #f2eeea;
+  --toast-fg: #1c1917;
+  --toast-aksi: #2448c7;
+  --canvas: #141210;
+  --canvas-deep: #100e0c;
+  --surface: #1c1917;
+  --surface-2: #211d1a;
+  --surface-3: #26221f;
+  --wall: #141210;
+  --wall-deep: #141210;
+  --ink: #f2eeea;
   --ink-heading: #ffffff;
-  --ink-muted: #aab1c3;
-  --ink-subtle: #8f97ab;
-  --line: #252b37;
-  --line-strong: #313847;
-  --brand: #3cc8ae;
-  --brand-hover: #5ad4bd;
-  --brand-press: #2fb39b;
-  --brand-soft: #123630;
-  --brand-soft-2: #18453d;
-  --brand-soft-border: #22594f;
-  --brand-ink: #7fe0c9;
-  --brand-text: #06231e;
-  --focus-ring: 0 0 0 3px rgba(60, 200, 174, 0.4);
-  --wood: #4a2f1c;
-  --wood-deep: #f0a35e;
-  --wood-edge: #d98a45;
-  --wood-soft: #33231a;
+  --ink-muted: #bdb4ad;
+  --ink-subtle: #958b84;
+  --line: #2b2623;
+  --line-strong: #3a3430;
+  --brand: #6b8cff;
+  --brand-hover: #84a0ff;
+  --brand-press: #5a7cf0;
+  --brand-soft: #1f2a4d;
+  --brand-soft-2: #26335e;
+  --brand-soft-border: #33437a;
+  --brand-ink: #a8bbff;
+  --focus-ring: 0 0 0 3px rgba(107, 140, 255, 0.4);
+  --wood: #8a7330;
+  --wood-deep: #c9a24a;
+  --wood-edge: #6e5a22;
+  --wood-soft: #352b0e;
   --lantai-kerja: var(--canvas);
   --lantai-kegiatan: var(--canvas);
   --lantai-buku: var(--canvas);
@@ -227,42 +194,39 @@
   --lantai-koordinasi: var(--canvas);
   --lantai-pengaturan: var(--canvas);
   --lantai-garis: transparent;
-  --ok: #8edbb0;
-  --ok-bg: #143322;
-  --ok-line: #22503a;
-  --late: #ff9f8a;
-  --late-bg: #3a1c17;
-  --late-line: #5a2e26;
-  --warn: #f2cf7a;
-  --warn-bg: #352a12;
-  --warn-line: #54431c;
-  --neutral-bg: #212733;
+  --ok: #8ed9bc;
+  --ok-bg: #16302a;
+  --ok-line: #24493e;
+  --late: #ff9f73;
+  --late-bg: #3a2016;
+  --late-line: #5a3222;
+  --warn: #f0d075;
+  --warn-bg: #352b0e;
+  --warn-line: #54451a;
+  --neutral-bg: #26221f;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 24px -12px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 34px -16px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 28px 60px -20px rgba(0, 0, 0, 0.7);
-  --shadow-dock: 0 14px 34px -10px rgba(0, 0, 0, 0.6);
-  --ikon-isi: rgba(60, 200, 174, 0.16);
-  --ikon-awal: #7fe0c9;
-  --ikon-akhir: #3cc8ae;
-  --pastel-purple-text: #c2b3ff;
-  --pastel-purple-bg: #261f45;
-  --pastel-biru: #16263a;
-  --pastel-biru-ink: #9cc8f2;
-  --pastel-pink: #3a1a2a;
-  --pastel-pink-ink: #f3a6c6;
-  --pastel-mentega: #3a2414;
-  --pastel-mentega-ink: #f6b98a;
-  --pastel-mint: #14301f;
-  --pastel-mint-ink: #8edbb0;
-  --grafik-redup: #2a303d;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 14px 34px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --shadow-dock: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --ikon-isi: rgba(107, 140, 255, 0.22);
+  --pastel-purple-text: #f2a6c4;
+  --pastel-purple-bg: #3a1d29;
+  --pastel-biru: #1f2a4d;
+  --pastel-biru-ink: #a8bbff;
+  --pastel-pink: #3a1d29;
+  --pastel-pink-ink: #f2a6c4;
+  --pastel-mentega: #352b0e;
+  --pastel-mentega-ink: #f0d075;
+  --pastel-mint: #16302a;
+  --pastel-mint-ink: #8ed9bc;
 }
 
 
 @media (max-width: 767px) {
   :root {
-    --fs-title: 24px;
+    --fs-title: 22px;
     --gutter: 16px;
-    --topbar-h: 60px;
+    --topbar-h: 56px;
   }
 }

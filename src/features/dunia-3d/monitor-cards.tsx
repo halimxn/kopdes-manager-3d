@@ -1,6 +1,6 @@
 'use client';
-// Kartu melayang: putih bersih, sudut 14–18 px, aksen
-// teal, ikon teal. Komponen generik; isi datanya disusun MonitoringDashboard.
+// Kartu melayang bergaya panel logistik referensi: putih bersih, sudut 14–18 px, aksen biru
+// #2F5BEA, ikon biru kilap. Komponen generik; isi datanya disusun MonitoringDashboard.
 import Link from 'next/link';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, Plus, X, type LucideIcon } from 'lucide-react';

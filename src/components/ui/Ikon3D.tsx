@@ -115,20 +115,20 @@ function Defs({ c }: { c: Ctx }) {
   );
   return (
     <defs>
-      {g('muka', '#b9ecdf', '#3cc2a8')}
-      {g('tebal', '#12937f', '#0c6a5c')}
-      {g('atas', '#eefaf6', '#9fe3d3', 1, 1)}
-      {g('kiri', '#6fd6c0', '#2fb39b')}
-      {g('kanan', '#1fa38d', '#0f7a69')}
-      {g('pucat', '#ffffff', '#dff3ee')}
+      {g('muka', '#a9c4ff', '#3b68f0')}
+      {g('tebal', '#2c51d6', '#1b3aa6')}
+      {g('atas', '#d4e2ff', '#97b6ff', 1, 1)}
+      {g('kiri', '#6f97ff', '#3d69ee')}
+      {g('kanan', '#3a63e6', '#2445bd')}
+      {g('pucat', '#ffffff', '#dbe6ff')}
       <radialGradient id={`${c.id}-kilap`} cx="0.32" cy="0.18" r="0.62">
         <stop offset="0" stopColor="#fff" stopOpacity="0.75" />
         <stop offset="0.55" stopColor="#fff" stopOpacity="0.12" />
         <stop offset="1" stopColor="#fff" stopOpacity="0" />
       </radialGradient>
       <radialGradient id={`${c.id}-bayang`} cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stopColor="#0c6a5c" stopOpacity="0.28" />
-        <stop offset="1" stopColor="#0c6a5c" stopOpacity="0" />
+        <stop offset="0" stopColor="#1d3a9e" stopOpacity="0.28" />
+        <stop offset="1" stopColor="#1d3a9e" stopOpacity="0" />
       </radialGradient>
     </defs>
   );
@@ -298,9 +298,8 @@ export function Ikon3D({
       <defs>
         {/* Koordinat simbol lucide (0–24): garis lurus tetap terwarnai, tidak hilang. */}
         <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1="2" y1="2" x2="22" y2="22">
-          {/* Warna dari token tema (--ikon-awal/--ikon-akhir) agar ikon ikut terang/gelap dan menu samping. */}
-          <stop style={{ stopColor: 'var(--ikon-awal, #3cc2a8)' }} />
-          <stop offset="1" style={{ stopColor: 'var(--ikon-akhir, #0f7a69)' }} />
+          <stop stopColor="#6d92ff" />
+          <stop offset="1" stopColor="#2448c7" />
         </linearGradient>
       </defs>
       <Icon
@@ -311,7 +310,7 @@ export function Ikon3D({
         strokeWidth="2.1"
         className="ikon3d-simbol"
         // Gaya inline: aturan lama `svg { stroke/fill }` di CSS tidak boleh menimpa warna ikon.
-        style={{ stroke: `url(#${id}-g)`, fill: 'var(--ikon-isi, #dff3ee)', color: 'var(--ikon-akhir, #0f7a69)' }}
+        style={{ stroke: `url(#${id}-g)`, fill: 'var(--ikon-isi, #dfe8ff)', color: '#2f5bea' }}
       />
     </svg>
   );
