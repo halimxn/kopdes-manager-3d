@@ -8,34 +8,34 @@ import { z } from 'zod';
 import { usePreference } from '@/lib/usePreference';
 import { Modal } from '@/components/ui/Modal';
 import {
-  ArrowUpRight,
+  Activity,
+  AlertCircle,
+  BarChart3,
   CalendarDays,
   ArrowRight,
   Check,
   Clock,
+  Flag,
+  FolderOpen,
+  ListChecks,
   Video,
   SlidersHorizontal,
   Plus,
   Trash2,
   RotateCcw,
+  Wallet,
   X,
 } from 'lucide-react';
 import { FollowUps } from '../follow-ups/FollowUps';
 import { getFollowUps, recordHref } from '../workspace/workspace-navigation';
 import type { Workspace } from '../workspace/useWorkspace';
 import { schemas } from '../records/schemas';
-import { planProgress, isOverdue, scopeProgress } from '@/lib/progress';
+import { isOverdue, scopeProgress } from '@/lib/progress';
 import { today, addDays, formatDate } from '@/lib/date';
 import { cashSummary, rupiah } from '../operations/ledger';
 import { meetingJoinUrl } from '../meetings/meeting';
-import {
-  WeekBarChart,
-  TaskDonutChart,
-  StatCard,
-  ProjectProgressBar,
-} from '@/components/charts/DashboardCharts';
+import { WeekBarChart, TaskDonutChart } from '@/components/charts/DashboardCharts';
 import { Select } from '@/components/ui/Select';
-import { Ikon3D } from '@/components/ui/Ikon3D';
 
 const routineSchema = z.array(z.object({ id: z.string(), time: z.string(), title: z.string() }));
 function parseRoutinePreference<T>(text: string, schema: z.ZodType<T>, fallback: T): T {
@@ -51,8 +51,6 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
   const now = today();
   const [projectId, setProjectId] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-  const [routineOpen, setRoutineOpen] = usePreference(preferenceScope + 'hub-dashboard-routine-open', 'false');
-  const [chartsOpen, setChartsOpen] = usePreference(preferenceScope + 'hub-dashboard-charts-open', 'false');
   const allTasks = (data['work-items'] || []).map((row) => ({
     ...schemas['work-items'].parse(row.data),
     id: row.id,
@@ -75,16 +73,6 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
   const visibleProjects = projects.filter(
     (project) => project.data.status !== 'diarsipkan' && (!projectId || project.id === projectId),
   );
-  const meeting = (data.meetings || [])
-    .filter(
-      (m) =>
-        String(m.data.date) >= now && m.data.status !== 'selesai' && m.data.status !== 'dibatalkan',
-    )
-    .sort((a, b) =>
-      `${a.data.date}${a.data.time}`.localeCompare(`${b.data.date}${b.data.time}`),
-    )[0];
-
-  const meetingOnlineUrl = meetingJoinUrl(meeting);
 
   // Rutinitas harian manajer gerai; daftar bawaan bisa diubah lewat Atur
   const ROUTINE_CONFIG_KEY = 'kdmp_manager_routine_config';
@@ -208,104 +196,103 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     },
   ];
 
-  const cash = cashSummary(data['cash-entries'] || []);
   const journalRecent = [...(data.journal || [])]
     .sort((a, b) => String(b.data.date || '').localeCompare(String(a.data.date || '')))
-    .slice(0, 3);
-  const completedCount = tasks.filter((t) => t.status === 'selesai').length;
+    .slice(0, 4);
   const overdueCount = tasks.filter((t) => isOverdue(t, now)).length;
-  const todayMeetingCount = (data.meetings || []).filter((m) => String(m.data.date) === now).length;
-  const completion = planProgress(tasks);
+  const dueTodayCount = open.filter((t) => t.due_date === now).length;
   const perhatian = getFollowUps(data, now);
+  const tanggalPanjang = new Intl.DateTimeFormat('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'Asia/Jakarta',
+  }).format(new Date(now + 'T12:00:00Z'));
+
+  // Agenda hari ini: rapat hari ini dan rutinitas dalam satu urutan jam.
+  const rapatHariIni = (data.meetings || [])
+    .filter((m) => String(m.data.date) === now && m.data.status !== 'dibatalkan')
+    .sort((a, b) => String(a.data.time || '99').localeCompare(String(b.data.time || '99')));
+  const rapatBerikutnya = rapatHariIni.find(
+    (m) => m.data.status !== 'selesai' && (!jamSekarang || String(m.data.time || '') >= jamSekarang),
+  );
+  const agenda = [
+    ...routines.map((r) => ({ jenis: 'rutin' as const, jam: r.time, rutin: r, rapat: undefined })),
+    ...rapatHariIni.map((m) => ({ jenis: 'rapat' as const, jam: String(m.data.time || ''), rutin: undefined, rapat: m })),
+  ].sort((a, b) => (a.jam || '99').localeCompare(b.jam || '99'));
+
+  // Proyek: progres dan milestone terdekat yang belum tercapai.
+  const milestoneBerikut = (projectId_: string) =>
+    (data.milestones || [])
+      .filter((m) => m.data.workstream_id === projectId_ && !m.data.actual_date)
+      .sort((a, b) => String(a.data.due_date).localeCompare(String(b.data.due_date)))[0];
+
+  // Kas bulan berjalan: hanya uang masuk/keluar tercatat, bukan saldo.
+  const bulanIni = now.slice(0, 7);
+  const kasBulanIni = (data['cash-entries'] || []).filter((row) => String(row.data.date).startsWith(bulanIni));
+  const kas = cashSummary(kasBulanIni);
+  const pekanKas = [0, 1, 2, 3, 4].map((pekan) => {
+    const baris = kasBulanIni.filter((row) => Math.min(4, Math.floor((Number(String(row.data.date).slice(8, 10)) - 1) / 7)) === pekan);
+    return cashSummary(baris);
+  });
+  const puncakKas = Math.max(1, ...pekanKas.flatMap((p) => [p.incoming, p.outgoing]));
+  const keluarPerKategori = new Map<string, number>();
+  for (const row of kasBulanIni.filter((r) => r.data.direction === 'keluar')) {
+    const kategori = String(row.data.category || 'Lainnya');
+    keluarPerKategori.set(kategori, (keluarPerKategori.get(kategori) || 0) + Number(row.data.amount));
+  }
+  const kategoriTerbesar = [...keluarPerKategori.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const namaBulan = new Intl.DateTimeFormat('id-ID', { month: 'long', timeZone: 'Asia/Jakarta' }).format(
+    new Date(now + 'T12:00:00Z'),
+  );
 
   return (
     <div className="manager-home beranda">
-      {/* ── Kepala: tanggal, judul, filter proyek, aksi ─────────── */}
-      <header className="home-heading beranda-head">
-        <div className="home-heading-text">
-          <h1>
-            <Ikon3D kind="rumah" size={30} />
-            Ringkasan pekerjaan
-          </h1>
-          <p className="home-date-chip">
-            <CalendarDays size={14} aria-hidden />
-            <span>{formatDate(now)}</span>
-          </p>
+      <header className="beranda-kepala">
+        <div>
+          <h1>{tanggalPanjang}</h1>
+          <div className="beranda-pil" aria-label="Ringkasan hari ini">
+            <Link href="/tugas?status=terlambat" className={`pil ${overdueCount ? 'pil-telat' : 'pil-netral'}`}>
+              <AlertCircle size={15} aria-hidden="true" />
+              <b>{overdueCount}</b> terlambat
+            </Link>
+            <Link href="/hari-ini" className="pil pil-biru">
+              <b>{dueTodayCount}</b> jatuh tempo hari ini
+            </Link>
+            {rapatBerikutnya && (
+              <Link href={recordHref('meetings', rapatBerikutnya)} className="pil pil-pink">
+                <Video size={15} aria-hidden="true" />
+                Rapat {String(rapatBerikutnya.data.time || 'hari ini')}
+              </Link>
+            )}
+          </div>
         </div>
-        <div className="home-heading-actions">
-          <label className="beranda-proyek">
-            <span className="sr-only">Proyek</span>
-            <Select
-              value={projectId}
-              onChange={(value) => {
-                setProjectId(value);
-                setSelectedDate('');
-              }}
-              options={[
-                { value: '', label: 'Semua proyek' },
-                ...projects.map((project) => ({
-                  value: project.id,
-                  label: String(project.data.title),
-                })),
-              ]}
-              ariaLabel="Proyek"
-            />
-          </label>
-          <Link href="/jurnal?baru=1" className="home-action-btn home-action-btn-soft">
-            Catat kegiatan
-          </Link>
-          <Link href="/tugas?baru=1" className="home-action-btn">
-            + Buat tugas
-          </Link>
-        </div>
+        <label className="beranda-proyek">
+          <span className="sr-only">Proyek</span>
+          <Select
+            value={projectId}
+            onChange={(value) => {
+              setProjectId(value);
+              setSelectedDate('');
+            }}
+            options={[
+              { value: '', label: 'Semua proyek' },
+              ...projects.map((project) => ({ value: project.id, label: String(project.data.title) })),
+            ]}
+            ariaLabel="Proyek"
+          />
+        </label>
       </header>
 
-      {/* ── KPI ─────────────────────────────────────────────── */}
-      <div className="ui-stats-grid">
-        <StatCard
-          label="Progres tugas"
-          value={`${completion}%`}
-          percentage={completion}
-          sub={`${completedCount} dari ${totalTasks} selesai`}
-          variant="emerald"
-          accent
-          href="/tugas?status=selesai"
-        />
-        <StatCard
-          label="Tugas aktif"
-          value={open.length}
-          sub="rencana dan dikerjakan"
-          icon={<Ikon3D kind="papan" size={34} />}
-          variant="blue"
-          href="/tugas"
-        />
-        <StatCard
-          label="Terlambat"
-          value={overdueCount}
-          sub={overdueCount > 0 ? 'perlu diperhatikan' : 'semua sesuai tenggat'}
-          icon={<Ikon3D kind="jam" size={34} />}
-          variant="rose"
-          href="/tugas?status=terlambat"
-        />
-        <StatCard
-          label="Rapat hari ini"
-          value={todayMeetingCount}
-          sub={meeting ? String(meeting.data.title) : 'tidak ada jadwal'}
-          icon={<Ikon3D kind="kalender" size={34} />}
-          variant="purple"
-          href="/rapat"
-        />
-      </div>
-
-      {/* ── Grid utama: fokus tugas (kiri), rapat, perhatian, kegiatan (kanan) ── */}
-      <div className="beranda-grid">
-        <section className="beranda-kartu beranda-tugas" aria-label="Tugas pilihan">
-          <div className="beranda-kartu-head">
-            <h2>Fokus tugas</h2>
+      <div className="beranda-modul">
+        <section className="modul lebar-separuh beranda-tugas" aria-label="Tugas pilihan">
+          <div className="modul-kepala">
+            <span className="modul-ikon pastel-biru" aria-hidden="true"><ListChecks size={17} /></span>
+            <h2>Tugas</h2>
             <div className="beranda-seg" role="group" aria-label="Saring tugas">
               {[
                 ['aktif', 'Aktif', open.length],
-                ['terlambat', 'Terlambat', tasks.filter((t) => isOverdue(t, now)).length],
+                ['terlambat', 'Terlambat', overdueCount],
                 ['selesai', 'Selesai', tasks.filter((t) => t.status === 'selesai').length],
               ].map(([value, label, count]) => (
                 <button
@@ -325,9 +312,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
           </div>
           {(selectedDate || ['rencana', 'proses', 'dibatalkan'].includes(filter)) && (
             <div className="dashboard-selection" role="status">
-              <span>
-                {selectedDate ? 'Selesai pada ' + formatDate(selectedDate) : 'Status: ' + filter}
-              </span>
+              <span>{selectedDate ? 'Selesai pada ' + formatDate(selectedDate) : 'Status: ' + filter}</span>
               <Button
                 onClick={() => {
                   setSelectedDate('');
@@ -342,6 +327,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
             <ul className="beranda-baris">
               {visible.slice(0, 7).map((task) => {
                 const late = isOverdue(task, now);
+                const hariIni = task.due_date === now;
                 return (
                   <li key={task.id}>
                     <Link href={`/tugas?task=${encodeURIComponent(task.id)}`}>
@@ -354,11 +340,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                             ` · ${task.subtasks.filter((st) => st.done).length}/${task.subtasks.length} subtugas`}
                         </small>
                       </span>
-                      <span className={`beranda-tanggal${late ? ' is-telat' : ''}`}>{formatDate(task.due_date)}</span>
-                      {['tinggi', 'mendesak'].includes(task.priority) && (
-                        <span className="beranda-prioritas">{task.priority}</span>
-                      )}
-                      <ArrowUpRight size={15} className="beranda-panah" aria-hidden="true" />
+                      <span className={`beranda-tanggal${late ? ' is-telat' : hariIni ? ' is-hari-ini' : ''}`}>
+                        {hariIni ? 'Hari ini' : formatDate(task.due_date)}
+                      </span>
                     </Link>
                   </li>
                 );
@@ -373,129 +357,151 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
               action={{ label: 'Tambah tugas', href: '/tugas?baru=1' }}
             />
           )}
-          <Link className="home-text-link" href="/tugas">
-            Semua tugas <ArrowUpRight size={16} />
-          </Link>
-        </section>
-
-        <aside className="beranda-samping">
-          <Link href={meeting ? recordHref('meetings', meeting) : '/rapat?baru=1'} className="beranda-kartu beranda-rapat">
-            <Ikon3D kind="kalender" size={40} />
-            <span className="beranda-rapat-teks">
-              <small>{meeting ? 'Rapat berikutnya' : 'Agenda rapat'}</small>
-              <strong>{meeting ? String(meeting.data.title) : 'Belum ada jadwal rapat'}</strong>
-              <span>
-                {meeting
-                  ? `${formatDate(String(meeting.data.date))} · ${String(meeting.data.time || 'waktu belum diisi')} · ${String(meeting.data.mode || 'tatap muka')}`
-                  : 'Jadwalkan rapat koordinasi'}
-              </span>
-            </span>
-            {meetingOnlineUrl ? (
-              <a
-                href={meetingOnlineUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-join-meeting-direct"
-                onClick={(e) => e.stopPropagation()}
-                title="Buka ruang rapat daring langsung"
-              >
-                <Video size={14} />
-                <span>Gabung</span>
-              </a>
-            ) : (
-              <ArrowRight size={18} className="beranda-panah" aria-hidden="true" />
-            )}
-          </Link>
-
-          <section id="perhatian" className="beranda-kartu" aria-label="Perlu perhatian">
-            <div className="beranda-kartu-head">
-              <h2>Perlu perhatian</h2>
-              <span className="beranda-jumlah">{perhatian.length}</span>
-            </div>
-            {perhatian.length ? (
-              <ul className="beranda-baris is-ringkas">
-                {perhatian.slice(0, 5).map((item) => (
-                  <li key={item.id}>
-                    <Link href={item.href}>
-                      <span className={`beranda-titik is-${item.urgent ? 'telat' : 'rencana'}`} aria-hidden="true" />
-                      <span className="beranda-baris-teks">
-                        <strong>{item.title}</strong>
-                        <small>
-                          {item.kind} · {item.reason}
-                        </small>
-                      </span>
-                      <ArrowUpRight size={15} className="beranda-panah" aria-hidden="true" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="beranda-kosong">Tidak ada pengingat pada catatan yang dimuat.</p>
-            )}
-            {perhatian.length > 5 && (
-              <details className="beranda-semua">
-                <summary>Lihat semua ({perhatian.length})</summary>
-                <FollowUps data={data} />
-              </details>
-            )}
-          </section>
-
-          <section className="beranda-kartu" aria-label="Kegiatan terbaru">
-            <div className="beranda-kartu-head">
-              <h2>Kegiatan terbaru</h2>
-              <Link href="/jurnal" className="beranda-kecil">
-                Semua <ArrowUpRight size={13} />
-              </Link>
-            </div>
-            {journalRecent.length ? (
-              <ul className="beranda-baris is-ringkas">
-                {journalRecent.map((row) => (
-                  <li key={row.id}>
-                    <Link href={recordHref('journal', row)}>
-                      <Ikon3D kind="dumbel" size={22} rapat />
-                      <span className="beranda-baris-teks">
-                        <strong>{String(row.data.title || '')}</strong>
-                        <small>{formatDate(String(row.data.date || ''))}</small>
-                      </span>
-                      <ArrowUpRight size={15} className="beranda-panah" aria-hidden="true" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <EmptyState
-                compact
-                ikon="buku"
-                title="Belum ada kegiatan dicatat"
-                description="Catat kunjungan, koordinasi, atau hasil lapangan."
-                action={{ label: 'Catat kegiatan', href: '/jurnal?baru=1' }}
-              />
-            )}
-          </section>
-        </aside>
-      </div>
-
-      {/* ── Baris kedua: proyek dan catatan koperasi ──────────── */}
-      <div className="beranda-grid-2">
-        <section className="beranda-kartu" aria-label="Proyek saya">
-          <div className="beranda-kartu-head">
-            <h2>Proyek saya</h2>
-            <Link href="/proyek" className="beranda-kecil">
-              Kelola <ArrowUpRight size={13} />
+          <div className="modul-kaki">
+            <Link className="home-text-link" href="/tugas">
+              Semua tugas <ArrowRight size={15} />
             </Link>
           </div>
-          {visibleProjects.length ? (
-            <div className="dash-proj-list">
-              {visibleProjects.slice(0, 5).map((p, i) => (
-                <ProjectProgressBar
-                  key={p.id}
-                  label={String(p.data.title)}
-                  pct={scopeProgress(tasks.filter((t) => t.workstream_id === p.id))}
-                  href={`/proyek?id=${encodeURIComponent(p.id)}`}
-                  index={i}
-                />
+        </section>
+
+        <section className="modul lebar-separuh dashboard-routines" aria-label="Agenda hari ini">
+          <div className="modul-kepala">
+            <span className="modul-ikon pastel-pink" aria-hidden="true"><CalendarDays size={17} /></span>
+            <h2>Agenda hari ini</h2>
+            <span className={`beranda-jumlah${semuaRutinSelesai ? ' is-selesai' : ''}`}>
+              {routineCompletedCount}/{routines.length} selesai
+            </span>
+          </div>
+          <ol className="rutin-rel">
+            {agenda.map((butir) => {
+              if (butir.rapat) {
+                const m = butir.rapat;
+                const url = meetingJoinUrl(m);
+                return (
+                  <li key={'rapat-' + m.id} className={`rutin-butir is-rapat${m === rapatBerikutnya ? ' is-berikutnya' : ''}`}>
+                    <Link href={recordHref('meetings', m)}>
+                      <span className="rutin-jam">{butir.jam || '—'}</span>
+                      <span className="rutin-simpul" aria-hidden="true"><Video size={13} /></span>
+                      <span className="rutin-isi">
+                        <span className="rutin-judul">{String(m.data.title)}</span>
+                        <small className="rutin-ket">Rapat · {String(m.data.mode || 'tatap muka')}</small>
+                      </span>
+                    </Link>
+                    {url && (
+                      <a href={url} target="_blank" rel="noreferrer" className="rutin-gabung">
+                        <Video size={14} aria-hidden="true" /> Gabung
+                      </a>
+                    )}
+                  </li>
+                );
+              }
+              const item = butir.rutin!;
+              const isChecked = completedRoutines.includes(item.id);
+              const berikutnya = item.id === routineBerikutnya;
+              const terlewat = !isChecked && Boolean(jamSekarang) && item.time < jamSekarang;
+              const keadaan = isChecked ? 'is-selesai' : berikutnya ? 'is-berikutnya' : terlewat ? 'is-terlewat' : '';
+              return (
+                <li key={item.id} className={`rutin-butir ${keadaan}`}>
+                  <label>
+                    <span className="rutin-jam">{item.time}</span>
+                    <span className="rutin-simpul" aria-hidden="true">
+                      <Check size={13} strokeWidth={3} />
+                    </span>
+                    <input
+                      type="checkbox"
+                      className="rutin-centang"
+                      checked={isChecked}
+                      onChange={() => toggleRoutine(item.id)}
+                    />
+                    <span className="rutin-isi">
+                      <span className="rutin-judul">{item.title}</span>
+                      {berikutnya && <small className="rutin-label">Berikutnya</small>}
+                      {terlewat && <span className="sr-only">Jam sudah lewat</span>}
+                    </span>
+                  </label>
+                </li>
+              );
+            })}
+          </ol>
+          {agenda.length === 0 && (
+            <EmptyState
+              compact
+              ikon="jam"
+              title="Agenda hari ini kosong"
+              description="Tambahkan rutinitas harian atau jadwalkan rapat."
+              action={{ label: 'Atur rutinitas', onClick: () => setShowRoutineModal(true) }}
+            />
+          )}
+          <div className="modul-kaki">
+            <Button type="button" className="btn-routine-config" onClick={() => setShowRoutineModal(true)} aria-label="Atur rutinitas">
+              <SlidersHorizontal size={14} />
+              <span>Atur rutinitas</span>
+            </Button>
+            <Link className="home-text-link" href="/rapat">
+              Semua rapat <ArrowRight size={15} />
+            </Link>
+          </div>
+        </section>
+
+        <section id="perhatian" className="modul lebar-sepertiga" aria-label="Perlu perhatian">
+          <div className="modul-kepala">
+            <span className="modul-ikon pastel-mentega" aria-hidden="true"><AlertCircle size={17} /></span>
+            <h2>Perlu perhatian</h2>
+            <span className="beranda-jumlah">{perhatian.length}</span>
+          </div>
+          {perhatian.length ? (
+            <ul className="beranda-baris is-ringkas">
+              {perhatian.slice(0, 5).map((item) => (
+                <li key={item.id}>
+                  <Link href={item.href}>
+                    <span className={`beranda-jenis${item.urgent ? ' is-mendesak' : ''}`}>{item.kind}</span>
+                    <span className="beranda-baris-teks">
+                      <strong>{item.title}</strong>
+                      <small>{item.reason}</small>
+                    </span>
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
+          ) : (
+            <p className="beranda-kosong">Tidak ada pengingat pada catatan yang dimuat.</p>
+          )}
+          {perhatian.length > 5 && (
+            <details className="beranda-semua">
+              <summary>Lihat semua ({perhatian.length})</summary>
+              <FollowUps data={data} />
+            </details>
+          )}
+        </section>
+
+        <section className="modul lebar-sepertiga" aria-label="Proyek saya">
+          <div className="modul-kepala">
+            <span className="modul-ikon pastel-biru" aria-hidden="true"><FolderOpen size={17} /></span>
+            <h2>Proyek</h2>
+            <Link href="/proyek" className="modul-tautan">Kelola</Link>
+          </div>
+          {visibleProjects.length ? (
+            <ul className="beranda-proyek-daftar">
+              {visibleProjects.slice(0, 4).map((p) => {
+                const persen = scopeProgress(tasks.filter((t) => t.workstream_id === p.id));
+                const ms = milestoneBerikut(p.id);
+                return (
+                  <li key={p.id}>
+                    <Link href={`/proyek?id=${encodeURIComponent(p.id)}`}>
+                      <span className="proyek-baris-atas">
+                        <span>{String(p.data.title)}</span>
+                        <b>{persen}%</b>
+                      </span>
+                      <span className="ui-progress" aria-hidden="true"><span style={{ width: `${persen}%` }} /></span>
+                      <small className="proyek-milestone">
+                        <Flag size={12} aria-hidden="true" />
+                        {ms ? `${String(ms.data.title)} · ${formatDate(String(ms.data.due_date))}` : 'Belum ada milestone berikutnya'}
+                      </small>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           ) : (
             <EmptyState
               compact
@@ -507,151 +513,95 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
           )}
         </section>
 
-        <section className="beranda-kartu" aria-label="Catatan koperasi">
-          <div className="beranda-kartu-head">
-            <h2>Catatan koperasi</h2>
-            <Link href="/pencatatan" className="beranda-kecil">
-              Buka buku <ArrowUpRight size={13} />
-            </Link>
+        <section className="modul lebar-sepertiga modul-lebar-tablet" aria-label="Kas bulan ini">
+          <div className="modul-kepala">
+            <span className="modul-ikon pastel-mint" aria-hidden="true"><Wallet size={17} /></span>
+            <h2>Kas {namaBulan}</h2>
+            <Link href="/keuangan" className="modul-tautan">Buku kas</Link>
           </div>
-          <div className="beranda-angka">
-            {(
-              [
-                ['/anggota', 'kartu', 'Anggota', data.members ? String(data.members.length) : 'Belum aktif'],
-                ['/keuangan', 'dompet', 'Selisih kas tercatat', data['cash-entries'] ? rupiah(cash.net) : 'Belum aktif'],
-                ['/barang', 'kotak', 'Jenis barang', data['inventory-items'] ? String(data['inventory-items'].length) : 'Belum aktif'],
-                ['/stok-opname', 'rak', 'Stok opname', data['stock-counts'] ? String(data['stock-counts'].length) : 'Belum aktif'],
-              ] as const
-            ).map(([href, ikon, label, nilai]) => (
-              <Link key={href} href={href}>
-                <Ikon3D kind={ikon} size={26} rapat />
-                <small>{label}</small>
-                <strong>{nilai}</strong>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* ── Lipatan opsional: rutinitas dan grafik ───────────── */}
-      <div className="beranda-grid-2 beranda-lipat">
-        <details
-          className="dashboard-routines beranda-kartu"
-          open={routineOpen === 'true'}
-          onToggle={(event) => {
-            const next = String(event.currentTarget.open);
-            if (next !== routineOpen) setRoutineOpen(next);
-          }}
-        >
-          <summary>
-            Rutinitas harian
-            <span className={`beranda-jumlah${semuaRutinSelesai ? ' is-selesai' : ''}`}>
-              {routineCompletedCount}/{routines.length} selesai
-            </span>
-          </summary>
-          <div className="home-routine-card">
-            <div className="rutin-kepala">
-              <div className="rutin-kemajuan" aria-hidden="true">
-                {routines.map((r) => (
-                  <i key={r.id} className={completedRoutines.includes(r.id) ? 'is-selesai' : ''} />
+          {data['cash-entries'] ? (
+            <>
+              <div className="kas-ringkas">
+                <div><small>Uang masuk</small><b className="is-masuk">{rupiah(kas.incoming)}</b></div>
+                <div><small>Uang keluar</small><b className="is-keluar">{rupiah(kas.outgoing)}</b></div>
+              </div>
+              <div className="kas-pekan" role="img" aria-label={`Uang masuk dan keluar per pekan bulan ${namaBulan}`}>
+                {pekanKas.map((p, i) => (
+                  <div key={i}>
+                    <span className="kas-batang">
+                      <i className="is-masuk" style={{ height: `${Math.max(3, (p.incoming / puncakKas) * 100)}%` }} />
+                      <i className="is-keluar" style={{ height: `${Math.max(3, (p.outgoing / puncakKas) * 100)}%` }} />
+                    </span>
+                    <small>P{i + 1}</small>
+                  </div>
                 ))}
               </div>
-              <Button
-                type="button"
-                className="btn-routine-config"
-                onClick={() => setShowRoutineModal(true)}
-                title="Atur checklist rutinitas harian"
-                aria-label="Atur rutinitas"
-              >
-                <SlidersHorizontal size={14} />
-                <span>Atur</span>
-              </Button>
-            </div>
-            {semuaRutinSelesai && (
-              <p className="rutin-tuntas">
-                <Check size={14} aria-hidden="true" /> Semua rutinitas hari ini sudah dicentang.
+              <p className="kas-catatan">
+                <span className="legenda is-masuk" />Masuk <span className="legenda is-keluar" />Keluar
+                {kategoriTerbesar ? ` · keluar terbesar: ${kategoriTerbesar}` : ''}
               </p>
-            )}
-            <ol className="rutin-rel">
-              {routines.map((item) => {
-                const isChecked = completedRoutines.includes(item.id);
-                const berikutnya = item.id === routineBerikutnya;
-                const terlewat = !isChecked && Boolean(jamSekarang) && item.time < jamSekarang;
-                const keadaan = isChecked ? 'is-selesai' : berikutnya ? 'is-berikutnya' : terlewat ? 'is-terlewat' : '';
-                return (
-                  <li key={item.id} className={`rutin-butir ${keadaan}`}>
-                    <label>
-                      <span className="rutin-jam">{item.time}</span>
-                      <span className="rutin-simpul" aria-hidden="true">
-                        <Check size={13} strokeWidth={3} />
-                      </span>
-                      <input
-                        type="checkbox"
-                        className="rutin-centang"
-                        checked={isChecked}
-                        onChange={() => toggleRoutine(item.id)}
-                      />
-                      <span className="rutin-isi">
-                        <span className="rutin-judul">{item.title}</span>
-                        {berikutnya && <small className="rutin-label">Berikutnya</small>}
-                        {terlewat && <span className="sr-only">Jam sudah lewat</span>}
-                      </span>
-                    </label>
-                  </li>
-                );
-              })}
-            </ol>
-            {routines.length === 0 && (
-              <EmptyState
-                compact
-                ikon="jam"
-                title="Belum ada rutinitas"
-                description="Tambahkan checklist rutinitas harian gerai."
-                action={{ label: 'Atur rutinitas', onClick: () => setShowRoutineModal(true) }}
-              />
-            )}
-          </div>
-        </details>
+            </>
+          ) : (
+            <p className="beranda-kosong">Buku kas belum aktif di server ini.</p>
+          )}
+        </section>
 
-        <details
-          className="dashboard-extra beranda-kartu"
-          open={chartsOpen === 'true'}
-          onToggle={(event) => {
-            const next = String(event.currentTarget.open);
-            if (next !== chartsOpen) setChartsOpen(next);
-          }}
-        >
-          <summary>Grafik pekerjaan</summary>
-          <div className="dash-analytics-row">
-            <section className="home-panel analytics-panel">
-              <div className="section-head">
-                <h2>Penyelesaian 7 hari</h2>
-              </div>
-              <WeekBarChart
-                data={barData}
-                selectedDate={selectedDate}
-                onSelect={(date) => {
-                  setSelectedDate(selectedDate === date ? '' : date);
-                  setFilter('selesai');
-                }}
-              />
-            </section>
-            <section className="home-panel analytics-panel">
-              <div className="section-head">
-                <h2>Distribusi status tugas</h2>
-              </div>
-              <TaskDonutChart
-                slices={donutSlices}
-                total={totalTasks}
-                selected={filter}
-                onSelect={(status) => {
-                  setFilter(status);
-                  setSelectedDate('');
-                }}
-              />
-            </section>
+        <section className="modul lebar-separuh" aria-label="Kegiatan terbaru">
+          <div className="modul-kepala">
+            <span className="modul-ikon pastel-mint" aria-hidden="true"><Activity size={17} /></span>
+            <h2>Kegiatan terbaru</h2>
+            <Link href="/jurnal" className="modul-tautan">Semua</Link>
           </div>
-        </details>
+          {journalRecent.length ? (
+            <ul className="beranda-baris is-ringkas">
+              {journalRecent.map((row) => (
+                <li key={row.id}>
+                  <Link href={recordHref('journal', row)}>
+                    <span className="beranda-titik is-proses" aria-hidden="true" />
+                    <span className="beranda-baris-teks">
+                      <strong>{String(row.data.title || '')}</strong>
+                      <small>{formatDate(String(row.data.date || ''))}</small>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <EmptyState
+              compact
+              ikon="buku"
+              title="Belum ada kegiatan dicatat"
+              description="Catat kunjungan, koordinasi, atau hasil lapangan."
+              action={{ label: 'Catat kegiatan', href: '/jurnal?baru=1' }}
+            />
+          )}
+        </section>
+
+        <section className="modul lebar-separuh dashboard-extra" aria-label="Grafik pekerjaan">
+          <div className="modul-kepala">
+            <span className="modul-ikon pastel-pink" aria-hidden="true"><BarChart3 size={17} /></span>
+            <h2>Grafik pekerjaan</h2>
+          </div>
+          <div className="dash-analytics-row">
+            <WeekBarChart
+              data={barData}
+              selectedDate={selectedDate}
+              onSelect={(date) => {
+                setSelectedDate(selectedDate === date ? '' : date);
+                setFilter('selesai');
+              }}
+            />
+            <TaskDonutChart
+              slices={donutSlices}
+              total={totalTasks}
+              selected={filter}
+              onSelect={(status) => {
+                setFilter(status);
+                setSelectedDate('');
+              }}
+            />
+          </div>
+        </section>
       </div>
 
       {/* ── Modal Atur Rutinitas Manajer ─────────────────── */}

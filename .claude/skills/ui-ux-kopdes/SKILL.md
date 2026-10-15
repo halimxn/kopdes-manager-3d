@@ -28,6 +28,7 @@ Sumber gaya: `docs/DESAIN-ANTARMUKA.md`. Konteks produk: `PRODUCT.md`. Untuk kep
 6. Elemen sticky di dialog bergulir: `top: 0` dan latar `--surface`, jangan `top` negatif (tombol menabrak sudut melengkung).
 7. Kelas di TSX tanpa aturan CSS = sisa gaya lama. Saat menyentuh komponen, cari kelasnya di `src/styles` (`grep -rn "\.namakelas" src/styles`).
 8. Identitas (nama koperasi, orang) tidak boleh ditulis tetap di kode atau contoh isian; ambil dari profil.
+9. Jangan menamai kelas seperti utilitas Tailwind (`m-4`, `p-2`, `flex`, `grid`, `w-full`, …): Tailwind ikut menghasilkan gaya margin/padding untuknya. Pakai nama Indonesia (`lebar-separuh`, `lebar-sepertiga`).
 
 ## Wajib
 - Area sentuh ≥ 44 px (boleh visual kecil + `::after` transparan), fokus terlihat, label form, reduced-motion, safe area.

@@ -44,7 +44,7 @@ export function pageEntities(slug: string): Entity[] {
       'risks',
       'inventory-items',
       'stock-counts',
-      'members',
+      'milestones',
       'cash-entries',
       'journal',
     ],

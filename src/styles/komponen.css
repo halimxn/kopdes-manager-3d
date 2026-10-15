@@ -455,3 +455,26 @@ dialog.ui-modal h2 { font-size: 19px; }
   .form-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .form-actions > :only-child { grid-column: 1 / -1; }
 }
+
+/* ---------- Modul (anatomi Senja): kepala berikon pastel, isi, kaki aksi ---------- */
+.modul {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.modul-kepala { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 650; letter-spacing: -0.01em; }
+.modul-ikon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; }
+.modul-ikon.pastel-biru { background: var(--pastel-biru); color: var(--pastel-biru-ink); }
+.modul-ikon.pastel-pink { background: var(--pastel-pink); color: var(--pastel-pink-ink); }
+.modul-ikon.pastel-mentega { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
+.modul-ikon.pastel-mint { background: var(--pastel-mint); color: var(--pastel-mint-ink); }
+.modul-tautan { margin-left: auto; color: var(--ink-muted); font-size: 13px; font-weight: 600; text-decoration: none; }
+.modul-tautan:hover { color: var(--brand-ink); text-decoration: none; }
+.modul-kaki { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 14px; }
+@media (max-width: 767px) { .modul { padding: 16px; } }

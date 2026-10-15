@@ -65,12 +65,12 @@ it('keeps dashboard details closed and lists focus tasks as compact rows', () =>
     ),
   };
   const view = render(<Dashboard data={data} />);
-  expect(view.container.querySelector('.dashboard-extra')?.hasAttribute('open')).toBe(false);
-  expect(view.container.querySelector('.dashboard-routines')?.hasAttribute('open')).toBe(false);
+  // Agenda (rutinitas) dan grafik kini modul yang selalu tampil di grid Beranda.
+  expect(view.container.querySelector('.dashboard-routines')).toBeTruthy();
+  expect(view.container.querySelector('.dashboard-extra')).toBeTruthy();
   expect(view.container.querySelectorAll('.beranda-tugas .beranda-baris li')).toHaveLength(5);
   expect(screen.getByRole('link', { name: /Semua tugas/ }).getAttribute('href')).toBe('/tugas');
-  fireEvent.click(screen.getByText('Grafik pekerjaan'));
-  expect(view.container.querySelector('.dashboard-extra')?.hasAttribute('open')).toBe(true);
+  expect(screen.getByText('Grafik pekerjaan')).toBeTruthy();
 });
 
 it('reminds about active meetings through seven days without reviving past or closed meetings', () => {

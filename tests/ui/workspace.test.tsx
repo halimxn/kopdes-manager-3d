@@ -79,7 +79,8 @@ describe('Alur kerja dasar UI', () => {
   it('dashboard kosong mengajak membuat proyek tanpa mengarang capaian', () => {
     render(<Dashboard data={{}} />);
     expect(screen.getByText('Belum ada proyek')).toBeTruthy();
-    expect(screen.getByRole('link', { name: /Progres tugas 0%/ })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /0 terlambat/ })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /0 jatuh tempo hari ini/ })).toBeTruthy();
   });
   it('aksi selesai mengirim status dan tanggal penyelesaian yang valid', async () => {
     mocks.api.mockResolvedValue({});
