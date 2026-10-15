@@ -1,7 +1,7 @@
 /* Bagian umum: tab halaman, rentang tugas, muat lagi, panduan, risiko, kesiapan, layar masuk PIN. */
 
-/* Tab bagian halaman (Rapat/Keputusan, Risiko/Isu, Tim/Pelatihan, …) */
-.workspace-page > .tabs {
+/* Tab bagian halaman (Rapat/Keputusan, Risiko/Isu, Tim/Pelatihan, …), tepat di bawah judul halaman */
+.workspace-page .tabs {
   display: inline-flex;
   gap: 4px;
   justify-self: start;
@@ -14,7 +14,7 @@
   box-shadow: var(--shadow-sm);
   scrollbar-width: none;
 }
-.workspace-page > .tabs .ui-btn,
+.workspace-page .tabs .ui-btn,
 .workspace-scope-control .ui-btn {
   min-height: 36px;
   padding: 0 14px;
@@ -24,11 +24,10 @@
   font-size: 13px;
   box-shadow: none;
 }
-.workspace-page > .tabs .ui-btn[aria-selected='true'],
+.workspace-page .tabs .ui-btn[aria-selected='true'],
 .workspace-scope-control .ui-btn[aria-pressed='true'] { background: var(--brand-soft); color: var(--brand-ink); }
 .workspace-scope-control { display: inline-flex; gap: 4px; justify-self: start; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
-.workspace-page > .workspace-scope-control,
-.workspace-page > .tabs { margin-top: 12px; }
+.workspace-page > .workspace-scope-control { margin-top: 12px; }
 .workspace-partial-note { color: var(--ink-muted); font-size: 12.5px; }
 .workspace-load-more.ui-btn { justify-self: center; }
 .workspace-more-details > summary { color: var(--brand-ink); font-weight: 650; cursor: pointer; }
@@ -141,8 +140,8 @@
 
 @media (max-width: 767px) {
   .guide-steps, .guide-books { grid-template-columns: minmax(0, 1fr); }
-  .workspace-page > .tabs, .workspace-scope-control { width: 100%; }
-  .workspace-page > .tabs .ui-btn, .workspace-scope-control .ui-btn { flex: 1 1 auto; }
+  .workspace-page .tabs, .workspace-scope-control { width: 100%; }
+  .workspace-page .tabs .ui-btn, .workspace-scope-control .ui-btn { flex: 1 1 auto; }
 }
 
 /* Halaman tidak ditemukan di dalam kerangka: kartu saja, tanpa diorama layar masuk. */

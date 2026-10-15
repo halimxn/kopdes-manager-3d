@@ -85,7 +85,6 @@ export function SkeletonLoading({ slug = 'beranda' }: { slug?: string }) {
             <div key={i} style={{
               background: 'var(--surface)',
               border: '1px solid var(--line)',
-              borderLeft: '4px solid var(--brand)',
               borderRadius: '16px',
               padding: '18px',
               display: 'flex',

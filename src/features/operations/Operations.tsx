@@ -104,7 +104,7 @@ function getIndonesianMonthOptions(dates: string[]): { value: string; label: str
       const isCurrent = key === thisMonthKey;
       return {
         value: key,
-        label: `${monthName} ${y}${isCurrent ? ' (Bulan Ini)' : ''}`,
+        label: `${monthName} ${y}${isCurrent ? ' (bulan ini)' : ''}`,
       };
     }),
   ];

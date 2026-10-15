@@ -2,6 +2,16 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Senja dirapikan: halaman kerja lebih ringkas — 16 Oktober 2026
+
+- Gaya Kebun dan Teal yang sempat dipasang di cabang `tampilan/gaya-baru` dibatalkan pemilik; web kembali ke Senja H lalu dirapikan berdasar inspeksi (detektor impeccable + pemeriksaan visual 1280 dan 375 px).
+- Halaman daftar (Tugas, Rapat, dan halaman `Records` lain): kolom cari selalu terlihat, saringan lain dilipat di balik tombol Filter dengan angka saringan aktif. Daftar kini tampak di layar pertama.
+- Tab halaman (mis. Rapat/Keputusan) pindah ke bawah judul; kartu sprint aktif pindah ke bawah bilah alat.
+- Ponsel: tombol tambah selebar layar di kepala halaman dihapus (sudah ada tombol + di bilah atas dan dok); cari dan Filter satu baris.
+- Tabel Buku kas: judul kolom boleh terbungkus agar kolom Aksi tidak terpotong pada 1280 px.
+- Judul memakai huruf kapital di awal kalimat saja; batang penjualan gerai biru pastel (hari ini biru penuh); kerangka memuat tanpa garis tepi kiri.
+- Verifikasi: 405 tes / 67 berkas, typecheck, lint, `lint:ui`, build lulus; JS awal 245 KB. Demo diperiksa pada 1280 px (Tugas, Rapat, Buku kas) dan 375 px (Tugas, Buku kas, tanpa luber samping). `audit:tampilan` belum dijalankan.
+
 ## Pengingat, laporan bulanan, anggaran proyek, administrasi usaha — 15 Oktober 2026
 
 - Lonceng pengingat di bilah atas (semua halaman): tenggat terlambat/hari ini/besok, rapat 7 hari, dokumen akan habis, isu, tinjauan risiko, stok minimum, selisih opname. Dimuat sekali per sesi setelah halaman tampil; angka baru hilang setelah panel dibuka.

@@ -30,19 +30,34 @@ const tabLabels: Partial<Record<Entity, string>> = {
 const Records = dynamic(() => import('../records/Records').then((module) => module.Records), {
   loading: () => <SkeletonLoading slug="tugas" />,
 });
-const Dashboard = dynamic(() => import('../dashboard/Dashboard').then((module) => module.Dashboard), {
-  loading: () => <SkeletonLoading slug="beranda" />,
-});
-const Operations = dynamic(() => import('../operations/Operations').then((module) => module.Operations), {
-  loading: () => <SkeletonLoading slug="pencatatan" />,
-});
-const TodayView = dynamic(() => import('../dashboard/TodayView').then((module) => module.TodayView), {
-  loading: () => <SkeletonLoading slug="hari-ini" />,
-});
-const FollowUps = dynamic(() => import('../follow-ups/FollowUps').then((module) => module.FollowUps));
-const RingkasanAdministrasi = dynamic(() => import('../administrasi/RingkasanAdministrasi').then((module) => module.RingkasanAdministrasi));
+const Dashboard = dynamic(
+  () => import('../dashboard/Dashboard').then((module) => module.Dashboard),
+  {
+    loading: () => <SkeletonLoading slug="beranda" />,
+  },
+);
+const Operations = dynamic(
+  () => import('../operations/Operations').then((module) => module.Operations),
+  {
+    loading: () => <SkeletonLoading slug="pencatatan" />,
+  },
+);
+const TodayView = dynamic(
+  () => import('../dashboard/TodayView').then((module) => module.TodayView),
+  {
+    loading: () => <SkeletonLoading slug="hari-ini" />,
+  },
+);
+const FollowUps = dynamic(() =>
+  import('../follow-ups/FollowUps').then((module) => module.FollowUps),
+);
+const RingkasanAdministrasi = dynamic(() =>
+  import('../administrasi/RingkasanAdministrasi').then((module) => module.RingkasanAdministrasi),
+);
 const Editor = dynamic(() => import('../records/Editor').then((module) => module.Editor));
-const MonitoringDashboard = dynamic(() => import('../dunia-3d/MonitoringDashboard').then(module => module.MonitoringDashboard));
+const MonitoringDashboard = dynamic(() =>
+  import('../dunia-3d/MonitoringDashboard').then((module) => module.MonitoringDashboard),
+);
 const Roadmap = dynamic(() => import('../roadmap/Roadmap').then((module) => module.Roadmap), {
   loading: () => <SkeletonLoading slug="roadmap" />,
 });
@@ -59,11 +74,15 @@ export function WorkspacePage({ slug }: { slug: string }) {
   const query = useSearchParams();
   const router = useRouter();
   const requestedSection = query.get('bagian');
-  const taskScope = ['proyek', 'riwayat-proyek'].includes(slug) ? 'all' : ['selesai', 'dibatalkan'].includes(query.get('status') || '')
-    ? 'history'
-    : 'current';
+  const taskScope = ['proyek', 'riwayat-proyek'].includes(slug)
+    ? 'all'
+    : ['selesai', 'dibatalkan'].includes(query.get('status') || '')
+      ? 'history'
+      : 'current';
   const requestedRecord =
-    query.get('record') || query.get('task') || (['proyek', 'riwayat-proyek'].includes(slug) ? query.get('id') : null);
+    query.get('record') ||
+    query.get('task') ||
+    (['proyek', 'riwayat-proyek'].includes(slug) ? query.get('id') : null);
   const selectedEntity = (
     query.get('task')
       ? 'work-items'
@@ -78,9 +97,26 @@ export function WorkspacePage({ slug }: { slug: string }) {
     /^[a-f\d-]{36}$/i.test(requestedRecord)
       ? { entity: selectedEntity, id: requestedRecord }
       : undefined;
-  const { data, loading, error, refresh, operations, logistics, administration, more, loadMore, fetching } = useWorkspace(
+  const {
+      data,
+      loading,
+      error,
+      refresh,
+      operations,
+      logistics,
+      administration,
+      more,
+      loadMore,
+      fetching,
+    } = useWorkspace(
       slug,
-      { scope: taskScope, ...(['proyek', 'riwayat-proyek'].includes(slug) && /^[a-f\d-]{36}$/i.test(query.get('id') || '') ? { project: query.get('id')! } : {}) },
+      {
+        scope: taskScope,
+        ...(['proyek', 'riwayat-proyek'].includes(slug) &&
+        /^[a-f\d-]{36}$/i.test(query.get('id') || '')
+          ? { project: query.get('id')! }
+          : {}),
+      },
       detail,
     ),
     [tabChoice, setTabChoice] = useState<{ section: string | null; index: number } | null>(null),
@@ -107,7 +143,20 @@ export function WorkspacePage({ slug }: { slug: string }) {
         : '';
   const sectionIndex = pages[slug]?.findIndex((entity) => entity === requestedSection) ?? -1;
   const tab = tabChoice?.section === requestedSection ? tabChoice.index : Math.max(0, sectionIndex);
-  if (slug === 'dunia-koperasi') return <MonitoringDashboard data={data} loading={loading} error={error} refresh={refresh} more={more} loadMore={loadMore} fetching={fetching} operations={operations} logistics={logistics} />;
+  if (slug === 'dunia-koperasi')
+    return (
+      <MonitoringDashboard
+        data={data}
+        loading={loading}
+        error={error}
+        refresh={refresh}
+        more={more}
+        loadMore={loadMore}
+        fetching={fetching}
+        operations={operations}
+        logistics={logistics}
+      />
+    );
   if (loading) return <SkeletonLoading slug={slug} />;
   if (error)
     return (
@@ -156,7 +205,14 @@ export function WorkspacePage({ slug }: { slug: string }) {
       )}
       {slug === 'tindak-lanjut' && <FollowUps data={data} />}
       {slug === 'beranda' && <Dashboard data={data} />}
-      {['proyek', 'riwayat-proyek'].includes(slug) && <Projects key={query.get('tab') || slug} data={data} refresh={refresh} history={slug === 'riwayat-proyek' || query.get('tab') === 'riwayat'} />}
+      {['proyek', 'riwayat-proyek'].includes(slug) && (
+        <Projects
+          key={query.get('tab') || slug}
+          data={data}
+          refresh={refresh}
+          history={slug === 'riwayat-proyek' || query.get('tab') === 'riwayat'}
+        />
+      )}
       {recordingPaths.includes(slug) && (
         <Operations
           key={slug + query.toString()}
@@ -168,52 +224,59 @@ export function WorkspacePage({ slug }: { slug: string }) {
       )}
       {slug === 'roadmap' && <Roadmap data={data} refresh={refresh} />}
       {slug === 'laporan' && <Reports />}
-      {slug === 'pengaturan' && <Settings refresh={refresh} organization={data.organization?.[0]} />}
+      {slug === 'pengaturan' && (
+        <Settings refresh={refresh} organization={data.organization?.[0]} />
+      )}
       {slug === 'hari-ini' && <TodayView workspace={data} refresh={refresh} />}
       {belumAktif ? (
         <p className="workspace-partial-note" role="status">
           {belumAktif}
         </p>
-      ) : pages[slug] && slug !== 'pengaturan' && (
-        <>
-          {pages[slug].length > 1 && (
-            <div className="tabs" role="tablist" aria-label="Bagian halaman">
-              {pages[slug].map((entity, index) => (
-                <Button
-                  role="tab"
-                  aria-selected={tab === index}
-                  key={entity}
-                  onClick={() => setTabChoice({ section: requestedSection, index })}
-                >
-                  {tabLabels[entity] ?? catalog[entity].title}
-                </Button>
-              ))}
-            </div>
-          )}
-          <Records
-            key={pages[slug][tab] + (query.get('record') || '') + (query.get('task') || '')}
-            ringkasan={
-              administrationEntities.includes(pages[slug][tab]) && (
-                <RingkasanAdministrasi entity={pages[slug][tab]} data={data} />
-              )
-            }
-            entity={pages[slug][tab]}
-            workspace={data}
-            refresh={refresh}
-          />
-          {more[pages[slug][tab]] !== undefined && (
-            <Button
-              className="workspace-load-more"
-              type="button"
-              disabled={fetching !== null}
-              onClick={() => void loadMore(pages[slug][tab])}
-            >
-              {fetching === pages[slug][tab]
-                ? 'Memuat…'
-                : `Muat 50 ${pages[slug][tab] === 'work-items' ? 'tugas' : 'catatan'} lagi`}
-            </Button>
-          )}
-        </>
+      ) : (
+        pages[slug] &&
+        slug !== 'pengaturan' && (
+          <>
+            <Records
+              key={pages[slug][tab] + (query.get('record') || '') + (query.get('task') || '')}
+              tabs={
+                pages[slug].length > 1 && (
+                  <div className="tabs" role="tablist" aria-label="Bagian halaman">
+                    {pages[slug].map((entity, index) => (
+                      <Button
+                        role="tab"
+                        aria-selected={tab === index}
+                        key={entity}
+                        onClick={() => setTabChoice({ section: requestedSection, index })}
+                      >
+                        {tabLabels[entity] ?? catalog[entity].title}
+                      </Button>
+                    ))}
+                  </div>
+                )
+              }
+              ringkasan={
+                administrationEntities.includes(pages[slug][tab]) && (
+                  <RingkasanAdministrasi entity={pages[slug][tab]} data={data} />
+                )
+              }
+              entity={pages[slug][tab]}
+              workspace={data}
+              refresh={refresh}
+            />
+            {more[pages[slug][tab]] !== undefined && (
+              <Button
+                className="workspace-load-more"
+                type="button"
+                disabled={fetching !== null}
+                onClick={() => void loadMore(pages[slug][tab])}
+              >
+                {fetching === pages[slug][tab]
+                  ? 'Memuat…'
+                  : `Muat 50 ${pages[slug][tab] === 'work-items' ? 'tugas' : 'catatan'} lagi`}
+              </Button>
+            )}
+          </>
+        )
       )}
       {slug === 'beranda' && more['work-items'] !== undefined && (
         <Button

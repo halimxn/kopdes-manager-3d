@@ -15,10 +15,34 @@ import { SavedTaskViews, type TaskView } from '../tasks/SavedTaskViews';
 import { TaskBatchActions } from '../tasks/TaskBatchActions';
 import { api } from '@/lib/client';
 import { today, formatDate } from '@/lib/date';
-import { selectTaskStatus, taskStatusChange, isActiveTask, type TaskStatus } from '@/lib/task-status';
+import {
+  selectTaskStatus,
+  taskStatusChange,
+  isActiveTask,
+  type TaskStatus,
+} from '@/lib/task-status';
 import { RiskMatrix } from '@/components/charts/Charts';
 import { Select } from '@/components/ui/Select';
-import { ListTodo, Columns3, CalendarDays, Calendar, Search, Plus, ChartGantt, CalendarClock, UploadCloud, Target, ChevronDown, X, BookOpen, CheckCircle2, Video, FolderArchive, CheckSquare } from 'lucide-react';
+import {
+  ListTodo,
+  Columns3,
+  CalendarDays,
+  Calendar,
+  Search,
+  Plus,
+  ChartGantt,
+  CalendarClock,
+  UploadCloud,
+  Target,
+  ChevronDown,
+  X,
+  BookOpen,
+  CheckCircle2,
+  Video,
+  FolderArchive,
+  CheckSquare,
+  SlidersHorizontal,
+} from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { SprintCard } from '../projects/SprintCard';
 import { formatDisplayCode } from '../tasks/task-code';
@@ -27,17 +51,39 @@ import dynamic from 'next/dynamic';
 import { kartuCatatan } from './RecordCard';
 // Tampilan, laci, dan formulir dimuat saat dipakai agar halaman catatan terbuka cepat.
 const Editor = dynamic(() => import('./Editor').then((module) => module.Editor));
-const TaskCalendar = dynamic(() => import('../tasks/TaskCalendar').then((module) => module.TaskCalendar));
-const TaskTimeline = dynamic(() => import('../tasks/TaskTimeline').then((module) => module.TaskTimeline));
-const DailyTasksView = dynamic(() => import('../tasks/DailyTasksView').then((module) => module.DailyTasksView));
-const TaskDetailDrawer = dynamic(() => import('../tasks/TaskDetailDrawer').then((module) => module.TaskDetailDrawer));
-const SprintModal = dynamic(() => import('../projects/SprintModal').then((module) => module.SprintModal));
-const ScrumBoardView = dynamic(() => import('../tasks/ScrumBoardView').then((module) => module.ScrumBoardView));
-const JournalBoardView = dynamic(() => import('./JournalViews').then((module) => module.JournalBoardView));
-const JournalTimelineView = dynamic(() => import('./JournalViews').then((module) => module.JournalTimelineView));
-const JournalTableView = dynamic(() => import('./JournalViews').then((module) => module.JournalTableView));
-const CompletedTimelineView = dynamic(() => import('./CompletedTimelineView').then((module) => module.CompletedTimelineView));
-const CsvDropzone = dynamic(() => import('@/components/ui/CsvDropzone').then((module) => module.CsvDropzone));
+const TaskCalendar = dynamic(() =>
+  import('../tasks/TaskCalendar').then((module) => module.TaskCalendar),
+);
+const TaskTimeline = dynamic(() =>
+  import('../tasks/TaskTimeline').then((module) => module.TaskTimeline),
+);
+const DailyTasksView = dynamic(() =>
+  import('../tasks/DailyTasksView').then((module) => module.DailyTasksView),
+);
+const TaskDetailDrawer = dynamic(() =>
+  import('../tasks/TaskDetailDrawer').then((module) => module.TaskDetailDrawer),
+);
+const SprintModal = dynamic(() =>
+  import('../projects/SprintModal').then((module) => module.SprintModal),
+);
+const ScrumBoardView = dynamic(() =>
+  import('../tasks/ScrumBoardView').then((module) => module.ScrumBoardView),
+);
+const JournalBoardView = dynamic(() =>
+  import('./JournalViews').then((module) => module.JournalBoardView),
+);
+const JournalTimelineView = dynamic(() =>
+  import('./JournalViews').then((module) => module.JournalTimelineView),
+);
+const JournalTableView = dynamic(() =>
+  import('./JournalViews').then((module) => module.JournalTableView),
+);
+const CompletedTimelineView = dynamic(() =>
+  import('./CompletedTimelineView').then((module) => module.CompletedTimelineView),
+);
+const CsvDropzone = dynamic(() =>
+  import('@/components/ui/CsvDropzone').then((module) => module.CsvDropzone),
+);
 
 export function Records({
   entity,
@@ -48,6 +94,7 @@ export function Records({
   scopeId,
   draftScope,
   ringkasan,
+  tabs,
 }: {
   entity: Entity;
   workspace: Workspace;
@@ -58,6 +105,8 @@ export function Records({
   draftScope?: string;
   /** Angka ringkas khusus halaman, tampil tepat di bawah kepala halaman. */
   ringkasan?: ReactNode;
+  /** Tab bagian halaman (mis. Rapat · Keputusan), tampil di bawah judul agar urutan baca wajar. */
+  tabs?: ReactNode;
 }) {
   const query = useSearchParams(),
     router = useRouter();
@@ -68,7 +117,9 @@ export function Records({
       // Tautan saran: ?baru=1&isi.<kolom>=… membuka form baru yang sudah terisi.
       const isi = isiDariQuery(query);
       if (query.get('baru') === '1')
-        return Object.keys(isi).length ? { id: '', created_at: '', updated_at: '', data: isi } : null;
+        return Object.keys(isi).length
+          ? { id: '', created_at: '', updated_at: '', data: isi }
+          : null;
       // Dari Dunia Koperasi ("Beri tugas"): buka tugas baru dengan penanggung jawab terisi.
       const assignee = entity === 'work-items' ? query.get('penanggung')?.trim() : '';
       if (!assignee) return undefined;
@@ -112,7 +163,9 @@ export function Records({
       }
       if (typeof window !== 'undefined') {
         try {
-          const savedView = localStorage.getItem(`${draftScope ? draftScope + ':' : ''}preferred_view_${entity}`);
+          const savedView = localStorage.getItem(
+            `${draftScope ? draftScope + ':' : ''}preferred_view_${entity}`,
+          );
           if (savedView && ['daftar', 'papan', 'kalender', 'gantt', 'harian'].includes(savedView)) {
             return savedView;
           }
@@ -126,13 +179,27 @@ export function Records({
     setView(newView);
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem(`${draftScope ? draftScope + ':' : ''}preferred_view_${entity}`, newView);
+        localStorage.setItem(
+          `${draftScope ? draftScope + ':' : ''}preferred_view_${entity}`,
+          newView,
+        );
       } catch {}
     }
   };
-  const closedProject = Boolean(scopeId && workspace.workstreams?.some((project) => project.id === scopeId && ['selesai', 'diarsipkan'].includes(String(project.data.status))));
+  const closedProject = Boolean(
+    scopeId &&
+    workspace.workstreams?.some(
+      (project) =>
+        project.id === scopeId && ['selesai', 'diarsipkan'].includes(String(project.data.status)),
+    ),
+  );
   function createTask(date = today(), status = 'rencana') {
-    if (closedProject) { setError('Buka kembali proyek sebelum menambah tugas baru. Tugas yang sudah ada tetap dapat diperiksa.'); return; }
+    if (closedProject) {
+      setError(
+        'Buka kembali proyek sebelum menambah tugas baru. Tugas yang sudah ada tetap dapat diperiksa.',
+      );
+      return;
+    }
     setEdit({
       id: '',
       created_at: '',
@@ -183,6 +250,16 @@ export function Records({
   }
   const effectiveFilter = filter ?? (entity === 'work-items' ? query.get('status') || '' : '');
   const isCompletedArchive = entity === 'work-items' && effectiveFilter === 'selesai';
+  // Jumlah saringan aktif selain kata cari, ditampilkan pada tombol Filter.
+  const jumlahFilter = [
+    effectiveFilter,
+    workstream,
+    priority,
+    journalUnit,
+    journalStakeholder,
+    journalMeeting,
+    sprintFilter,
+  ].filter(Boolean).length;
   const all = (workspace[entity] || []).filter(
       (row) => !scopeId || row.data.workstream_id === scopeId,
     ),
@@ -200,9 +277,9 @@ export function Records({
                 ? String(row.data.due_date) < today() && isActiveTask(row.data.status)
                 : effectiveFilter === 'all'
                   ? true
-                : effectiveFilter
-                  ? row.data.status === effectiveFilter
-                  : isActiveTask(row.data.status)) &&
+                  : effectiveFilter
+                    ? row.data.status === effectiveFilter
+                    : isActiveTask(row.data.status)) &&
           (!workstream || row.data.workstream_id === workstream) &&
           (!sprintFilter || row.data.sprint_id === sprintFilter) &&
           (!priority || row.data.priority === priority) &&
@@ -236,7 +313,17 @@ export function Records({
       setBusy(false);
     }
   };
-  const konteksKartu = { entity, workspace, refresh, busy, setBusy, setError, setDetailTask, setLihat, update };
+  const konteksKartu = {
+    entity,
+    workspace,
+    refresh,
+    busy,
+    setBusy,
+    setError,
+    setDetailTask,
+    setLihat,
+    update,
+  };
   const card = (row: Item) => kartuCatatan(row, konteksKartu);
   return (
     <section
@@ -265,7 +352,15 @@ export function Records({
               <span className="stat-label">Total Selesai</span>
               <strong>{rows.length} tugas</strong>
             </div>
-            {scopeId ? <Button className="btn-back-to-active-tasks" onClick={() => setFilter('all')}>Semua tugas proyek</Button> : <Link href="/tugas" className="btn-back-to-active-tasks">← Kembali ke Tugas Aktif</Link>}
+            {scopeId ? (
+              <Button className="btn-back-to-active-tasks" onClick={() => setFilter('all')}>
+                Semua tugas proyek
+              </Button>
+            ) : (
+              <Link href="/tugas" className="btn-back-to-active-tasks">
+                ← Kembali ke Tugas Aktif
+              </Link>
+            )}
           </div>
         </div>
       ) : (
@@ -329,13 +424,19 @@ export function Records({
           </Button>
         </div>
       )}
+      {tabs}
       {ringkasan}
-      {entity === 'work-items' && closedProject && <p className="notice">Proyek sudah selesai atau diarsipkan. Seluruh tugas tetap tersimpan. Ubah status proyek ke aktif sebelum menambah tugas baru.</p>}
+      {entity === 'work-items' && closedProject && (
+        <p className="notice">
+          Proyek sudah selesai atau diarsipkan. Seluruh tugas tetap tersimpan. Ubah status proyek ke
+          aktif sebelum menambah tugas baru.
+        </p>
+      )}
       {entity === 'journal' && !isCompletedArchive && (
         <div className="recording-metrics journal-metrics">
           <div className="metric-card metric-total">
             <div className="metric-header">
-              <small className="metric-label">Total Kegiatan</small>
+              <small className="metric-label">Total kegiatan</small>
               <div className="metric-icon-wrap icon-total" aria-hidden="true">
                 <BookOpen size={16} />
               </div>
@@ -345,7 +446,7 @@ export function Records({
           </div>
           <div className="metric-card metric-active">
             <div className="metric-header">
-              <small className="metric-label">Bulan Ini</small>
+              <small className="metric-label">Bulan ini</small>
               <div className="metric-icon-wrap icon-active" aria-hidden="true">
                 <Calendar size={16} />
               </div>
@@ -354,12 +455,14 @@ export function Records({
               {all.filter((a) => String(a.data.date || '').startsWith(today().slice(0, 7))).length}
             </strong>
             <span className="metric-sub">
-              {new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(new Date())}
+              {new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' }).format(
+                new Date(),
+              )}
             </span>
           </div>
           <div className="metric-card metric-income">
             <div className="metric-header">
-              <small className="metric-label">Tindak Lanjut Tugas</small>
+              <small className="metric-label">Tindak lanjut tugas</small>
               <div className="metric-icon-wrap icon-income" aria-hidden="true">
                 <CheckSquare size={16} />
               </div>
@@ -371,7 +474,7 @@ export function Records({
           </div>
           <div className="metric-card metric-net">
             <div className="metric-header">
-              <small className="metric-label">Koordinasi Rapat</small>
+              <small className="metric-label">Koordinasi rapat</small>
               <div className="metric-icon-wrap icon-net" aria-hidden="true">
                 <Video size={16} />
               </div>
@@ -406,10 +509,20 @@ export function Records({
                 ]
             ).map(([value, label, Icon]) => {
               const ViewIcon = Icon as typeof ListTodo;
-              return { value: String(value), label: <><ViewIcon size={20} />{String(label)}</> };
+              return {
+                value: String(value),
+                label: (
+                  <>
+                    <ViewIcon size={20} />
+                    {String(label)}
+                  </>
+                ),
+              };
             })}
           >
-            <span>{rows.length} {entity === 'work-items' ? 'tugas' : 'kegiatan'}</span>
+            <span>
+              {rows.length} {entity === 'work-items' ? 'tugas' : 'kegiatan'}
+            </span>
           </SegmentedControl>
 
           {entity === 'work-items' && (
@@ -450,25 +563,6 @@ export function Records({
           )}
         </div>
       )}
-      {entity === 'work-items' &&
-        (workspace.sprints || []).length > 0 &&
-        !sprintFilter &&
-        !isCompletedArchive &&
-        view === 'daftar' && (
-          <div className="active-sprints-row">
-            {(workspace.sprints || [])
-              .filter((s) => s.data.status === 'aktif')
-              .map((sprint) => (
-                <SprintCard
-                  key={sprint.id}
-                  sprint={sprint}
-                  tasks={all}
-                  onEdit={(item) => setShowSprintModal(item)}
-                  onRefresh={refresh}
-                />
-              ))}
-          </div>
-        )}
       {entity === 'work-items' && !isCompletedArchive && !closedProject && view === 'daftar' && (
         <form
           className="today-quick-add-card"
@@ -519,26 +613,31 @@ export function Records({
       )}
       {view !== 'harian' && (
         <>
-          <button
-            type="button"
-            className="mobile-filter-toggle"
-            aria-expanded={filtersOpen}
-            onClick={() => setFiltersOpen(!filtersOpen)}
-          >
-            Cari & filter{search || effectiveFilter || workstream || priority || journalUnit || journalStakeholder || journalMeeting ? ' · aktif' : ''}
-          </button>
-          <div className={`filters ${filtersOpen ? 'filters-expanded' : ''}`}>
-            <label>
-              <span className="field-caption">
-                <Search size={14} /> Cari
-              </span>
+          {/* Kolom cari selalu terlihat; saringan lain dilipat agar daftar langsung tampak. */}
+          <div className="records-alat">
+            <label className="records-cari">
+              <Search size={16} aria-hidden="true" />
+              <span className="sr-only">Cari</span>
               <Input
                 type="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Judul, penanggung jawab, catatan…"
+                placeholder="Cari judul, penanggung jawab, catatan…"
               />
             </label>
+            <button
+              type="button"
+              className="records-filter-toggle"
+              aria-expanded={filtersOpen}
+              aria-controls="records-filters"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+            >
+              <SlidersHorizontal size={16} aria-hidden="true" />
+              Filter
+              {jumlahFilter > 0 && <span className="records-filter-jumlah">{jumlahFilter}</span>}
+            </button>
+          </div>
+          <div id="records-filters" className={`filters ${filtersOpen ? 'filters-expanded' : ''}`}>
             {options[entity + '.status'] && view !== 'papan' && (
               <label>
                 <span className="field-caption">Status</span>
@@ -556,7 +655,9 @@ export function Records({
                   }}
                   options={[
                     { value: '', label: entity === 'work-items' ? 'Tugas aktif' : 'Semua Status' },
-                    ...(scopeId && entity === 'work-items' ? [{ value: 'all', label: 'Semua status (termasuk selesai)' }] : []),
+                    ...(scopeId && entity === 'work-items'
+                      ? [{ value: 'all', label: 'Semua status (termasuk selesai)' }]
+                      : []),
                     ...(entity === 'work-items'
                       ? [{ value: 'terlambat', label: 'Terlambat' }]
                       : []),
@@ -730,6 +831,25 @@ export function Records({
       {entity === 'work-items' && !isCompletedArchive && view === 'daftar' && (
         <TaskBatchActions items={rows} refresh={refresh} />
       )}
+      {entity === 'work-items' &&
+        (workspace.sprints || []).length > 0 &&
+        !sprintFilter &&
+        !isCompletedArchive &&
+        view === 'daftar' && (
+          <div className="active-sprints-row">
+            {(workspace.sprints || [])
+              .filter((s) => s.data.status === 'aktif')
+              .map((sprint) => (
+                <SprintCard
+                  key={sprint.id}
+                  sprint={sprint}
+                  tasks={all}
+                  onEdit={(item) => setShowSprintModal(item)}
+                  onRefresh={refresh}
+                />
+              ))}
+          </div>
+        )}
       {error && !showCsvModal && (
         <p className="notice error" role="alert">
           {error}
@@ -741,10 +861,14 @@ export function Records({
           title={`Belum ada ${catalog[entity].title.toLowerCase()}`}
           description={`Mulai dengan menambah ${catalog[entity].title.toLowerCase()} baru atau sesuaikan filter pencarian.`}
           tone="emerald"
-          action={closedProject ? undefined : {
-            label: `Tambah ${catalog[entity].title}`,
-            onClick: () => setEdit(null),
-          }}
+          action={
+            closedProject
+              ? undefined
+              : {
+                  label: `Tambah ${catalog[entity].title}`,
+                  onClick: () => setEdit(null),
+                }
+          }
         />
       )}
       {isCompletedArchive ? (
@@ -994,7 +1118,7 @@ export function Records({
                   <div className="meeting-section-header">
                     <div className="meeting-section-title-wrap">
                       <CalendarDays size={16} />
-                      <h3>Rapat Mendatang & Hari Ini</h3>
+                      <h3>Rapat hari ini dan mendatang</h3>
                     </div>
                     <span className="badge">{upcoming.length}</span>
                   </div>
@@ -1018,7 +1142,7 @@ export function Records({
                     <div className="meeting-section-header">
                       <div className="meeting-section-title-wrap">
                         <FolderArchive size={16} />
-                        <h3>Riwayat Rapat Sebelumnya</h3>
+                        <h3>Rapat sebelumnya</h3>
                       </div>
                       <span className="badge">{past.length}</span>
                     </div>
@@ -1117,7 +1241,9 @@ export function Records({
         <Modal
           className="sprint-modal-dialog"
           aria-labelledby="csv-modal-title"
-          onDismiss={() => { if (!busy) setShowCsvModal(false); }}
+          onDismiss={() => {
+            if (!busy) setShowCsvModal(false);
+          }}
         >
           <div className="sprint-modal-card">
             <header className="sprint-modal-head">
@@ -1142,13 +1268,28 @@ export function Records({
               Unggah file CSV dengan kolom sesuai format data untuk menambahkan data secara
               langsung.
             </p>
-            <Button type="button" disabled={busy} onClick={() => {
-              const url = URL.createObjectURL(new Blob(['\uFEFF' + catalog[entity].fields.join(',') + '\r\n'], { type: 'text/csv;charset=utf-8' }));
-              const anchor = document.createElement('a');
-              anchor.href = url; anchor.download = `format-${entity}.csv`; anchor.click();
-              URL.revokeObjectURL(url);
-            }}>Unduh format CSV</Button>
-            <p>Isi judul pada kolom title. Tanggal memakai YYYY-MM-DD; kolom kosong memakai nilai bawaan.</p>
+            <Button
+              type="button"
+              disabled={busy}
+              onClick={() => {
+                const url = URL.createObjectURL(
+                  new Blob(['\uFEFF' + catalog[entity].fields.join(',') + '\r\n'], {
+                    type: 'text/csv;charset=utf-8',
+                  }),
+                );
+                const anchor = document.createElement('a');
+                anchor.href = url;
+                anchor.download = `format-${entity}.csv`;
+                anchor.click();
+                URL.revokeObjectURL(url);
+              }}
+            >
+              Unduh format CSV
+            </Button>
+            <p>
+              Isi judul pada kolom title. Tanggal memakai YYYY-MM-DD; kolom kosong memakai nilai
+              bawaan.
+            </p>
             <CsvDropzone
               disabled={busy}
               onDataParsed={async (parsedRows) => {
@@ -1159,11 +1300,19 @@ export function Records({
                   // Semua baris divalidasi dahulu agar kesalahan berkas tidak menyimpan sebagian data.
                   const records = parsedRows.map((row, index) => {
                     const result = schemas[entity].safeParse({
-                      ...(entity === 'work-items' ? { due_date: today() }
-                        : catalog[entity].fields.includes('date') ? { date: today() } : {}),
-                      ...Object.fromEntries(Object.entries(row).filter(([, value]) => value.trim() !== '')),
+                      ...(entity === 'work-items'
+                        ? { due_date: today() }
+                        : catalog[entity].fields.includes('date')
+                          ? { date: today() }
+                          : {}),
+                      ...Object.fromEntries(
+                        Object.entries(row).filter(([, value]) => value.trim() !== ''),
+                      ),
                     });
-                    if (!result.success) throw new Error(`Baris ${index + 2}: ${result.error.issues.map(issue => `${labels[String(issue.path[0])] || 'Isian'}: ${issue.message}`).join('; ')}`);
+                    if (!result.success)
+                      throw new Error(
+                        `Baris ${index + 2}: ${result.error.issues.map((issue) => `${labels[String(issue.path[0])] || 'Isian'}: ${issue.message}`).join('; ')}`,
+                      );
                     return result.data;
                   });
                   for (const data of records) {
@@ -1172,16 +1321,28 @@ export function Records({
                   }
                   setShowCsvModal(false);
                 } catch (err) {
-                  setError(`${saved} dari ${parsedRows.length} baris tersimpan. ${(err as Error).message} Impor ulang hanya baris yang belum tersimpan.`);
+                  setError(
+                    `${saved} dari ${parsedRows.length} baris tersimpan. ${(err as Error).message} Impor ulang hanya baris yang belum tersimpan.`,
+                  );
                 } finally {
-                  try { if (saved) await refresh(); }
-                  catch (err) { setError(`${saved} baris tersimpan, tetapi daftar belum dapat dimuat ulang. ${(err as Error).message}`); }
-                  finally { setBusy(false); }
+                  try {
+                    if (saved) await refresh();
+                  } catch (err) {
+                    setError(
+                      `${saved} baris tersimpan, tetapi daftar belum dapat dimuat ulang. ${(err as Error).message}`,
+                    );
+                  } finally {
+                    setBusy(false);
+                  }
                 }
               }}
             />
             {busy && <p role="status">Menyimpan baris CSV…</p>}
-            {error && <p className="notice error" role="alert">{error}</p>}
+            {error && (
+              <p className="notice error" role="alert">
+                {error}
+              </p>
+            )}
           </div>
         </Modal>
       )}

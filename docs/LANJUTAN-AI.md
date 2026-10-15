@@ -17,7 +17,9 @@
 - Browser lokal: nominal dan susunan mobile diperiksa juga pada 390/430 px; pergantian panel dunia diperiksa pada lima lokasi agar hanya satu isi panel terlihat. Bukti dan batasan pemeriksaan paket di STATUS. Paket mobile sudah di main; deploy belum diverifikasi.
 - Verifikasi paket mobile: 372 tes / 59 berkas, typecheck, lint tanpa peringatan, `lint:ui`, dan build produksi lulus. Belum ada pemeriksaan perangkat fisik atau UAT cloud untuk perubahan ini.
 
-Cabang aktif `tampilan/pemisah-ribuan` (belum di-push): pemisah ribuan, Senja + Beranda grid modul, lalu fitur pengingat (`features/notifikasi`), preset laporan bulanan, anggaran proyek (`projects/ProjectBudget.tsx`), dan migrasi 10 administrasi usaha (`features/administrasi`, entitas `assets/attendance/purchase-orders/sales/savings`). 405 tes, typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB.
+PR halimxn/kopdes-manager-3d#3 (cabang `tampilan/pemisah-ribuan`): pemisah ribuan, Senja + Beranda grid modul, lalu fitur pengingat (`features/notifikasi`), preset laporan bulanan, anggaran proyek (`projects/ProjectBudget.tsx`), dan migrasi 10 administrasi usaha (`features/administrasi`, entitas `assets/attendance/purchase-orders/sales/savings`). 405 tes, typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB.
+
+Cabang aktif `tampilan/gaya-baru` ditumpuk di atas PR #3: Kebun dan Teal dicoba lalu dibatalkan pemilik; kini Senja H dirapikan (Filter terlipat, tab di bawah judul, tabel Buku kas). Setelah PR #3 masuk, rebase cabang ini ke `main`.
 
 ## Lanjutan
 

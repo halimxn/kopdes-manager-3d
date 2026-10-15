@@ -258,8 +258,9 @@
 .jual { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: stretch; gap: 18px; flex: 1; }
 .jual-grafik { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; min-height: 120px; }
 .jual-grafik > div { display: grid; grid-template-rows: 1fr auto; justify-items: center; gap: 6px; min-width: 0; }
-.jual-grafik i { align-self: end; width: 100%; max-width: 22px; border-radius: 5px 5px 2px 2px; background: var(--pastel-mentega-ink); opacity: 0.55; }
-.jual-grafik .is-hari-ini i { opacity: 1; }
+.jual-grafik i { align-self: end; width: 100%; max-width: 18px; border-radius: 6px 6px 3px 3px; background: var(--pastel-biru); box-shadow: inset 0 0 0 1px var(--brand-soft-border); }
+.jual-grafik .is-hari-ini i,
+.jual-grafik > div:hover i { background: var(--brand); box-shadow: none; }
 .jual-grafik small { color: var(--ink-subtle); font-size: 11.5px; font-weight: 600; }
 .jual-daftar { display: grid; align-self: end; gap: 2px; margin: 0; padding: 0; list-style: none; }
 .jual-daftar li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
