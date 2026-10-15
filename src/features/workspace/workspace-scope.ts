@@ -96,6 +96,11 @@ export function pageEntities(slug: string): Entity[] {
     barang: ['inventory-items', 'cash-entries', 'units', 'deliveries', 'stock-movements', 'stock-counts'],
     'stok-opname': ['stock-counts', 'inventory-items', 'units', 'stock-movements', 'staff'],
     risiko: ['risks', 'issues', 'work-items', 'staff'],
+    aset: ['assets', 'units'],
+    absensi: ['attendance', 'staff', 'units'],
+    pembelian: ['purchase-orders', 'stakeholders', 'units', 'deliveries'],
+    penjualan: ['sales', 'units'],
+    simpanan: ['savings', 'members'],
     jurnal: ['journal', 'work-items', 'stakeholders', 'units', 'meetings', 'staff'],
   };
   return [

@@ -13,11 +13,21 @@ const seed: Record<string, unknown> = {
   notes: 'Catatan contoh khusus pemeriksaan tombol, input, dan tata letak.',
   item_id: '00000000-0000-4000-8000-000000000001',
 };
-export const popupWorkspace: Workspace = Object.fromEntries(popupEntities.map((entity, index) => {
-  const input = Object.fromEntries(Object.keys(schemas[entity].shape)
-    .filter(key => key in seed).map(key => [key, seed[key]]));
+const fixtureId = (entity: Entity) => `00000000-0000-4000-8000-${String(popupEntities.indexOf(entity) + 1).padStart(12, '0')}`;
+// Isian umum tidak cocok untuk enum dan relasi wajib pada catatan administrasi (migrasi 10).
+const seedPerEntity: Partial<Record<Entity, Record<string, unknown>>> = {
+  assets: { category: 'peralatan' },
+  attendance: { staff_id: fixtureId('staff'), status: 'hadir' },
+  sales: { unit_id: fixtureId('units') },
+  savings: { member_id: fixtureId('members'), direction: 'setor' },
+};
+export const popupWorkspace: Workspace = Object.fromEntries(popupEntities.map((entity) => {
+  const input = {
+    ...Object.fromEntries(Object.keys(schemas[entity].shape).filter(key => key in seed).map(key => [key, seed[key]])),
+    ...seedPerEntity[entity],
+  };
   const item: Item = {
-    id: `00000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
+    id: fixtureId(entity),
     created_at: '2026-10-04T02:00:00Z', updated_at: '2026-10-04T02:00:00Z',
     data: schemas[entity].parse(input),
   };

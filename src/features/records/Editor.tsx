@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { IntegerInput } from '@/components/ui/IntegerInput';
+import { judulOtomatis } from './judul-otomatis';
 import { Field } from '@/components/ui/Field';
 import { Textarea } from '@/components/ui/Input';
 import { DateInput } from '@/components/ui/DateField';
@@ -275,7 +276,7 @@ export function Editor({
                                             ? 'Agenda Pembahasan'
                                             : entity === 'meetings' && field === 'minutes'
                                               ? 'Notulen & Ringkasan Keputusan'
-                                              : labels[field] || field;
+                                              : labels[`${entity}.${field}`] || labels[field] || field;
 
             if (field.endsWith('_date') || field === 'date' || field === 'last_contact')
               return (
@@ -506,7 +507,7 @@ export function Editor({
                       else if (entity === 'work-items' && field === 'recurrence') setRecurrence(next);
                     }}
                     options={[
-                      ...(reference ? [{ value: '', label: ['stock-counts', 'stock-movements'].includes(entity) && field === 'item_id' ? 'Pilih barang (wajib)' : entity === 'work-items' && field === 'workstream_id' ? 'Tugas mandiri (tanpa proyek)' : 'Tidak terkait (opsional)' }] : []),
+                      ...(reference ? [{ value: '', label: (['stock-counts', 'stock-movements'].includes(entity) && field === 'item_id') || (entity === 'attendance' && field === 'staff_id') || (entity === 'sales' && field === 'unit_id') || (entity === 'savings' && field === 'member_id') ? `Pilih ${label.toLowerCase()} (wajib)` : entity === 'work-items' && field === 'workstream_id' ? 'Tugas mandiri (tanpa proyek)' : 'Tidak terkait (opsional)' }] : []),
                       ...(reference && selectedValue && !refItems.some((row) => row.id === selectedValue)
                         ? [{ value: String(selectedValue), label: 'Catatan terkait yang belum dimuat (' + String(selectedValue).slice(0, 8) + ')' }] : []),
                       ...(allChoices ? allChoices.map((choice) => ({ value: choice, label: formatChoiceLabel(choice, entity + '.' + field) }))
@@ -1125,8 +1126,11 @@ export function Editor({
               'minimum_quantity',
               'counted_quantity',
               'quantity',
+              'transactions',
             ].includes(field);
-            const money = field === 'amount' || field === 'price' || field === 'budget';
+            const money = ['amount', 'price', 'budget', 'value', 'total'].includes(field);
+            // Nilai nol sah: aset hibah, gerai tutup, pembelian yang belum dihitung.
+            const zeroAllowed = ['price', 'budget', 'value', 'total', 'transactions'].includes(field) || (entity === 'sales' && field === 'amount');
             const numeric = score || quantity || money || field === 'duration';
             const FieldInput = quantity || money ? IntegerInput : Input;
             return (
@@ -1182,13 +1186,13 @@ export function Editor({
                               ? 'number'
                               : 'text'
                   }
-                  min={field === 'duration' ? 15 : field === 'quantity' ? 1 : quantity || field === 'price' || field === 'budget' ? 0 : numeric ? 1 : undefined}
+                  min={field === 'duration' ? 15 : field === 'quantity' ? 1 : quantity || zeroAllowed ? 0 : numeric ? 1 : undefined}
                   max={
                     field === 'duration'
                       ? 480
                       : score
                         ? 5
-                        : field === 'amount' || field === 'budget'
+                        : money
                           ? 1_000_000_000_000
                           : quantity
                             ? 1_000_000_000
@@ -1367,6 +1371,8 @@ export function Editor({
                 values.location = '';
               }
             }
+            const judul = judulOtomatis(entity, values, workspace);
+            if (judul) values.title = judul;
             const parsed = schemas[entity].parse(values);
             await api(entity, { id: item?.id || undefined, data: parsed });
             try {

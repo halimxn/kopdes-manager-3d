@@ -32,6 +32,11 @@ const quantity = z.preprocess(
   (value) => (typeof value === 'string' && value.trim() !== '' ? Number(value) : value),
   z.number().int().min(0).max(1_000_000_000),
 );
+// Rupiah boleh nol (aset hibah, gerai tutup, pembelian belum dihitung).
+const rupiahNonNegative = z.preprocess(
+  (value) => (value === '' ? 0 : typeof value === 'string' ? Number(value) : value),
+  z.number().int().min(0).max(1_000_000_000_000).default(0),
+);
 const money = z.preprocess(
   (value) => (typeof value === 'string' && value.trim() !== '' ? Number(value) : value),
   z.number().int().min(1).max(1_000_000_000_000),
@@ -294,6 +299,7 @@ export const schemas = {
       driver_name: text,
       license_plate: text,
       items: text,
+      purchase_id: ref,
       link,
       notes: text,
     })
@@ -399,6 +405,78 @@ export const schemas = {
       notes: text,
     })
     .strict(),
+  // Migrasi 10: administrasi usaha. Judul absensi, penjualan, dan simpanan diisi otomatis
+  // dari petugas/gerai/anggota (lihat judulOtomatis).
+  assets: z
+    .object({
+      title,
+      code: text,
+      category: z
+        .enum(['bangunan', 'kendaraan', 'peralatan', 'elektronik', 'furnitur', 'lainnya'])
+        .default('peralatan'),
+      unit_id: ref,
+      acquired_date: optionalDate,
+      value: rupiahNonNegative,
+      condition: z.enum(['baik', 'perlu perbaikan', 'rusak', 'dihapuskan']).default('baik'),
+      assignee: text,
+      notes: text,
+    })
+    .strict(),
+  attendance: z
+    .object({
+      title,
+      staff_id: z.string().uuid('Pilih petugas'),
+      date,
+      status: z
+        .enum(['terjadwal', 'hadir', 'terlambat', 'izin', 'sakit', 'cuti', 'alpa', 'libur'])
+        .default('terjadwal'),
+      shift: text,
+      check_in_time: optionalTime,
+      check_out_time: optionalTime,
+      unit_id: ref,
+      notes: text,
+    })
+    .strict(),
+  'purchase-orders': z
+    .object({
+      title,
+      stakeholder_id: ref,
+      date,
+      expected_date: optionalDate,
+      status: z.enum(['draf', 'dipesan', 'diterima', 'dibatalkan']).default('dipesan'),
+      items: text,
+      total: rupiahNonNegative,
+      unit_id: ref,
+      workstream_id: ref,
+      reference_number: text,
+      notes: text,
+    })
+    .strict(),
+  sales: z
+    .object({
+      title,
+      unit_id: z.string().uuid('Pilih gerai'),
+      date,
+      amount: rupiahNonNegative,
+      transactions: z.preprocess(
+        (value) => (value === '' ? 0 : typeof value === 'string' ? Number(value) : value),
+        z.number().int().min(0).max(1_000_000).default(0),
+      ),
+      notes: text,
+    })
+    .strict(),
+  savings: z
+    .object({
+      title,
+      member_id: z.string().uuid('Pilih anggota'),
+      date,
+      kind: z.enum(['pokok', 'wajib', 'sukarela']).default('wajib'),
+      direction: z.enum(['setor', 'tarik']).default('setor'),
+      amount: money,
+      reference_number: text,
+      notes: text,
+    })
+    .strict(),
 };
 export const operationEntities: Entity[] = [
   'members',
@@ -408,6 +486,8 @@ export const operationEntities: Entity[] = [
 ];
 /** Aktif setelah migrasi 8 (pengiriman dan mutasi stok) terpasang. */
 export const logisticsEntities: Entity[] = ['deliveries', 'stock-movements'];
+/** Aktif setelah migrasi 10 (administrasi usaha) terpasang. */
+export const administrationEntities: Entity[] = ['assets', 'attendance', 'purchase-orders', 'sales', 'savings'];
 export type Entity = keyof typeof schemas;
 export type Item = {
   id: string;

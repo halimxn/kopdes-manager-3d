@@ -15,7 +15,7 @@ Arahan langsung pemilik terbaru mengatasi konflik. Jangan membuat kontrak gaya d
 ## Produk
 
 - Ruang kerja pribadi manajer koperasi: proyek fleksibel tanpa durasi wajib, tugas, milestone, kesiapan gerai, koordinasi, dokumen, risiko, laporan kerja.
-- Pencatatan terpisah dari ruang kerja: anggota, buku kas, barang, stok opname, pengiriman dan mutasi stok. Belum mencakup POS, akuntansi lengkap, simpan pinjam, atau kunci AI pengguna.
+- Pencatatan terpisah dari ruang kerja: anggota, buku kas, barang, stok opname, pengiriman dan mutasi stok, serta (migrasi 10) simpanan anggota, penjualan harian gerai, pembelian ke pemasok, inventaris aset, jadwal & absensi. Simpanan anggota hanya setoran/penarikan pokok, wajib, sukarela (disetujui pemilik 15 Oktober 2026). Belum mencakup POS, akuntansi lengkap, pinjaman, atau kunci AI pengguna.
 - Dunia Koperasi 3D menampilkan data yang sama (kantor bersekat, gerai, gudang, cold storage, pulau). Dunia dan web bertautan dua arah; dunia tidak menulis data sendiri.
 - Identitas berasal dari profil. Jangan mengarang nama, kontak, capaian, atau data operasional. Data contoh hanya di mode demo dan seed berawalan id `c0de0000`.
 - Pengalaman task/project manager terinspirasi Notion: daftar/papan/kalender/Gantt dan catatan terformat. Jangan mengklaim editor blok drag-and-drop, baseline, jalur kritis otomatis, atau kolaborasi real-time.

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { catalog, labels, options, formatChoiceLabel } from './catalog';
 import { schemas, type Entity, type Item } from './schemas';
@@ -47,6 +47,7 @@ export function Records({
   initialView,
   scopeId,
   draftScope,
+  ringkasan,
 }: {
   entity: Entity;
   workspace: Workspace;
@@ -55,6 +56,8 @@ export function Records({
   initialView?: string;
   scopeId?: string;
   draftScope?: string;
+  /** Angka ringkas khusus halaman, tampil tepat di bawah kepala halaman. */
+  ringkasan?: ReactNode;
 }) {
   const query = useSearchParams(),
     router = useRouter();
@@ -64,8 +67,8 @@ export function Records({
       if (found) return query.get('ubah') === '1' || entity === 'work-items' ? found : undefined;
       // Tautan saran: ?baru=1&isi.<kolom>=… membuka form baru yang sudah terisi.
       const isi = isiDariQuery(query);
-      if (query.get('baru') === '1' && Object.keys(isi).length)
-        return { id: '', created_at: '', updated_at: '', data: isi };
+      if (query.get('baru') === '1')
+        return Object.keys(isi).length ? { id: '', created_at: '', updated_at: '', data: isi } : null;
       // Dari Dunia Koperasi ("Beri tugas"): buka tugas baru dengan penanggung jawab terisi.
       const assignee = entity === 'work-items' ? query.get('penanggung')?.trim() : '';
       if (!assignee) return undefined;
@@ -326,6 +329,7 @@ export function Records({
           </Button>
         </div>
       )}
+      {ringkasan}
       {entity === 'work-items' && closedProject && <p className="notice">Proyek sudah selesai atau diarsipkan. Seluruh tugas tetap tersimpan. Ubah status proyek ke aktif sebelum menambah tugas baru.</p>}
       {entity === 'journal' && !isCompletedArchive && (
         <div className="recording-metrics journal-metrics">

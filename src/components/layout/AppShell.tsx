@@ -37,11 +37,11 @@ const sections = [
   ['Kegiatan', ['/jurnal'], 'amber'],
   [
     'Buku koperasi',
-    ['/keuangan', '/barang', '/stok-opname', '/pengiriman', '/anggota'],
+    ['/keuangan', '/penjualan', '/pembelian', '/barang', '/stok-opname', '/pengiriman', '/anggota', '/simpanan', '/aset'],
     'emerald',
   ],
   ['Gerai & laporan', ['/gerai', '/kesiapan', '/risiko', '/laporan'], 'purple'],
-  ['Koordinasi & berkas', ['/rapat', '/dokumen', '/mitra', '/tim'], 'rose'],
+  ['Koordinasi & berkas', ['/rapat', '/dokumen', '/mitra', '/tim', '/absensi'], 'rose'],
   ['Pengaturan & bantuan', ['/pengaturan', '/panduan'], 'blue'],
 ] as const;
 
@@ -61,6 +61,11 @@ function getNavSubtitle(href: string): string {
     '/stok-opname': 'Hitung fisik barang',
     '/pengiriman': 'Barang masuk & keluar',
     '/anggota': 'Catatan keanggotaan',
+    '/simpanan': 'Pokok, wajib & sukarela',
+    '/penjualan': 'Omzet gerai per hari',
+    '/pembelian': 'Pesanan ke pemasok',
+    '/aset': 'Peralatan & kondisi',
+    '/absensi': 'Jadwal & kehadiran petugas',
     '/gerai': 'Unit usaha koperasi',
     '/kesiapan': 'Daftar periksa & bukti',
     '/risiko': 'Kendala & tindak lanjut',

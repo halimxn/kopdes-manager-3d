@@ -332,8 +332,8 @@ export function kartuCatatan(row: Item, k: KonteksKartu) {
           <span className="record-title-text">{String(row.data.title)}</span>
         </h3>
         {Boolean(row.data.status) && (
-          <span className={'badge ' + (row.data.status === 'selesai' ? 'ok' : '')}>
-            {String(row.data.status)}
+          <span className={'badge ' + (['selesai', 'hadir', 'diterima'].includes(String(row.data.status)) ? 'ok' : row.data.status === 'alpa' ? 'late' : '')}>
+            {formatChoiceLabel(String(row.data.status), `${entity}.status`)}
           </span>
         )}
         {entity === 'stakeholders' && Boolean(row.data.category) && (

@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { logisticsEntities, operationEntities, type Entity, type Item } from '../records/schemas';
+import { administrationEntities, logisticsEntities, operationEntities, type Entity, type Item } from '../records/schemas';
 import { api } from '@/lib/client';
 import { pageEntities } from './workspace-scope';
 import type { ListQuery } from '../records/query';
@@ -12,6 +12,7 @@ type WorkspaceCacheEntry = {
   more: Partial<Record<Entity, number>>;
   operations: boolean;
   logistics?: boolean;
+  administration?: boolean;
 };
 
 const workspaceCache = new Map<string, WorkspaceCacheEntry>();
@@ -26,7 +27,7 @@ function cacheWorkspace(key: string, entry: WorkspaceCacheEntry) {
   }
 }
 
-type Capabilities = { operations: boolean; logistics?: boolean };
+type Capabilities = { operations: boolean; logistics?: boolean; administration?: boolean };
 // Kemampuan server hanya berubah setelah migrasi, jadi cukup diminta sekali per sesi browser; gagal tidak di-cache.
 let capabilitiesRequest: Promise<Capabilities> | null = null;
 export function loadCapabilities() {
@@ -63,6 +64,7 @@ export function useWorkspace(
     [error, setError] = useState('');
   const [operations, setOperations] = useState(() => initialCache?.operations || false);
   const [logistics, setLogistics] = useState(() => initialCache?.logistics || false);
+  const [administration, setAdministration] = useState(() => initialCache?.administration || false);
   const [more, setMore] = useState<Partial<Record<Entity, number>>>(() => initialCache?.more || {});
   const [fetching, setFetching] = useState<Entity | null>(null);
   const [renderedCacheKey, setRenderedCacheKey] = useState(cacheKey);
@@ -73,6 +75,7 @@ export function useWorkspace(
     setMore(initialCache?.more || {});
     setOperations(initialCache?.operations || false);
     setLogistics(initialCache?.logistics || false);
+    setAdministration(initialCache?.administration || false);
     setLoading(!initialCache);
     setError('');
     setFetching(null);
@@ -110,6 +113,7 @@ export function useWorkspace(
           .filter((entity) => capabilities.operations || !operationEntities.includes(entity))
           // Migrasi 8 belum terpasang: jangan meminta domain yang belum ada.
           .filter((entity) => capabilities.logistics || !logisticsEntities.includes(entity))
+          .filter((entity) => capabilities.administration || !administrationEntities.includes(entity))
           .map(async (entity) => {
             let page = await api<Page>(pathFor(entity));
             if (slug === 'dunia-koperasi') {
@@ -152,10 +156,12 @@ export function useWorkspace(
         more: nextMore,
         operations: capabilities.operations,
         logistics: Boolean(capabilities.logistics),
+        administration: Boolean(capabilities.administration),
       });
       window.dispatchEvent(new CustomEvent('hub-workspace', { detail: next }));
       setOperations(capabilities.operations);
       setLogistics(Boolean(capabilities.logistics));
+      setAdministration(Boolean(capabilities.administration));
       setError('');
     } catch (e) {
       if (current === generation.current) {
@@ -194,7 +200,7 @@ export function useWorkspace(
       else delete nextMore[entity];
       setData(next);
       setMore(nextMore);
-      cacheWorkspace(cacheKey, { data: next, more: nextMore, operations, logistics });
+      cacheWorkspace(cacheKey, { data: next, more: nextMore, operations, logistics, administration });
       window.dispatchEvent(new CustomEvent('hub-workspace', { detail: next }));
     } catch (e) {
       if (current === generation.current) setError((e as Error).message);
@@ -223,5 +229,5 @@ export function useWorkspace(
       requestRef.current++;
     };
   }, [refresh, cacheKey]);
-  return { data, loading, error, refresh, operations, logistics, more, loadMore, fetching };
+  return { data, loading, error, refresh, operations, logistics, administration, more, loadMore, fetching };
 }

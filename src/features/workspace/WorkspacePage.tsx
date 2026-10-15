@@ -6,12 +6,27 @@ import { useWorkspace } from './useWorkspace';
 import { pages, catalog } from '../records/catalog';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { Entity, Item } from '../records/schemas';
-import { schemas } from '../records/schemas';
+import { administrationEntities, schemas } from '../records/schemas';
 import { today } from '@/lib/date';
 import { SkeletonLoading } from '@/components/ui/SkeletonLoading';
 import { pageEntities, recordingPaths } from './workspace-scope';
 import { ManagerGuide } from './ManagerGuide';
 // Tiap halaman hanya memuat komponennya sendiri agar unduhan JS awal kecil.
+// Nama tab bila satu halaman memuat beberapa jenis catatan; selain ini memakai judul katalog.
+const tabLabels: Partial<Record<Entity, string>> = {
+  deliveries: 'Pengiriman',
+  'stock-movements': 'Mutasi stok',
+  organization: 'Profil koperasi',
+  workstreams: 'Bidang kerja',
+  decisions: 'Keputusan',
+  meetings: 'Rapat',
+  issues: 'Isu lapangan',
+  risks: 'Risiko',
+  interactions: 'Riwayat interaksi',
+  trainings: 'Pelatihan',
+  staff: 'Tim',
+  stakeholders: 'Mitra & kontak',
+};
 const Records = dynamic(() => import('../records/Records').then((module) => module.Records), {
   loading: () => <SkeletonLoading slug="tugas" />,
 });
@@ -25,6 +40,7 @@ const TodayView = dynamic(() => import('../dashboard/TodayView').then((module) =
   loading: () => <SkeletonLoading slug="hari-ini" />,
 });
 const FollowUps = dynamic(() => import('../follow-ups/FollowUps').then((module) => module.FollowUps));
+const RingkasanAdministrasi = dynamic(() => import('../administrasi/RingkasanAdministrasi').then((module) => module.RingkasanAdministrasi));
 const Editor = dynamic(() => import('../records/Editor').then((module) => module.Editor));
 const MonitoringDashboard = dynamic(() => import('../dunia-3d/MonitoringDashboard').then(module => module.MonitoringDashboard));
 const Roadmap = dynamic(() => import('../roadmap/Roadmap').then((module) => module.Roadmap), {
@@ -62,7 +78,7 @@ export function WorkspacePage({ slug }: { slug: string }) {
     /^[a-f\d-]{36}$/i.test(requestedRecord)
       ? { entity: selectedEntity, id: requestedRecord }
       : undefined;
-  const { data, loading, error, refresh, operations, logistics, more, loadMore, fetching } = useWorkspace(
+  const { data, loading, error, refresh, operations, logistics, administration, more, loadMore, fetching } = useWorkspace(
       slug,
       { scope: taskScope, ...(['proyek', 'riwayat-proyek'].includes(slug) && /^[a-f\d-]{36}$/i.test(query.get('id') || '') ? { project: query.get('id')! } : {}) },
       detail,
@@ -82,6 +98,13 @@ export function WorkspacePage({ slug }: { slug: string }) {
     window.addEventListener('hub-task', callback);
     return () => window.removeEventListener('hub-task', callback);
   }, []);
+  // Halaman yang butuh migrasi tambahan: tampilkan alasan, bukan daftar kosong.
+  const belumAktif =
+    slug === 'pengiriman' && !logistics
+      ? 'Pengiriman dan mutasi stok belum aktif. Pasang migrasi 8 (20261006000008_world_logistics.sql) setelah disetujui; data belum dapat dicatat di sini.'
+      : pages[slug]?.some((entity) => administrationEntities.includes(entity)) && !administration
+        ? 'Halaman ini belum aktif. Pasang migrasi 10 (20261015000010_administrasi_usaha.sql) setelah disetujui; data belum dapat dicatat di sini.'
+        : '';
   const sectionIndex = pages[slug]?.findIndex((entity) => entity === requestedSection) ?? -1;
   const tab = tabChoice?.section === requestedSection ? tabChoice.index : Math.max(0, sectionIndex);
   if (slug === 'dunia-koperasi') return <MonitoringDashboard data={data} loading={loading} error={error} refresh={refresh} more={more} loadMore={loadMore} fetching={fetching} operations={operations} logistics={logistics} />;
@@ -147,10 +170,9 @@ export function WorkspacePage({ slug }: { slug: string }) {
       {slug === 'laporan' && <Reports />}
       {slug === 'pengaturan' && <Settings refresh={refresh} organization={data.organization?.[0]} />}
       {slug === 'hari-ini' && <TodayView workspace={data} refresh={refresh} />}
-      {slug === 'pengiriman' && !logistics ? (
+      {belumAktif ? (
         <p className="workspace-partial-note" role="status">
-          Pengiriman dan mutasi stok belum aktif. Pasang migrasi 8
-          (20261006000008_world_logistics.sql) setelah disetujui; data belum dapat dicatat di sini.
+          {belumAktif}
         </p>
       ) : pages[slug] && slug !== 'pengaturan' && (
         <>
@@ -163,35 +185,18 @@ export function WorkspacePage({ slug }: { slug: string }) {
                   key={entity}
                   onClick={() => setTabChoice({ section: requestedSection, index })}
                 >
-                  {entity === 'deliveries'
-                    ? 'Pengiriman'
-                    : entity === 'stock-movements'
-                      ? 'Mutasi stok'
-                      : entity === 'organization'
-                    ? 'Profil koperasi'
-                    : entity === 'workstreams'
-                      ? 'Bidang kerja'
-                      : entity === 'decisions'
-                        ? 'Keputusan'
-                        : entity === 'meetings'
-                          ? 'Rapat'
-                          : entity === 'issues'
-                            ? 'Isu lapangan'
-                            : entity === 'risks'
-                              ? 'Risiko'
-                              : entity === 'interactions'
-                                ? 'Riwayat interaksi'
-                                : entity === 'trainings'
-                                  ? 'Pelatihan'
-                                  : entity === 'staff'
-                                    ? 'Tim'
-                                    : 'Mitra & kontak'}
+                  {tabLabels[entity] ?? catalog[entity].title}
                 </Button>
               ))}
             </div>
           )}
           <Records
             key={pages[slug][tab] + (query.get('record') || '') + (query.get('task') || '')}
+            ringkasan={
+              administrationEntities.includes(pages[slug][tab]) && (
+                <RingkasanAdministrasi entity={pages[slug][tab]} data={data} />
+              )
+            }
             entity={pages[slug][tab]}
             workspace={data}
             refresh={refresh}

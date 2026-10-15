@@ -33,7 +33,7 @@ export function nilaiTampil(entity: Entity, field: string, value: unknown, ws: W
     return value.length ? String(value.length) : '';
   }
   if (typeof value === 'object') return '';
-  if (field === 'amount' || field === 'price') return rupiah(Number(value));
+  if (['amount', 'price', 'budget', 'value', 'total'].includes(field)) return rupiah(Number(value));
   const teks = String(value);
   if (TANGGAL.test(teks)) return formatDate(teks);
   if (KOSONG.has(teks)) return '';
@@ -49,7 +49,7 @@ export function detailBaris(entity: Entity, row: Item, ws: Workspace): BarisDeta
     .filter((f) => f !== 'title' && f !== 'activities')
     .map((field) => ({
       field,
-      label: labels[field] || field.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase()),
+      label: labels[`${entity}.${field}`] || labels[field] || field.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase()),
       nilai: nilaiTampil(entity, field, row.data[field], ws),
     }))
     .filter((b) => b.nilai);
@@ -225,6 +225,16 @@ export function ringkasan(entity: Entity, row: Item, ws: Workspace): string[] {
       return pakai(v('duration'), d.start_date ? `${v('start_date')} – ${v('end_date')}` : false);
     case 'units':
       return pakai(v('kind'), v('location'));
+    case 'assets':
+      return pakai(v('category'), v('condition'), v('unit_id'), Number(d.value) > 0 && v('value'));
+    case 'attendance':
+      return pakai(v('shift'), d.check_in_time ? `Datang ${v('check_in_time')}` : false, d.check_out_time ? `Pulang ${v('check_out_time')}` : false, v('unit_id'));
+    case 'purchase-orders':
+      return pakai(v('stakeholder_id'), Number(d.total) > 0 && v('total'), d.expected_date ? `Perkiraan tiba ${v('expected_date')}` : false);
+    case 'sales':
+      return pakai(`Omzet ${v('amount')}`, `${Number(d.transactions || 0)} transaksi`);
+    case 'savings':
+      return pakai(`${d.direction === 'tarik' ? 'Tarik' : 'Setor'} ${v('amount')}`, `Simpanan ${String(d.kind)}`, v('reference_number'));
     default:
       return [];
   }

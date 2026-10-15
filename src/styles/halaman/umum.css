@@ -147,3 +147,16 @@
 
 /* Halaman tidak ditemukan di dalam kerangka: kartu saja, tanpa diorama layar masuk. */
 .manager-main .auth { min-height: 50dvh; padding: 48px 0; background: none; }
+
+/* Ringkasan halaman administrasi usaha (aset, absensi, pembelian, penjualan, simpanan) */
+.ringkasan-admin { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@container halaman (min-width: 560px) {
+  .ringkasan-admin { grid-template-columns: none; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; }
+}
+.ringkasan-admin-angka { display: grid; gap: 2px; min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); }
+.ringkasan-admin-angka span { color: var(--ink-muted); font-size: 12.5px; }
+.ringkasan-admin-angka strong { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ringkasan-admin-angka small { color: var(--ink-muted); font-size: 12px; }
+.ringkasan-admin-angka.is-ok strong { color: var(--ok); }
+.ringkasan-admin-angka.is-warn strong { color: var(--warn); }
+.ringkasan-admin-angka.is-late strong { color: var(--late); }
