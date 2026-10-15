@@ -4,7 +4,6 @@
 // migrasi belum aktif supaya Beranda tidak dipenuhi modul kosong.
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BadgeCheck, Store } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { api } from '@/lib/client';
 import { addDays, today } from '@/lib/date';
@@ -81,7 +80,6 @@ function PenjualanGerai({ sales, units, hari }: { sales: Item[]; units: Item[]; 
   return (
     <section className="modul lebar-separuh" aria-label="Penjualan gerai 7 hari">
       <div className="modul-kepala">
-        <span className="modul-ikon pastel-mentega" aria-hidden="true"><Store size={17} /></span>
         <h2>Penjualan gerai 7 hari</h2>
         <Link href="/penjualan" className="modul-tautan">Rincian</Link>
       </div>
@@ -140,7 +138,6 @@ function KehadiranHariIni({ attendance, staff }: { attendance: Item[]; staff: It
   return (
     <section className="modul lebar-separuh" aria-label="Kehadiran hari ini">
       <div className="modul-kepala">
-        <span className="modul-ikon pastel-biru" aria-hidden="true"><BadgeCheck size={17} /></span>
         <h2>Kehadiran hari ini</h2>
         <Link href="/absensi" className="modul-tautan">Jadwal & absensi</Link>
       </div>

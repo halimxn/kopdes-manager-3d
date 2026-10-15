@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import '@fontsource-variable/hanken-grotesk';
+import '@fontsource-variable/manrope';
 import './globals.css';
 import '../styles/token.css';
 import '../styles/dasar.css';

@@ -50,7 +50,7 @@ const SUDUT_AWAL = Math.PI / 4,
   LANGKAH_PUTAR = Math.PI / 12;
 /** Pin biru (SVG statis) untuk hal yang perlu perhatian di peta. */
 const PIN_SVG =
-  '<svg viewBox="0 0 32 40" width="30" height="38" aria-hidden="true"><ellipse cx="16" cy="37" rx="7" ry="2.4" fill="#1d3a9e" opacity=".22"/><path d="M16 2a12 12 0 0 1 12 12c0 8.6-9.6 18.4-11.2 21a1 1 0 0 1-1.6 0C13.6 32.4 4 22.6 4 14A12 12 0 0 1 16 2Z" fill="#2f5bea"/><path d="M16 2a12 12 0 0 1 12 12c0 2-.5 4-1.4 6A12 12 0 0 0 6 11.5 12 12 0 0 1 16 2Z" fill="#fff" opacity=".22"/><circle cx="16" cy="14" r="5" fill="#fff"/></svg>';
+  '<svg viewBox="0 0 32 40" width="30" height="38" aria-hidden="true"><ellipse cx="16" cy="37" rx="7" ry="2.4" fill="#1d4d40" opacity=".22"/><path d="M16 2a12 12 0 0 1 12 12c0 8.6-9.6 18.4-11.2 21a1 1 0 0 1-1.6 0C13.6 32.4 4 22.6 4 14A12 12 0 0 1 16 2Z" fill="#2f6b3a"/><path d="M16 2a12 12 0 0 1 12 12c0 2-.5 4-1.4 6A12 12 0 0 0 6 11.5 12 12 0 0 1 16 2Z" fill="#fff" opacity=".22"/><circle cx="16" cy="14" r="5" fill="#fff"/></svg>';
 export type PinPeta = { key: string; label: string };
 const LANTAI = 0.06;
 /** Langkah santai (satuan/detik) dan kecepatan belok; figur berangkat bergiliran. */

@@ -7,7 +7,7 @@ Arahan 10 Oktober 2026: dunia meniru panel logistik referensi, dan **seluruh web
 | Permukaan | Gaya dan sumber |
 |---|---|
 | Dunia Koperasi `/dunia-koperasi` | Diorama lembut, kartu mengambang, menu lokasi/cuaca. `src/features/dunia-3d/monitoring.css`. |
-| Halaman operasional | Gaya Senja: kanvas krem hangat, kartu putih, aksi biru #2F5BEA, pastel biru/merah muda/mentega/mint, Hanken Grotesk; terang/gelap. Sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
+| Halaman operasional | Gaya Kebun: kanvas #F4F5F0, kartu putih bergaris tipis, menu samping hijau tua #0F2A24, sorotan limau #C5E86C, Manrope; terang/gelap. Sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
 
 Pilihan palet lama tidak dipakai lagi: semua palet tersimpan tampil dengan tema biru yang sama, dan Pengaturan hanya memilih terang/gelap/sistem. Status tetap memakai warna semantik (hijau aman, kuning peringatan, merah terlambat) plus teks.
 
@@ -17,14 +17,15 @@ Seluruh palet, komposisi kartu, scene, karakter, waktu, kendaraan dan rencana up
 
 ## Halaman operasional
 
-- **Gaya Senja (15 Oktober 2026)**, dipilih pemilik dari beberapa pratinjau (A–L):
-  - Kanvas krem `#FAF7F4`, kartu putih bergaris tipis dan bayangan lembut, teks cokelat tua hangat; mode gelap cokelat malam.
-  - Aksi utama biru `#2F5BEA`. Pastel per jenis informasi: biru (tugas, aksi), merah muda (rapat, kas keluar), mentega (rutinitas, stok, perhatian), mint (selesai, kas masuk). Token `--pastel-biru/pink/mentega/mint` (+ `-ink`).
-  - Huruf Hanken Grotesk (paket `@fontsource-variable/hanken-grotesk`, tanpa unduhan Google saat build).
-  - Menu samping menyatu dengan kanvas; halaman aktif berupa kartu putih. Tidak ada ornamen lantai, kayu, atau nama ruang.
+- **Gaya Kebun (16 Oktober 2026)**, dipilih pemilik dari kanvas desain (Senja, Rapi, Bersih, Mint, Lembut, Teduh, Kebun):
+  - Kanvas `#F4F5F0`, kartu putih garis `#E3E7DF`, bayangan sangat tipis; teks hijau tua `#13201C`; mode gelap hijau malam `#0E1513` dengan aksi limau.
+  - Menu samping hijau tua `#0F2A24` berlabel (sekitar 30 halaman tetap terbaca namanya); halaman aktif berupa pil limau `#C5E86C`. Token `--sisi-*` dan `--limau*`.
+  - Tombol utama hijau tua berteks limau (`--brand` + `--brand-text`); tautan hijau `--brand-ink`. Nama token lama (`--brand-*`, `--pastel-*`) dipertahankan agar semua halaman ikut.
+  - Huruf Manrope (paket `@fontsource-variable/manrope`, tanpa unduhan Google saat build), angka `tabular-nums`.
+  - Ikon `Ikon3D` hijau dari token `--ikon-awal/--ikon-akhir/--ikon-isi` (terang di menu samping gelap).
   - Satu tombol "+ Tambah" di bilah atas (dan + di dok ponsel); kepala halaman tidak mengulang tombol tambah.
-- **Grid modul seimbang**: Beranda memakai 6 kolom; modul `lebar-separuh` (setengah) dan `lebar-sepertiga` (sepertiga) dengan tinggi rata per baris; tablet dua kolom, ponsel satu kolom. Anatomi modul (`.modul` di `komponen.css`): ikon pastel, judul, tautan "Semua", isi, aksi di dasar.
-- **Beranda**: tanggal + pil ringkasan (terlambat, jatuh tempo hari ini, rapat berikutnya); modul Tugas, Agenda hari ini (rapat dan rutinitas dalam satu rel jam), Perlu perhatian, Proyek dengan milestone terdekat, Kas bulan berjalan per pekan (uang masuk/keluar tercatat, bukan saldo), Kegiatan terbaru, Grafik pekerjaan.
+- **Anatomi modul** (`.modul` di `komponen.css`): kartu putih bergaris tipis, kepala = judul tebal + tautan hijau di kanan, isi, aksi di dasar. Tanpa ikon pastel di kepala.
+- **Beranda**: tanggal + pil ringkasan (terlambat, jatuh tempo hari ini, rapat berikutnya); pita jam 07–18 (rutinitas bisa dicentang dan rapat dalam satu garis waktu, penanda sekarang; di area < 640 px menjadi daftar); antrean kerja dikelompokkan Terlambat/Hari ini/Besok/Berikutnya (saringan Terlambat/Selesai dan grafik tetap menampilkan daftar datar); kolom samping kas bulan berjalan (panel gelap, uang masuk/keluar tercatat, bukan saldo), perlu perhatian, kegiatan terbaru; linimasa proyek 2 minggu ke belakang sampai 8 minggu ke depan dengan milestone berikutnya; penjualan gerai, kehadiran (migrasi 10) dan grafik pekerjaan.
 
 - **Pola tata letak (11 Oktober 2026)**: tabel = judul teks rata kiri dengan ikon/avatar di kiri, kolom selebar isi, aksi satu baris (ikon bila lebih dari dua); kartu daftar = tinggi rata per baris, aksi di dasar kartu dipisah garis tipis, informasi tidak diulang antara cip dan badan kartu; tabel Tugas/Kegiatan tampil sebagai kartu bila area halaman < 900 px (container query, bukan lebar layar, karena sidebar), dan Buku koperasi memakai tampilan kartu di layar < 1280 px. Warna hanya untuk status (lencana lembut), bukan garis aksen kartu. Satu set warna: biru tema untuk aksen dan kategori; token `--pastel-emerald/rose/amber-*` hanya untuk status selesai/terlambat/perlu perhatian; abu untuk netral. Judul halaman = ikon halaman + 22 px tebal; kode dan jam memakai angka rata (`tabular-nums`).
 

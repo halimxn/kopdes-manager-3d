@@ -8,13 +8,13 @@ description: Wajib dipakai setiap kali mengubah tampilan web Kopdes — CSS di s
 Sumber gaya: `docs/DESAIN-ANTARMUKA.md`. Konteks produk: `PRODUCT.md`. Untuk keputusan desain baru boleh memakai skill global `impeccable` / `ui-ux-pro-max`; aturan di bawah tetap menang.
 
 ## Peta
-- `src/styles/token.css` (satu-satunya tempat warna mentah, terang/gelap) → `dasar.css` → `komponen.css` → `kerangka.css` (sidebar, bilah atas, dok ponsel, lantai ruang `data-ruang`) → `halaman/*.css` (satu berkas per kelompok halaman).
+- `src/styles/token.css` (satu-satunya tempat warna mentah, terang/gelap) → `dasar.css` → `komponen.css` → `kerangka.css` (sidebar hijau tua, bilah atas, dok ponsel) → `halaman/*.css` (satu berkas per kelompok halaman).
 - Komponen bersama: `src/components/ui` (`Button`, `Input`, `Select`, `DateField`, `Modal`, `EmptyState`, `Ikon3D`).
 - Dunia 3D punya gaya sendiri: `src/features/dunia-3d/monitoring.css` (lihat skill dunia-koperasi).
 
 ## Bahasa visual
-- Gaya Senja: kanvas krem, kartu putih, aksi biru `#2F5BEA`, pastel `--pastel-biru/pink/mentega/mint` (+ `-ink`) per jenis informasi, huruf Hanken Grotesk, angka `tabular-nums`. Tanpa ornamen (lantai, kayu, dinding). Satu tombol tambah di bilah atas.
-- Halaman baru memakai grid modul seimbang: `.modul` + `lebar-separuh`/`lebar-sepertiga`, tinggi rata per baris, setiap data bisa ditindaklanjuti.
+- Gaya Kebun: kanvas `--canvas` hijau-abu muda, kartu putih garis tipis, menu samping hijau tua berlabel (`--sisi-*`), halaman aktif/penanda sekarang limau (`--limau*`), tombol utama `--brand` berteks `--brand-text`, tautan `--brand-ink`, huruf Manrope, angka `tabular-nums`. Pastel kategori `--pastel-biru/pink/mentega/mint` (+ `-ink`) seperlunya. Satu tombol tambah di bilah atas.
+- Kartu memakai `.modul` (kepala judul + tautan kanan, tanpa ikon pastel). Setiap data bisa ditindaklanjuti. Ikon `Ikon3D` ikut tema lewat `--ikon-awal/--ikon-akhir/--ikon-isi`; di latar gelap timpa ketiganya pada wadah.
 - Status hanya `--ok/--late/--warn` (+ `-bg`, `-line`); status selalu bertuliskan, bukan warna saja.
 - Judul halaman: ikon `Ikon3D` + judul tebal; tanpa label kecil di atas judul (eyebrow).
 - Tabel → kartu di area sempit (container query `halaman`, < 900 px). Aksi kartu satu baris di dasar kartu.

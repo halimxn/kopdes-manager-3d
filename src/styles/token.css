@@ -1,24 +1,39 @@
 /*
-  Token sistem gaya Kopdes Manager 3D — "Senja" (keputusan pemilik 15 Oktober 2026).
-  Kanvas krem hangat, kartu putih, aksi biru #2F5BEA, empat pastel (biru, merah muda,
-  mentega, mint) untuk modul dan kategori, huruf Hanken Grotesk. Status selalu bertuliskan.
+  Token sistem gaya Kopdes Manager 3D — "Kebun" (keputusan pemilik 15 Oktober 2026, menggantikan Senja).
+  Kanvas hijau-abu sangat muda, kartu putih bergaris tipis, menu samping hijau tua berlabel, aksi hijau
+  tua dengan teks limau, sorotan limau (#C5E86C) untuk yang sedang aktif, huruf Manrope. Status bertuliskan.
+  Nama variabel lama (pastel-*, brand-*) dipertahankan agar semua halaman ikut tanpa diubah satu per satu.
 */
 :root {
   color-scheme: light;
-  --scrim: rgba(34, 24, 16, 0.32);
+  --scrim: rgba(10, 26, 22, 0.36);
   /* Isi di atas warna merek/status, kilau merek, sinyal kuning, jalur Gantt, toast */
-  --on-brand: #fff;
-  --brand-bright: #6b8cff;
-  --sinyal: #e8b33a;
-  --jalur-rencana: #e8eefd;
-  --titik-rencana: #c6d3fb;
-  --titik-selesai: #8fcfb2;
-  --toast-bg: #221e1c;
-  --toast-fg: #fff;
-  --toast-aksi: #a8bbff;
+  --on-brand: #ffffff;
+  --brand-bright: #3f7f54;
+  --sinyal: #e0b43a;
+  --jalur-rencana: #e7f3c9;
+  --titik-rencana: #c9dca3;
+  --titik-selesai: #8fc79a;
+  --toast-bg: #0f2a24;
+  --toast-fg: #ffffff;
+  --toast-aksi: #c5e86c;
+
+  /* Sorotan limau: halaman aktif, penanda "sekarang", nilai yang disorot */
+  --limau: #c5e86c;
+  --limau-soft: #e7f3c9;
+  --limau-ink: #0f2a24;
+
+  /* Menu samping hijau tua (sama di terang dan gelap) */
+  --sisi-bg: #0f2a24;
+  --sisi-hover: #163a32;
+  --sisi-kartu: #163a32;
+  --sisi-garis: #1f463c;
+  --sisi-ink: #c9dad4;
+  --sisi-ink-kuat: #ffffff;
+  --sisi-muted: #8aa79e;
 
   /* Huruf */
-  --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Manrope Variable', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --fs-title: 28px;
   --fs-h2: 17px;
@@ -29,45 +44,45 @@
   --lh-tight: 1.25;
   --lh-body: 1.5;
 
-  /* Permukaan: kanvas = dinding kantor, kartu = panel putih dunia */
-  --canvas: #faf7f4;
-  --canvas-deep: #f3eee9;
+  /* Permukaan */
+  --canvas: #f4f5f0;
+  --canvas-deep: #eceee7;
   --surface: #ffffff;
-  --surface-2: #fbf8f5;
-  --surface-3: #f3eee9;
-  --wall: #faf7f4;
-  --wall-deep: #faf7f4;
+  --surface-2: #f7f8f4;
+  --surface-3: #eef1ea;
+  --wall: #f4f5f0;
+  --wall-deep: #f4f5f0;
 
   /* Tinta */
-  --ink: #221e1c;
-  --ink-heading: #1a1614;
-  --ink-muted: #665d57;
-  --ink-subtle: #7f756e;
+  --ink: #13201c;
+  --ink-heading: #0f1a17;
+  --ink-muted: #55645f;
+  --ink-subtle: #67756f;
   --ink-inverse: #ffffff;
 
   /* Garis */
-  --line: #efe8e1;
-  --line-strong: #e2d8ce;
+  --line: #e3e7df;
+  --line-strong: #d3d9cf;
 
-  /* Aksen biru dunia */
-  --brand: #2f5bea;
-  --brand-hover: #2148c7;
-  --brand-press: #1b3cab;
-  --brand-soft: #e8eefd;
-  --brand-soft-2: #dbe4fc;
-  --brand-soft-border: #c9d6fb;
-  --brand-ink: #2448c7;
-  --brand-text: #ffffff;
+  /* Aksi: hijau tua; teks tombol utama limau */
+  --brand: #0f2a24;
+  --brand-hover: #163a32;
+  --brand-press: #0a1f1a;
+  --brand-soft: #edf5da;
+  --brand-soft-2: #e1edc4;
+  --brand-soft-border: #cfe0a8;
+  --brand-ink: #2f6b3a;
+  --brand-text: #d4f08a;
   --brand-contrast: #ffffff;
-  --focus-ring: 0 0 0 3px rgba(47, 91, 234, 0.28);
+  --focus-ring: 0 0 0 3px rgba(47, 107, 58, 0.32);
 
-  /* Kayu lantai diorama: aksen hangat kedua */
-  --wood: #f3dfa2;
+  /* Aksen hangat kedua (sisa nama lama) */
+  --wood: #f6e7b0;
   --wood-deep: #d9b45a;
   --wood-edge: #c9a24a;
-  --wood-soft: #fff3cc;
+  --wood-soft: #fdf1cf;
 
-  /* Lantai ruang (sisa gaya dunia lama): kini sama dengan kanvas */
+  /* Lantai ruang (sisa gaya dunia lama): sama dengan kanvas */
   --lantai-kerja: var(--canvas);
   --lantai-kegiatan: var(--canvas);
   --lantai-buku: var(--canvas);
@@ -78,31 +93,31 @@
   --lantai-garis: transparent;
 
   /* Status — hanya untuk makna, tidak sebagai hiasan */
-  --ok: #1f6e52;
-  --ok-bg: #e4f4ee;
-  --ok-line: #c3e6d6;
-  --late: #b9461a;
-  --late-bg: #fde7dc;
-  --late-line: #f8cdb8;
-  --warn: #8a6400;
-  --warn-bg: #fff3cc;
-  --warn-line: #f3dfa2;
+  --ok: #2f6b3a;
+  --ok-bg: #e4f1e6;
+  --ok-line: #c6dfc9;
+  --late: #b8391f;
+  --late-bg: #fde8e1;
+  --late-line: #f6c9bb;
+  --warn: #7a5a00;
+  --warn-bg: #fdf1cf;
+  --warn-line: #f0dc9c;
   --info: var(--brand-ink);
   --info-bg: var(--brand-soft);
-  --neutral-bg: #f3eee9;
+  --neutral-bg: #eef1ea;
 
-  /* Bentuk dan kedalaman */
+  /* Bentuk dan kedalaman: garis tipis, bayangan sangat tipis */
   --r-xs: 6px;
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 18px;
   --r-xl: 22px;
   --r-full: 999px;
-  --shadow-sm: 0 1px 2px rgba(60, 40, 20, 0.05);
-  --shadow: 0 1px 2px rgba(60, 40, 20, 0.04), 0 6px 18px rgba(60, 40, 20, 0.05);
-  --shadow-md: 0 2px 4px rgba(60, 40, 20, 0.05), 0 12px 30px rgba(60, 40, 20, 0.08);
-  --shadow-lg: 0 24px 60px rgba(40, 26, 14, 0.18);
-  --shadow-dock: 0 12px 32px rgba(60, 40, 20, 0.14);
+  --shadow-sm: 0 1px 2px rgba(15, 42, 36, 0.05);
+  --shadow: 0 1px 2px rgba(15, 42, 36, 0.04), 0 6px 18px rgba(15, 42, 36, 0.05);
+  --shadow-md: 0 2px 4px rgba(15, 42, 36, 0.05), 0 12px 30px rgba(15, 42, 36, 0.08);
+  --shadow-lg: 0 24px 60px rgba(10, 26, 22, 0.2);
+  --shadow-dock: 0 12px 32px rgba(15, 42, 36, 0.16);
 
   /* Gerak */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -110,21 +125,23 @@
   --dur: 200ms;
 
   /* Tata letak */
-  --sidebar-w: 240px;
+  --sidebar-w: 248px;
   --topbar-h: 64px;
   --page-max: 1200px;
   --gutter: 28px;
   --touch: 44px;
   --dock-h: 72px;
 
-  /* Ikon dua nada */
-  --ikon-isi: #e8eefd;
+  /* Ikon dua nada (Ikon3D): garis bergradasi + isi */
+  --ikon-isi: #e7f3c9;
+  --ikon-awal: #5f9e3f;
+  --ikon-akhir: #1d4d40;
 
   /* Alias untuk gaya inline di komponen (jangan tambah alias baru) */
   --success: var(--ok);
   --danger: var(--late);
   --tone-success-text: var(--ok);
-  --tone-success-accent: #22a55a;
+  --tone-success-accent: #3f9a5f;
   --tone-warn-text: var(--warn);
   --tone-danger-text: var(--late);
   --tone-info-text: var(--brand-ink);
@@ -140,49 +157,58 @@
   --pastel-blue-text: var(--brand-ink);
   --pastel-blue-bg: var(--brand-soft);
   --pastel-blue-border: var(--brand-soft-border);
-  --pastel-purple-text: #a0315f;
-  --pastel-purple-bg: #fce7ef;
-  /* Pastel Senja: biru (aksi), merah muda (rapat), mentega (rutinitas/stok), mint (selesai/uang masuk) */
-  --pastel-biru: #e8eefd;
-  --pastel-biru-ink: #2448c7;
-  --pastel-pink: #fce7ef;
-  --pastel-pink-ink: #a0315f;
-  --pastel-mentega: #fff3cc;
-  --pastel-mentega-ink: #8a6400;
-  --pastel-mint: #e4f4ee;
-  --pastel-mint-ink: #1f6e52;
+  --pastel-purple-text: #a3401c;
+  --pastel-purple-bg: #fbe3d6;
+  /* Pastel kategori (nama lama): biru = setor/info, pink = rapat/kas keluar (persik),
+     mentega = stok/perhatian, mint = selesai/uang masuk (limau lembut) */
+  --pastel-biru: #e2edf9;
+  --pastel-biru-ink: #1f5fa6;
+  --pastel-pink: #fbe3d6;
+  --pastel-pink-ink: #a3401c;
+  --pastel-mentega: #fdf1cf;
+  --pastel-mentega-ink: #7a5a00;
+  --pastel-mint: #e7f3c9;
+  --pastel-mint-ink: #3d6b12;
 }
 
 :root.dark {
   color-scheme: dark;
   --scrim: rgba(0, 0, 0, 0.55);
-  --jalur-rencana: #1f2a4d;
-  --titik-rencana: #4a5fa8;
-  --titik-selesai: #3f9e78;
-  --toast-bg: #f2eeea;
-  --toast-fg: #1c1917;
-  --toast-aksi: #2448c7;
-  --canvas: #141210;
-  --canvas-deep: #100e0c;
-  --surface: #1c1917;
-  --surface-2: #211d1a;
-  --surface-3: #26221f;
-  --wall: #141210;
-  --wall-deep: #141210;
-  --ink: #f2eeea;
+  --on-brand: #0f2a24;
+  --brand-bright: #d4f08a;
+  --jalur-rencana: #1f2c18;
+  --titik-rencana: #4c6b2f;
+  --titik-selesai: #4f9a6a;
+  --toast-bg: #e7efea;
+  --toast-fg: #0f1a17;
+  --toast-aksi: #2f6b3a;
+  --limau-soft: #233119;
+  --sisi-bg: #0a1714;
+  --sisi-hover: #12241f;
+  --sisi-kartu: #12241f;
+  --sisi-garis: #1a332c;
+  --canvas: #0e1513;
+  --canvas-deep: #0a100e;
+  --surface: #141d1a;
+  --surface-2: #18221f;
+  --surface-3: #1d2925;
+  --wall: #0e1513;
+  --wall-deep: #0e1513;
+  --ink: #e7efea;
   --ink-heading: #ffffff;
-  --ink-muted: #bdb4ad;
-  --ink-subtle: #958b84;
-  --line: #2b2623;
-  --line-strong: #3a3430;
-  --brand: #6b8cff;
-  --brand-hover: #84a0ff;
-  --brand-press: #5a7cf0;
-  --brand-soft: #1f2a4d;
-  --brand-soft-2: #26335e;
-  --brand-soft-border: #33437a;
-  --brand-ink: #a8bbff;
-  --focus-ring: 0 0 0 3px rgba(107, 140, 255, 0.4);
+  --ink-muted: #a6b4ae;
+  --ink-subtle: #8a9993;
+  --line: #22302b;
+  --line-strong: #2d3d37;
+  --brand: #c5e86c;
+  --brand-hover: #d4f08a;
+  --brand-press: #b2d65a;
+  --brand-soft: #1f2c18;
+  --brand-soft-2: #27361d;
+  --brand-soft-border: #3a4d27;
+  --brand-ink: #c5e86c;
+  --brand-text: #0f2a24;
+  --focus-ring: 0 0 0 3px rgba(197, 232, 108, 0.4);
   --wood: #8a7330;
   --wood-deep: #c9a24a;
   --wood-edge: #6e5a22;
@@ -194,32 +220,34 @@
   --lantai-koordinasi: var(--canvas);
   --lantai-pengaturan: var(--canvas);
   --lantai-garis: transparent;
-  --ok: #8ed9bc;
-  --ok-bg: #16302a;
-  --ok-line: #24493e;
-  --late: #ff9f73;
-  --late-bg: #3a2016;
-  --late-line: #5a3222;
+  --ok: #9bd6a6;
+  --ok-bg: #16291c;
+  --ok-line: #24442d;
+  --late: #ff9f80;
+  --late-bg: #3a1c14;
+  --late-line: #5a2e22;
   --warn: #f0d075;
   --warn-bg: #352b0e;
   --warn-line: #54451a;
-  --neutral-bg: #26221f;
+  --neutral-bg: #1d2925;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 14px 34px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
   --shadow-dock: 0 10px 30px rgba(0, 0, 0, 0.45);
-  --ikon-isi: rgba(107, 140, 255, 0.22);
-  --pastel-purple-text: #f2a6c4;
-  --pastel-purple-bg: #3a1d29;
-  --pastel-biru: #1f2a4d;
-  --pastel-biru-ink: #a8bbff;
-  --pastel-pink: #3a1d29;
-  --pastel-pink-ink: #f2a6c4;
+  --ikon-isi: rgba(197, 232, 108, 0.16);
+  --ikon-awal: #d4f08a;
+  --ikon-akhir: #8fc25a;
+  --pastel-purple-text: #f5b39a;
+  --pastel-purple-bg: #3a2016;
+  --pastel-biru: #16243a;
+  --pastel-biru-ink: #9cc4f2;
+  --pastel-pink: #3a2016;
+  --pastel-pink-ink: #f5b39a;
   --pastel-mentega: #352b0e;
   --pastel-mentega-ink: #f0d075;
-  --pastel-mint: #16302a;
-  --pastel-mint-ink: #8ed9bc;
+  --pastel-mint: #1f2c18;
+  --pastel-mint-ink: #c5e86c;
 }
 
 
