@@ -140,7 +140,6 @@ const modules = [
     Icon: ClipboardCheck,
   },
 ] as const;
-export const recordingPaths = ['pencatatan', ...modules.map((entry) => entry.path)];
 // Ponsel, tablet, dan laptop kecil (konten < ~950 px karena sidebar) memakai kartu agar tabel lebar tidak perlu digeser.
 function subscribeCompactView(callback: () => void) {
   if (typeof window.matchMedia !== 'function') return () => {};

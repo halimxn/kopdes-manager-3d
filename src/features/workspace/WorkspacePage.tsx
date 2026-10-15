@@ -4,19 +4,28 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useWorkspace } from './useWorkspace';
 import { pages, catalog } from '../records/catalog';
-import { Records } from '../records/Records';
-import { Dashboard } from '../dashboard/Dashboard';
-import { Editor } from '../records/Editor';
-import { Operations, recordingPaths } from '../operations/Operations';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FollowUps } from '../follow-ups/FollowUps';
-import { TodayView } from '../dashboard/TodayView';
 import type { Entity, Item } from '../records/schemas';
 import { schemas } from '../records/schemas';
 import { today } from '@/lib/date';
 import { SkeletonLoading } from '@/components/ui/SkeletonLoading';
-import { pageEntities } from './workspace-scope';
+import { pageEntities, recordingPaths } from './workspace-scope';
 import { ManagerGuide } from './ManagerGuide';
+// Tiap halaman hanya memuat komponennya sendiri agar unduhan JS awal kecil.
+const Records = dynamic(() => import('../records/Records').then((module) => module.Records), {
+  loading: () => <SkeletonLoading slug="tugas" />,
+});
+const Dashboard = dynamic(() => import('../dashboard/Dashboard').then((module) => module.Dashboard), {
+  loading: () => <SkeletonLoading slug="beranda" />,
+});
+const Operations = dynamic(() => import('../operations/Operations').then((module) => module.Operations), {
+  loading: () => <SkeletonLoading slug="pencatatan" />,
+});
+const TodayView = dynamic(() => import('../dashboard/TodayView').then((module) => module.TodayView), {
+  loading: () => <SkeletonLoading slug="hari-ini" />,
+});
+const FollowUps = dynamic(() => import('../follow-ups/FollowUps').then((module) => module.FollowUps));
+const Editor = dynamic(() => import('../records/Editor').then((module) => module.Editor));
 const MonitoringDashboard = dynamic(() => import('../dunia-3d/MonitoringDashboard').then(module => module.MonitoringDashboard));
 const Roadmap = dynamic(() => import('../roadmap/Roadmap').then((module) => module.Roadmap), {
   loading: () => <SkeletonLoading slug="roadmap" />,

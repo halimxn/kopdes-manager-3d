@@ -26,9 +26,21 @@ function cacheWorkspace(key: string, entry: WorkspaceCacheEntry) {
   }
 }
 
+type Capabilities = { operations: boolean; logistics?: boolean };
+// Kemampuan server hanya berubah setelah migrasi, jadi cukup diminta sekali per sesi browser; gagal tidak di-cache.
+let capabilitiesRequest: Promise<Capabilities> | null = null;
+function loadCapabilities() {
+  capabilitiesRequest ??= api<Capabilities>('capabilities').catch((error) => {
+    capabilitiesRequest = null;
+    throw error;
+  });
+  return capabilitiesRequest;
+}
+
 export function invalidateWorkspaceCache(pattern?: string) {
   if (!pattern) {
     workspaceCache.clear();
+    capabilitiesRequest = null;
   } else {
     for (const key of workspaceCache.keys()) {
       if (key.includes(pattern)) workspaceCache.delete(key);
@@ -92,7 +104,7 @@ export function useWorkspace(
     const current = ++generation.current;
     setFetching(null);
     try {
-      const capabilities = await api<{ operations: boolean; logistics?: boolean }>('capabilities');
+      const capabilities = await loadCapabilities();
       const entries = await Promise.all(
         pageEntities(slug)
           .filter((entity) => capabilities.operations || !operationEntities.includes(entity))

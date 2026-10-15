@@ -1,5 +1,7 @@
 import { pages } from '../records/catalog';
 import type { Entity } from '../records/schemas';
+// Halaman Buku koperasi; harus sama dengan `modules` di Operations.tsx (dipisah agar Operations dimuat hanya di halamannya).
+export const recordingPaths = ['pencatatan', 'anggota', 'keuangan', 'barang', 'stok-opname'];
 export function pageEntities(slug: string): Entity[] {
   if (slug === 'riwayat-proyek') return pageEntities('proyek');
   const related: Record<string, Entity[]> = {

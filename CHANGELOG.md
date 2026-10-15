@@ -2,6 +2,12 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Halaman lebih cepat dimuat — 15 Oktober 2026
+
+- Tiap halaman hanya mengunduh komponennya sendiri: Beranda, Hari ini, catatan, Buku koperasi, Perlu perhatian, dan formulir kini dimuat sesuai halaman (sebelumnya semua ikut di setiap halaman). Di dalam halaman catatan, tampilan Harian/Papan/Kalender/Linimasa, laci tugas, formulir, impor CSV, dan periode kerja dimuat saat dipakai. JS awal halaman operasional turun dari 546 KB menjadi 236 KB (hasil build produksi).
+- Kemampuan server (`capabilities`) diminta sekali per sesi browser, tidak lagi di setiap pindah halaman, sehingga data halaman langsung diminta tanpa menunggu satu permintaan tambahan. Gagal tidak di-cache.
+- Verifikasi: tes, typecheck, lint, `lint:ui`, build lulus; halaman utama dan tampilan Tugas diperiksa tampil di 1440 px. Waktu muat di Vercel belum diukur.
+
 ## Pemisah ribuan pada input angka — 13 Oktober 2026
 
 - Nominal kas, harga, dan jumlah stok otomatis memakai titik pemisah ribuan saat diketik, ditempel, atau membuka data lama. Formulir dan draf tetap menyimpan angka tanpa titik; PIN, telepon, serta kode tetap memakai input sebelumnya.

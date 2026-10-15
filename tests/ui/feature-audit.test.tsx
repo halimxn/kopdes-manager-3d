@@ -85,7 +85,7 @@ it('CSV tugas menyimpan judul berkoma dan tidak mengirim kolom date yang tidak s
   render(<Records entity="work-items" workspace={{}} refresh={refresh} />);
   fireEvent.click(screen.getByRole('button', { name: 'Impor CSV' }));
   expect(screen.getByRole('button', { name: 'Unduh format CSV' })).toBeTruthy();
-  fireEvent.change(screen.getByLabelText('Berkas CSV'), {
+  fireEvent.change(await screen.findByLabelText('Berkas CSV'), {
     target: {
       files: [
         new File(
