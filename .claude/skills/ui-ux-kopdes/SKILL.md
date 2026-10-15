@@ -13,7 +13,8 @@ Sumber gaya: `docs/DESAIN-ANTARMUKA.md`. Konteks produk: `PRODUCT.md`. Untuk kep
 - Dunia 3D punya gaya sendiri: `src/features/dunia-3d/monitoring.css` (lihat skill dunia-koperasi).
 
 ## Bahasa visual
-- Bahasa dunia 3D: kanvas lavender, kartu putih, menu samping = dinding, item aktif = kartu putih, lantai per ruang, aksen kayu (`--wood`) hanya untuk rapat, PIN, laporan, hari ini, milestone. Biru `#2F5BEA`, huruf Inter, angka `tabular-nums`.
+- Gaya Senja: kanvas krem, kartu putih, aksi biru `#2F5BEA`, pastel `--pastel-biru/pink/mentega/mint` (+ `-ink`) per jenis informasi, huruf Hanken Grotesk, angka `tabular-nums`. Tanpa ornamen (lantai, kayu, dinding). Satu tombol tambah di bilah atas.
+- Halaman baru memakai grid modul seimbang: `.modul` + `lebar-separuh`/`lebar-sepertiga`, tinggi rata per baris, setiap data bisa ditindaklanjuti.
 - Status hanya `--ok/--late/--warn` (+ `-bg`, `-line`); status selalu bertuliskan, bukan warna saja.
 - Judul halaman: ikon `Ikon3D` + judul tebal; tanpa label kecil di atas judul (eyebrow).
 - Tabel → kartu di area sempit (container query `halaman`, < 900 px). Aksi kartu satu baris di dasar kartu.

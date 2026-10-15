@@ -44,7 +44,7 @@ Arahan langsung pemilik terbaru mengatasi konflik. Jangan membuat kontrak gaya d
 - Periksa 360, 768, 1024, 1440 px. Halaman operasional memakai navigasi bawah/rel/sidebar; Dunia Koperasi memakai bilah dan panel sendiri.
 - Area sentuh minimal 44 px, fokus keyboard, label form, status memakai teks selain warna.
 - Tabel/Gantt bergulir dalam kontainer atau berubah menjadi kartu di area sempit; hormati reduced-motion dan safe area.
-- Tema web dan dunia satu keluarga: kanvas lavender muda, kartu putih, aksen biru `#2F5BEA`, huruf Inter. Sistem gaya web di `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`); warna mentah hanya di `token.css`, tanpa `!important` (`npm run lint:ui`). Dunia di `src/features/dunia-3d/monitoring.css`. Warna status hanya token `--ok/--late/--warn` (alias `--pastel-*`). Mode gelap tersedia untuk web; dunia selalu terang.
+- Web memakai gaya "Senja": kanvas krem hangat, kartu putih, aksi biru `#2F5BEA`, empat pastel (biru, merah muda, mentega, mint) untuk modul dan kategori, huruf Hanken Grotesk (keputusan pemilik 15 Oktober 2026); dunia 3D berbagi biru `#2F5BEA` dan huruf yang sama. Beranda dan halaman baru memakai grid modul seimbang (komponen `.modul`). Sistem gaya web di `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`); warna mentah hanya di `token.css`, tanpa `!important` (`npm run lint:ui`). Dunia di `src/features/dunia-3d/monitoring.css`. Warna status hanya token `--ok/--late/--warn` (alias `--pastel-*`). Mode gelap tersedia untuk web; dunia selalu terang.
 - Hindari angka operasional palsu, tombol dekoratif, dan slogan. Buku kas hanya uang masuk/keluar tercatat, bukan saldo atau laba.
 
 ## Proses

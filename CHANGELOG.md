@@ -2,6 +2,14 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Gaya Senja dan Beranda grid modul — 15 Oktober 2026
+
+- Pemilik memilih desain H · Senja setelah membandingkan 12 pratinjau (A–L). Token diganti di satu tempat: kanvas krem hangat, kartu putih, aksi biru #2F5BEA, pastel biru/merah muda/mentega/mint, status pastel bertuliskan, huruf Hanken Grotesk (paket lokal; Inter dibuang). Mode gelap ikut.
+- Ornamen dunia dibuang dari web: pita lantai, nama ruang tercat, sidebar dinding, strip kayu, diorama layar PIN, serta peta `data-ruang` di AppShell.
+- Beranda disusun ulang menjadi grid modul seimbang: tanggal + pil ringkasan menggantikan kartu angka; tombol tambah ganda di kepala halaman dihapus; modul Tugas, Agenda hari ini (rapat dan rutinitas dalam satu rel jam), Perlu perhatian, Proyek dengan milestone terdekat, Kas bulan berjalan per pekan (uang masuk/keluar tercatat), Kegiatan terbaru, Grafik pekerjaan. Beranda memuat milestone alih-alih anggota.
+- Pelajaran: nama kelas `m-6`/`m-4` bentrok dengan utilitas margin Tailwind; dicatat di skill ui-ux-kopdes.
+- Verifikasi: 377 tes / 60 berkas, typecheck, lint, `lint:ui` lulus; Beranda diperiksa di 1440, 820, 390 px dan mode gelap; Tugas, Buku kas, Hari ini, Rapat, Proyek, Pengaturan, PIN diperiksa di 1440 px.
+
 ## Halaman lebih cepat dimuat — 15 Oktober 2026
 
 - Tiap halaman hanya mengunduh komponennya sendiri: Beranda, Hari ini, catatan, Buku koperasi, Perlu perhatian, dan formulir kini dimuat sesuai halaman (sebelumnya semua ikut di setiap halaman). Di dalam halaman catatan, tampilan Harian/Papan/Kalender/Linimasa, laci tugas, formulir, impor CSV, dan periode kerja dimuat saat dipakai. JS awal halaman operasional turun dari 546 KB menjadi 236 KB (hasil build produksi).
