@@ -1,4 +1,4 @@
-/* Beranda: kepala di atas lantai ruang, angka, fokus tugas, kolom samping, proyek, catatan, lipatan. */
+/* Beranda: kepala, angka, fokus tugas, kolom samping, proyek, catatan, lipatan. */
 
 .beranda { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 
@@ -150,11 +150,11 @@
   gap: 14px;
   color: inherit;
   text-decoration: none;
-  background: linear-gradient(135deg, var(--surface) 55%, var(--wood-soft));
-  box-shadow: var(--shadow), inset 0 -4px 0 color-mix(in srgb, var(--wood) 60%, transparent);
+  background: linear-gradient(135deg, var(--surface) 55%, var(--pastel-mentega));
+  box-shadow: var(--shadow);
   transition: box-shadow var(--dur), transform var(--dur) var(--ease-out);
 }
-.beranda-rapat:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--shadow-md), inset 0 -4px 0 var(--wood); }
+.beranda-rapat:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .beranda-rapat-teks { display: grid; flex: 1 1 auto; min-width: 0; line-height: 1.3; }
 .beranda-rapat-teks small { color: var(--brand-ink); font-size: 12px; font-weight: 700; }
 .beranda-rapat-teks strong { font-size: 15.5px; font-weight: 750; }

@@ -131,7 +131,7 @@ dialog.task-detail-drawer[open] { display: block; }
 .drawer-date-inline-input { max-width: 200px; }
 .prop-user-chip { gap: 8px; }
 .prop-avatar { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-ink); font-size: 11.5px; font-weight: 750; }
-.prop-avatar-creator { background: var(--wood-soft); color: var(--wood-deep); }
+.prop-avatar-creator { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
 .prop-user-name { font-weight: 650; }
 .prop-user-role { color: var(--ink-muted); font-size: 12px; }
 .prop-text-badge { font-weight: 600; }

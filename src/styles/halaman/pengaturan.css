@@ -19,13 +19,12 @@
   min-height: 132px;
   padding: 10px;
   border-radius: var(--r-lg);
-  background:
-    repeating-linear-gradient(153.43deg, transparent 0 22px, var(--lantai-garis) 22px 23px),
-    var(--lantai-kerja);
-  box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--wood) 55%, transparent);
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  box-shadow: none;
 }
 .tema-mini i { display: block; }
-.tema-mini-samping { display: grid; align-content: start; gap: 8px; padding: 10px 8px; border-radius: 10px; background: linear-gradient(180deg, var(--wall), var(--wall-deep)); }
+.tema-mini-samping { display: grid; align-content: start; gap: 8px; padding: 10px 8px; border-radius: 10px; background: var(--surface-3); }
 .tema-mini-samping i { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.7); }
 .tema-mini-samping i:first-child { background: var(--surface); box-shadow: var(--shadow-sm); }
 .tema-mini-isi { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto; gap: 8px; }

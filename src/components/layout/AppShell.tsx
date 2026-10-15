@@ -44,21 +44,6 @@ const sections = [
   ['Pengaturan & bantuan', ['/pengaturan', '/panduan'], 'blue'],
 ] as const;
 
-/** Setiap kelompok menu adalah satu ruang kantor diorama; halaman memakai warna lantai ruang itu. */
-const RUANG: Record<string, string> = {
-  'Ruang kerja': 'kerja',
-  Kegiatan: 'kegiatan',
-  'Buku koperasi': 'buku',
-  'Gerai & laporan': 'gerai',
-  'Koordinasi & berkas': 'koordinasi',
-  'Pengaturan & bantuan': 'pengaturan',
-};
-function ruangDari(path: string): { kunci: string; label: string } {
-  const bagian = sections.find(([, hrefs]) => (hrefs as readonly string[]).some((h) => path === h || path.startsWith(h + '/')));
-  const label = bagian ? bagian[0] : 'Ruang kerja';
-  return { kunci: RUANG[label] ?? 'kerja', label };
-}
-
 function getNavSubtitle(href: string): string {
   const subtitles: Record<string, string> = {
     '/beranda': 'Ringkasan pekerjaan',
@@ -108,7 +93,6 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
   const [shortcutHelp, setShortcutHelp] = useState(false);
   const path = usePathname(),
     query = useSearchParams();
-  const ruang = ruangDari(path);
   const [favoriteText, setFavoriteText] = usePreference('hub-favorites', '/hari-ini|/tugas');
   const [collapsedText, setCollapsedText] = usePreference('hub-nav-collapsed', '');
   const [desktopSidebarHidden, setDesktopSidebarHidden] = usePreference(
@@ -535,7 +519,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
       {menu && (
         <Button className="manager-shade" aria-label="Tutup menu" onClick={() => setMenu(false)} />
       )}
-      <main className="manager-main" id="main" tabIndex={-1} data-ruang={ruang.kunci} data-ruang-label={ruang.label}>
+      <main className="manager-main" id="main" tabIndex={-1}>
         {error && (
           <p role="alert" className="notice error">
             {error}
