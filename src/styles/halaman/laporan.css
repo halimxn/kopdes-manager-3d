@@ -113,3 +113,4 @@
   .manager-main::before, .manager-main::after { display: none; }
   .official-report-sheet { max-width: none; border: 0; box-shadow: none; padding: 0; }
 }
+.report-periode { justify-self: start; }

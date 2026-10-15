@@ -11,6 +11,17 @@ export function addDays(value: string, amount: number): string {
   date.setUTCDate(date.getUTCDate() + amount);
   return date.toISOString().slice(0, 10);
 }
+/** Rentang satu bulan kalender; `geser` -1 = bulan lalu. Akhir bulan berjalan dibatasi `sampai` (hari ini). */
+export function monthRange(value: string, geser = 0, sampai = value): { start: string; end: string; label: string } {
+  const awal = new Date(value.slice(0, 7) + '-01T12:00:00Z');
+  awal.setUTCMonth(awal.getUTCMonth() + geser);
+  const start = awal.toISOString().slice(0, 10);
+  const akhirBulan = new Date(awal);
+  akhirBulan.setUTCMonth(akhirBulan.getUTCMonth() + 1, 0);
+  const end = akhirBulan.toISOString().slice(0, 10);
+  const label = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(awal);
+  return { start, end: end > sampai ? sampai : end, label };
+}
 export function daysBetween(start: string, end: string): number {
   return Math.round((Date.parse(end + 'T12:00:00Z') - Date.parse(start + 'T12:00:00Z')) / 86400000);
 }
