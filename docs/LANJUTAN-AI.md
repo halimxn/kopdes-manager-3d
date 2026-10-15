@@ -17,12 +17,12 @@
 - Browser lokal: nominal dan susunan mobile diperiksa juga pada 390/430 px; pergantian panel dunia diperiksa pada lima lokasi agar hanya satu isi panel terlihat. Bukti dan batasan pemeriksaan paket di STATUS. Paket mobile sudah di main; deploy belum diverifikasi.
 - Verifikasi paket mobile: 372 tes / 59 berkas, typecheck, lint tanpa peringatan, `lint:ui`, dan build produksi lulus. Belum ada pemeriksaan perangkat fisik atau UAT cloud untuk perubahan ini.
 
-Cabang aktif `tampilan/pemisah-ribuan` (belum di-push): pemisah ribuan, Senja + Beranda grid modul, lalu fitur pengingat (`features/notifikasi`), preset laporan bulanan, anggaran proyek (`projects/ProjectBudget.tsx`), dan migrasi 10 administrasi usaha (`features/administrasi`, entitas `assets/attendance/purchase-orders/sales/savings`). 400 tes, typecheck, lint, `lint:ui`, build lulus; JS awal 245 KB.
+Cabang aktif `tampilan/pemisah-ribuan` (belum di-push): pemisah ribuan, Senja + Beranda grid modul, lalu fitur pengingat (`features/notifikasi`), preset laporan bulanan, anggaran proyek (`projects/ProjectBudget.tsx`), dan migrasi 10 administrasi usaha (`features/administrasi`, entitas `assets/attendance/purchase-orders/sales/savings`). 405 tes, typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB.
 
 ## Lanjutan
 
 1. Penilaian pemilik di mode demo; reset + seed cloud oleh pemilik.
-2. Delapan fitur baru (15 Oktober 2026) sudah di kode. Sisa: pemilik menjalankan migrasi 10 setelah migrasi 9 (lihat MIGRASI-SQL); modul Beranda Penjualan gerai 7 hari dan Kehadiran hari ini; panel Dunia 3D bergaya Senja dengan grafik; audit tampilan 360/768/1024/1440 untuk halaman baru (tanya pemilik sebelum menjalankan audit).
+2. Delapan fitur baru (15 Oktober 2026) sudah di kode. Modul Beranda usaha harian dan grafik panel Dunia (`dunia-3d/grafik-lokasi.tsx`) juga selesai. Sisa: pemilik menjalankan migrasi 10 setelah migrasi 9 (lihat MIGRASI-SQL); audit tampilan 360/768/1024/1440 untuk halaman baru (tanya pemilik sebelum menjalankan audit); push/PR atas permintaan pemilik.
 3. Pemeriksaan perangkat fisik dan UAT cloud.
 4. Periksa keadaan migrasi 1–8 pada proyek Supabase baru sebelum pemilik menerapkan migrasi 9 dan 10; jangan memakai reset/install pada database berisi data. Uji cadangan/pemulihan cloud tetap terbuka.
 

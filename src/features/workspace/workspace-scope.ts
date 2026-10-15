@@ -27,6 +27,8 @@ export function pageEntities(slug: string): Entity[] {
       'interactions',
       'stock-movements',
       'stock-counts',
+      'sales',
+      'attendance',
     ],
     pengiriman: [
       'deliveries',

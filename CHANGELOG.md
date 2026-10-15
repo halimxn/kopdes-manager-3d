@@ -8,8 +8,10 @@ Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di 
 - Laporan kerja: preset 7 hari, Bulan ini, Bulan lalu (judul dan rentang terisi); cetak/simpan PDF memakai tombol Cetak yang ada.
 - Anggaran proyek: kolom anggaran di proyek dan tautan proyek di buku kas; detail proyek menampilkan anggaran, uang keluar tercatat, sisa/lebih, dan persen terpakai. Tanpa migrasi.
 - Migrasi 10 `20261015000010_administrasi_usaha.sql` (belum dijalankan di cloud): simpanan anggota (pokok/wajib/sukarela, setor/tarik, saldo tidak boleh minus), penjualan harian gerai, pembelian ke pemasok (pengiriman bisa menaut pembelian), inventaris aset, jadwal & absensi. Lima halaman baru dengan ringkasan angka, menu, ikon, aksi cepat "Usaha harian". Pemilik menyetujui simpanan anggota; pinjaman tetap di luar cakupan.
+- Beranda: modul Penjualan gerai 7 hari dan Kehadiran hari ini (memuat rentang tanggal tepat; tersembunyi sebelum migrasi 10 aktif).
+- Dunia 3D: kartu panel memakai palet Senja; panel Ringkasan mendapat grafik ringkas per lokasi (tugas terbuka, selesai 7 hari, kehadiran, uang keluar 7 hari, omzet gerai, barang per rak, pengiriman aktif, isi rak pendingin). Judul panel tidak lagi mewarisi warna mode gelap web.
 - Halaman generik kini membuka formulir baru dengan `?baru=1`; label status kartu memakai label pilihan; tab halaman memakai peta label, bukan rantai kondisi.
-- Verifikasi: 400 tes / 65 berkas (termasuk 4 tes PGlite migrasi 10), typecheck, lint, `lint:ui`, build lulus; JS awal 245 KB. Demo diperiksa pada lebar panel ±630 px dan 1440 px untuk lonceng; audit 360/768/1024/1440 halaman baru belum dijalankan.
+- Verifikasi: 405 tes / 67 berkas (termasuk 4 tes PGlite migrasi 10), typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB. Demo diperiksa pada lebar panel ±630 px (halaman baru, Beranda, panel dunia Kantor/Gerai/Gudang) dan 1440 px (lonceng, Beranda); audit 360/768/1024/1440 belum dijalankan.
 
 ## Gaya Senja dan Beranda grid modul — 15 Oktober 2026
 
