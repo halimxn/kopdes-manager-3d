@@ -26,6 +26,7 @@ import { ArrowUpRight, Star, ChevronDown, PanelLeftClose, PanelLeftOpen } from '
 import { IkonHalaman } from '@/components/ui/IkonHalaman';
 import { ManagerActionModal } from './ManagerActionModal';
 import { Modal } from '@/components/ui/Modal';
+import { Notifikasi } from '@/features/notifikasi/Notifikasi';
 
 const sections = [
   [
@@ -262,6 +263,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           >
             <Search size={19} />
           </Button>
+          <Notifikasi />
 
           <Button
             aria-label="Ganti tema"

@@ -29,7 +29,7 @@ function cacheWorkspace(key: string, entry: WorkspaceCacheEntry) {
 type Capabilities = { operations: boolean; logistics?: boolean };
 // Kemampuan server hanya berubah setelah migrasi, jadi cukup diminta sekali per sesi browser; gagal tidak di-cache.
 let capabilitiesRequest: Promise<Capabilities> | null = null;
-function loadCapabilities() {
+export function loadCapabilities() {
   capabilitiesRequest ??= api<Capabilities>('capabilities').catch((error) => {
     capabilitiesRequest = null;
     throw error;

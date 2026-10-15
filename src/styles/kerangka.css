@@ -614,3 +614,61 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
 
 /* Halaman tanpa kerangka (PIN, galat) memakai kanvas yang sama */
 .shortcut-help-dialog p { margin: 10px 0; color: var(--ink-muted); }
+
+/* ---------- Pengingat (lonceng bilah atas) ---------- */
+.manager-actions > .ui-btn.notifikasi-tombol { position: relative; }
+.notifikasi-angka {
+  position: absolute;
+  top: 4px;
+  right: 3px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border: 2px solid var(--canvas);
+  border-radius: 999px;
+  background: var(--late);
+  color: var(--on-brand);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+dialog.ui-modal.notifikasi-panel { width: min(460px, calc(100vw - 32px)); padding: 20px; }
+.notifikasi-kepala { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.notifikasi-kepala .ui-btn { width: 44px; padding: 0; border-color: transparent; background: transparent; box-shadow: none; }
+.notifikasi-kosong { margin: 0; padding: 24px 4px; color: var(--ink-muted); text-align: center; }
+.notifikasi-kelompok + .notifikasi-kelompok { margin-top: 16px; }
+.notifikasi-kelompok h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 13px; font-weight: 650; color: var(--ink-muted); }
+.notifikasi-kelompok h3 span { padding: 0 7px; border-radius: 999px; background: var(--surface-2); font-variant-numeric: tabular-nums; }
+.notifikasi-kelompok ul { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.notifikasi-kelompok a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  color: var(--ink);
+  text-decoration: none;
+}
+.notifikasi-kelompok a:hover { background: var(--canvas); }
+.notifikasi-titik { flex: none; width: 8px; height: 8px; margin-left: auto; border-radius: 50%; background: var(--brand); }
+.notifikasi-jenis {
+  flex: none;
+  min-width: 72px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--pastel-mentega);
+  color: var(--pastel-mentega-ink);
+  font-size: 11px;
+  font-weight: 650;
+  text-align: center;
+}
+.notifikasi-jenis.is-mendesak { background: var(--late-bg); color: var(--late); }
+.notifikasi-teks { display: grid; flex: 1; min-width: 0; }
+.notifikasi-teks strong { overflow: hidden; font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.notifikasi-teks small { color: var(--ink-muted); font-size: 12px; }
+@media (max-width: 767px) {
+  dialog.ui-modal.notifikasi-panel { width: 100vw; padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); }
+}
