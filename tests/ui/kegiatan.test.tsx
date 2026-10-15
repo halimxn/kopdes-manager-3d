@@ -53,7 +53,7 @@ it('tautan gabung rapat hanya sah untuk rapat online/hybrid dengan URL http', ()
   ).toBe('https://meet.google.com/abc');
 });
 
-it('kegiatan menampilkan tautan gabung rapat hanya untuk rapat daring yang valid', () => {
+it('kegiatan menampilkan tautan gabung rapat hanya untuk rapat daring yang valid', async () => {
   const meeting = item('m1', {
     title: 'Rapat pengurus',
     mode: 'online',
@@ -77,7 +77,7 @@ it('kegiatan menampilkan tautan gabung rapat hanya untuk rapat daring yang valid
       refresh={vi.fn()}
     />,
   );
-  expect(screen.getByText('Koordinasi gerai')).toBeTruthy();
+  expect(await screen.findByText('Koordinasi gerai')).toBeTruthy();
   expect(screen.getByText(/Siapkan rak/)).toBeTruthy();
   expect(screen.getByRole('link', { name: /Gabung rapat/ }).getAttribute('href')).toBe(
     'https://meet.google.com/abc',
