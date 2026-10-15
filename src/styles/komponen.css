@@ -3,7 +3,8 @@
 /* ---------- Tombol ---------- */
 .ui-btn,
 a.button,
-button.button {
+button.button,
+label.button {
   --btn-bg: var(--surface);
   --btn-fg: var(--ink);
   --btn-line: var(--line-strong);
@@ -31,7 +32,8 @@ button.button {
     color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), transform var(--dur-fast);
 }
 .ui-btn:hover,
-a.button:hover {
+a.button:hover,
+label.button:hover {
   border-color: var(--brand-soft-border);
   background: var(--surface-2);
   text-decoration: none;
@@ -106,6 +108,7 @@ textarea.ui-input,
   box-shadow: var(--focus-ring);
 }
 :where(input[type='checkbox'], input[type='radio']) { width: 18px; height: 18px; accent-color: var(--brand); }
+.ui-check { flex-shrink: 0; margin: 0; cursor: pointer; }
 
 .ui-field { display: grid; gap: 6px; min-width: 0; }
 .ui-field-label { color: var(--ink); font-size: var(--fs-meta); font-weight: 600; }
@@ -171,7 +174,9 @@ textarea.ui-input,
 .custom-select-check { color: var(--brand); }
 
 /* ---------- Tanggal ---------- */
-.ui-date { position: relative; min-width: 0; }
+.ui-date { position: relative; display: grid; gap: 6px; min-width: 0; }
+/* Label tanggal sama dengan label kolom lain (field-caption) */
+.ui-date > label { color: var(--ink); font-size: var(--fs-meta); font-weight: 600; }
 .ui-date-control { position: relative; }
 .ui-date-native { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); opacity: 0; pointer-events: none; }
 .ui-btn.ui-date-trigger {
@@ -450,3 +455,26 @@ dialog.ui-modal h2 { font-size: 19px; }
   .form-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .form-actions > :only-child { grid-column: 1 / -1; }
 }
+
+/* ---------- Modul (anatomi Senja): kepala berikon pastel, isi, kaki aksi ---------- */
+.modul {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.modul-kepala { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 650; letter-spacing: -0.01em; }
+.modul-ikon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; }
+.modul-ikon.pastel-biru { background: var(--pastel-biru); color: var(--pastel-biru-ink); }
+.modul-ikon.pastel-pink { background: var(--pastel-pink); color: var(--pastel-pink-ink); }
+.modul-ikon.pastel-mentega { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
+.modul-ikon.pastel-mint { background: var(--pastel-mint); color: var(--pastel-mint-ink); }
+.modul-tautan { margin-left: auto; color: var(--ink-muted); font-size: 13px; font-weight: 600; text-decoration: none; }
+.modul-tautan:hover { color: var(--brand-ink); text-decoration: none; }
+.modul-kaki { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 14px; }
+@media (max-width: 767px) { .modul { padding: 16px; } }

@@ -1,4 +1,5 @@
 'use client';
+import { GrafikRingkasan, grafikLokasi } from './grafik-lokasi';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -1691,10 +1692,15 @@ export function MonitoringDashboard({
               {panelBody}
             </aside>
           </div>
-          <div hidden={panel !== 'ringkasan'} className="mt-kpis">
-            {kpis.map((k) => (
-              <KpiCard key={k.label} {...k} />
-            ))}
+          <div hidden={panel !== 'ringkasan'}>
+            <div className="mt-kpis">
+              {kpis.map((k) => (
+                <KpiCard key={k.label} {...k} />
+              ))}
+            </div>
+            {panel === 'ringkasan' && (
+              <GrafikRingkasan grafik={grafikLokasi({ lokasi, data, model, hari: date, stock, shipping, unavailable })} />
+            )}
           </div>
           <div hidden={panel !== 'agenda'}>{tracker}</div>
           <div hidden={panel !== 'daftar'}>

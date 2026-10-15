@@ -5,10 +5,8 @@ import {
   CapsuleGeometry,
   ConeGeometry,
   CylinderGeometry,
-  ExtrudeGeometry,
   Mesh,
   MeshStandardMaterial,
-  Shape,
   SphereGeometry,
   type BufferGeometry,
   type ColorRepresentation,
@@ -110,21 +108,6 @@ export function kapsul(r: number, panjang: number, warna: ColorRepresentation) {
 export function di<T extends { position: { set: (x: number, y: number, z: number) => unknown } }>(o: T, x: number, y: number, z: number) {
   o.position.set(x, y, z);
   return o;
-}
-
-/** Prisma atap pelana: segitiga selebar w, setinggi h, memanjang d (sumbu z), tepi bevel lembut. */
-export function prisma(w: number, h: number, d: number, warna: ColorRepresentation) {
-  const g = simpan(`p${w}|${h}|${d}`, () => {
-    const bentuk = new Shape();
-    bentuk.moveTo(-w / 2, 0);
-    bentuk.lineTo(w / 2, 0);
-    bentuk.lineTo(0, h);
-    bentuk.closePath();
-    const geo = new ExtrudeGeometry(bentuk, { depth: d - 0.16, bevelEnabled: true, bevelSize: 0.08, bevelThickness: 0.08, bevelSegments: 3 });
-    geo.translate(0, 0, -(d - 0.16) / 2);
-    return geo;
-  });
-  return jadi(g, warna);
 }
 
 /** Atap limas (piramida empat sisi) selebar w × d, setinggi h. */

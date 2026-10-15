@@ -37,7 +37,7 @@
 }
 .week-strip-day-btn:hover { background: var(--surface-2); }
 .ui-btn.week-strip-day-btn.is-selected { background: var(--brand); color: var(--on-brand); }
-.ui-btn.week-strip-day-btn.is-today:not(.is-selected) { box-shadow: inset 0 0 0 1.5px var(--wood-deep); color: var(--ink); }
+.ui-btn.week-strip-day-btn.is-today:not(.is-selected) { box-shadow: inset 0 0 0 1.5px var(--pastel-mentega-ink); color: var(--ink); }
 .strip-day-name { font-size: 11px; font-weight: 700; text-transform: uppercase; }
 .strip-day-num { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .strip-day-meta { display: grid; place-items: center; height: 16px; }
@@ -62,7 +62,7 @@
   background: var(--surface);
   box-shadow: var(--shadow);
 }
-.daily-active-day-card.is-current-today { box-shadow: var(--shadow), inset 0 4px 0 color-mix(in srgb, var(--wood) 70%, transparent); }
+.daily-active-day-card.is-current-today { box-shadow: var(--shadow); }
 .daily-active-day-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
 .active-day-title-block { display: flex; align-items: center; gap: 12px; }
 .active-day-icon-wrap { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-soft); color: var(--brand); }
@@ -101,7 +101,7 @@
 .day-date { color: var(--ink-muted); }
 .today-badge { padding: 1px 7px; border-radius: var(--r-full); background: var(--brand); color: var(--on-brand); font-size: 11px; font-weight: 700; }
 .day-count-badge { display: flex; align-items: center; gap: 6px; color: var(--ink-muted); font-size: 12.5px; font-weight: 650; }
-.current-day-group { box-shadow: var(--shadow), inset 0 4px 0 color-mix(in srgb, var(--wood) 70%, transparent); }
+.current-day-group { box-shadow: var(--shadow); }
 .overdue-group-card { border-color: var(--late-line); }
 .alert-header .alert-icon, .alert-text { color: var(--late); }
 .alert-count-badge { color: var(--late); }
@@ -247,7 +247,7 @@
 .timeline-axis .timeline-name { display: flex; justify-content: space-between; align-items: center; background: var(--surface-2); color: var(--ink-muted); font-size: 12px; font-weight: 700; }
 .timeline-track { position: relative; min-width: 0; background-image: linear-gradient(to right, var(--line) 1px, transparent 1px); }
 .timeline-axis .timeline-track > span { position: absolute; top: 12px; padding-left: 8px; color: var(--ink-muted); font-size: 11.5px; font-weight: 600; white-space: nowrap; }
-.today-line { position: absolute; z-index: 1; top: 0; bottom: 0; width: 0; border-left: 2px dashed var(--wood-deep); }
+.today-line { position: absolute; z-index: 1; top: 0; bottom: 0; width: 0; border-left: 2px dashed var(--pastel-mentega-ink); }
 .ui-btn.timeline-bar {
   position: absolute;
   top: 12px;
@@ -273,7 +273,7 @@
 @container (max-width: 56px) { .timeline-bar > span:first-child { display: none; } }
 .resize-grip { display: grid; place-items: center; min-width: 12px; align-self: stretch; opacity: 0; cursor: ew-resize; }
 .timeline-bar:hover .resize-grip { opacity: 0.7; }
-.milestone-pin { position: absolute; top: 14px; display: grid; place-items: center; width: 22px; height: 22px; color: var(--wood-deep); transform: translateX(-50%) rotate(45deg); border-radius: 5px; background: var(--wood-soft); box-shadow: inset 0 0 0 2px var(--wood); }
+.milestone-pin { position: absolute; top: 14px; display: grid; place-items: center; width: 22px; height: 22px; color: var(--pastel-mentega-ink); transform: translateX(-50%) rotate(45deg); border-radius: 5px; background: var(--pastel-mentega); box-shadow: inset 0 0 0 2px var(--pastel-mentega); }
 .timeline-mobile-list { display: none; }
 .timeline-mobile-list > .ui-btn {
   justify-content: space-between;
@@ -317,7 +317,7 @@
 .subtask-toggle-mark { display: grid; place-items: center; width: 18px; height: 18px; border: 1.5px solid var(--line-strong); border-radius: 5px; }
 .subtask-pending-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--warn); }
 .sprint-form { display: grid; gap: 12px; }
-.field-label { font-size: var(--fs-meta); font-weight: 600; }
+.field-label { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-meta); font-weight: 600; }
 .recurrence-explanation { padding: 10px 12px; border-radius: var(--r-md); background: var(--surface-2); color: var(--ink-muted); font-size: 12.5px; }
 .sprint-form-actions { display: flex; justify-content: flex-end; gap: 8px; }
 

@@ -34,14 +34,14 @@ afterEach(() => {
   window.history.replaceState(null, '', '/');
 });
 
-it('menutup tugas menghapus parameter URL sehingga pergantian tampilan tidak membukanya lagi', () => {
+it('menutup tugas menghapus parameter URL sehingga pergantian tampilan tidak membukanya lagi', async () => {
   const props = {
     entity: 'work-items' as const,
     workspace: { 'work-items': [task] },
     refresh: vi.fn(),
   };
   const view = render(<Records {...props} />);
-  expect(screen.getByRole('dialog', { name: 'Detail Tugas' })).toBeTruthy();
+  expect(await screen.findByRole('dialog', { name: 'Detail Tugas' })).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Tutup' }));
   expect(mocks.replace).toHaveBeenCalledWith('/tugas', { scroll: false });
   expect(screen.queryByRole('dialog', { name: 'Detail Tugas' })).toBeNull();

@@ -4,6 +4,7 @@ import { Textarea } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { DateInput } from '@/components/ui/DateField';
+import { SegmentedControl } from '@/components/ui/SegmentedControl';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Printer,
@@ -24,7 +25,7 @@ import {
   Info,
 } from 'lucide-react';
 import { api } from '@/lib/client';
-import { today, addDays, formatDate } from '@/lib/date';
+import { today, addDays, formatDate, monthRange } from '@/lib/date';
 import { rupiah } from '../operations/ledger';
 import type { ReportSnapshot } from './report-snapshot';
 
@@ -36,6 +37,20 @@ export type Report = {
   snapshot: ReportSnapshot;
   created_at?: string;
 };
+
+type Periode = 'pekan' | 'bulan-ini' | 'bulan-lalu';
+// Preset bulanan menyiapkan laporan untuk rapat pengurus; isi tetap dihitung server dari catatan periode itu.
+function isiPeriode(periode: Periode, hari = today()) {
+  if (periode === 'pekan')
+    return { title: 'Laporan kerja mingguan', start: addDays(hari, -6), end: hari };
+  const bulan = monthRange(hari, periode === 'bulan-lalu' ? -1 : 0);
+  return { title: `Laporan kerja bulanan ${bulan.label}`, start: bulan.start, end: bulan.end };
+}
+const pilihanPeriode: { id: Periode; label: string }[] = [
+  { id: 'pekan', label: '7 hari' },
+  { id: 'bulan-ini', label: 'Bulan ini' },
+  { id: 'bulan-lalu', label: 'Bulan lalu' },
+];
 
 const sectionMeta = {
   completed: {
@@ -87,6 +102,8 @@ export function Reports({ previewReports }: { previewReports?: Report[] } = {}) 
   const [loading, setLoading] = useState(!previewReports);
   const [hasMore, setHasMore] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [periode, setPeriode] = useState<Periode | null>('pekan');
+  const [isian, setIsian] = useState(() => isiPeriode('pekan'));
 
   const loadReports = useCallback(async (append = false, offset = 0) => {
     setLoading(true);
@@ -224,13 +241,24 @@ export function Reports({ previewReports }: { previewReports?: Report[] } = {}) 
             }
           }}
         >
+          <SegmentedControl
+            label="Periode laporan"
+            className="report-periode"
+            value={periode ?? ''}
+            options={pilihanPeriode.map((pilihan) => ({ value: pilihan.id, label: pilihan.label }))}
+            onChange={(nilai) => {
+              setPeriode(nilai as Periode);
+              setIsian(isiPeriode(nilai as Periode));
+            }}
+          />
           <div className="form-grid">
             <label className="field-item">
               <span className="field-caption">Judul Laporan</span>
               <Input
                 className="field-input"
                 name="title"
-                defaultValue="Laporan Perkembangan & Operasional Mingguan"
+                value={isian.title}
+                onChange={(event) => setIsian({ ...isian, title: event.target.value })}
                 required
               />
             </label>
@@ -240,7 +268,11 @@ export function Reports({ previewReports }: { previewReports?: Report[] } = {}) 
                 aria-label="Awal periode laporan"
                 className="field-input"
                 name="start"
-                defaultValue={addDays(today(), -6)}
+                value={isian.start}
+                onValueChange={(start) => {
+                  setPeriode(null);
+                  setIsian({ ...isian, start });
+                }}
                 required
               />
             </label>
@@ -250,7 +282,11 @@ export function Reports({ previewReports }: { previewReports?: Report[] } = {}) 
                 aria-label="Akhir periode laporan"
                 className="field-input"
                 name="end"
-                defaultValue={today()}
+                value={isian.end}
+                onValueChange={(end) => {
+                  setPeriode(null);
+                  setIsian({ ...isian, end });
+                }}
                 required
               />
             </label>

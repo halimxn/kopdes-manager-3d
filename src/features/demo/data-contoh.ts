@@ -166,6 +166,7 @@ export function dataContoh(hariIni: string): ItemContoh[] {
       assignee: staf[[8, 4, 1, 3][i]].nama,
       start_date: tgl(-60 + i * 7),
       target_date: tgl(30 + i * 20),
+      budget: [15_000_000, 6_000_000, 0, 0][i],
       description: `Proyek contoh: ${title.toLowerCase()}.`,
     }),
   );
@@ -441,6 +442,8 @@ export function dataContoh(hariIni: string): ItemContoh[] {
       category,
       account: g.r() < 0.7 ? 'Kas tunai' : 'Rekening koperasi',
       member_id: category === 'Simpanan' ? g.pilih(anggota) : '',
+      // Upah bongkar muat dan perawatan freezer dibebankan ke proyek gudang (contoh realisasi anggaran).
+      workstream_id: category === 'Upah' || category === 'Perawatan' ? proyek[1] : '',
       unit_id: category === 'Penjualan' ? unitAktif(title.includes('apotek') ? 1 : 0) : '',
       reference_number: `KAS-${String(30 + d).padStart(3, '0')}`,
     });
@@ -540,6 +543,93 @@ export function dataContoh(hariIni: string): ItemContoh[] {
       work_item_id: t ? tugasId(t) : '',
       meeting_id: '',
     });
+
+  // ---- Administrasi usaha (migrasi 10). Ditaruh paling akhir agar urutan acak data lama tetap.
+  for (const [n, [title, category, gerai, value, condition, s]] of ([
+    ['Freezer sembako 2 pintu', 'elektronik', 0, 6_500_000, 'baik', 6],
+    ['Timbangan digital 150 kg', 'peralatan', 5, 1_800_000, 'perlu perbaikan', 4],
+    ['Rak besi gudang (set 6)', 'furnitur', 5, 4_200_000, 'baik', 4],
+    ['Laptop administrasi', 'elektronik', -1, 7_000_000, 'baik', 2],
+    ['Motor roda tiga', 'kendaraan', 5, 28_000_000, 'baik', 5],
+    ['Lemari pendingin obat', 'elektronik', 1, 5_400_000, 'rusak', 7],
+  ] as const).entries())
+    tambah('assets', {
+      title,
+      code: `AST-${String(n + 1).padStart(3, '0')}`,
+      category,
+      unit_id: gerai < 0 ? '' : unitAktif(gerai),
+      acquired_date: tgl(-g.int(60, 400)),
+      value,
+      condition,
+      assignee: staf[s].nama,
+    });
+  for (let d = -6; d <= 1; d++)
+    for (const [i, id] of stafId.entries()) {
+      const status = d > 0 ? 'terjadwal' : g.r() < 0.08 ? g.pilih(['izin', 'sakit'] as const) : g.r() < 0.1 ? 'terlambat' : 'hadir';
+      const [masuk, pulang] = i < 4 ? ['07:30', '15:30'] : ['07:00', '16:00'];
+      const hadir = status === 'hadir' || status === 'terlambat';
+      tambah('attendance', {
+        title: staf[i].nama,
+        staff_id: id,
+        date: tgl(d),
+        status,
+        shift: `${masuk}-${pulang}`,
+        check_in_time: hadir ? (status === 'terlambat' ? masuk.replace(/:\d\d$/, ':45') : masuk) : '',
+        // Hari ini belum ada jam pulang.
+        check_out_time: hadir && d < 0 ? pulang : '',
+      });
+    }
+  const pembelian = [
+    ['Beras dan minyak goreng', 1, -6, 'diterima', 'Beras 20 karung, minyak 10 dus', 9_800_000],
+    ['Pupuk NPK musim tanam', 0, -1, 'dipesan', 'NPK 40 karung', 6_400_000],
+    ['Gula dan tepung', 1, 0, 'draf', 'Gula 10 karung, tepung 8 karung', 0],
+  ] as const;
+  const pembelianId = pembelian.map(([title, m, d, status, items, total]) =>
+    tambah('purchase-orders', {
+      title,
+      stakeholder_id: mitra[m],
+      date: tgl(d),
+      expected_date: status === 'dipesan' ? tgl(2) : '',
+      status,
+      items,
+      total,
+      unit_id: unitAktif(0),
+      reference_number: `PO-${String(30 + d).padStart(3, '0')}`,
+    }),
+  );
+  // Kiriman masuk pertama berasal dari pembelian yang sudah diterima.
+  const kirimanMasuk = baris.find((b) => b.entity === 'deliveries' && b.data.direction === 'masuk');
+  if (kirimanMasuk) kirimanMasuk.data.purchase_id = pembelianId[0];
+  for (let d = -13; d <= -1; d++)
+    for (const gerai of [0, 1])
+      tambah('sales', {
+        title: `Penjualan ${UNIT[gerai][0]}`,
+        unit_id: unitAktif(gerai),
+        date: tgl(d),
+        amount: (gerai === 0 ? g.int(18, 40) : g.int(6, 18)) * 50_000,
+        transactions: gerai === 0 ? g.int(35, 90) : g.int(10, 35),
+      });
+  for (const [i, id] of anggota.slice(0, 12).entries()) {
+    const catatanAnggota = baris.find((b) => b.data.__id === id)?.data;
+    const namaAnggota = String(catatanAnggota?.title);
+    // Simpanan tidak boleh tercatat sebelum tanggal bergabung.
+    const gabung = String(catatanAnggota?.date);
+    const hariGabung = Math.round((Date.parse(gabung) - Date.parse(tgl(0))) / 86_400_000);
+    const simpan = (kind: string, direction: string, amount: number, d: number) =>
+      tambah('savings', {
+        title: `Simpanan ${kind} · ${namaAnggota}`,
+        member_id: id,
+        date: tgl(d),
+        kind,
+        direction,
+        amount,
+        reference_number: `SMP-${String((urut.get('savings') ?? 0) + 1).padStart(4, '0')}`,
+      });
+    simpan('pokok', 'setor', 100_000, hariGabung);
+    for (const d of [-60, -30, 0]) if (d >= hariGabung) simpan('wajib', 'setor', 50_000, d);
+    if (i % 3 === 0) simpan('sukarela', 'setor', g.int(2, 10) * 50_000, Math.max(hariGabung, -g.int(5, 40)));
+    if (i === 3) simpan('sukarela', 'tarik', 50_000, 0);
+  }
 
   // Validasi dengan skema yang sama dengan server: data contoh tidak boleh lolos tanpa aturan.
   return baris.map(({ entity, data }, i) => {

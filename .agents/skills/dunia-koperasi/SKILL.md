@@ -1,6 +1,6 @@
 ---
 name: dunia-koperasi
-description: Membangun dan mengubah Dunia Koperasi 3D (Three.js) — ruang kantor, gerai, gudang, pulau, figur chibi, kamera, pin, kartu monitoring, tautan dunia-web, performa render. Pakai saat menyentuh src/features/dunia-3d.
+description: Wajib dipakai saat menyentuh src/features/dunia-3d atau halaman /dunia-koperasi — Three.js, ruang kantor, gerai, gudang, cold storage, pulau, figur chibi, kamera/zoom/putar, pin, panel monitoring, tautan dunia-web, performa render, atau keluhan dunia lambat/kosong/salah data.
 ---
 
 # Dunia Koperasi 3D
@@ -18,7 +18,9 @@ Kontrak gaya, data, dan peta kode: `docs/DUNIA-KOPERASI.md`. Model dibangun dari
 - Data asli saja; simulasi berlabel; belum aktif/galat ≠ nol (tampilkan —); tanpa nama atau angka karangan.
 - Dunia tidak menulis data; aksi membuka formulir web (`?baru=1&isi.<kolom>=`).
 - Render hanya saat perubahan atau selama figur/kamera bergerak; tanpa loop idle. Reduced-motion: langsung di tempat.
-- Pin (≤5) hanya untuk hal yang perlu perhatian. Dunia selalu terang, aksen biru `#2F5BEA`, huruf Inter.
+- Three.js hanya dimuat di halaman dunia (`MonitoringDashboard` lewat `next/dynamic` di `WorkspacePage`); jangan mengimpor modul dunia dari halaman operasional (cek `npm run ukur:bundel`).
+- Pin (≤5) hanya untuk hal yang perlu perhatian. Dunia selalu terang, kartu bergaya Senja (krem hangat, pastel, teks cokelat tua), aksen biru `#2F5BEA`, huruf Hanken Grotesk (`--font-sans`). Warna judul di panel dikunci ke `--mt-ink` agar tidak mewarisi mode gelap web.
+- Panel Ringkasan: KPI + grafik ringkas per lokasi di `grafik-lokasi.tsx` (batang CSS murni, tanpa pustaka grafik).
 
 ## Verifikasi
 - Pemeriksaan mengikuti `AGENTS.md`; `/dev/dunia-3d?contoh=1` atau `npm run dev:demo` di 360/768/1024/1440 px; klik ruang, figur, zoom, putar.

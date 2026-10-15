@@ -37,10 +37,19 @@ Migrasi diuji dengan PostgreSQL lokal. Konfirmasi pemasangan sebelumnya tidak me
 - Mutasi tidak dapat diubah atau dihapus. Kesalahan diperbaiki dengan mutasi koreksi baru agar jejak stok tetap utuh. Barang yang sudah punya mutasi tidak dapat dihapus.
 - Hasil opname tetap tidak mengubah stok otomatis; bila perlu koreksi, catat mutasi "koreksi" dan pilih opname terkait.
 
+## Administrasi usaha (migrasi 10)
+
+- **Simpanan anggota** (`/simpanan`): setor atau tarik simpanan pokok, wajib, sukarela per anggota. Penarikan yang membuat saldo jenis itu minus ditolak database. Ringkasan menampilkan saldo per jenis dari catatan yang dimuat. Uang yang benar-benar diterima tetap dicatat di Buku kas.
+- **Penjualan harian** (`/penjualan`): omzet dan jumlah transaksi per gerai per hari (satu catatan per gerai per hari). Bukan laba dan bukan POS.
+- **Pembelian** (`/pembelian`): pesanan ke pemasok (Mitra & kontak), status draf → dipesan → diterima/dibatalkan, perkiraan tiba, total. Barang yang datang dicatat sebagai pengiriman masuk yang menaut pembelian; stok tetap berubah hanya lewat mutasi.
+- **Inventaris aset** (`/aset`): kategori, kondisi (baik, perlu perbaikan, rusak, dihapuskan), lokasi gerai, nilai perolehan, pemegang. Tanpa penyusutan.
+- **Jadwal & absensi** (`/absensi`): satu catatan per petugas per hari; status terjadwal untuk jadwal ke depan, lalu hadir/terlambat/izin/sakit/cuti/alpa/libur dengan jam datang dan pulang.
+- Judul absensi, penjualan, dan simpanan diisi otomatis dari petugas, gerai, atau anggota.
+
 ## Rapat online
 
 Pilih jenis tatap muka, online, atau hybrid. Isi lokasi/tautan pertemuan, waktu WIB dan durasi. Tombol Bergabung membuka layanan yang Anda pilih. **Unduh agenda (.ics)** dapat diimpor ke aplikasi kalender. Aplikasi tidak membuat ruang Zoom/Meet, mengundang peserta, merekam video, atau mengirim email otomatis.
 
 ## Batas saat ini
 
-Belum ada simpan pinjam, iuran otomatis, jurnal akuntansi berpasangan, rekonsiliasi bank, pergerakan stok otomatis, transaksi POS, multiuser atau sinkronisasi kalender dua arah. Penyuntingan catatan memakai pola terakhir disimpan; belum ada penguncian untuk perubahan bersamaan dari beberapa perangkat.
+Belum ada pinjaman anggota, iuran otomatis, penyusutan aset, jurnal akuntansi berpasangan, rekonsiliasi bank, pergerakan stok otomatis, transaksi POS, multiuser atau sinkronisasi kalender dua arah. Penyuntingan catatan memakai pola terakhir disimpan; belum ada penguncian untuk perubahan bersamaan dari beberapa perangkat.

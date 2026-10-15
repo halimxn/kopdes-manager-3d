@@ -2,6 +2,37 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Pengingat, laporan bulanan, anggaran proyek, administrasi usaha — 15 Oktober 2026
+
+- Lonceng pengingat di bilah atas (semua halaman): tenggat terlambat/hari ini/besok, rapat 7 hari, dokumen akan habis, isu, tinjauan risiko, stok minimum, selisih opname. Dimuat sekali per sesi setelah halaman tampil; angka baru hilang setelah panel dibuka.
+- Laporan kerja: preset 7 hari, Bulan ini, Bulan lalu (judul dan rentang terisi); cetak/simpan PDF memakai tombol Cetak yang ada.
+- Anggaran proyek: kolom anggaran di proyek dan tautan proyek di buku kas; detail proyek menampilkan anggaran, uang keluar tercatat, sisa/lebih, dan persen terpakai. Tanpa migrasi.
+- Migrasi 10 `20261015000010_administrasi_usaha.sql` (belum dijalankan di cloud): simpanan anggota (pokok/wajib/sukarela, setor/tarik, saldo tidak boleh minus), penjualan harian gerai, pembelian ke pemasok (pengiriman bisa menaut pembelian), inventaris aset, jadwal & absensi. Lima halaman baru dengan ringkasan angka, menu, ikon, aksi cepat "Usaha harian". Pemilik menyetujui simpanan anggota; pinjaman tetap di luar cakupan.
+- Beranda: modul Penjualan gerai 7 hari dan Kehadiran hari ini (memuat rentang tanggal tepat; tersembunyi sebelum migrasi 10 aktif).
+- Dunia 3D: kartu panel memakai palet Senja; panel Ringkasan mendapat grafik ringkas per lokasi (tugas terbuka, selesai 7 hari, kehadiran, uang keluar 7 hari, omzet gerai, barang per rak, pengiriman aktif, isi rak pendingin). Judul panel tidak lagi mewarisi warna mode gelap web.
+- Halaman generik kini membuka formulir baru dengan `?baru=1`; label status kartu memakai label pilihan; tab halaman memakai peta label, bukan rantai kondisi.
+- Verifikasi: 405 tes / 67 berkas (termasuk 4 tes PGlite migrasi 10), typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB. Demo diperiksa pada lebar panel ±630 px (halaman baru, Beranda, panel dunia Kantor/Gerai/Gudang) dan 1440 px (lonceng, Beranda); audit 360/768/1024/1440 belum dijalankan.
+
+## Gaya Senja dan Beranda grid modul — 15 Oktober 2026
+
+- Pemilik memilih desain H · Senja setelah membandingkan 12 pratinjau (A–L). Token diganti di satu tempat: kanvas krem hangat, kartu putih, aksi biru #2F5BEA, pastel biru/merah muda/mentega/mint, status pastel bertuliskan, huruf Hanken Grotesk (paket lokal; Inter dibuang). Mode gelap ikut.
+- Ornamen dunia dibuang dari web: pita lantai, nama ruang tercat, sidebar dinding, strip kayu, diorama layar PIN, serta peta `data-ruang` di AppShell.
+- Beranda disusun ulang menjadi grid modul seimbang: tanggal + pil ringkasan menggantikan kartu angka; tombol tambah ganda di kepala halaman dihapus; modul Tugas, Agenda hari ini (rapat dan rutinitas dalam satu rel jam), Perlu perhatian, Proyek dengan milestone terdekat, Kas bulan berjalan per pekan (uang masuk/keluar tercatat), Kegiatan terbaru, Grafik pekerjaan. Beranda memuat milestone alih-alih anggota.
+- Pelajaran: nama kelas `m-6`/`m-4` bentrok dengan utilitas margin Tailwind; dicatat di skill ui-ux-kopdes.
+- Verifikasi: 377 tes / 60 berkas, typecheck, lint, `lint:ui` lulus; Beranda diperiksa di 1440, 820, 390 px dan mode gelap; Tugas, Buku kas, Hari ini, Rapat, Proyek, Pengaturan, PIN diperiksa di 1440 px.
+
+## Halaman lebih cepat dimuat — 15 Oktober 2026
+
+- Tiap halaman hanya mengunduh komponennya sendiri: Beranda, Hari ini, catatan, Buku koperasi, Perlu perhatian, dan formulir kini dimuat sesuai halaman (sebelumnya semua ikut di setiap halaman). Di dalam halaman catatan, tampilan Harian/Papan/Kalender/Linimasa, laci tugas, formulir, impor CSV, dan periode kerja dimuat saat dipakai. JS awal halaman operasional turun dari 546 KB menjadi 236 KB (hasil build produksi).
+- Kemampuan server (`capabilities`) diminta sekali per sesi browser, tidak lagi di setiap pindah halaman, sehingga data halaman langsung diminta tanpa menunggu satu permintaan tambahan. Gagal tidak di-cache.
+- Verifikasi: tes, typecheck, lint, `lint:ui`, build lulus; halaman utama dan tampilan Tugas diperiksa tampil di 1440 px. Waktu muat di Vercel belum diukur.
+
+## Pemisah ribuan pada input angka — 13 Oktober 2026
+
+- Nominal kas, harga, dan jumlah stok otomatis memakai titik pemisah ribuan saat diketik, ditempel, atau membuka data lama. Formulir dan draf tetap menyimpan angka tanpa titik; PIN, telepon, serta kode tetap memakai input sebelumnya.
+- Kolom wajib, bilangan bulat, minimum/maksimum, stok buku read-only, dan posisi kursor tetap ditangani; Backspace pada pemisah tidak macet.
+- Suite lengkap 376 tes / 60 berkas lulus; setelah menambah tes penyimpanan nominal ke API, seluruh 49 tes formulir diulang dan lulus (cakupan akhir 377 kasus). Typecheck, lint, dan build produksi lulus. Browser formulir kas diperiksa pada 360/768/1024/1440 px tanpa galat konsol. Perangkat fisik dan cloud belum diuji.
+
 ## Rapikan mobile dan panel Dunia Koperasi — 13 Oktober 2026
 
 - Selisih kas mendapat baris penuh di Beranda pada ponsel; label dan nominal tidak lagi dipaksa muat dalam kolom sempit. Ringkasan buku memisahkan label, nilai, dan keterangan; judul tugas panjang membungkus.
@@ -28,6 +59,14 @@ Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di 
 - AGENTS menjadi sumber ketentuan Graphify opsional; aturan Claude/Gemini/Cursor/agen lain menunjuk ke sana. Skill memakai rute pratinjau yang tersedia dan ukuran pemeriksaan 360/768/1024/1440, lalu disinkronkan. Peta gaya pada clean-code memakai `monitoring.css` yang aktif.
 - CI menjalankan `lint:ui`; ESLint mengabaikan semua folder build `.next-*`, termasuk hasil pemeriksaan lokal.
 - Verifikasi: 350 tes / 56 berkas, typecheck, lint, `lint:ui`, dan build produksi lulus. Beranda, Tugas Harian, Barang dan formulir Barang diperiksa pada 360/768/1024/1440 px; tombol dunia terukur 44 px, kartu Harian tidak terpotong, tanpa luber halaman dan tanpa galat browser. Perangkat fisik dan pemulihan cloud belum diuji.
+
+## Rutinitas garis waktu dan audit tata letak — 12 Oktober 2026
+
+- Rutinitas harian menjadi garis waktu: batang kemajuan bersegmen, rel jam dengan simpul yang berubah menjadi centang hijau, rutinitas berikutnya menurut jam WIB (diperbarui tiap menit) ditandai biru, jam yang sudah lewat tanpa centang ditandai kuning halus, dan baris hijau bila semua sudah dicentang. Judul ganda di dalam lipatan dihapus. Kotak centang asli tetap ada untuk papan ketik dan pembaca layar.
+- Kotak centang tidak lagi tampil sebagai kolom teks selebar penuh: komponen `Input` tidak memberi gaya `ui-input` ke checkbox/radio (terlihat di rutinitas dan formulir).
+- Tombol berupa `label.button` (Pilih Berkas Cadangan JSON) kini bergaya tombol.
+- Tinjauan mingguan: satu baris per tugas dengan tanggal di kanan (sebelumnya tautan menumpuk). Keputusan terkait rapat: judul dan alasan di baris terpisah agar tidak saling menimpa. Titik hari ini di grafik tidak keluar dari kolom.
+- Perbaikan di atas ditemukan lewat audit otomatis CDP di luar repo (375 px): setiap halaman, tampilan Tugas/Kegiatan, tab, laci, editor, dan dialog dibuka dengan semua lipatan terbuka, lalu dicek kontrol berukuran janggal, teks luber, elemen keluar layar, isi tombol meluap, dan elemen yang saling menimpa.
 
 ## Sistem gaya baru berbahasa dunia 3D — 12 Oktober 2026
 

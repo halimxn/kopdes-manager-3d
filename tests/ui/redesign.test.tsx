@@ -152,7 +152,7 @@ describe('Fitur Redesain Behance', () => {
     );
 
     expect(screen.getByText('KD-44006')).toBeTruthy();
-    expect(screen.getByText('DIBUAT OLEH')).toBeTruthy();
+    expect(screen.getByText('Dibuat oleh')).toBeTruthy();
     expect(screen.getByText('Penanggung jawab')).toBeTruthy();
     expect(screen.queryByText('PEMANGKU / TIM')).toBeNull();
     expect(screen.getByText(/membuat tugas ini/)).toBeTruthy();
@@ -439,7 +439,7 @@ describe('Fitur Redesain Behance', () => {
     expect(screen.getByRole('button', { name: 'Ubah' })).toBeTruthy();
   });
 
-  it('Records mode kalender menampilkan agenda terpilih dan calendar-task-card modern', () => {
+  it('Records mode kalender menampilkan agenda terpilih dan calendar-task-card modern', async () => {
     const todayStr = today();
     const task: Item = {
       id: 'task-cal-1',
@@ -470,7 +470,7 @@ describe('Fitur Redesain Behance', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Kalender' }));
 
     // Select today
-    fireEvent.click(screen.getByRole('button', { name: 'Hari ini' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Hari ini' }));
 
     // Check modern calendar task card is rendered
     const taskCard = container.querySelector('.calendar-task-card') as HTMLElement;

@@ -56,4 +56,4 @@ Migrasi baru ditambahkan berurutan di `supabase/migrations/`, lalu SQL install/r
 
 ## Kerja paralel
 
-Satu orang atau AI = satu cabang dan satu checkout. Bagi kepemilikan berkas; `src/styles/token.css`, `src/styles/kerangka.css`, `AppShell.tsx`, `Records.tsx`, dan `MonitoringDashboard.tsx` mudah berbenturan. Sinkronkan cabang dengan `main` terbaru sebelum menguji ulang. Jangan force-push ke `main` dan jangan menulis ulang riwayat yang sudah dibagikan.
+Semua AI memakai satu cabang kerja aktif: lanjutkan cabang yang belum masuk `main` (lihat `git branch`), buat cabang baru hanya dari `main` bersih, hapus cabang (lokal dan remote) setelah masuk `main`, dan commit semua perubahan sebelum sesi selesai. Aturan lengkap di `AGENTS.md` bagian Git. Bagi kepemilikan berkas; `src/styles/token.css`, `src/styles/kerangka.css`, `AppShell.tsx`, `Records.tsx`, dan `MonitoringDashboard.tsx` mudah berbenturan. Sinkronkan cabang dengan `main` terbaru sebelum menguji ulang. Jangan force-push ke `main` dan jangan menulis ulang riwayat yang sudah dibagikan.

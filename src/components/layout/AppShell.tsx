@@ -26,6 +26,7 @@ import { ArrowUpRight, Star, ChevronDown, PanelLeftClose, PanelLeftOpen } from '
 import { IkonHalaman } from '@/components/ui/IkonHalaman';
 import { ManagerActionModal } from './ManagerActionModal';
 import { Modal } from '@/components/ui/Modal';
+import { Notifikasi } from '@/features/notifikasi/Notifikasi';
 
 const sections = [
   [
@@ -36,28 +37,13 @@ const sections = [
   ['Kegiatan', ['/jurnal'], 'amber'],
   [
     'Buku koperasi',
-    ['/keuangan', '/barang', '/stok-opname', '/pengiriman', '/anggota'],
+    ['/keuangan', '/penjualan', '/pembelian', '/barang', '/stok-opname', '/pengiriman', '/anggota', '/simpanan', '/aset'],
     'emerald',
   ],
   ['Gerai & laporan', ['/gerai', '/kesiapan', '/risiko', '/laporan'], 'purple'],
-  ['Koordinasi & berkas', ['/rapat', '/dokumen', '/mitra', '/tim'], 'rose'],
+  ['Koordinasi & berkas', ['/rapat', '/dokumen', '/mitra', '/tim', '/absensi'], 'rose'],
   ['Pengaturan & bantuan', ['/pengaturan', '/panduan'], 'blue'],
 ] as const;
-
-/** Setiap kelompok menu adalah satu ruang kantor diorama; halaman memakai warna lantai ruang itu. */
-const RUANG: Record<string, string> = {
-  'Ruang kerja': 'kerja',
-  Kegiatan: 'kegiatan',
-  'Buku koperasi': 'buku',
-  'Gerai & laporan': 'gerai',
-  'Koordinasi & berkas': 'koordinasi',
-  'Pengaturan & bantuan': 'pengaturan',
-};
-function ruangDari(path: string): { kunci: string; label: string } {
-  const bagian = sections.find(([, hrefs]) => (hrefs as readonly string[]).some((h) => path === h || path.startsWith(h + '/')));
-  const label = bagian ? bagian[0] : 'Ruang kerja';
-  return { kunci: RUANG[label] ?? 'kerja', label };
-}
 
 function getNavSubtitle(href: string): string {
   const subtitles: Record<string, string> = {
@@ -75,6 +61,11 @@ function getNavSubtitle(href: string): string {
     '/stok-opname': 'Hitung fisik barang',
     '/pengiriman': 'Barang masuk & keluar',
     '/anggota': 'Catatan keanggotaan',
+    '/simpanan': 'Pokok, wajib & sukarela',
+    '/penjualan': 'Omzet gerai per hari',
+    '/pembelian': 'Pesanan ke pemasok',
+    '/aset': 'Peralatan & kondisi',
+    '/absensi': 'Jadwal & kehadiran petugas',
     '/gerai': 'Unit usaha koperasi',
     '/kesiapan': 'Daftar periksa & bukti',
     '/risiko': 'Kendala & tindak lanjut',
@@ -108,7 +99,6 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
   const [shortcutHelp, setShortcutHelp] = useState(false);
   const path = usePathname(),
     query = useSearchParams();
-  const ruang = ruangDari(path);
   const [favoriteText, setFavoriteText] = usePreference('hub-favorites', '/hari-ini|/tugas');
   const [collapsedText, setCollapsedText] = usePreference('hub-nav-collapsed', '');
   const [desktopSidebarHidden, setDesktopSidebarHidden] = usePreference(
@@ -278,6 +268,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           >
             <Search size={19} />
           </Button>
+          <Notifikasi />
 
           <Button
             aria-label="Ganti tema"
@@ -535,7 +526,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
       {menu && (
         <Button className="manager-shade" aria-label="Tutup menu" onClick={() => setMenu(false)} />
       )}
-      <main className="manager-main" id="main" tabIndex={-1} data-ruang={ruang.kunci} data-ruang-label={ruang.label}>
+      <main className="manager-main" id="main" tabIndex={-1}>
         {error && (
           <p role="alert" className="notice error">
             {error}

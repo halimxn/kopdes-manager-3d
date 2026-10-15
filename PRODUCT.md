@@ -28,13 +28,14 @@ Seluruh data kerja hidup di **Dunia Koperasi**: diorama kantor 3D yang membaca c
 
 - Proyek fleksibel, tugas (daftar/papan/kalender/Gantt/harian), milestone, sprint, kegiatan, rapat + ICS, dokumen, risiko/isu, mitra, tim/pelatihan, gerai/kesiapan, laporan; anggota, buku kas, barang, stok opname, pengiriman, mutasi stok.
 - Buku kas hanya uang masuk/keluar tercatat — tidak pernah disebut saldo atau laba. Opname tidak mengubah stok otomatis.
-- Belum ada POS, akuntansi lengkap, simpan pinjam, kolaborasi real-time, editor blok, unggah berkas.
+- Belum ada POS, akuntansi lengkap, pinjaman anggota, kolaborasi real-time, editor blok, unggah berkas. Simpanan anggota (pokok, wajib, sukarela) tersedia sejak migrasi 10.
 - Next.js 16, React 19, TypeScript strict, Tailwind 3, Three.js. Repo publik.
 
 ## Brand Commitments
 
 - Nama produk: Kopdes Manager 3D; di dalam aplikasi: "Dunia Koperasi" untuk diorama.
-- Dunia Koperasi 3D adalah induk bahasa visual; halaman web mengikuti bahasa panel dunia (keputusan pemilik 12 Oktober 2026). Aksen biru `#2F5BEA`, huruf Inter, ikon dua nada biru (`Ikon3D`).
+- Web memakai gaya "Senja": kanvas krem hangat, kartu putih, aksi biru `#2F5BEA`, empat pastel (biru, merah muda, mentega, mint) untuk modul dan kategori, huruf Hanken Grotesk (keputusan pemilik 15 Oktober 2026; menggantikan bahasa dinding/lantai/kayu dunia). Warna pastel dipilih agar nyaman di mata. Ikon dua nada biru (`Ikon3D`).
+- Tampilan seimbang di semua perangkat: grid modul dengan tinggi rata; setiap data yang tampil harus bisa ditindaklanjuti; tidak ada tombol aksi ganda.
 - Bahasa UI langsung, ringkas, tanpa slogan motivasi.
 
 ## Evidence on Hand

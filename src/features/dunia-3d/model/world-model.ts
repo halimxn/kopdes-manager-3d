@@ -19,7 +19,6 @@ export const worldPreferencesSchema = z.object({
   look_glasses: z.enum(['tidak', 'ya']).default('tidak'),
   quality: z.enum(['otomatis', 'tinggi', 'sedang', 'hemat']).default('otomatis'),
 });
-export type WorldPreferences = z.infer<typeof worldPreferencesSchema>;
 /**
  * luar: distrik; dalam: interior kantor; balai: interior balai desa; gudang: interior gudang
  * logistik; pendingin: interior cold storage; gerai:<id bangunan>: interior gerai (sembako, …).
@@ -186,7 +185,6 @@ export function summarizeInventory(items: Item[]) {
   }
   return { items, racks, coldRacks, staging, atUnits, low: items.filter(isBelowMinimum) };
 }
-export type InventorySummary = ReturnType<typeof summarizeInventory>;
 
 export type MeetingStep = {
   row: Item;

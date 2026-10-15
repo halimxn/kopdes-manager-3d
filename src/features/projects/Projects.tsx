@@ -43,6 +43,7 @@ import { recordHref } from '../workspace/workspace-navigation';
 import { formatChoiceLabel } from '../records/catalog';
 import { isProjectHistory } from './project-lifecycle';
 import { Ikon3D } from '@/components/ui/Ikon3D';
+import { ProjectBudget } from './ProjectBudget';
 
 export function Projects({ data, refresh, history = false, draftScope }: { data: Workspace; refresh: () => Promise<void>; history?: boolean; draftScope?: string }) {
   const query = useSearchParams(),
@@ -198,6 +199,7 @@ export function Projects({ data, refresh, history = false, draftScope }: { data:
             <div className="sr-only" aria-hidden="true">
               <Meter value={scopeProgress(tasksFor(selected.id))} />
             </div>
+            <ProjectBudget project={selected} />
           </section>
 
           {!isProjectHistory(selected) && tasksFor(selected.id).length > 0 && tasksFor(selected.id).every((task) => ['selesai', 'dibatalkan'].includes(task.status)) && <p className="notice">Seluruh tugas sudah selesai atau dibatalkan. Proyek masih berstatus {formatChoiceLabel(String(selected.data.status || 'rencana'))}. Buka properti proyek dan pilih Selesai setelah meninjau hasil.</p>}

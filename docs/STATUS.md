@@ -4,15 +4,19 @@ Keadaan terkini saja; timpa bagian yang berubah. Log per paket di [CHANGELOG](..
 
 ## Halaman operasional
 
-Proyek fleksibel; tugas daftar/papan/kalender/Gantt/harian; milestone, subtugas, dependensi, pengulangan; catatan terformat; kegiatan; rapat dengan tautan pengguna dan unduhan ICS; dokumen; risiko dan isu; tim dan pelatihan; mitra; laporan snapshot; profil/PIN/cadangan; anggota, buku kas, barang, stok opname, pengiriman, mutasi stok. Riwayat proyek di `/proyek?tab=riwayat`.
+Nominal kas, harga, dan jumlah stok memakai titik pemisah ribuan saat input; formulir/draf menyimpan angka mentah. Tes mencakup validasi, kursor, Backspace, read-only, dan penyimpanan nominal ke API. Browser formulir kas diperiksa pada 360/768/1024/1440 px; perangkat fisik dan cloud belum diuji.
 
-Belum tersedia: editor blok bebas, kolaborasi real-time, PWA/offline, unggah berkas, baseline/jalur kritis, penjadwalan otomatis dependensi, POS, akuntansi lengkap, simpan pinjam. Kas hanya uang masuk/keluar tercatat; opname tidak mengubah stok otomatis.
+Proyek fleksibel; tugas daftar/papan/kalender/Gantt/harian; milestone, subtugas, dependensi, pengulangan; catatan terformat; kegiatan; rapat dengan tautan pengguna dan unduhan ICS; dokumen; risiko dan isu; tim dan pelatihan; mitra; laporan snapshot dengan preset 7 hari/bulan ini/bulan lalu dan cetak/simpan PDF; profil/PIN/cadangan; anggota, buku kas, barang, stok opname, pengiriman, mutasi stok. Riwayat proyek di `/proyek?tab=riwayat`; anggaran proyek dibandingkan dengan uang keluar buku kas yang ditautkan ke proyek. Lonceng pengingat di bilah atas (tenggat, rapat 7 hari, dokumen, isu, risiko, stok minimum, selisih opname, tenggat besok).
 
-Tampilan: sistem gaya baru berbahasa dunia 3D di `src/styles/` (dinding menu samping, lantai per ruang, aksen kayu, pil angka · label, dok ponsel mengambang), Beranda bento, laci detail Detail/Terkait/Riwayat dengan saran langkah berikut, judul halaman seragam berikon, warna status token `--ok/--late/--warn` (alias `--pastel-*`), mode gelap. Semua halaman menu diperiksa di 375/768/1024/1440 px tanpa luber samping (pemeriksaan ponsel/tablet terakhir 12 Oktober lewat emulasi perangkat: aksi kartu satu baris, pilihan tampilan bergeser, angka ringkasan berupa baris); tabel lebar berubah menjadi kartu di area sempit (Buku koperasi di layar < 1280 px, Tugas/Kegiatan bila area halaman < 900 px).
+Migrasi 10 (belum dijalankan di cloud): simpanan anggota, penjualan harian gerai, pembelian ke pemasok, inventaris aset, jadwal & absensi; masing-masing halaman dengan ringkasan angka. Sebelum migrasi terpasang halaman menampilkan "belum aktif". Diperiksa di mode demo pada lebar panel ±630 px (simpan penjualan berhasil); ukuran 360/768/1024/1440 belum diaudit untuk halaman ini.
+
+Belum tersedia: editor blok bebas, kolaborasi real-time, PWA/offline, unggah berkas, baseline/jalur kritis, penjadwalan otomatis dependensi, POS, akuntansi lengkap, pinjaman anggota, penyusutan aset. Kas hanya uang masuk/keluar tercatat; opname tidak mengubah stok otomatis.
+
+Tampilan: gaya Senja di `src/styles/` (krem hangat, pastel, Hanken Grotesk, satu tombol tambah, dok ponsel mengambang), Beranda grid modul seimbang (tugas, agenda, perhatian, proyek + milestone, kas bulan berjalan), laci detail Detail/Terkait/Riwayat dengan saran langkah berikut, judul halaman seragam berikon, warna status token `--ok/--late/--warn` (alias `--pastel-*`), mode gelap. Semua halaman menu diperiksa di 375/768/1024/1440 px tanpa luber samping (pemeriksaan ponsel/tablet terakhir 12 Oktober lewat emulasi perangkat: aksi kartu satu baris, pilihan tampilan bergeser, angka ringkasan berupa baris); tabel lebar berubah menjadi kartu di area sempit (Buku koperasi di layar < 1280 px, Tugas/Kegiatan bila area halaman < 900 px).
 
 ## Dunia Koperasi 3D
 
-Kontrak aktif: [DUNIA-KOPERASI](DUNIA-KOPERASI.md). Lima lokasi dalam satu kanvas — Pulau melayang, Kantor (delapan ruang), Gerai (sepuluh unit; unit belum aktif transparan bergembok), Gudang, Cold storage. Tampilan panel logistik (bilah atas, tiga KPI, panel kanan, pelacak, daftar bertab, pin perhatian, label pil, putar kamera, lembar bawah ponsel). Tautan dua arah dengan web, aksi buat baru dari panel ruang, lonceng tugas/risiko/isu.
+Kontrak aktif: [DUNIA-KOPERASI](DUNIA-KOPERASI.md). Lima lokasi dalam satu kanvas — Pulau melayang, Kantor (delapan ruang), Gerai (sepuluh unit; unit belum aktif transparan bergembok), Gudang, Cold storage. Tampilan panel logistik (bilah atas, tiga KPI, panel kanan, pelacak, daftar bertab, pin perhatian, label pil, putar kamera, lembar bawah ponsel). Tautan dua arah dengan web, aksi buat baru dari panel ruang, lonceng tugas/risiko/isu. Kartu panel bergaya Senja; panel Ringkasan berisi KPI dan grafik ringkas per lokasi (tugas, kehadiran, kas keluar 7 hari, omzet gerai, rak, pengiriman, rak pendingin).
 
 Figur chibi (maks. 12, rupa dari kolom staf) ditempatkan dari rapat, kegiatan, pelatihan, status tugas, seksi, dan unit gerai; manajer selalu tampil. Visualisasi, bukan kehadiran. Render hanya saat perubahan atau selama figur/kamera bergerak. Panorama jendela mengikuti cuaca simulasi dan fase WIB.
 
@@ -22,7 +26,7 @@ Figur chibi (maks. 12, rupa dari kolom staf) ditempatkan dari rapat, kegiatan, p
 
 ## Cloud
 
-Target Supabase baru milik pemilik. Migrasi 8 (pengiriman/mutasi stok) sudah dijalankan pemilik. Migrasi 9 (status laporan dan pemulihan cadangan) siap di repo, belum dijalankan di cloud; lihat [MIGRASI-SQL](MIGRASI-SQL.md). PIN/simpan setelah reset, indeks paginasi migrasi 6, relasi dokumen migrasi 7, dan smoke test produksi belum dikonfirmasi. AI tidak menjalankan SQL cloud; pemilik menjalankan migrasi setelah tujuan dan dampaknya dikonfirmasi.
+Target Supabase baru milik pemilik. Migrasi 8 (pengiriman/mutasi stok) sudah dijalankan pemilik. Migrasi 9 (status laporan dan pemulihan cadangan) dan 10 (administrasi usaha) siap di repo, belum dijalankan di cloud; lihat [MIGRASI-SQL](MIGRASI-SQL.md). PIN/simpan setelah reset, indeks paginasi migrasi 6, relasi dokumen migrasi 7, dan smoke test produksi belum dikonfirmasi. AI tidak menjalankan SQL cloud; pemilik menjalankan migrasi setelah tujuan dan dampaknya dikonfirmasi.
 
 ## Pemeriksaan terakhir — 13 Oktober 2026
 
@@ -40,4 +44,4 @@ Target Supabase baru milik pemilik. Migrasi 8 (pengiriman/mutasi stok) sudah dij
 
 ## Git
 
-Repo `kopdes-manager-3d`, cabang utama `main`, riwayat dimulai bersih 11 Oktober 2026. Dua paket audit sudah digabung lewat PR #1 (`c3b01a9`). Paket tampilan aktif di `tampilan/rapikan-mobile`; perubahan lokal yang tidak dimasukkan tetap dipertahankan. Cabang fitur bertopik (lihat [CONTRIBUTING](../CONTRIBUTING.md)); commit tanpa atribusi AI; push dan deploy hanya bila pemilik meminta.
+Repo `kopdes-manager-3d`, cabang utama `main`, riwayat dimulai bersih 11 Oktober 2026. Dua paket audit digabung lewat PR #1 (`c3b01a9`); paket mobile dan panel dunia lewat PR #2 (`7f4dc8b`), CI lulus. Paket input angka aktif di `tampilan/pemisah-ribuan`, belum di-push. Perubahan lokal pengguna tetap dipertahankan. Cabang fitur bertopik (lihat [CONTRIBUTING](../CONTRIBUTING.md)); commit tanpa atribusi AI; push dan deploy hanya bila pemilik meminta.

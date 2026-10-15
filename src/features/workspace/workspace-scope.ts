@@ -1,5 +1,7 @@
 import { pages } from '../records/catalog';
 import type { Entity } from '../records/schemas';
+// Halaman Buku koperasi; harus sama dengan `modules` di Operations.tsx (dipisah agar Operations dimuat hanya di halamannya).
+export const recordingPaths = ['pencatatan', 'anggota', 'keuangan', 'barang', 'stok-opname'];
 export function pageEntities(slug: string): Entity[] {
   if (slug === 'riwayat-proyek') return pageEntities('proyek');
   const related: Record<string, Entity[]> = {
@@ -25,6 +27,8 @@ export function pageEntities(slug: string): Entity[] {
       'interactions',
       'stock-movements',
       'stock-counts',
+      'sales',
+      'attendance',
     ],
     pengiriman: [
       'deliveries',
@@ -42,7 +46,7 @@ export function pageEntities(slug: string): Entity[] {
       'risks',
       'inventory-items',
       'stock-counts',
-      'members',
+      'milestones',
       'cash-entries',
       'journal',
     ],
@@ -94,6 +98,11 @@ export function pageEntities(slug: string): Entity[] {
     barang: ['inventory-items', 'cash-entries', 'units', 'deliveries', 'stock-movements', 'stock-counts'],
     'stok-opname': ['stock-counts', 'inventory-items', 'units', 'stock-movements', 'staff'],
     risiko: ['risks', 'issues', 'work-items', 'staff'],
+    aset: ['assets', 'units'],
+    absensi: ['attendance', 'staff', 'units'],
+    pembelian: ['purchase-orders', 'stakeholders', 'units', 'deliveries'],
+    penjualan: ['sales', 'units'],
+    simpanan: ['savings', 'members'],
     jurnal: ['journal', 'work-items', 'stakeholders', 'units', 'meetings', 'staff'],
   };
   return [

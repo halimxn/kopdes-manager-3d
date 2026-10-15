@@ -316,7 +316,7 @@ function mutasiStok(p: Record<string, unknown>): Hasil {
 const klien = {
   from: (tabel: string) => new Kueri(tabel),
   rpc: async (nama: string, args: Record<string, unknown> = {}): Promise<Hasil> => {
-    if (nama === 'hub_operations_ready' || nama === 'hub_logistics_ready')
+    if (['hub_operations_ready', 'hub_logistics_ready', 'hub_administration_ready'].includes(nama))
       return { data: true, error: null };
     if (nama === 'save_work_item') return simpanTugas(args);
     if (nama === 'hub_post_stock_movement')

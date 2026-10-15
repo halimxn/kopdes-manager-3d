@@ -99,23 +99,16 @@
 .readiness-breakdown { display: grid; gap: 6px; margin-top: 8px; }
 .radar { max-width: 220px; margin: 0 auto; }
 
-/* Layar masuk PIN: kantor diorama di pintu masuk */
+/* Layar masuk PIN: kanvas krem dengan semburat pastel, kartu putih */
 .auth {
   display: grid;
   place-items: center;
   min-height: 100dvh;
   padding: 24px 16px;
   background:
-    linear-gradient(180deg, var(--wall) 0%, var(--wall-deep) 52%, transparent 52%),
-    repeating-linear-gradient(153.43deg, transparent 0 46px, var(--lantai-garis) 46px 47px),
-    var(--lantai-buku);
-}
-.auth::after {
-  content: '';
-  position: fixed;
-  inset: auto 0 0;
-  height: 10px;
-  background: var(--wood-deep);
+    radial-gradient(ellipse at 15% 10%, var(--pastel-pink), transparent 45%),
+    radial-gradient(ellipse at 85% 90%, var(--pastel-mentega), transparent 45%),
+    var(--canvas);
 }
 .auth > .card,
 .auth > section.card {
@@ -126,7 +119,7 @@
   padding: 32px 28px;
   border-radius: var(--r-xl);
   text-align: center;
-  box-shadow: var(--shadow-lg), inset 0 -5px 0 color-mix(in srgb, var(--wood) 60%, transparent);
+  box-shadow: var(--shadow-lg);
 }
 .auth h1 { font-size: 24px; }
 .auth p { color: var(--ink-muted); }
@@ -140,25 +133,8 @@
   isolation: isolate;
   overflow: hidden;
   padding: max(32px, env(safe-area-inset-top)) 20px max(32px, env(safe-area-inset-bottom));
-  background:
-    radial-gradient(ellipse at 15% 15%, var(--brand-soft-2), transparent 60%),
-    radial-gradient(ellipse at 90% 70%, var(--wood-soft), transparent 55%),
-    linear-gradient(160deg, var(--canvas), var(--wall-deep));
+  background: transparent;
 }
-.pin-page::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  top: 8%;
-  right: -40px;
-  width: clamp(200px, 36vw, 460px);
-  aspect-ratio: 1;
-  border: 14px solid color-mix(in srgb, var(--surface) 55%, transparent);
-  border-radius: 40px;
-  background: linear-gradient(90deg, transparent 48%, var(--line) 48% 52%, transparent 52%), linear-gradient(transparent 48%, var(--line) 48% 52%, transparent 52%);
-  transform: rotate(-15deg);
-}
-.pin-page::after { position: absolute; z-index: -1; height: 28%; background: repeating-linear-gradient(155deg, transparent 0 48px, var(--lantai-garis) 48px 50px), color-mix(in srgb, var(--wood-soft) 60%, transparent); border-top: 1px solid var(--line); }
 .pin-page > .card { position: relative; width: min(440px, 100%); padding: 32px 24px; border: 1px solid var(--line-strong); }
 .pin-emblem { display: grid; place-items: center; width: 100px; height: 100px; margin-bottom: 8px; border-radius: 28px; background: var(--brand-soft); box-shadow: inset 0 0 0 1px var(--brand-soft-border); }
 .pin-page input[name='pin'] { min-height: 52px; font-size: 22px; text-align: center; letter-spacing: 0.25em; }
@@ -171,4 +147,16 @@
 
 /* Halaman tidak ditemukan di dalam kerangka: kartu saja, tanpa diorama layar masuk. */
 .manager-main .auth { min-height: 50dvh; padding: 48px 0; background: none; }
-.manager-main .auth::after { content: none; }
+
+/* Ringkasan halaman administrasi usaha (aset, absensi, pembelian, penjualan, simpanan) */
+.ringkasan-admin { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@container halaman (min-width: 560px) {
+  .ringkasan-admin { grid-template-columns: none; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; }
+}
+.ringkasan-admin-angka { display: grid; gap: 2px; min-width: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); }
+.ringkasan-admin-angka span { color: var(--ink-muted); font-size: 12.5px; }
+.ringkasan-admin-angka strong { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ringkasan-admin-angka small { color: var(--ink-muted); font-size: 12px; }
+.ringkasan-admin-angka.is-ok strong { color: var(--ok); }
+.ringkasan-admin-angka.is-warn strong { color: var(--warn); }
+.ringkasan-admin-angka.is-late strong { color: var(--late); }
