@@ -1,8 +1,7 @@
 /*
-  Token sistem gaya Kopdes Manager 3D — "Cerah" (keputusan pemilik 16 Oktober 2026).
-  Latar abu-lavender dingin, kartu putih tanpa garis berbayangan tipis, aksi biru #2F5BEA,
-  aksen jenuh hanya untuk grafik, status, dan tombol utama (≤ ±10% layar), huruf Plus Jakarta Sans.
-  Peta aksen: biru = aksi/Tugas, ungu = Proyek, oranye = Buku koperasi, teal = Gerai, merah muda = Rapat.
+  Token sistem gaya Kopdes — "Taskflow" (keputusan pemilik 16 Oktober 2026, menggantikan Cerah).
+  Latar abu terang, kartu putih sudut 16 px berbayangan tipis, aksen tunggal biru #546FFF,
+  tinta gelap #141522, huruf Plus Jakarta Sans. Warna sampul per hub hanya untuk sampul kartu dan ikon.
   Status selalu bertuliskan.
 */
 :root {
@@ -10,58 +9,58 @@
   --scrim: rgba(17, 20, 40, 0.32);
   /* Isi di atas warna merek/status, kilau merek, sinyal kuning, jalur Gantt, toast */
   --on-brand: #fff;
-  --brand-bright: #6b8cff;
+  --brand-bright: #8a9bff;
   --sinyal: #f3c64a;
-  --jalur-rencana: #eaf0ff;
-  --titik-rencana: #c9d6fb;
+  --jalur-rencana: #eef1ff;
+  --titik-rencana: #c8d1ff;
   --titik-selesai: #8fd8cc;
-  --toast-bg: #171a3a;
+  --toast-bg: #141522;
   --toast-fg: #fff;
   --toast-aksi: #a8bbff;
 
   /* Huruf */
   --font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  --fs-title: 28px;
-  --fs-h2: 17px;
+  --fs-title: 24px;
+  --fs-h2: 16px;
   --fs-h3: 16px;
   --fs-body: 14px;
-  --fs-meta: 12.5px;
-  --fs-cap: 11.5px;
+  --fs-meta: 12px;
+  --fs-cap: 12px;
   --lh-tight: 1.25;
   --lh-body: 1.5;
 
   /* Permukaan */
-  --canvas: #f4f5fa;
-  --canvas-deep: #eceef5;
+  --canvas: #f5f5f7;
+  --canvas-deep: #ededf1;
   --surface: #ffffff;
-  --surface-2: #f8f9fc;
-  --surface-3: #eceef5;
-  --wall: #f4f5fa;
-  --wall-deep: #f4f5fa;
+  --surface-2: #fafafa;
+  --surface-3: #f5f5f7;
+  --wall: #f5f5f7;
+  --wall-deep: #f5f5f7;
 
   /* Tinta */
-  --ink: #2e3250;
-  --ink-heading: #171a3a;
-  --ink-muted: #5e6384;
-  --ink-subtle: #676c8c;
+  --ink: #141522;
+  --ink-heading: #141522;
+  --ink-muted: #54577a;
+  --ink-subtle: #8e92bc;
   --ink-inverse: #ffffff;
 
   /* Garis */
-  --line: #eceef5;
-  --line-strong: #dfe2ec;
+  --line: #f0f0f5;
+  --line-strong: #e4e5ee;
 
   /* Aksen biru (sama dengan Dunia Koperasi) */
-  --brand: #2f5bea;
-  --brand-hover: #2148c7;
-  --brand-press: #1b3cab;
-  --brand-soft: #eaf0ff;
-  --brand-soft-2: #dde6ff;
-  --brand-soft-border: #c9d6fb;
-  --brand-ink: #2448c7;
+  --brand: #546fff;
+  --brand-hover: #3d58f0;
+  --brand-press: #2f48d6;
+  --brand-soft: #eef1ff;
+  --brand-soft-2: #e1e6ff;
+  --brand-soft-border: #c8d1ff;
+  --brand-ink: #3d58f0;
   --brand-text: #ffffff;
   --brand-contrast: #ffffff;
-  --focus-ring: 0 0 0 3px rgba(47, 91, 234, 0.28);
+  --focus-ring: 0 0 0 3px rgba(84, 111, 255, 0.3);
 
   /* Sisa gaya dunia lama (kayu); dipakai beberapa aksen hangat */
   --wood: #ffe3b8;
@@ -90,17 +89,17 @@
   --warn-line: #f6dfa0;
   --info: var(--brand-ink);
   --info-bg: var(--brand-soft);
-  --neutral-bg: #eceef5;
+  --neutral-bg: #f0f0f5;
 
   /* Bentuk dan kedalaman: kartu tanpa garis, bayangan tipis */
   --r-xs: 6px;
   --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 18px;
+  --r-md: 10px;
+  --r-lg: 16px;
   --r-xl: 22px;
   --r-full: 999px;
   --shadow-sm: 0 1px 2px rgba(23, 26, 58, 0.04);
-  --shadow: 0 1px 2px rgba(23, 26, 58, 0.04), 0 4px 16px -10px rgba(23, 26, 58, 0.1);
+  --shadow: 0 1px 2px rgba(20, 21, 34, 0.03), 0 6px 20px -12px rgba(20, 21, 34, 0.08);
   --shadow-md: 0 2px 4px rgba(23, 26, 58, 0.04), 0 12px 28px -12px rgba(23, 26, 58, 0.14);
   --shadow-lg: 0 24px 60px rgba(17, 20, 40, 0.18);
   --shadow-dock: 0 14px 34px -10px rgba(23, 26, 58, 0.28);
@@ -112,7 +111,7 @@
 
   /* Tata letak */
   --sidebar-w: 240px;
-  --topbar-h: 64px;
+  --topbar-h: 72px;
   --page-max: 1200px;
   --gutter: 28px;
   --touch: 44px;
@@ -122,10 +121,10 @@
   --kartu-garis: transparent;
 
   /* Ikon dua nada */
-  --ikon-isi: #eaf0ff;
+  --ikon-isi: #eef1ff;
 
   /* Grafik lembut: garis tipis, isi gradien memudar */
-  --grafik-biru: #5b7cf0;
+  --grafik-biru: #546fff;
   --grafik-oranye: #f5a142;
   --grafik-teal: #2bb7a8;
   --grafik-pink: #ee6f9e;
@@ -156,46 +155,60 @@
   --pastel-purple-text: #5b2fd6;
   --pastel-purple-bg: #f1ebff;
   /* Pastel modul: biru (aksi/Tugas), merah muda (Rapat), mentega = oranye (Buku koperasi), mint = teal (Gerai) */
-  --pastel-biru: #eaf0ff;
-  --pastel-biru-ink: #2448c7;
+  --pastel-biru: #eef1ff;
+  --pastel-biru-ink: #3d58f0;
   --pastel-pink: #fde9f1;
   --pastel-pink-ink: #c21f5e;
   --pastel-mentega: #fff3e0;
   --pastel-mentega-ink: #a3560a;
   --pastel-mint: #e2f7f4;
   --pastel-mint-ink: #0b7a70;
+  /* Taskflow: sudut kartu, lebar kolom kerangka, sampul kartu per hub (tanpa foto) */
+  --r-card: 16px;
+  --rail-w: 72px;
+  --panel-kanan-w: 320px;
+  --sampul-pekerjaan: #eef1ff;
+  --sampul-pekerjaan-ink: #3d58f0;
+  --sampul-catatan: #fdecf3;
+  --sampul-catatan-ink: #c21f5e;
+  --sampul-usaha: #e3f7f4;
+  --sampul-usaha-ink: #0b7a70;
+  --sampul-koperasi: #fff2e0;
+  --sampul-koperasi-ink: #a3560a;
+  --sampul-dunia: #efeaff;
+  --sampul-dunia-ink: #5b2fd6;
 }
 
 :root.dark {
   color-scheme: dark;
   --scrim: rgba(0, 0, 0, 0.55);
-  --jalur-rencana: #1f2a4d;
+  --jalur-rencana: #22284f;
   --titik-rencana: #4a5fa8;
   --titik-selesai: #3f9e8f;
   --toast-bg: #e7e9f3;
   --toast-fg: #171a3a;
   --toast-aksi: #2448c7;
-  --canvas: #11131c;
-  --canvas-deep: #0d0f16;
-  --surface: #181b27;
-  --surface-2: #1d2130;
-  --surface-3: #232838;
-  --wall: #11131c;
-  --wall-deep: #11131c;
-  --ink: #e7e9f3;
+  --canvas: #0f1018;
+  --canvas-deep: #0b0c12;
+  --surface: #171826;
+  --surface-2: #1c1d2d;
+  --surface-3: #232436;
+  --wall: #0f1018;
+  --wall-deep: #0f1018;
+  --ink: #e8e9f3;
   --ink-heading: #ffffff;
-  --ink-muted: #a8adc6;
-  --ink-subtle: #8d93ad;
-  --line: #262b3b;
-  --line-strong: #333950;
-  --brand: #6b8cff;
-  --brand-hover: #84a0ff;
-  --brand-press: #5a7cf0;
-  --brand-soft: #1f2a4d;
-  --brand-soft-2: #26335e;
-  --brand-soft-border: #33437a;
-  --brand-ink: #a8bbff;
-  --focus-ring: 0 0 0 3px rgba(107, 140, 255, 0.4);
+  --ink-muted: #a9acc8;
+  --ink-subtle: #7f83a6;
+  --line: #25263a;
+  --line-strong: #313350;
+  --brand: #7d90ff;
+  --brand-hover: #95a5ff;
+  --brand-press: #6a7ef0;
+  --brand-soft: #22284f;
+  --brand-soft-2: #2a3160;
+  --brand-soft-border: #39427a;
+  --brand-ink: #b3beff;
+  --focus-ring: 0 0 0 3px rgba(125, 144, 255, 0.4);
   --wood: #5a4520;
   --wood-deep: #f5a142;
   --wood-edge: #8a6420;
@@ -216,7 +229,7 @@
   --warn: #f0d075;
   --warn-bg: #352b0e;
   --warn-line: #54451a;
-  --neutral-bg: #232838;
+  --neutral-bg: #232436;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 14px 34px rgba(0, 0, 0, 0.35);
@@ -224,7 +237,7 @@
   --shadow-dock: 0 10px 30px rgba(0, 0, 0, 0.45);
   --kartu-garis: var(--line);
   --ikon-isi: rgba(107, 140, 255, 0.22);
-  --grafik-biru: #7d97ff;
+  --grafik-biru: #7d90ff;
   --grafik-oranye: #f6b464;
   --grafik-teal: #4fcfc0;
   --grafik-pink: #f48bb2;
@@ -233,20 +246,30 @@
   --grafik-dasar: #262b3b;
   --pastel-purple-text: #c3b0ff;
   --pastel-purple-bg: #2a2147;
-  --pastel-biru: #1f2a4d;
-  --pastel-biru-ink: #a8bbff;
+  --pastel-biru: #22284f;
+  --pastel-biru-ink: #b3beff;
   --pastel-pink: #3a1d2b;
   --pastel-pink-ink: #f2a6c4;
   --pastel-mentega: #3a2a12;
   --pastel-mentega-ink: #f6c27a;
   --pastel-mint: #12312d;
   --pastel-mint-ink: #84dccf;
+  --sampul-pekerjaan: #22284f;
+  --sampul-pekerjaan-ink: #b3beff;
+  --sampul-catatan: #3a1d2b;
+  --sampul-catatan-ink: #f2a6c4;
+  --sampul-usaha: #12312d;
+  --sampul-usaha-ink: #84dccf;
+  --sampul-koperasi: #3a2a12;
+  --sampul-koperasi-ink: #f6c27a;
+  --sampul-dunia: #2a2147;
+  --sampul-dunia-ink: #c3b0ff;
 }
 
 @media (max-width: 767px) {
   :root {
-    --fs-title: 22px;
+    --fs-title: 20px;
     --gutter: 16px;
-    --topbar-h: 56px;
+    --topbar-h: 60px;
   }
 }

@@ -12,6 +12,7 @@ body {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
+  font-weight: 500;
   font-feature-settings: 'cv11', 'ss01', 'ss03';
   -webkit-font-smoothing: antialiased;
 }
@@ -19,12 +20,12 @@ body {
 h1, h2, h3, h4 {
   margin: 0;
   color: var(--ink-heading);
-  font-weight: 700;
+  font-weight: 600;
   line-height: var(--lh-tight);
   letter-spacing: -0.015em;
   text-wrap: balance;
 }
-h1 { font-size: var(--fs-title); font-weight: 800; letter-spacing: -0.025em; }
+h1 { font-size: var(--fs-title); font-weight: 600; letter-spacing: -0.02em; }
 h2 { font-size: var(--fs-h2); }
 h3 { font-size: var(--fs-h3); }
 h4 { font-size: var(--fs-body); }
@@ -56,7 +57,7 @@ img, svg { flex-shrink: 0; }
 :where(table, td, th) { font-variant-numeric: tabular-nums; }
 
 /* Permukaan browser ikut tema */
-::selection { background: rgba(47, 91, 234, 0.2); color: inherit; }
+::selection { background: rgba(84, 111, 255, 0.2); color: inherit; }
 :root { accent-color: var(--brand); caret-color: var(--brand); }
 * { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -74,7 +75,7 @@ img, svg { flex-shrink: 0; }
   min-width: 0;
   padding: 20px;
   border: 1px solid var(--kartu-garis);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-card);
   background: var(--surface);
   box-shadow: var(--shadow);
 }

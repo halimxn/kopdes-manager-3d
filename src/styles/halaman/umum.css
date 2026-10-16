@@ -1,20 +1,27 @@
 /* Bagian umum: tab halaman, rentang tugas, muat lagi, panduan, risiko, kesiapan, layar masuk PIN. */
 
 /* Tab bagian halaman (Rapat/Keputusan, Risiko/Isu, Tim/Pelatihan, …), tepat di bawah judul halaman */
+/* Gaya Taskflow: tab bergaris bawah, lebih kecil dari tab hub di atasnya */
 .workspace-page .tabs {
-  display: inline-flex;
-  gap: 4px;
-  justify-self: start;
+  display: flex;
+  gap: 16px;
+  justify-self: stretch;
   max-width: 100%;
   overflow-x: auto;
-  padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--line);
   scrollbar-width: none;
 }
-.workspace-page .tabs .ui-btn,
+.workspace-page .tabs .ui-btn {
+  min-height: var(--touch);
+  padding: 0 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 13px;
+  box-shadow: none;
+}
+.workspace-page .tabs .ui-btn[aria-selected='true'] { color: var(--ink-heading); box-shadow: inset 0 -2px 0 var(--brand); }
 .workspace-scope-control .ui-btn {
   min-height: 36px;
   padding: 0 14px;
@@ -24,7 +31,6 @@
   font-size: 13px;
   box-shadow: none;
 }
-.workspace-page .tabs .ui-btn[aria-selected='true'],
 .workspace-scope-control .ui-btn[aria-pressed='true'] { background: var(--brand-soft); color: var(--brand-ink); }
 .workspace-scope-control { display: inline-flex; gap: 4px; justify-self: start; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
 .workspace-page > .workspace-scope-control { margin-top: 12px; }
