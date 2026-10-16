@@ -68,7 +68,7 @@ it('keeps dashboard details closed and lists focus tasks as compact rows', () =>
   // Agenda dan status tugas selalu tampil; fokus berisi tugas terlambat sebagai baris ringkas.
   expect(view.container.querySelector('.dashboard-routines')).toBeTruthy();
   expect(view.container.querySelector('.beranda-status')).toBeTruthy();
-  expect(view.container.querySelectorAll('.beranda-fokus .beranda-baris li')).toHaveLength(5);
+  expect(view.container.querySelectorAll('.beranda-fokus .fokus-daftar li')).toHaveLength(5);
   expect(screen.getByRole('link', { name: /Semua tugas/ }).getAttribute('href')).toBe('/tugas');
 });
 

@@ -39,6 +39,7 @@ it('menampilkan omzet 7 hari dan petugas yang belum absen', async () => {
   render(<ModulUsahaHarian />);
   expect((await screen.findAllByText('Rp 1,5 jt')).length).toBeGreaterThan(0);
   expect(screen.getByRole('img', { name: '1 dari 2 petugas hadir' })).toBeTruthy();
-  expect(screen.getByText('Belum absen').closest('li')?.textContent).toBe('Belum absen1');
+  expect(screen.getByText('Hadir 07:05')).toBeTruthy();
+  expect(screen.getByText('Belum absen')).toBeTruthy();
   expect(mocks.api).toHaveBeenCalledWith(expect.stringMatching(new RegExp(`^attendance\\?from=${hari}&to=${hari}`)));
 });

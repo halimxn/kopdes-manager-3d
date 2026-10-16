@@ -25,7 +25,7 @@ it('beranda memakai jumlah selesai nyata dan tenggat terlambat', () => {
   const fokus = within(screen.getByRole('region', { name: 'Fokus hari ini' }));
   expect(fokus.getByRole('link', { name: /Terlambat nyata/ }).getAttribute('href')).toBe('/tugas?task=two');
   expect(fokus.queryByRole('link', { name: /Selesai nyata/ })).toBeNull();
-  expect(screen.getByRole('img', { name: '2 tugas: 0 rencana, 1 dikerjakan, 1 selesai' })).toBeTruthy();
+  expect(screen.getByRole('img', { name: '50% selesai: 0 rencana, 1 dikerjakan, 1 selesai' })).toBeTruthy();
   expect(screen.queryByText('60%')).toBeNull();
 }, 15000);
 it('kalender mingguan melintasi tahun dan tambah tugas memakai tanggal terpilih', () => {
@@ -102,6 +102,6 @@ it('filter proyek menyaring fokus dan status tugas tanpa status ganda', () => {
   expect(fokus.getByRole('link', { name: /Aktif gerai/ })).toBeTruthy();
   expect(fokus.queryByRole('link', { name: /Aktif administrasi/ })).toBeNull();
   expect(fokus.queryByRole('link', { name: /Selesai gerai/ })).toBeNull();
-  expect(screen.getByRole('img', { name: '2 tugas: 0 rencana, 1 dikerjakan, 1 selesai' })).toBeTruthy();
+  expect(screen.getByRole('img', { name: '50% selesai: 0 rencana, 1 dikerjakan, 1 selesai' })).toBeTruthy();
   expect(screen.queryByText('Dibatalkan')).toBeNull();
 });

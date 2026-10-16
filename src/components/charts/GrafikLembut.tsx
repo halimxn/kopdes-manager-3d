@@ -158,34 +158,3 @@ export function Donat({
     </svg>
   );
 }
-
-/** Setengah lingkaran: nilai dari maksimum (mis. hadir dari petugas aktif). */
-export function Gauge({ nilai, maks, keterangan }: { nilai: number; maks: number; keterangan: string }) {
-  const id = useId().replace(/:/g, '');
-  const panjang = Math.PI * 80;
-  const isi = maks > 0 ? (Math.min(nilai, maks) / maks) * panjang : 0;
-  return (
-    <svg className="grafik-gauge" viewBox="0 0 200 118" role="img" aria-label={`${nilai} dari ${maks} ${keterangan}`}>
-      <defs>
-        <linearGradient id={`gauge-${id}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="var(--grafik-teal)" />
-          <stop offset="1" stopColor="var(--grafik-biru)" />
-        </linearGradient>
-      </defs>
-      <path d="M20 100 A80 80 0 0 1 180 100" className="grafik-dasar-lingkar" strokeLinecap="round" />
-      {isi > 0 && (
-        <path
-          d="M20 100 A80 80 0 0 1 180 100"
-          fill="none"
-          stroke={`url(#gauge-${id})`}
-          strokeWidth="14"
-          strokeLinecap="round"
-          strokeDasharray={`${isi} ${panjang}`}
-          className="grafik-muncul"
-        />
-      )}
-      <text x="100" y="88" textAnchor="middle" className="grafik-donat-angka">{`${nilai}/${maks}`}</text>
-      <text x="100" y="108" textAnchor="middle" className="grafik-sumbu">{keterangan}</text>
-    </svg>
-  );
-}

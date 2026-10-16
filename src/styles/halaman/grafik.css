@@ -15,9 +15,7 @@
 .grafik-tip .tip-kini { fill: var(--grafik-oranye); }
 .grafik-tip .tip-lalu { fill: none; stroke: var(--grafik-redup); stroke-width: 2; }
 
-.grafik-donat,
-.grafik-gauge { display: block; width: 100%; max-width: 176px; height: auto; margin: 4px auto 0; }
-.grafik-gauge { max-width: 220px; }
+.grafik-donat { display: block; width: 100%; max-width: 176px; height: auto; margin: 4px auto 0; }
 .grafik-dasar-lingkar { fill: none; stroke: var(--grafik-dasar); stroke-width: 14; }
 .grafik-donat-angka { fill: var(--ink-heading); font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
 

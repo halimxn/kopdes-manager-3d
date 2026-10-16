@@ -183,15 +183,6 @@
 .project-dot { width: 9px; height: 9px; flex-shrink: 0; border-radius: 3px; }
 .project-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sidebar-empty-note { display: block; padding: 4px 10px; color: var(--ink-muted); }
-.sidebar-footer-card {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: var(--r-md);
-  background: var(--surface);
-  box-shadow: 0 0 0 1px var(--line);
-}
-.sidebar-profile-row { display: flex; align-items: center; gap: 10px; }
-.sidebar-avatar,
 .manager-avatar-badge,
 .mobile-sheet-avatar {
   display: grid;
@@ -204,9 +195,6 @@
   color: var(--pastel-biru-ink);
   font-weight: 700;
 }
-.sidebar-profile-info { display: grid; min-width: 0; line-height: 1.25; }
-.sidebar-profile-info strong { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
-.sidebar-profile-info small { color: var(--ink-muted); font-size: 11.5px; }
 
 /* ---------- Bilah atas ---------- */
 .manager-topbar {
@@ -225,9 +213,7 @@
 }
 .topbar-left-cluster { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .ui-btn.topbar-nav-menu-btn { width: 40px; padding: 0; }
-.topbar-menu-label,
-.topbar-crumb-sep,
-.manager-profile { display: none; }
+.topbar-menu-label { display: none; }
 .manager-location-wrap { display: flex; align-items: center; gap: 4px; min-width: 0; }
 .manager-location {
   overflow: hidden;
@@ -293,7 +279,28 @@
 .topbar-cari:hover { color: var(--ink-muted); box-shadow: var(--shadow); }
 .topbar-cari kbd { margin-left: auto; }
 .topbar-profil { position: relative; margin-left: 4px; }
-.topbar-profil > summary { display: grid; place-items: center; width: 44px; height: 44px; list-style: none; cursor: pointer; }
+.topbar-profil > summary { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 2px 10px 2px 2px; border-radius: var(--r-full); list-style: none; cursor: pointer; }
+.topbar-profil > summary:hover { background: var(--surface); }
+.topbar-profil-nama { display: grid; line-height: 1.2; }
+.topbar-profil-nama strong { max-width: 140px; overflow: hidden; color: var(--ink-heading); font-size: 13.5px; text-overflow: ellipsis; white-space: nowrap; }
+.topbar-profil-nama small { color: var(--ink-subtle); font-size: 12px; }
+.topbar-profil-panah { color: var(--ink-subtle); }
+.sidebar-dunia-kartu {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 16px 14px 14px;
+  border-radius: var(--r-xl);
+  background: linear-gradient(160deg, var(--pastel-biru), var(--pastel-purple-bg));
+  color: var(--ink-heading);
+  text-align: center;
+  text-decoration: none;
+}
+.sidebar-dunia-kartu:hover { text-decoration: none; }
+.sidebar-dunia-kartu strong { margin-top: 4px; font-size: 14.5px; }
+.sidebar-dunia-kartu small { color: var(--ink-muted); font-size: 12px; line-height: 1.35; }
+.sidebar-dunia-tombol { display: inline-flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; margin-top: 8px; border-radius: var(--r-md); background: var(--brand); color: var(--on-brand); font-size: 13.5px; font-weight: 700; box-shadow: 0 10px 18px -12px var(--brand); }
 .topbar-profil > summary::-webkit-details-marker { display: none; }
 .topbar-profil .manager-avatar-badge { width: 40px; height: 40px; background: linear-gradient(150deg, color-mix(in srgb, var(--grafik-teal) 60%, var(--on-brand)), var(--grafik-teal) 75%); color: var(--on-brand); box-shadow: 0 8px 16px -10px var(--grafik-teal); }
 .topbar-profil-menu {
@@ -529,7 +536,8 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
   .tablet-rail-link.is-active { background: var(--surface); color: var(--brand-ink); box-shadow: var(--shadow); }
   .tablet-rail-menu-btn { margin-top: auto; }
   .topbar-cari { width: 44px; justify-content: center; padding: 0; }
-  .topbar-cari span, .topbar-cari kbd { display: none; }
+  .topbar-cari span, .topbar-cari kbd, .topbar-profil-nama, .topbar-profil-panah { display: none; }
+  .topbar-profil > summary { padding: 0; }
 }
 
 /* Ponsel: dok mengambang + lembar menu dari bawah */

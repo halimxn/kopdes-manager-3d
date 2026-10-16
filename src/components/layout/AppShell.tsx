@@ -268,6 +268,11 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           <details className="topbar-profil">
             <summary aria-label={`Menu profil ${name}`} title={name}>
               <span className="manager-avatar-badge">{name[0] || 'M'}</span>
+              <span className="topbar-profil-nama">
+                <strong>{name}</strong>
+                <small>Manajer koperasi</small>
+              </span>
+              <ChevronDown size={16} className="topbar-profil-panah" aria-hidden="true" />
             </summary>
             <div className="topbar-profil-menu">
               <strong>{name}</strong>
@@ -523,15 +528,13 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           </section>
         </div>
 
-        <div className="sidebar-footer-card">
-          <div className="sidebar-profile-row">
-            <span className="sidebar-avatar">{name[0]}</span>
-            <div className="sidebar-profile-info">
-              <strong>{name}</strong>
-              <small>Manajer koperasi</small>
-            </div>
-          </div>
-        </div>
+        {/* Kartu ilustrasi di dasar menu (pola M.project); profil sudah ada di bilah atas. */}
+        <Link href="/dunia-koperasi" className="sidebar-dunia-kartu" onClick={() => setMenu(false)}>
+          <Ikon3D kind="pulau" size={64} />
+          <strong>Dunia Koperasi</strong>
+          <small>Kantor, gerai, dan gudang dalam 3D</small>
+          <span className="sidebar-dunia-tombol">Buka dunia</span>
+        </Link>
       </aside>
       {menu && (
         <Button className="manager-shade" aria-label="Tutup menu" onClick={() => setMenu(false)} />

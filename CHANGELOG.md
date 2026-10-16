@@ -2,6 +2,14 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Beranda mengikuti referensi M.project — 16 Oktober 2026
+
+- Pemilik meminta tampilan disesuaikan dengan kumpulan referensi (M.project, Selles, Natz/Analytics, Seonizer). Beranda kini bersusun seperti M.project: baris kartu proyek berwarna (ubin semi-3D, tumpukan avatar penanggung jawab, progres bergaris warna proyek, "N hari lagi" ke milestone, jumlah tugas dan milestone) + kartu Progres keseluruhan (donat persen selesai + legenda); lalu grafik performa kas ala Selles + Agenda + Perlu perhatian (pola Message); lalu Tim hari ini (pola Team Members: bilah hadir/izin/belum + petugas), Fokus hari ini (pola Monthly Tasks: butir berbingkai berubin warna proyek + avatar), dan Penjualan gerai (batang pil ala Natz).
+- Kartu angka di atas dilepas karena isinya kini tampil di kartu proyek, donat, grafik kas, dan agenda. Gauge kehadiran diganti daftar tim; komponen `Gauge` dihapus.
+- Kerangka: profil di bilah atas menampilkan nama dan jabatan dengan panah menu; kartu profil di dasar menu samping diganti kartu ilustrasi 3D "Dunia Koperasi" (ikon pulau, tombol Buka dunia) seperti kartu promosi M.project.
+- Ponsel: kartu proyek menjadi carousel geser; Agenda di kolom sempit memakai tata jam-di-atas-judul dan digulir di dalam kartu agar baris sejajar.
+- Verifikasi: 407 tes, typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB. Demo diperiksa pada 1280 dan 375 px tanpa luber samping.
+
 ## Gaya Cerah: kerangka baru dan Beranda lebih hidup — 16 Oktober 2026
 
 - Pemilik menilai paket 1 "kurang menarik": bilah atas dan menu masih gaya lama, Beranda terlalu polos, tidak ada kartu angka, grafik kurang menonjol. Dipilih warna tingkat tengah dan rombakan kerangka + Beranda.

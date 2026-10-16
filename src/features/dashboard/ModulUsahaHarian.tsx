@@ -10,7 +10,7 @@ import { addDays, today } from '@/lib/date';
 import type { Item } from '../records/schemas';
 import { loadCapabilities } from '../workspace/useWorkspace';
 import { BadgeCheck, Store } from 'lucide-react';
-import { Gauge } from '@/components/charts/GrafikLembut';
+import { recordHref } from '../workspace/workspace-navigation';
 
 type Data = { sales: Item[]; attendance: Item[]; staff: Item[] };
 type Keadaan = { status: 'memuat' } | { status: 'nonaktif' } | { status: 'galat'; pesan: string } | ({ status: 'siap' } & Data);
@@ -108,37 +108,78 @@ function PenjualanGerai({ sales, hari }: { sales: Item[]; hari: string }) {
   );
 }
 
+const urutanPerhatian = ['terjadwal', 'alpa', 'terlambat', 'sakit', 'izin', 'cuti', 'hadir', 'libur'];
+const WARNA = ['biru', 'ungu', 'oranye', 'teal', 'pink'] as const;
+const warnaOrang = (nama: string) => {
+  let h = 0;
+  for (const huruf of nama) h = (h * 31 + huruf.charCodeAt(0)) >>> 0;
+  return WARNA[h % WARNA.length];
+};
+
+/** Tim hari ini (pola Team Members M.project): bilah hadir/izin/belum, lalu petugas yang perlu dilihat dulu. */
 function KehadiranHariIni({ attendance, staff }: { attendance: Item[]; staff: Item[] }) {
   const aktif = staff.filter((row) => row.data.status === 'aktif');
-  const statusOf = (id: string) => attendance.find((row) => row.data.staff_id === id)?.data.status;
+  const catatanOf = (id: string) => attendance.find((row) => row.data.staff_id === id);
   const hadir = attendance.filter((row) => ['hadir', 'terlambat'].includes(String(row.data.status))).length;
   const absen = attendance.filter((row) => ['izin', 'sakit', 'cuti', 'alpa'].includes(String(row.data.status))).length;
   // Belum absen: terjadwal tapi belum diperbarui, atau petugas aktif tanpa catatan hari ini.
   const belum = aktif.filter((row) => {
-    const status = statusOf(row.id);
+    const status = catatanOf(row.id)?.data.status;
     return !status || status === 'terjadwal';
   }).length;
+  const baris = aktif
+    .map((row) => ({ row, catatan: catatanOf(row.id) }))
+    .sort(
+      (a, b) =>
+        urutanPerhatian.indexOf(String(a.catatan?.data.status || 'terjadwal')) -
+        urutanPerhatian.indexOf(String(b.catatan?.data.status || 'terjadwal')),
+    )
+    .slice(0, 4);
+  const total = Math.max(1, hadir + absen + belum);
   return (
     <section className="modul beranda-hadir" aria-label="Kehadiran hari ini">
       <div className="modul-kepala">
         <span className="ubin ubin-kecil ubin-teal" aria-hidden="true">
           <BadgeCheck size={17} />
         </span>
-        <h2>Kehadiran</h2>
+        <h2>Tim hari ini</h2>
         <Link href="/absensi" className="modul-tautan">Absensi</Link>
       </div>
       {aktif.length ? (
         <>
-          <Gauge nilai={hadir} maks={aktif.length} keterangan="petugas hadir" />
-          <ul className="beranda-legenda-daftar">
-            <li>
-              <i className="is-izin" aria-hidden="true" />
-              Izin, sakit, cuti, alpa<b>{absen}</b>
-            </li>
-            <li className={belum ? 'is-telat' : undefined}>
-              <i className="is-belum" aria-hidden="true" />
-              Belum absen<b>{belum}</b>
-            </li>
+          <p className="hadir-ringkas">
+            <b>{hadir}</b> hadir · <b>{absen}</b> izin/sakit · <b className={belum ? 'is-telat' : undefined}>{belum}</b> belum absen
+          </p>
+          <span className="hadir-bilah" role="img" aria-label={`${hadir} dari ${aktif.length} petugas hadir`}>
+            <i className="is-hadir" style={{ flexGrow: hadir / total }} />
+            <i className="is-izin" style={{ flexGrow: absen / total }} />
+            <i className="is-belum" style={{ flexGrow: belum / total }} />
+          </span>
+          <ul className="beranda-baris">
+            {baris.map(({ row, catatan }) => {
+              const nama = String(row.data.title || '?');
+              const status = String(catatan?.data.status || '');
+              const belumAbsen = !status || status === 'terjadwal';
+              const label = belumAbsen
+                ? 'Belum absen'
+                : status === 'hadir' || status === 'terlambat'
+                  ? `${status === 'terlambat' ? 'Terlambat' : 'Hadir'}${catatan?.data.check_in_time ? ` ${String(catatan.data.check_in_time)}` : ''}`
+                  : status.charAt(0).toUpperCase() + status.slice(1);
+              return (
+                <li key={row.id}>
+                  <Link href={catatan ? recordHref('attendance', catatan) : '/absensi?baru=1'}>
+                    <span className={`avatar-warna is-${warnaOrang(nama)}`} aria-hidden="true">
+                      {nama.slice(0, 1).toUpperCase()}
+                    </span>
+                    <span className="beranda-baris-teks">
+                      <strong>{nama}</strong>
+                      <small>{String(catatan?.data.shift || row.data.work_hours || row.data.role || '')}</small>
+                    </span>
+                    <span className={`hadir-status is-${belumAbsen || status === 'alpa' ? 'telat' : status === 'hadir' ? 'hadir' : 'izin'}`}>{label}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </>
       ) : (
