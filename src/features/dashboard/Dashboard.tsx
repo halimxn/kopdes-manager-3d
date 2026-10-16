@@ -12,8 +12,6 @@ import {
   CalendarDays,
   Check,
   Clock,
-  Flag,
-  FolderOpen,
   ListChecks,
   Video,
   SlidersHorizontal,
@@ -32,6 +30,8 @@ import { Donat } from '@/components/charts/GrafikLembut';
 import { ModulUsahaHarian } from './ModulUsahaHarian';
 import { KasBanding, useKasDuaBulan } from './KasBanding';
 import { Select } from '@/components/ui/Select';
+import { KartuPekerjaan } from './KartuPekerjaan';
+import { KalenderMini } from './KalenderMini';
 
 const WARNA_AVATAR = ['biru', 'ungu', 'oranye', 'teal', 'pink'] as const;
 /** Warna avatar tetap per nama agar orang yang sama selalu berwarna sama. */
@@ -211,15 +211,22 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     ...fokusBerikut.map((t) => ({ t, jenis: 'nanti' as const })),
   ].slice(0, 6);
 
+  // Kalender mini menandai tanggal tenggat tugas aktif dan rapat yang belum dibatalkan.
+  const tanggalBerkegiatan = [
+    ...open.map((t) => t.due_date).filter(Boolean),
+    ...(data.meetings || []).filter((m) => m.data.status !== 'dibatalkan').map((m) => String(m.data.date || '')),
+  ];
+
   return (
     <div className="manager-home beranda">
-      <header className="beranda-kepala">
+      <div className="beranda-utama">
+      <header className="modul beranda-kepala">
         <div>
           <p className="beranda-sapaan">
             {sapaan}
             {namaManajer ? `, ${namaManajer}` : ''}
           </p>
-          <h1>{tanggalPanjang}</h1>
+          <h2>{tanggalPanjang}</h2>
           <p className="beranda-ringkas">
             <Link href="/tugas?status=terlambat" className={overdueCount ? 'is-telat' : undefined}>
               {overdueCount} terlambat
@@ -250,63 +257,41 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
         </label>
       </header>
 
-      <div className="beranda-modul">
-        {/* Baris 1: kartu proyek berwarna + progres keseluruhan (pola M.project) */}
-        <div className="beranda-atas">
+      {/* Baris kartu proyek bersampul warna hub, bergulir mendatar (pola Taskflow) */}
+      <section className="beranda-berjalan" aria-label="Pekerjaan berjalan">
+        <div className="modul-kepala">
+          <h2>Pekerjaan berjalan</h2>
+          <Link href="/proyek" className="modul-tautan">
+            Semua proyek
+          </Link>
+        </div>
         {visibleProjects.length ? (
-          visibleProjects.slice(0, 3).map((p) => {
-            const tugasProyek = tasks.filter((t) => t.workstream_id === p.id);
-            const persen = scopeProgress(tugasProyek);
-            const ms = milestoneBerikut(p.id);
-            const sisa = ms ? daysBetween(now, String(ms.data.due_date)) : null;
-            const orang = [...new Set(tugasProyek.map((t) => t.assignee).filter(Boolean))];
-            const warna = warnaProyek(indeksProyek(p.id));
-            const jumlahMilestone = (data.milestones || []).filter((m) => m.data.workstream_id === p.id).length;
-            return (
-              <Link key={p.id} href={`/proyek?id=${encodeURIComponent(p.id)}`} className={`modul kartu-proyek is-${warna}`}>
-                <span className="kartu-proyek-kepala">
-                  <span className={`ubin ubin-${warna}`} aria-hidden="true">
-                    <FolderOpen size={20} />
-                  </span>
-                  <span className="beranda-baris-teks">
-                    <strong>{String(p.data.title)}</strong>
-                    <small>{String(p.data.status) === 'aktif' ? 'Aktif' : 'Rencana'} · {String(p.data.code)}</small>
-                  </span>
-                </span>
-                <span className="tumpuk-avatar" aria-label={`${orang.length} penanggung jawab`}>
-                  {orang.slice(0, 4).map((nama) => (
-                    <span key={nama} className={`avatar-warna is-${warnaAvatar(nama)}`} title={nama}>
-                      {inisial(nama)}
-                    </span>
-                  ))}
-                  {orang.length > 4 && <span className="avatar-warna is-lebih">+{orang.length - 4}</span>}
-                </span>
-                <span className="kartu-proyek-progres">
-                  <span>Progres</span>
-                  <b>{persen}%</b>
-                </span>
-                <span className="proyek-batang" role="img" aria-label={`Progres ${persen}%`}>
-                  <span style={{ width: `${persen}%` }} />
-                </span>
-                <span className="kartu-proyek-kaki">
-                  <span className={`kartu-proyek-sisa${sisa !== null && sisa < 0 ? ' is-telat' : ''}`}>
-                    <Clock size={14} aria-hidden="true" />
-                    {sisa === null ? 'Belum ada milestone' : sisa < 0 ? `Lewat ${-sisa} hari` : sisa === 0 ? 'Hari ini' : `${sisa} hari lagi`}
-                  </span>
-                  <span className="kartu-proyek-hitung" title="Tugas">
-                    <ListChecks size={14} aria-hidden="true" />
-                    {tugasProyek.length}
-                  </span>
-                  <span className="kartu-proyek-hitung" title="Milestone">
-                    <Flag size={14} aria-hidden="true" />
-                    {jumlahMilestone}
-                  </span>
-                </span>
-              </Link>
-            );
-          })
+          <div className="beranda-berjalan-baris">
+            {visibleProjects.slice(0, 6).map((p) => {
+              const tugasProyek = tasks.filter((t) => t.workstream_id === p.id);
+              const ms = milestoneBerikut(p.id);
+              const sisa = ms ? daysBetween(now, String(ms.data.due_date)) : null;
+              const orang = new Set(tugasProyek.map((t) => t.assignee).filter(Boolean)).size;
+              return (
+                <KartuPekerjaan
+                  key={p.id}
+                  hub="pekerjaan"
+                  href={`/proyek?id=${encodeURIComponent(p.id)}`}
+                  judul={String(p.data.title)}
+                  keterangan={[
+                    String(p.data.status) === 'aktif' ? 'Aktif' : 'Rencana',
+                    `${tugasProyek.length} tugas`,
+                    orang ? `${orang} penanggung jawab` : '',
+                  ].filter(Boolean).join(' · ')}
+                  progres={scopeProgress(tugasProyek)}
+                  tenggat={sisa === null ? 'Belum ada milestone' : sisa < 0 ? `Milestone lewat ${-sisa} hari` : sisa === 0 ? 'Milestone hari ini' : `Milestone ${sisa} hari lagi`}
+                  terlambat={sisa !== null && sisa < 0}
+                />
+              );
+            })}
+          </div>
         ) : (
-          <section className="modul kartu-proyek-kosong" aria-label="Proyek">
+          <div className="modul kartu-proyek-kosong">
             <EmptyState
               compact
               ikon="folder"
@@ -314,9 +299,11 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
               description={projectId ? 'Tidak ada proyek aktif pada pilihan ini.' : 'Buat proyek atau periksa proyek yang diarsipkan.'}
               action={{ label: 'Kelola proyek', href: '/proyek' }}
             />
-          </section>
+          </div>
         )}
+      </section>
 
+      <div className="beranda-modul">
         <section className="modul beranda-status" aria-label="Progres keseluruhan">
           <div className="modul-kepala">
             <h2>Progres keseluruhan</h2>
@@ -342,11 +329,96 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
           </div>
         </section>
 
-        </div>
-
-        {/* Baris 2: grafik performa kas + agenda + perlu perhatian */}
         <KasBanding keadaan={kas} />
 
+        <section className="modul beranda-perhatian" aria-label="Perlu perhatian">
+          <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-oranye" aria-hidden="true">
+              <Bell size={17} />
+            </span>
+            <h2>Perlu perhatian</h2>
+            <span className="beranda-jumlah">{perhatian.length}</span>
+            <Link href="/tindak-lanjut" className="modul-tautan">
+              Semua
+            </Link>
+          </div>
+          {perhatian.length ? (
+            <ul className="beranda-baris">
+              {perhatian.slice(0, 5).map((item) => (
+                <li key={item.id}>
+                  <Link href={item.href}>
+                    <span className={`avatar-warna is-${item.urgent ? 'pink' : 'oranye'}`} aria-hidden="true">
+                      {item.kind.slice(0, 1)}
+                    </span>
+                    <span className="beranda-baris-teks">
+                      <strong>{item.title}</strong>
+                      <small>
+                        {item.kind} · {item.reason}
+                      </small>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="beranda-kosong">Tidak ada pengingat pada catatan yang dimuat.</p>
+          )}
+        </section>
+        <ModulUsahaHarian />
+
+        <section className="modul beranda-fokus" aria-label="Fokus hari ini">
+          <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-biru" aria-hidden="true">
+              <ListChecks size={17} />
+            </span>
+            <h2>Fokus hari ini</h2>
+            <span className="beranda-jumlah">{open.length} aktif</span>
+            <Link href="/tugas" className="modul-tautan">
+              Semua tugas
+            </Link>
+          </div>
+          {fokus.length ? (
+            <ul className="fokus-daftar">
+              {fokus.map(({ t, jenis }) => (
+                <li key={t.id}>
+                  <Link href={`/tugas?task=${encodeURIComponent(t.id)}`}>
+                    <span className={`ubin ubin-kecil ubin-${t.workstream_id ? warnaProyek(indeksProyek(t.workstream_id)) : 'biru'}`} aria-hidden="true">
+                      <ListChecks size={16} />
+                    </span>
+                    <span className="beranda-baris-teks">
+                      <strong>{t.title}</strong>
+                      <small>
+                        {[namaProyek(t.workstream_id), t.subtasks.length ? `${t.subtasks.filter((st) => st.done).length}/${t.subtasks.length} subtugas` : '']
+                          .filter(Boolean)
+                          .join(' · ') || 'Tanpa proyek'}
+                      </small>
+                    </span>
+                    <span className={`beranda-tanggal is-${jenis}`}>{jenis === 'hari-ini' ? 'Hari ini' : formatDate(t.due_date)}</span>
+                    <span className={`avatar-warna is-${warnaAvatar(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
+                      {inisial(t.assignee || '?')}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <EmptyState
+              compact
+              ikon="kalender"
+              title="Tidak ada tugas aktif"
+              description="Tambahkan tugas dan pilih tanggal pengerjaannya."
+              action={{ label: 'Tambah tugas', href: '/tugas?baru=1' }}
+            />
+          )}
+        </section>
+      </div>
+      </div>
+
+      {/* Panel kanan (pola Taskflow): kalender bulan ini dan agenda hari ini */}
+      <aside className="panel-kanan" aria-label="Kalender dan agenda">
+        <section className="modul beranda-kalender" aria-label="Kalender">
+          <KalenderMini tanggal={now} tandai={tanggalBerkegiatan} />
+        </section>
         <section className="modul beranda-agenda dashboard-routines" aria-label="Agenda hari ini">
           <div className="modul-kepala">
             <span className="ubin ubin-kecil ubin-pink" aria-hidden="true">
@@ -428,89 +500,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
           </div>
         </section>
 
-        <section className="modul beranda-perhatian" aria-label="Perlu perhatian">
-          <div className="modul-kepala">
-            <span className="ubin ubin-kecil ubin-oranye" aria-hidden="true">
-              <Bell size={17} />
-            </span>
-            <h2>Perlu perhatian</h2>
-            <span className="beranda-jumlah">{perhatian.length}</span>
-            <Link href="/tindak-lanjut" className="modul-tautan">
-              Semua
-            </Link>
-          </div>
-          {perhatian.length ? (
-            <ul className="beranda-baris">
-              {perhatian.slice(0, 5).map((item) => (
-                <li key={item.id}>
-                  <Link href={item.href}>
-                    <span className={`avatar-warna is-${item.urgent ? 'pink' : 'oranye'}`} aria-hidden="true">
-                      {item.kind.slice(0, 1)}
-                    </span>
-                    <span className="beranda-baris-teks">
-                      <strong>{item.title}</strong>
-                      <small>
-                        {item.kind} · {item.reason}
-                      </small>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="beranda-kosong">Tidak ada pengingat pada catatan yang dimuat.</p>
-          )}
-        </section>
-
-        {/* Baris 3: tim hari ini + tugas + penjualan */}
-        <ModulUsahaHarian />
-
-        <section className="modul beranda-fokus" aria-label="Fokus hari ini">
-          <div className="modul-kepala">
-            <span className="ubin ubin-kecil ubin-biru" aria-hidden="true">
-              <ListChecks size={17} />
-            </span>
-            <h2>Fokus hari ini</h2>
-            <span className="beranda-jumlah">{open.length} aktif</span>
-            <Link href="/tugas" className="modul-tautan">
-              Semua tugas
-            </Link>
-          </div>
-          {fokus.length ? (
-            <ul className="fokus-daftar">
-              {fokus.map(({ t, jenis }) => (
-                <li key={t.id}>
-                  <Link href={`/tugas?task=${encodeURIComponent(t.id)}`}>
-                    <span className={`ubin ubin-kecil ubin-${t.workstream_id ? warnaProyek(indeksProyek(t.workstream_id)) : 'biru'}`} aria-hidden="true">
-                      <ListChecks size={16} />
-                    </span>
-                    <span className="beranda-baris-teks">
-                      <strong>{t.title}</strong>
-                      <small>
-                        {[namaProyek(t.workstream_id), t.subtasks.length ? `${t.subtasks.filter((st) => st.done).length}/${t.subtasks.length} subtugas` : '']
-                          .filter(Boolean)
-                          .join(' · ') || 'Tanpa proyek'}
-                      </small>
-                    </span>
-                    <span className={`beranda-tanggal is-${jenis}`}>{jenis === 'hari-ini' ? 'Hari ini' : formatDate(t.due_date)}</span>
-                    <span className={`avatar-warna is-${warnaAvatar(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
-                      {inisial(t.assignee || '?')}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <EmptyState
-              compact
-              ikon="kalender"
-              title="Tidak ada tugas aktif"
-              description="Tambahkan tugas dan pilih tanggal pengerjaannya."
-              action={{ label: 'Tambah tugas', href: '/tugas?baru=1' }}
-            />
-          )}
-        </section>
-      </div>
+      </aside>
 
       {/* ── Modal Atur Rutinitas Manajer ─────────────────── */}
       {showRoutineModal && (

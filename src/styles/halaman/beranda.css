@@ -1,57 +1,92 @@
-/* Beranda Cerah mengikuti referensi M.project: kartu proyek berwarna + progres keseluruhan, lalu
-   grafik performa kas (ala Selles), agenda, perlu perhatian, lalu tim hari ini, tugas, penjualan. */
+/* Beranda Taskflow: kartu sapaan, baris "Pekerjaan berjalan" (kartu bersampul warna hub), modul
+   progres, kas, perhatian, tim, tugas, penjualan; panel kanan berisi kalender mini dan agenda. */
 
-.beranda { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+/* Beranda boleh lebih lebar dari halaman lain karena memuat panel kanan */
+.manager-main > .page-beranda { max-width: 1520px; }
+.beranda { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 24px; }
+.beranda-utama { display: grid; gap: 24px; min-width: 0; }
+@media (min-width: 1440px) {
+  .beranda { grid-template-columns: minmax(0, 1fr) var(--panel-kanan-w); }
+  .beranda > .panel-kanan { position: sticky; top: calc(var(--topbar-h) + 8px); }
+}
+@media (min-width: 768px) and (max-width: 1439px) {
+  .beranda > .panel-kanan { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
 
-/* Kepala: sapaan, tanggal, satu baris ringkasan teks; hanya "terlambat" berwarna */
-.beranda-kepala { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 8px 0 0; }
-.beranda-sapaan { margin: 0 0 2px; color: var(--ink-muted); font-size: 15px; font-weight: 600; }
-.beranda-kepala h1 { margin: 0 0 6px; font-size: 32px; line-height: 1.15; letter-spacing: -0.025em; }
-.beranda-ringkas { margin: 0; color: var(--ink-muted); font-size: 14.5px; }
+/* Kartu sapaan: sapaan, tanggal, satu baris ringkasan teks; hanya "terlambat" berwarna */
+.modul.beranda-kepala { display: flex; flex-flow: row wrap; align-items: flex-end; justify-content: space-between; gap: 16px; background: linear-gradient(120deg, var(--brand-soft), var(--surface) 70%); }
+.beranda-sapaan { margin: 0 0 2px; color: var(--ink-muted); font-size: 14px; font-weight: 600; }
+.beranda-kepala h2 { margin: 0 0 6px; font-size: 22px; font-weight: 600; }
+.beranda-ringkas { margin: 0; color: var(--ink-muted); font-size: 14px; }
 .beranda-ringkas a { color: inherit; font-weight: 600; text-decoration: none; }
 .beranda-ringkas a:hover { color: var(--brand-ink); text-decoration: none; }
-.beranda-ringkas a.is-telat { color: var(--late); font-weight: 750; }
+.beranda-ringkas a.is-telat { color: var(--late); font-weight: 700; }
 .beranda-proyek { min-width: 220px; }
 
-/* Grid 12 kolom. Baris atas menyesuaikan jumlah proyek; baris 2: kas 6 + agenda 3 + perhatian 3;
-   baris 3: tim 4 + tugas 5 + penjualan 3 (urutan visual lewat order karena modul usaha dirender bersama). */
-.beranda-modul { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: stretch; gap: 22px; }
-.beranda-atas { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; }
-.beranda-kas { grid-column: span 6; }
-.beranda-agenda, .beranda-perhatian, .beranda-jual { grid-column: span 3; }
-.beranda-hadir { grid-column: span 4; order: 1; }
-.beranda-fokus { grid-column: span 5; order: 1; }
-.beranda-jual { order: 2; }
-/* Migrasi 10 belum aktif: tim dan penjualan tidak tampil, tugas melebar */
-.beranda-modul:not(:has(.beranda-hadir)) .beranda-fokus { grid-column: 1 / -1; }
+/* Pekerjaan berjalan: kartu bergulir mendatar, berhenti per kartu */
+.beranda-berjalan { display: grid; gap: 14px; min-width: 0; }
+.beranda-berjalan-baris {
+  display: grid;
+  grid-auto-columns: minmax(260px, 1fr);
+  grid-auto-flow: column;
+  gap: 20px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.beranda-berjalan-baris > * { scroll-snap-align: start; }
+.kartu-pekerjaan {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--kartu-garis);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  color: inherit;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  transition: box-shadow var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+}
+.kartu-pekerjaan:hover { box-shadow: var(--shadow-md); text-decoration: none; transform: translateY(-2px); }
+.kartu-pekerjaan:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.kartu-pekerjaan-sampul { display: grid; place-items: center; height: 112px; border-radius: 12px; }
+.sampul-pekerjaan .kartu-pekerjaan-sampul { background: var(--sampul-pekerjaan); }
+.sampul-catatan .kartu-pekerjaan-sampul { background: var(--sampul-catatan); }
+.sampul-usaha .kartu-pekerjaan-sampul { background: var(--sampul-usaha); }
+.sampul-koperasi .kartu-pekerjaan-sampul { background: var(--sampul-koperasi); }
+.kartu-pekerjaan-teks { display: grid; gap: 2px; min-width: 0; }
+.kartu-pekerjaan-teks strong { overflow: hidden; color: var(--ink-heading); font-size: 16px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.kartu-pekerjaan-teks small { color: var(--ink-muted); }
+.kartu-pekerjaan-tenggat { color: var(--ink-muted); font-weight: 600; }
+.kartu-pekerjaan-tenggat.is-telat { color: var(--late); }
+.kartu-proyek-kosong { display: grid; }
+
+/* Kalender mini panel kanan */
+.kalender-mini-judul { padding-bottom: 12px; color: var(--ink-heading); font-size: 16px; font-weight: 600; text-align: left; }
+.kalender-mini { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: center; font-variant-numeric: tabular-nums; }
+.kalender-mini th { padding-bottom: 6px; color: var(--ink-muted); font-size: var(--fs-cap); font-weight: 600; }
+.kalender-mini td { position: relative; height: 36px; border-radius: var(--r-full); color: var(--ink-heading); font-size: 13px; font-weight: 600; }
+.kalender-mini td[data-hari-ini] { background: var(--brand); color: var(--on-brand); }
+.kalender-mini td[data-ada]::after { position: absolute; bottom: 4px; left: 50%; width: 4px; height: 4px; border-radius: 50%; background: var(--brand); content: ''; transform: translateX(-50%); }
+.kalender-mini td[data-hari-ini][data-ada]::after { background: var(--on-brand); }
+
+/* Grid 12 kolom: progres 4 + kas 8; perhatian 5 + tugas 7; tim 6 + penjualan 6 */
+.beranda-modul { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: stretch; gap: 24px; }
+.beranda-status { grid-column: span 4; }
+.beranda-kas { grid-column: span 8; }
+.beranda-perhatian { grid-column: span 5; }
+.beranda-fokus { grid-column: span 7; order: 1; }
+.beranda-hadir, .beranda-jual { grid-column: span 6; order: 2; }
+/* Migrasi 10 belum aktif: tim dan penjualan tidak tampil */
 
 .beranda-jumlah { color: var(--ink-subtle); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .beranda-jumlah.is-selesai { color: var(--ok); }
 .modul-kepala .modul-tautan { color: var(--brand-ink); }
-.beranda .modul-kepala h2 { font-size: 17px; font-weight: 750; }
-
-/* Kartu proyek (M.project): ubin warna proyek, tumpukan avatar, progres bergaris, sisa hari */
-.modul.kartu-proyek { --warna: var(--grafik-ungu); gap: 14px; color: inherit; text-decoration: none; transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out); }
-.modul.kartu-proyek:hover { box-shadow: var(--shadow-md); text-decoration: none; transform: translateY(-2px); }
-.kartu-proyek.is-biru { --warna: var(--grafik-biru); }
-.kartu-proyek.is-ungu { --warna: var(--grafik-ungu); }
-.kartu-proyek.is-oranye { --warna: var(--grafik-oranye); }
-.kartu-proyek.is-teal { --warna: var(--grafik-teal); }
-.kartu-proyek.is-pink { --warna: var(--grafik-pink); }
-.kartu-proyek-kepala { display: flex; align-items: center; gap: 12px; min-width: 0; }
-/* Kartu proyek sempit: nama boleh dua baris */
-.kartu-proyek-kepala .beranda-baris-teks strong { display: -webkit-box; white-space: normal; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.3; }
-.tumpuk-avatar { display: flex; min-height: 30px; padding-left: 8px; }
-.tumpuk-avatar .avatar-warna { width: 30px; height: 30px; margin-left: -8px; font-size: 11px; box-shadow: 0 0 0 2px var(--surface); }
+.beranda .modul-kepala h2 { font-size: 16px; font-weight: 600; }
 .avatar-warna.is-lebih { background: var(--surface-3); color: var(--ink-muted); }
-.kartu-proyek-progres { display: flex; justify-content: space-between; color: var(--ink-heading); font-size: 13.5px; font-weight: 650; }
-.kartu-proyek-progres b { font-variant-numeric: tabular-nums; }
-.kartu-proyek .proyek-batang > span { background: repeating-linear-gradient(-45deg, var(--warna) 0 6px, color-mix(in srgb, var(--warna) 65%, var(--surface)) 6px 12px); }
-.kartu-proyek-kaki { display: flex; align-items: center; gap: 12px; margin-top: auto; color: var(--ink-muted); font-size: 12.5px; font-weight: 650; }
-.kartu-proyek-sisa { display: inline-flex; align-items: center; gap: 6px; margin-right: auto; padding: 5px 10px; border-radius: var(--r-full); background: color-mix(in srgb, var(--warna) 12%, var(--surface)); color: var(--ink); }
-.kartu-proyek-sisa.is-telat { background: var(--late-bg); color: var(--late); }
-.kartu-proyek-hitung { display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
-.kartu-proyek-kosong { grid-column: span 2; }
 
 /* Progres keseluruhan (M.project Overall Progress): legenda di kiri, donat di kanan */
 /* Kartu selebar kartu proyek: donat di atas, legenda di bawah */
@@ -149,8 +184,6 @@
 .beranda-legenda-daftar li { display: flex; align-items: center; gap: 8px; color: var(--ink); }
 .beranda-legenda-daftar i { width: 10px; height: 10px; flex-shrink: 0; border-radius: 4px; }
 .beranda-legenda-daftar b { margin-left: auto; font-variant-numeric: tabular-nums; }
-.proyek-batang { height: 10px; overflow: hidden; border-radius: var(--r-full); background: var(--grafik-dasar); }
-.proyek-batang > span { display: block; height: 100%; border-radius: inherit; }
 
 /* Agenda hari ini: rutinitas (bisa dicentang) dan rapat dalam satu rel jam */
 /* Kolom Agenda sempit (3/12): jam di atas judul, simpul di kiri, seperti tata ponsel */
@@ -247,23 +280,21 @@
 .routine-modal-footer { display: flex; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
 .routine-empty-hint { color: var(--ink-muted); font-size: 13px; }
 
-/* Tablet: dua kolom, urutan sesuai DOM */
+/* Layar menengah: dua kolom, urutan sesuai DOM */
 @media (max-width: 1100px) {
   .beranda-modul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .beranda-modul > * { order: 0; }
-  .beranda-kas, .beranda-fokus, .beranda-modul:not(:has(.beranda-hadir)) .beranda-fokus { grid-column: 1 / -1; }
-  .beranda-agenda, .beranda-perhatian, .beranda-jual, .beranda-hadir { grid-column: span 1; }
+  .beranda-kas, .beranda-fokus { grid-column: 1 / -1; }
+  .beranda-status, .beranda-perhatian, .beranda-jual, .beranda-hadir { grid-column: span 1; }
 }
 /* Ponsel: satu kolom */
 @media (max-width: 767px) {
   .beranda { gap: 14px; }
   .beranda-kepala { padding-top: 4px; }
-  .beranda-kepala h1 { font-size: 24px; }
+  .beranda-kepala h2 { font-size: 20px; }
   .beranda-kepala > div, .beranda-proyek { width: 100%; min-width: 0; }
   .beranda-modul { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  /* Kartu proyek digeser menyamping agar Beranda ponsel tidak terlalu panjang */
-  .beranda-atas { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 80%; gap: 12px; margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter) 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
-  .beranda-atas > * { scroll-snap-align: start; }
+  .beranda-berjalan-baris { grid-auto-columns: 80%; gap: 12px; margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter) 10px; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
   .beranda-modul > * { grid-column: 1 / -1; }
   .beranda-modul .modul { padding: 16px; }
   .beranda-baris-teks strong { white-space: normal; overflow-wrap: anywhere; }
@@ -289,5 +320,6 @@
   .routine-modal-footer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .modul.kartu-proyek:hover { transform: none; }
+  .kartu-pekerjaan:hover { transform: none; }
+  .beranda-berjalan-baris { scroll-snap-type: none; }
 }

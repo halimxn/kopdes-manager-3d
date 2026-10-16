@@ -201,7 +201,6 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           </Button>
           <div>
             <h1>{judul}</h1>
-            {path === '/beranda' && <p>Halo, {name}</p>}
           </div>
         </div>
         <div className="manager-actions">
