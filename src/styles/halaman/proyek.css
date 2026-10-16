@@ -2,7 +2,7 @@
 
 /* ---------- Daftar ---------- */
 .project-scope-tabs { display: inline-flex; justify-self: start; max-width: 100%; overflow-x: auto; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
-.project-scope-tabs :is(a, .ui-btn) { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border: 0; border-radius: var(--r-md); background: transparent; color: var(--ink-muted); font-size: 13px; font-weight: 650; text-decoration: none; box-shadow: none; }
+.project-scope-tabs :is(a, .ui-btn) { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border: 0; border-radius: var(--r-md); background: transparent; color: var(--ink-muted); font-size: 13px; font-weight: 600; text-decoration: none; box-shadow: none; }
 .project-scope-tabs :is(a, .ui-btn):is([aria-current='page'], [aria-selected='true'], .is-active) { background: var(--brand-soft); color: var(--brand-ink); }
 .projects-intro-banner { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 18px 0 4px; }
 .projects-intro-banner p { margin-top: 6px; color: var(--ink-muted); }
@@ -10,7 +10,7 @@
 .project-kpi-card { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); }
 .kpi-icon-wrap { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: var(--brand-soft); color: var(--brand); }
 .kpi-info { display: grid; line-height: 1.2; }
-.kpi-info strong { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.kpi-info strong { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .kpi-info span, .kpi-info small { color: var(--ink-muted); font-size: 12.5px; }
 .projects-toolbar-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
 .project-search-box { position: relative; flex: 1 1 280px; max-width: 420px; }
@@ -20,9 +20,9 @@
 .project-status-tabs { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-md); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); overflow-x: auto; }
 .project-status-tabs .ui-btn { min-height: 34px; padding: 0 12px; border: 0; background: transparent; color: var(--ink-muted); font-size: 13px; box-shadow: none; }
 .project-status-tabs .ui-btn.is-active { background: var(--brand-soft); color: var(--brand-ink); }
-.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
-/* Kartu proyek: map dengan warna proyek */
+/* Kartu proyek Taskflow: sampul warna hub, garis atas warna proyek pengguna */
 .project-card {
   --proj: var(--brand);
   --proj-bg: var(--brand-soft);
@@ -30,9 +30,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
+  padding: 16px;
+  border: 1px solid var(--kartu-garis);
+  border-radius: var(--r-card);
   background: var(--surface);
   color: inherit;
   text-decoration: none;
@@ -46,7 +46,7 @@
 :root.dark .project-card { --proj-bg: color-mix(in srgb, var(--proj) 18%, transparent); }
 .project-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .project-badge-cluster { display: flex; flex-wrap: wrap; gap: 6px; }
-.project-code-tag { padding: 2px 8px; border-radius: 6px; background: var(--proj-bg); color: var(--proj); font-size: 11.5px; font-weight: 750; letter-spacing: 0.03em; }
+.project-code-tag { padding: 2px 8px; border-radius: 6px; background: var(--proj-bg); color: var(--proj); font-size: 11.5px; font-weight: 600; letter-spacing: 0.03em; }
 .project-status-badge, .project-status-tag { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: var(--r-full); background: var(--surface-3); color: var(--ink-muted); font-size: 11.5px; font-weight: 700; text-transform: capitalize; }
 :is(.project-status-badge, .project-status-tag).status-aktif { background: var(--brand-soft); color: var(--brand-ink); }
 :is(.project-status-badge, .project-status-tag).status-selesai { background: var(--ok-bg); color: var(--ok); }
@@ -54,12 +54,13 @@
 .project-card-arrow { color: var(--ink-subtle); }
 .project-card:hover .project-card-arrow { color: var(--proj); }
 .project-card-body { display: grid; gap: 4px; }
-.project-compact-title { font-size: 17px; }
+.project-card .kartu-pekerjaan-sampul { height: 104px; box-shadow: inset 0 4px 0 var(--warna-proyek, var(--brand)); }
+.project-compact-title { font-size: 16px; font-weight: 600; }
 .project-compact-desc { color: var(--ink-muted); font-size: 13px; }
 .project-compact-progress-wrap { display: flex; align-items: center; gap: 10px; }
-.project-compact-bar-track { flex: 1 1 auto; height: 8px; overflow: hidden; border-radius: var(--r-full); background: var(--surface-3); }
+.project-compact-bar-track { flex: 1 1 auto; height: 6px; overflow: hidden; border-radius: var(--r-full); background: var(--brand-soft); }
 .project-compact-bar-fill { height: 100%; border-radius: inherit; background: var(--proj); }
-.project-compact-progress-label { font-size: 13px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.project-compact-progress-label { color: var(--brand-ink); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .project-compact-meta-row { display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .project-meta-pill { display: inline-flex; align-items: center; gap: 5px; color: var(--ink-muted); font-size: 12px; font-weight: 600; }
 .project-meta-pill.issue-ok { color: var(--ok); }
@@ -72,7 +73,7 @@
 /* ---------- Detail proyek ---------- */
 .project-detail-header-nav { display: flex; align-items: center; gap: 8px; padding-top: 12px; color: var(--ink-muted); font-size: 13px; }
 .btn-back-project.ui-btn { min-height: 34px; padding: 0 10px; }
-.project-breadcrumb-title { color: var(--ink); font-weight: 650; }
+.project-breadcrumb-title { color: var(--ink); font-weight: 600; }
 .project-cover { display: grid; gap: 16px; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-xl); background: var(--surface); box-shadow: var(--shadow); }
 .project-hero-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .project-hero-main { display: flex; align-items: flex-start; gap: 14px; min-width: 0; }
@@ -95,11 +96,11 @@
 .progress-title-wrap, .progress-stats-wrap { display: flex; align-items: center; gap: 8px; }
 .progress-title { font-weight: 700; }
 .progress-fraction { color: var(--ink-muted); font-size: 13px; }
-.progress-badge { padding: 2px 9px; border-radius: var(--r-full); background: var(--brand-soft); color: var(--brand-ink); font-size: 12px; font-weight: 750; }
+.progress-badge { padding: 2px 9px; border-radius: var(--r-full); background: var(--brand-soft); color: var(--brand-ink); font-size: 12px; font-weight: 600; }
 .project-progress-track { height: 10px; overflow: hidden; border-radius: var(--r-full); background: var(--surface-3); }
 .project-progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--brand), var(--brand-bright)); }
 .project-section-nav { display: flex; gap: 4px; overflow-x: auto; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); scrollbar-width: none; }
-.project-nav-link { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: var(--r-md); color: var(--ink-muted); font-size: 13px; font-weight: 650; text-decoration: none; }
+.project-nav-link { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: var(--r-md); color: var(--ink-muted); font-size: 13px; font-weight: 600; text-decoration: none; }
 .project-nav-link:hover { background: var(--surface-2); color: var(--ink); text-decoration: none; }
 .nav-counter { padding: 0 6px; border-radius: var(--r-full); background: var(--surface-3); font-size: 11.5px; }
 .project-next-actions { padding: 0; }
@@ -120,7 +121,7 @@
 .next-due-date { color: var(--ink-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
 .next-arrow { color: var(--ink-subtle); }
 .project-next-empty { color: var(--ink-muted); font-size: 13px; }
-.text-link { color: var(--brand-ink); font-weight: 650; }
+.text-link { color: var(--brand-ink); font-weight: 600; }
 .project-context { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .project-section-anchor { scroll-margin-top: calc(var(--topbar-h) + 16px); }
 .project-related-card { display: grid; align-content: start; gap: 10px; }
@@ -162,16 +163,16 @@
 .sprint-summary-card { display: grid; gap: 12px; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow); }
 .sprint-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 .sprint-card-title-group { display: flex; align-items: center; gap: 8px; }
-.sprint-chip { padding: 2px 8px; border-radius: 6px; background: var(--pastel-mentega); color: var(--pastel-mentega-ink); font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+.sprint-chip { padding: 2px 8px; border-radius: 6px; background: var(--pastel-mentega); color: var(--pastel-mentega-ink); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
 .sprint-card-actions { display: flex; align-items: center; gap: 6px; }
 .sprint-status-tag { padding: 2px 9px; border-radius: var(--r-full); background: var(--brand-soft); color: var(--brand-ink); font-size: 11.5px; font-weight: 700; }
 .sprint-action-btn.ui-btn { width: 34px; min-height: 34px; padding: 0; }
 .sprint-goal-text { color: var(--ink-muted); font-size: 13px; }
 .sprint-timeline-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--ink-muted); font-size: 12.5px; }
 .sprint-timeline-row .duration-pill { margin-left: auto; }
-.duration-pill { padding: 2px 8px; border-radius: var(--r-full); background: var(--surface-3); font-weight: 650; }
+.duration-pill { padding: 2px 8px; border-radius: var(--r-full); background: var(--surface-3); font-weight: 600; }
 .sprint-progress-wrap { display: grid; gap: 6px; }
-.progress-labels { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 650; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 600; }
 .sprint-progress-bar { height: 8px; overflow: hidden; border-radius: var(--r-full); background: var(--surface-3); }
 .sprint-progress-fill { height: 100%; border-radius: inherit; background: var(--brand); }
 .sprint-task-stats { color: var(--ink-muted); font-size: 12px; }

@@ -587,31 +587,7 @@ export function Operations({
   }
   return (
     <>
-      <nav className="recording-tabs" aria-label="Halaman pencatatan">
-        <Link
-          href="/pencatatan"
-          className={`recording-tab-item ${!book ? 'is-active' : ''}`}
-          aria-current={!book ? 'page' : undefined}
-        >
-          <Ikon3D kind="buku" size={18} rapat />
-          <span>Ringkasan</span>
-        </Link>
-        {modules.map(({ path, entity: modEntity, title, Icon }) => {
-          const count = ready ? (data[modEntity] || []).length : 0;
-          return (
-            <Link
-              key={path}
-              href={'/' + path}
-              className={`recording-tab-item ${path === slug ? 'is-active' : ''}`}
-              aria-current={path === slug ? 'page' : undefined}
-            >
-              <IkonOp Icon={Icon} size={18} />
-              <span>{title}</span>
-              {ready && count > 0 && <span className="tab-count-badge">{count}</span>}
-            </Link>
-          );
-        })}
-      </nav>
+      {/* Navigasi antarbuku kini lewat tab hub di bawah judul (Usaha/Koperasi). */}
       {!ready && (
         <section className="activation-notice">
           <FilePenLine size={24} />

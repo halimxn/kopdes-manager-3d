@@ -36,7 +36,7 @@
 .workspace-page > .workspace-scope-control { margin-top: 12px; }
 .workspace-partial-note { color: var(--ink-muted); font-size: 12.5px; }
 .workspace-load-more.ui-btn { justify-self: center; }
-.workspace-more-details > summary { color: var(--brand-ink); font-weight: 650; cursor: pointer; }
+.workspace-more-details > summary { color: var(--brand-ink); font-weight: 600; cursor: pointer; }
 .workspace-more-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .card.empty { display: grid; gap: 8px; max-width: 640px; margin: 32px auto; text-align: center; }
 
@@ -69,7 +69,7 @@
 .guide-books { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .guide-details > summary { font-weight: 700; cursor: pointer; }
 .guide-details p { margin-top: 8px; color: var(--ink-muted); font-size: 13px; }
-.entry-guide > summary { color: var(--brand-ink); font-weight: 650; cursor: pointer; }
+.entry-guide > summary { color: var(--brand-ink); font-weight: 600; cursor: pointer; }
 .entry-guide-content { margin-top: 8px; color: var(--ink-muted); font-size: 13px; }
 
 /* Risiko: tingkat dan peta 3×3 */
@@ -92,15 +92,15 @@
 .matrix-cell.cell-medium:has(.matrix-risk-title) { border-color: var(--warn-line); background: var(--warn-bg); }
 .matrix-cell.cell-low:has(.matrix-risk-title) { border-color: var(--ok-line); background: var(--ok-bg); }
 .matrix-cell-content { display: grid; gap: 4px; }
-.cell-count-badge { font-size: 12px; font-weight: 750; }
+.cell-count-badge { font-size: 12px; font-weight: 600; }
 .matrix-risk-title { font-size: 12px; line-height: 1.4; }
 .matrix-more { color: var(--ink-muted); font-size: 11.5px; }
 
 /* Kesiapan gerai */
 .meter-row { display: flex; align-items: center; gap: 10px; }
 .meter-row .ui-progress { flex: 1 1 auto; }
-.meter-row strong, .meter-row span { font-size: 12.5px; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.readiness-details > summary { color: var(--ink-muted); font-size: 13px; font-weight: 650; cursor: pointer; }
+.meter-row strong, .meter-row span { font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.readiness-details > summary { color: var(--ink-muted); font-size: 13px; font-weight: 600; cursor: pointer; }
 .readiness-breakdown { display: grid; gap: 6px; margin-top: 8px; }
 .radar { max-width: 220px; margin: 0 auto; }
 

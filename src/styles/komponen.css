@@ -167,7 +167,7 @@ textarea.ui-input,
   cursor: pointer;
 }
 .custom-select-option.is-highlighted { background: var(--surface-3); }
-.custom-select-option.is-selected { color: var(--brand-ink); font-weight: 650; }
+.custom-select-option.is-selected { color: var(--brand-ink); font-weight: 600; }
 .custom-select-option-content { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
 .custom-select-option-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .custom-select-option-icon { display: inline-flex; color: var(--ink-muted); }
@@ -503,7 +503,7 @@ dialog.ui-modal h2 { font-size: 19px; }
 .ubin-pink { --ubin: var(--grafik-pink); }
 
 /* Avatar berwarna tetap per orang */
-.avatar-warna { display: inline-grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; font-size: 12px; font-weight: 800; }
+.avatar-warna { display: inline-grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; font-size: 12px; font-weight: 700; }
 .avatar-warna.is-biru { background: var(--pastel-biru); color: var(--pastel-biru-ink); }
 .avatar-warna.is-ungu { background: var(--pastel-purple-bg); color: var(--pastel-purple-text); }
 .avatar-warna.is-oranye { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
@@ -522,7 +522,7 @@ dialog.ui-modal h2 { font-size: 19px; }
   box-shadow: var(--shadow);
 }
 .modul-kepala { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
-.modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 650; letter-spacing: -0.01em; }
+.modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 600; letter-spacing: -0.01em; }
 .modul-ikon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; }
 .modul-ikon.pastel-biru { background: var(--pastel-biru); color: var(--pastel-biru-ink); }
 .modul-ikon.pastel-pink { background: var(--pastel-pink); color: var(--pastel-pink-ink); }

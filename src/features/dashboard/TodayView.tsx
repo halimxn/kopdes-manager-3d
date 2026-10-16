@@ -188,10 +188,10 @@ export function TodayView({
             <CalendarDays size={14} />
             {formatDate(now)}
           </span>
-          <h1 className="judul-halaman">
+          <h2 className="judul-halaman">
             <Ikon3D kind="matahari" size={30} />
             Fokus kerja hari ini
-          </h1>
+          </h2>
           <p>Tugas, tenggat, dan rapat hari ini.</p>
         </div>
 

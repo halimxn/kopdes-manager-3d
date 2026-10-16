@@ -610,11 +610,11 @@ export function Reports({ previewReports }: { previewReports?: Report[] } = {}) 
                 {String(selected.snapshot.organization || 'Koperasi')}
               </span>
               <div className="kop-divider" />
-              <h1 className="kop-doc-title">
+              <h2 className="kop-doc-title">
                 {isCurrentDraft
                   ? 'LEMBAR DRAF LAPORAN OPERASIONAL & PERKEMBANGAN'
                   : 'LEMBAR LAPORAN PERKEMBANGAN & OPERASIONAL'}
-              </h1>
+              </h2>
             </div>
           </header>
 
