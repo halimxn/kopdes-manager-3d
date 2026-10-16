@@ -456,16 +456,16 @@ dialog.ui-modal h2 { font-size: 19px; }
   .form-actions > :only-child { grid-column: 1 / -1; }
 }
 
-/* ---------- Modul (anatomi Senja): kepala berikon pastel, isi, kaki aksi ---------- */
+/* ---------- Modul: kartu putih tanpa garis, kepala judul + tautan kanan, isi, kaki aksi ---------- */
 .modul {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-lg);
+  padding: 20px 22px;
+  border: 1px solid var(--kartu-garis);
+  border-radius: var(--r-xl);
   background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow);
 }
 .modul-kepala { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
 .modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 650; letter-spacing: -0.01em; }

@@ -67,13 +67,13 @@ img, svg { flex-shrink: 0; }
 
 /* ---------- Primitif generik ---------- */
 
-/* Kartu panel: putih, sudut 16, bayangan lembut seperti panel dunia */
+/* Kartu panel: putih tanpa garis (garis hanya di mode gelap), bayangan tipis */
 .card,
 .ui-card {
   position: relative;
   min-width: 0;
   padding: 20px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--kartu-garis);
   border-radius: var(--r-lg);
   background: var(--surface);
   box-shadow: var(--shadow);

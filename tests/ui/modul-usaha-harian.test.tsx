@@ -19,7 +19,7 @@ it('tidak tampil sebelum migrasi administrasi aktif', async () => {
   expect(container.innerHTML).toBe('');
 });
 
-it('menampilkan omzet per gerai dan petugas yang belum absen', async () => {
+it('menampilkan omzet 7 hari dan petugas yang belum absen', async () => {
   const hari = today();
   mocks.api.mockImplementation(async (path: string) => {
     if (path === 'capabilities') return { operations: true, logistics: true, administration: true };
@@ -37,9 +37,8 @@ it('menampilkan omzet per gerai dan petugas yang belum absen', async () => {
     return { items: [{ id: 'u1', data: { title: 'Gerai Sembako' } }] };
   });
   render(<ModulUsahaHarian />);
-  expect(await screen.findByText('Gerai Sembako')).toBeTruthy();
-  expect(screen.getByText('Rp 1,5 jt')).toBeTruthy();
-  expect(screen.getByText('Hadir 07:05')).toBeTruthy();
-  expect(screen.getByText('Belum absen')).toBeTruthy();
+  expect((await screen.findAllByText('Rp 1,5 jt')).length).toBeGreaterThan(0);
+  expect(screen.getByRole('img', { name: '1 dari 2 petugas hadir' })).toBeTruthy();
+  expect(screen.getByText('Belum absen').closest('li')?.textContent).toBe('Belum absen1');
   expect(mocks.api).toHaveBeenCalledWith(expect.stringMatching(new RegExp(`^attendance\\?from=${hari}&to=${hari}`)));
 });

@@ -65,12 +65,11 @@ it('keeps dashboard details closed and lists focus tasks as compact rows', () =>
     ),
   };
   const view = render(<Dashboard data={data} />);
-  // Agenda (rutinitas) dan grafik kini modul yang selalu tampil di grid Beranda.
+  // Agenda dan status tugas selalu tampil; fokus berisi tugas terlambat sebagai baris ringkas.
   expect(view.container.querySelector('.dashboard-routines')).toBeTruthy();
-  expect(view.container.querySelector('.dashboard-extra')).toBeTruthy();
-  expect(view.container.querySelectorAll('.beranda-tugas .beranda-baris li')).toHaveLength(5);
+  expect(view.container.querySelector('.beranda-status')).toBeTruthy();
+  expect(view.container.querySelectorAll('.beranda-fokus .beranda-baris li')).toHaveLength(5);
   expect(screen.getByRole('link', { name: /Semua tugas/ }).getAttribute('href')).toBe('/tugas');
-  expect(screen.getByText('Grafik pekerjaan')).toBeTruthy();
 });
 
 it('reminds about active meetings through seven days without reviving past or closed meetings', () => {

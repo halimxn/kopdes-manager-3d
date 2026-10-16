@@ -99,8 +99,12 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
   const [shortcutHelp, setShortcutHelp] = useState(false);
   const path = usePathname(),
     query = useSearchParams();
-  const [favoriteText, setFavoriteText] = usePreference('hub-favorites', '/hari-ini|/tugas');
-  const [collapsedText, setCollapsedText] = usePreference('hub-nav-collapsed', '');
+  const [favoriteText, setFavoriteText] = usePreference('hub-favorites', '');
+  // Menu ringkas: hanya Ruang kerja dan Kegiatan terbuka; kelompok lain dilipat sampai dibuka pengguna.
+  const [collapsedText, setCollapsedText] = usePreference(
+    'hub-nav-collapsed',
+    'Buku koperasi|Gerai & laporan|Koordinasi & berkas|Pengaturan & bantuan',
+  );
   const [desktopSidebarHidden, setDesktopSidebarHidden] = usePreference(
     'hub-sidebar-desktop-collapsed',
     'false',
@@ -427,12 +431,15 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
               </nav>
             </section>
           )}
-          {sections.map(([label, paths]) => (
+          {sections.map(([label, paths]) => {
+            // Kelompok berisi halaman aktif selalu terbuka agar posisi pengguna terlihat.
+            const tertutup = collapsed.includes(label) && !(paths as readonly string[]).includes(path);
+            return (
             <section key={label} className="manager-sidebar-section">
               <h2 className="sidebar-section-title">
                 <Button
                   className="sidebar-group-toggle"
-                  aria-expanded={!collapsed.includes(label)}
+                  aria-expanded={!tertutup}
                   onClick={() =>
                     setCollapsedText(
                       (collapsed.includes(label)
@@ -443,10 +450,11 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
                   }
                 >
                   {label}
+                  {tertutup && <span className="sidebar-group-jumlah">{paths.length}</span>}
                   <ChevronDown size={14} />
                 </Button>
               </h2>
-              <nav className="sidebar-nav-list" hidden={collapsed.includes(label)}>
+              <nav className="sidebar-nav-list" hidden={tertutup}>
                 {paths.map((href) => {
                   const isActive = path === href;
                   return (
@@ -471,7 +479,8 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
                 })}
               </nav>
             </section>
-          ))}
+            );
+          })}
           <section className="manager-sidebar-section">
             <div className="sidebar-section-head-row">
               <h2 className="sidebar-section-title">Proyek saya</h2>

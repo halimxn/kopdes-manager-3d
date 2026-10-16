@@ -34,7 +34,7 @@ Seluruh data kerja hidup di **Dunia Koperasi**: diorama kantor 3D yang membaca c
 ## Brand Commitments
 
 - Nama produk: Kopdes Manager 3D; di dalam aplikasi: "Dunia Koperasi" untuk diorama.
-- Web memakai gaya "Senja": kanvas krem hangat, kartu putih, aksi biru `#2F5BEA`, empat pastel (biru, merah muda, mentega, mint) untuk modul dan kategori, huruf Hanken Grotesk (keputusan pemilik 15 Oktober 2026; menggantikan bahasa dinding/lantai/kayu dunia). Warna pastel dipilih agar nyaman di mata. Ikon dua nada biru (`Ikon3D`).
+- Web memakai gaya "Cerah": latar abu-lavender, kartu putih tanpa garis, aksi biru `#2F5BEA`, huruf Plus Jakarta Sans yang ramah di ponsel (keputusan pemilik 16 Oktober 2026 dari referensi M.project, Ckdulz, Seonizer, Selles Lab; Senja, Kebun, dan Teal ditolak). Warna-warni tapi tidak memusingkan: aksen jenuh hanya pada grafik, status, dan tombol utama. Ikon dua nada biru (`Ikon3D`).
 - Tampilan seimbang di semua perangkat: grid modul dengan tinggi rata; setiap data yang tampil harus bisa ditindaklanjuti; tidak ada tombol aksi ganda.
 - Bahasa UI langsung, ringkas, tanpa slogan motivasi.
 

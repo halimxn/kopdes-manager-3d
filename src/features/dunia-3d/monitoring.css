@@ -1,32 +1,32 @@
-/* Monitoring 3D: kanvas penuh, kartu putih melayang bergaya Senja (krem hangat, pastel, teks
-   cokelat tua), aksen biru #2F5BEA, ikon biru kilap. Dunia selalu terang. Gaya dibatasi .mt-root.
+/* Monitoring 3D: kanvas penuh, kartu putih melayang bergaya Cerah (abu-lavender, teks biru tua,
+   aksen jenuh hanya untuk grafik/status), aksen biru #2F5BEA, ikon biru kilap. Dunia selalu terang. Gaya dibatasi .mt-root.
    Tata letak: ≥1280 persis referensi; 768–1279 panel sempit, pelacak + daftar bertumpuk di kiri
    bawah; <768 bilah ringkas, KPI bergeser, detail dalam lembar bawah (intip/setengah/penuh). */
 .mt-root {
-  --mt-ink: #221e1c;
-  --mt-text: #221e1c;
-  --mt-muted: #665d57;
-  --mt-line: #efe8e1;
-  --mt-soft: #fbf8f5;
+  --mt-ink: #171a3a;
+  --mt-text: #2e3250;
+  --mt-muted: #5e6384;
+  --mt-line: #eceef5;
+  --mt-soft: #f8f9fc;
   --mt-card: rgba(255, 255, 255, 0.97);
   --mt-blue: #2f5bea;
   --mt-blue-ink: #2448c7;
-  --mt-blue-soft: #e8eefd;
-  --mt-green: #1f6e52;
-  --mt-green-bar: #3e9b78;
-  --mt-green-soft: #e4f4ee;
-  --mt-yellow: #8a6400;
-  --mt-yellow-bar: #e0a826;
-  --mt-yellow-soft: #fff3cc;
-  --mt-red: #b9461a;
-  --mt-red-soft: #fde7dc;
-  --mt-gray: #7f756e;
-  --mt-gray-soft: #f3eee9;
-  --mt-pink: #a0315f;
-  --mt-pink-bar: #d66f98;
-  --mt-pink-soft: #fce7ef;
+  --mt-blue-soft: #eaf0ff;
+  --mt-green: #0b7a70;
+  --mt-green-bar: #2bb7a8;
+  --mt-green-soft: #e2f7f4;
+  --mt-yellow: #a3560a;
+  --mt-yellow-bar: #f5a142;
+  --mt-yellow-soft: #fff3e0;
+  --mt-red: #c23a1f;
+  --mt-red-soft: #fdece8;
+  --mt-gray: #676c8c;
+  --mt-gray-soft: #eceef5;
+  --mt-pink: #c21f5e;
+  --mt-pink-bar: #ee6f9e;
+  --mt-pink-soft: #fde9f1;
   --mt-radius: 16px;
-  --mt-shadow: 0 12px 32px rgba(60, 40, 30, 0.09), 0 1px 2px rgba(60, 40, 30, 0.06);
+  --mt-shadow: 0 12px 32px rgba(23, 26, 58, 0.1), 0 1px 2px rgba(23, 26, 58, 0.05);
   --mt-gap: 20px;
   --mt-top: 64px;
   --mt-panel-w: 360px;

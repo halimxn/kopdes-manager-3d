@@ -7,35 +7,16 @@ import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { usePreference } from '@/lib/usePreference';
 import { Modal } from '@/components/ui/Modal';
-import {
-  Activity,
-  AlertCircle,
-  BarChart3,
-  CalendarDays,
-  ArrowRight,
-  Check,
-  Clock,
-  Flag,
-  FolderOpen,
-  ListChecks,
-  Video,
-  SlidersHorizontal,
-  Plus,
-  Trash2,
-  RotateCcw,
-  Wallet,
-  X,
-} from 'lucide-react';
-import { FollowUps } from '../follow-ups/FollowUps';
+import { Check, Clock, Video, SlidersHorizontal, Plus, Trash2, RotateCcw, X } from 'lucide-react';
 import { getFollowUps, recordHref } from '../workspace/workspace-navigation';
 import type { Workspace } from '../workspace/useWorkspace';
 import { schemas } from '../records/schemas';
 import { isOverdue, scopeProgress } from '@/lib/progress';
-import { today, addDays, formatDate } from '@/lib/date';
-import { cashSummary, rupiah } from '../operations/ledger';
+import { today, formatDate } from '@/lib/date';
 import { meetingJoinUrl } from '../meetings/meeting';
-import { WeekBarChart, TaskDonutChart } from '@/components/charts/DashboardCharts';
+import { Donat } from '@/components/charts/GrafikLembut';
 import { ModulUsahaHarian } from './ModulUsahaHarian';
+import { KasBanding } from './KasBanding';
 import { Select } from '@/components/ui/Select';
 
 const routineSchema = z.array(z.object({ id: z.string(), time: z.string(), title: z.string() }));
@@ -51,24 +32,12 @@ function parseRoutinePreference<T>(text: string, schema: z.ZodType<T>, fallback:
 export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; preferenceScope?: string }) {
   const now = today();
   const [projectId, setProjectId] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
   const allTasks = (data['work-items'] || []).map((row) => ({
     ...schemas['work-items'].parse(row.data),
     id: row.id,
   }));
   const tasks = allTasks.filter((task) => !projectId || task.workstream_id === projectId);
-  const [filter, setFilter] = useState('aktif');
   const open = tasks.filter((t) => !['selesai', 'dibatalkan'].includes(t.status));
-  const visible = tasks
-    .filter((t) =>
-      ['selesai', 'rencana', 'proses', 'dibatalkan'].includes(filter)
-        ? t.status === filter
-        : filter === 'terlambat'
-          ? isOverdue(t, now)
-          : !['selesai', 'dibatalkan'].includes(t.status),
-    )
-    .filter((t) => !selectedDate || (t.status === 'selesai' && t.completed_at === selectedDate))
-    .sort((a, b) => a.due_date.localeCompare(b.due_date));
 
   const projects = data.workstreams || [];
   const visibleProjects = projects.filter(
@@ -153,55 +122,17 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     setCompletedText(JSON.stringify(next));
   }
 
-  // Bar chart: 7-day completion
-  const week = Array.from({ length: 7 }, (_, i) => addDays(now, i - 6));
-  const doneCounts = week.map(
-    (date) => tasks.filter((t) => t.status === 'selesai' && t.completed_at === date).length,
-  );
-  const barData = week.map((date, i) => ({
-    label: new Intl.DateTimeFormat('id-ID', { weekday: 'short' }).format(
-      new Date(date + 'T12:00:00Z'),
-    ),
-    dateLabel: formatDate(date),
-    date,
-    value: doneCounts[i],
-    isToday: date === now,
-  }));
-
-  // Donut chart: task status breakdown
-  const totalTasks = tasks.length;
-  const donutSlices = [
-    {
-      label: 'Selesai',
-      value: tasks.filter((t) => t.status === 'selesai').length,
-      color: 'var(--success)',
-      cls: 'dot-done',
-    },
-    {
-      label: 'Dikerjakan',
-      value: tasks.filter((t) => t.status === 'proses').length,
-      color: 'var(--brand)',
-      cls: 'dot-active',
-    },
-    {
-      label: 'Rencana',
-      value: tasks.filter((t) => t.status === 'rencana').length,
-      color: 'var(--pastel-purple-text)',
-      cls: 'dot-plan',
-    },
-    {
-      label: 'Dibatalkan',
-      value: tasks.filter((t) => t.status === 'dibatalkan').length,
-      color: 'var(--danger)',
-      cls: 'dot-late',
-    },
-  ];
-
-  const journalRecent = [...(data.journal || [])]
-    .sort((a, b) => String(b.data.date || '').localeCompare(String(a.data.date || '')))
-    .slice(0, 4);
-  const overdueCount = tasks.filter((t) => isOverdue(t, now)).length;
-  const dueTodayCount = open.filter((t) => t.due_date === now).length;
+  // Fokus hari ini: tenggat terlewat dan jatuh tempo hari ini; bila kosong, tenggat terdekat.
+  const urutTenggat = (a: { due_date: string }, b: { due_date: string }) => a.due_date.localeCompare(b.due_date);
+  const fokusTerlambat = open.filter((t) => isOverdue(t, now)).sort(urutTenggat);
+  const fokusHariIni = open.filter((t) => t.due_date === now);
+  const fokusBerikut =
+    fokusTerlambat.length || fokusHariIni.length
+      ? []
+      : open.filter((t) => t.due_date > now).sort(urutTenggat).slice(0, 5);
+  const namaProyek = (id: string) => String(projects.find((p) => p.id === id)?.data.title || '');
+  const overdueCount = fokusTerlambat.length;
+  const dueTodayCount = fokusHariIni.length;
   const perhatian = getFollowUps(data, now);
   const tanggalPanjang = new Intl.DateTimeFormat('id-ID', {
     weekday: 'long',
@@ -209,6 +140,15 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     month: 'long',
     timeZone: 'Asia/Jakarta',
   }).format(new Date(now + 'T12:00:00Z'));
+
+  // Status tugas untuk donat; Dibatalkan hanya tampil bila ada.
+  const jumlahStatus = (status: string) => tasks.filter((t) => t.status === status).length;
+  const statusTugas = [
+    { label: 'Rencana', nilai: jumlahStatus('rencana'), warna: 'var(--grafik-biru)' },
+    { label: 'Dikerjakan', nilai: jumlahStatus('proses'), warna: 'var(--grafik-oranye)' },
+    { label: 'Selesai', nilai: jumlahStatus('selesai'), warna: 'var(--grafik-teal)' },
+    { label: 'Dibatalkan', nilai: jumlahStatus('dibatalkan'), warna: 'var(--ink-subtle)' },
+  ].filter((b) => b.label !== 'Dibatalkan' || b.nilai > 0);
 
   // Agenda hari ini: rapat hari ini dan rutinitas dalam satu urutan jam.
   const rapatHariIni = (data.meetings || [])
@@ -228,23 +168,20 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
       .filter((m) => m.data.workstream_id === projectId_ && !m.data.actual_date)
       .sort((a, b) => String(a.data.due_date).localeCompare(String(b.data.due_date)))[0];
 
-  // Kas bulan berjalan: hanya uang masuk/keluar tercatat, bukan saldo.
-  const bulanIni = now.slice(0, 7);
-  const kasBulanIni = (data['cash-entries'] || []).filter((row) => String(row.data.date).startsWith(bulanIni));
-  const kas = cashSummary(kasBulanIni);
-  const pekanKas = [0, 1, 2, 3, 4].map((pekan) => {
-    const baris = kasBulanIni.filter((row) => Math.min(4, Math.floor((Number(String(row.data.date).slice(8, 10)) - 1) / 7)) === pekan);
-    return cashSummary(baris);
-  });
-  const puncakKas = Math.max(1, ...pekanKas.flatMap((p) => [p.incoming, p.outgoing]));
-  const keluarPerKategori = new Map<string, number>();
-  for (const row of kasBulanIni.filter((r) => r.data.direction === 'keluar')) {
-    const kategori = String(row.data.category || 'Lainnya');
-    keluarPerKategori.set(kategori, (keluarPerKategori.get(kategori) || 0) + Number(row.data.amount));
-  }
-  const kategoriTerbesar = [...keluarPerKategori.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
-  const namaBulan = new Intl.DateTimeFormat('id-ID', { month: 'long', timeZone: 'Asia/Jakarta' }).format(
-    new Date(now + 'T12:00:00Z'),
+  const barisFokus = (task: (typeof open)[number], jenis: 'telat' | 'hari-ini' | 'nanti') => (
+    <li key={task.id}>
+      <Link href={`/tugas?task=${encodeURIComponent(task.id)}`}>
+        <span className="beranda-baris-teks">
+          <strong>{task.title}</strong>
+          <small>
+            {[task.assignee || 'Belum ditugaskan', namaProyek(task.workstream_id)].filter(Boolean).join(' · ')}
+            {task.subtasks.length > 0 &&
+              ` · ${task.subtasks.filter((st) => st.done).length}/${task.subtasks.length} subtugas`}
+          </small>
+        </span>
+        <span className={`beranda-tanggal is-${jenis}`}>{jenis === 'hari-ini' ? 'Hari ini' : formatDate(task.due_date)}</span>
+      </Link>
+    </li>
   );
 
   return (
@@ -252,30 +189,35 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
       <header className="beranda-kepala">
         <div>
           <h1>{tanggalPanjang}</h1>
-          <div className="beranda-pil" aria-label="Ringkasan hari ini">
-            <Link href="/tugas?status=terlambat" className={`pil ${overdueCount ? 'pil-telat' : 'pil-netral'}`}>
-              <AlertCircle size={15} aria-hidden="true" />
-              <b>{overdueCount}</b> terlambat
+          <p className="beranda-ringkas">
+            <Link href="/tugas?status=terlambat" className={overdueCount ? 'is-telat' : undefined}>
+              {overdueCount} terlambat
             </Link>
-            <Link href="/hari-ini" className="pil pil-biru">
-              <b>{dueTodayCount}</b> jatuh tempo hari ini
-            </Link>
+            {' · '}
+            <Link href="/hari-ini">{dueTodayCount} jatuh tempo hari ini</Link>
             {rapatBerikutnya && (
-              <Link href={recordHref('meetings', rapatBerikutnya)} className="pil pil-pink">
-                <Video size={15} aria-hidden="true" />
-                Rapat {String(rapatBerikutnya.data.time || 'hari ini')}
-              </Link>
+              <>
+                {' · '}
+                <Link href={recordHref('meetings', rapatBerikutnya)}>
+                  rapat {String(rapatBerikutnya.data.time || 'hari ini')}
+                </Link>
+              </>
             )}
-          </div>
+            {perhatian.length > 0 && (
+              <>
+                {' · '}
+                <Link href="/tindak-lanjut" className="is-perhatian">
+                  {perhatian.length} perlu perhatian
+                </Link>
+              </>
+            )}
+          </p>
         </div>
         <label className="beranda-proyek">
           <span className="sr-only">Proyek</span>
           <Select
             value={projectId}
-            onChange={(value) => {
-              setProjectId(value);
-              setSelectedDate('');
-            }}
+            onChange={setProjectId}
             options={[
               { value: '', label: 'Semua proyek' },
               ...projects.map((project) => ({ value: project.id, label: String(project.data.title) })),
@@ -286,92 +228,52 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
       </header>
 
       <div className="beranda-modul">
-        <section className="modul lebar-separuh beranda-tugas" aria-label="Tugas pilihan">
+        <section className="modul beranda-fokus" aria-label="Fokus hari ini">
           <div className="modul-kepala">
-            <span className="modul-ikon pastel-biru" aria-hidden="true"><ListChecks size={17} /></span>
-            <h2>Tugas</h2>
-            <div className="beranda-seg" role="group" aria-label="Saring tugas">
-              {[
-                ['aktif', 'Aktif', open.length],
-                ['terlambat', 'Terlambat', overdueCount],
-                ['selesai', 'Selesai', tasks.filter((t) => t.status === 'selesai').length],
-              ].map(([value, label, count]) => (
-                <button
-                  key={String(value)}
-                  type="button"
-                  aria-pressed={filter === value}
-                  onClick={() => {
-                    setFilter(String(value));
-                    setSelectedDate('');
-                  }}
-                >
-                  {label}
-                  <span>{count}</span>
-                </button>
-              ))}
-            </div>
+            <h2>Fokus hari ini</h2>
+            <span className="beranda-jumlah">{open.length} tugas aktif</span>
+            <Link href="/tugas" className="modul-tautan">
+              Semua tugas
+            </Link>
           </div>
-          {(selectedDate || ['rencana', 'proses', 'dibatalkan'].includes(filter)) && (
-            <div className="dashboard-selection" role="status">
-              <span>{selectedDate ? 'Selesai pada ' + formatDate(selectedDate) : 'Status: ' + filter}</span>
-              <Button
-                onClick={() => {
-                  setSelectedDate('');
-                  setFilter('aktif');
-                }}
-              >
-                Hapus pilihan
-              </Button>
-            </div>
+          {fokusTerlambat.length > 0 && (
+            <>
+              <h3 className="beranda-grup is-telat">Terlambat · {fokusTerlambat.length}</h3>
+              <ul className="beranda-baris">{fokusTerlambat.slice(0, 5).map((t) => barisFokus(t, 'telat'))}</ul>
+            </>
           )}
-          {visible.length ? (
-            <ul className="beranda-baris">
-              {visible.slice(0, 7).map((task) => {
-                const late = isOverdue(task, now);
-                const hariIni = task.due_date === now;
-                return (
-                  <li key={task.id}>
-                    <Link href={`/tugas?task=${encodeURIComponent(task.id)}`}>
-                      <span className={`beranda-titik is-${late ? 'telat' : task.status}`} aria-hidden="true" />
-                      <span className="beranda-baris-teks">
-                        <strong>{task.title}</strong>
-                        <small>
-                          {task.assignee || 'Belum ditugaskan'}
-                          {task.subtasks.length > 0 &&
-                            ` · ${task.subtasks.filter((st) => st.done).length}/${task.subtasks.length} subtugas`}
-                        </small>
-                      </span>
-                      <span className={`beranda-tanggal${late ? ' is-telat' : hariIni ? ' is-hari-ini' : ''}`}>
-                        {hariIni ? 'Hari ini' : formatDate(task.due_date)}
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
+          {fokusHariIni.length > 0 && (
+            <>
+              <h3 className="beranda-grup is-hari-ini">Hari ini · {fokusHariIni.length}</h3>
+              <ul className="beranda-baris">{fokusHariIni.slice(0, 5).map((t) => barisFokus(t, 'hari-ini'))}</ul>
+            </>
+          )}
+          {fokusBerikut.length > 0 && (
+            <>
+              <h3 className="beranda-grup">Berikutnya</h3>
+              <ul className="beranda-baris">{fokusBerikut.map((t) => barisFokus(t, 'nanti'))}</ul>
+            </>
+          )}
+          {!open.length && (
             <EmptyState
               compact
               ikon="kalender"
-              title={filter === 'selesai' ? 'Belum ada tugas selesai' : 'Tidak ada tugas di sini'}
-              description={filter === 'terlambat' ? 'Tidak ada tenggat yang terlewat.' : 'Tambahkan tugas dan pilih tanggal pengerjaannya.'}
+              title="Tidak ada tugas aktif"
+              description="Tambahkan tugas dan pilih tanggal pengerjaannya."
               action={{ label: 'Tambah tugas', href: '/tugas?baru=1' }}
             />
           )}
-          <div className="modul-kaki">
-            <Link className="home-text-link" href="/tugas">
-              Semua tugas <ArrowRight size={15} />
-            </Link>
-          </div>
         </section>
 
-        <section className="modul lebar-separuh dashboard-routines" aria-label="Agenda hari ini">
+        <section className="modul beranda-agenda dashboard-routines" aria-label="Agenda hari ini">
           <div className="modul-kepala">
-            <span className="modul-ikon pastel-pink" aria-hidden="true"><CalendarDays size={17} /></span>
-            <h2>Agenda hari ini</h2>
+            <h2>Agenda</h2>
             <span className={`beranda-jumlah${semuaRutinSelesai ? ' is-selesai' : ''}`}>
-              {routineCompletedCount}/{routines.length} selesai
+              {routineCompletedCount}/{routines.length} rutinitas
             </span>
+            <Link href="/rapat" className="modul-tautan">
+              Rapat
+            </Link>
           </div>
           <ol className="rutin-rel">
             {agenda.map((butir) => {
@@ -438,48 +340,34 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
               <SlidersHorizontal size={14} />
               <span>Atur rutinitas</span>
             </Button>
-            <Link className="home-text-link" href="/rapat">
-              Semua rapat <ArrowRight size={15} />
+          </div>
+        </section>
+
+        <KasBanding />
+        <ModulUsahaHarian />
+
+        <section className="modul beranda-status" aria-label="Status tugas">
+          <div className="modul-kepala">
+            <h2>Status tugas</h2>
+          </div>
+          <Donat bagian={statusTugas} tengah={String(tasks.length)} keterangan="tugas" />
+          <ul className="beranda-legenda-daftar">
+            {statusTugas.map((b) => (
+              <li key={b.label}>
+                <i style={{ background: b.warna }} aria-hidden="true" />
+                {b.label}
+                <b>{b.nilai}</b>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="modul beranda-proyek-modul" aria-label="Proyek berjalan">
+          <div className="modul-kepala">
+            <h2>Proyek berjalan</h2>
+            <Link href="/proyek" className="modul-tautan">
+              Semua proyek
             </Link>
-          </div>
-        </section>
-
-        <section id="perhatian" className="modul lebar-sepertiga" aria-label="Perlu perhatian">
-          <div className="modul-kepala">
-            <span className="modul-ikon pastel-mentega" aria-hidden="true"><AlertCircle size={17} /></span>
-            <h2>Perlu perhatian</h2>
-            <span className="beranda-jumlah">{perhatian.length}</span>
-          </div>
-          {perhatian.length ? (
-            <ul className="beranda-baris is-ringkas">
-              {perhatian.slice(0, 5).map((item) => (
-                <li key={item.id}>
-                  <Link href={item.href}>
-                    <span className={`beranda-jenis${item.urgent ? ' is-mendesak' : ''}`}>{item.kind}</span>
-                    <span className="beranda-baris-teks">
-                      <strong>{item.title}</strong>
-                      <small>{item.reason}</small>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="beranda-kosong">Tidak ada pengingat pada catatan yang dimuat.</p>
-          )}
-          {perhatian.length > 5 && (
-            <details className="beranda-semua">
-              <summary>Lihat semua ({perhatian.length})</summary>
-              <FollowUps data={data} />
-            </details>
-          )}
-        </section>
-
-        <section className="modul lebar-sepertiga" aria-label="Proyek saya">
-          <div className="modul-kepala">
-            <span className="modul-ikon pastel-biru" aria-hidden="true"><FolderOpen size={17} /></span>
-            <h2>Proyek</h2>
-            <Link href="/proyek" className="modul-tautan">Kelola</Link>
           </div>
           {visibleProjects.length ? (
             <ul className="beranda-proyek-daftar">
@@ -489,15 +377,18 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                 return (
                   <li key={p.id}>
                     <Link href={`/proyek?id=${encodeURIComponent(p.id)}`}>
-                      <span className="proyek-baris-atas">
-                        <span>{String(p.data.title)}</span>
-                        <b>{persen}%</b>
+                      <span className="beranda-baris-teks">
+                        <strong>{String(p.data.title)}</strong>
+                        <small>
+                          {ms
+                            ? `${String(ms.data.title)} · ${formatDate(String(ms.data.due_date))}`
+                            : 'Belum ada milestone berikutnya'}
+                        </small>
                       </span>
-                      <span className="ui-progress" aria-hidden="true"><span style={{ width: `${persen}%` }} /></span>
-                      <small className="proyek-milestone">
-                        <Flag size={12} aria-hidden="true" />
-                        {ms ? `${String(ms.data.title)} · ${formatDate(String(ms.data.due_date))}` : 'Belum ada milestone berikutnya'}
-                      </small>
+                      <span className="proyek-batang" role="img" aria-label={`Progres ${persen}%`}>
+                        <span style={{ width: `${persen}%` }} />
+                      </span>
+                      <b>{persen}%</b>
                     </Link>
                   </li>
                 );
@@ -513,98 +404,6 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
             />
           )}
         </section>
-
-        <section className="modul lebar-sepertiga modul-lebar-tablet" aria-label="Kas bulan ini">
-          <div className="modul-kepala">
-            <span className="modul-ikon pastel-mint" aria-hidden="true"><Wallet size={17} /></span>
-            <h2>Kas {namaBulan}</h2>
-            <Link href="/keuangan" className="modul-tautan">Buku kas</Link>
-          </div>
-          {data['cash-entries'] ? (
-            <>
-              <div className="kas-ringkas">
-                <div><small>Uang masuk</small><b className="is-masuk">{rupiah(kas.incoming)}</b></div>
-                <div><small>Uang keluar</small><b className="is-keluar">{rupiah(kas.outgoing)}</b></div>
-              </div>
-              <div className="kas-pekan" role="img" aria-label={`Uang masuk dan keluar per pekan bulan ${namaBulan}`}>
-                {pekanKas.map((p, i) => (
-                  <div key={i}>
-                    <span className="kas-batang">
-                      <i className="is-masuk" style={{ height: `${Math.max(3, (p.incoming / puncakKas) * 100)}%` }} />
-                      <i className="is-keluar" style={{ height: `${Math.max(3, (p.outgoing / puncakKas) * 100)}%` }} />
-                    </span>
-                    <small>P{i + 1}</small>
-                  </div>
-                ))}
-              </div>
-              <p className="kas-catatan">
-                <span className="legenda is-masuk" />Masuk <span className="legenda is-keluar" />Keluar
-                {kategoriTerbesar ? ` · keluar terbesar: ${kategoriTerbesar}` : ''}
-              </p>
-            </>
-          ) : (
-            <p className="beranda-kosong">Buku kas belum aktif di server ini.</p>
-          )}
-        </section>
-
-        <section className="modul lebar-separuh" aria-label="Kegiatan terbaru">
-          <div className="modul-kepala">
-            <span className="modul-ikon pastel-mint" aria-hidden="true"><Activity size={17} /></span>
-            <h2>Kegiatan terbaru</h2>
-            <Link href="/jurnal" className="modul-tautan">Semua</Link>
-          </div>
-          {journalRecent.length ? (
-            <ul className="beranda-baris is-ringkas">
-              {journalRecent.map((row) => (
-                <li key={row.id}>
-                  <Link href={recordHref('journal', row)}>
-                    <span className="beranda-titik is-proses" aria-hidden="true" />
-                    <span className="beranda-baris-teks">
-                      <strong>{String(row.data.title || '')}</strong>
-                      <small>{formatDate(String(row.data.date || ''))}</small>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <EmptyState
-              compact
-              ikon="buku"
-              title="Belum ada kegiatan dicatat"
-              description="Catat kunjungan, koordinasi, atau hasil lapangan."
-              action={{ label: 'Catat kegiatan', href: '/jurnal?baru=1' }}
-            />
-          )}
-        </section>
-
-        <section className="modul lebar-separuh dashboard-extra" aria-label="Grafik pekerjaan">
-          <div className="modul-kepala">
-            <span className="modul-ikon pastel-pink" aria-hidden="true"><BarChart3 size={17} /></span>
-            <h2>Grafik pekerjaan</h2>
-          </div>
-          <div className="dash-analytics-row">
-            <WeekBarChart
-              data={barData}
-              selectedDate={selectedDate}
-              onSelect={(date) => {
-                setSelectedDate(selectedDate === date ? '' : date);
-                setFilter('selesai');
-              }}
-            />
-            <TaskDonutChart
-              slices={donutSlices}
-              total={totalTasks}
-              selected={filter}
-              onSelect={(status) => {
-                setFilter(status);
-                setSelectedDate('');
-              }}
-            />
-          </div>
-        </section>
-
-        <ModulUsahaHarian />
       </div>
 
       {/* ── Modal Atur Rutinitas Manajer ─────────────────── */}

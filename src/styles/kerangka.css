@@ -127,6 +127,7 @@
   box-shadow: none;
 }
 .sidebar-group-toggle svg { opacity: 0.6; transition: transform var(--dur); }
+.sidebar-group-jumlah { margin-left: auto; margin-right: 6px; color: var(--ink-subtle); font-variant-numeric: tabular-nums; }
 .sidebar-group-toggle[aria-expanded='false'] svg { transform: rotate(-90deg); }
 .sidebar-section-add {
   display: grid;
@@ -138,6 +139,8 @@
 }
 .sidebar-section-add:hover { background: var(--surface-3); color: var(--brand-ink); }
 .sidebar-nav-list { display: grid; gap: 2px; margin-top: 4px; }
+/* Atribut hidden kalah oleh display:grid; kelompok terlipat harus benar-benar tersembunyi. */
+.sidebar-nav-list[hidden] { display: none; }
 .sidebar-nav-item {
   position: relative;
   display: flex;

@@ -15,9 +15,9 @@ it('rutinitas berikutnya mengikuti WIB, centang tersimpan, dan jam yang lewat di
   const briefing = screen.getByRole('checkbox', { name: /Briefing singkat/ });
   fireEvent.click(briefing);
   expect((briefing as HTMLInputElement).checked).toBe(true);
-  expect(screen.getByText('1/6 selesai')).toBeTruthy();
+  expect(screen.getByText('1/6 rutinitas')).toBeTruthy();
   view.unmount();
   render(<Dashboard data={{}} preferenceScope="audit-rutin-" />);
   expect((screen.getByRole('checkbox', { name: /Briefing singkat/ }) as HTMLInputElement).checked).toBe(true);
-  expect(screen.getByText('1/6 selesai')).toBeTruthy();
+  expect(screen.getByText('1/6 rutinitas')).toBeTruthy();
 });

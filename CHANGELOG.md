@@ -2,6 +2,15 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Gaya Cerah paket 1: token, huruf, menu ringkas, Beranda grafik lembut — 16 Oktober 2026
+
+- Pemilik menilai Senja yang dirapikan "masih sama", lalu memilih arah baru lewat mockup kanvas dari referensi M.project, Ckdulz, Seonizer, dan Selles Lab, dengan permintaan "clean, rapi, tanpa banyak yang mengganggu" dan grafik yang lembut.
+- Token baru: latar abu-lavender `#F4F5FA`, kartu putih tanpa garis berbayangan tipis (garis hanya di mode gelap), teks biru tua, warna status dan pastel diselaraskan, token grafik `--grafik-*`. Huruf Plus Jakarta Sans (paket lokal) menggantikan Hanken Grotesk karena lebih ramah di ponsel. Mode gelap biru malam. Panel Dunia 3D ikut palet lewat `monitoring.css`.
+- Menu samping ringkas: hanya Ruang kerja dan Kegiatan terbuka; kelompok lain dilipat dengan jumlah halaman, kelompok berisi halaman aktif selalu terbuka; Favorit kosong secara bawaan. Diperbaiki: kelompok yang dilipat sebelumnya tetap tampil karena `display: grid` mengalahkan atribut `hidden`.
+- Beranda disusun ulang (grid 12 kolom): satu baris ringkasan teks, Fokus hari ini (Terlambat/Hari ini/Berikutnya), Agenda, Uang masuk/keluar kumulatif bulan ini dibanding bulan lalu (memuat kas dua bulan sendiri, berhalaman; hanya uang tercatat), Penjualan gerai 7 hari (batang bergradien, puncak berlabel), Kehadiran (gauge), Status tugas (donat), Proyek berjalan. Perlu perhatian menjadi tautan ke Tindak lanjut; Kegiatan terbaru tetap di halaman Kegiatan; Grafik pekerjaan digantikan donat status.
+- Komponen grafik baru `components/charts/GrafikLembut.tsx` (SVG tanpa pustaka); `DashboardCharts.tsx` dan gaya lamanya dihapus karena tidak dipakai lagi.
+- Verifikasi: 407 tes / 68 berkas (termasuk tes kas kumulatif dan batas sumbu), typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB. Demo diperiksa pada 1280 px dan 375 px (terang dan gelap); Tugas dan Buku kas tanpa luber samping pada 375 px. `audit:tampilan` belum dijalankan; halaman lain baru ikut token.
+
 ## Senja dirapikan: halaman kerja lebih ringkas — 16 Oktober 2026
 
 - Gaya Kebun dan Teal yang sempat dipasang di cabang `tampilan/gaya-baru` dibatalkan pemilik; web kembali ke Senja H lalu dirapikan berdasar inspeksi (detektor impeccable + pemeriksaan visual 1280 dan 375 px).

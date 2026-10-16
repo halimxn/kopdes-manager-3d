@@ -147,7 +147,7 @@ it('an empty saved routine configuration stays empty and stale completions do no
   localStorage.setItem(`kdmp_manager_routine_${today()}`, '["removed-routine"]');
   render(<Dashboard data={{}} />);
   expect(screen.queryByText('Buka gerai & cek kas modal awal')).toBeNull();
-  expect(screen.getByText('0/0 selesai')).toBeTruthy();
+  expect(screen.getByText('0/0 rutinitas')).toBeTruthy();
 });
 
 it('invalid routine storage does not crash the dashboard', () => {
@@ -155,7 +155,7 @@ it('invalid routine storage does not crash the dashboard', () => {
   localStorage.setItem(`kdmp_manager_routine_${today()}`, '{}');
   render(<Dashboard data={{}} />);
   expect(screen.getByText('Buka gerai & cek kas modal awal')).toBeTruthy();
-  expect(screen.getByText('0/6 selesai')).toBeTruthy();
+  expect(screen.getByText('0/6 rutinitas')).toBeTruthy();
 });
 
 it('the period editor is a native modal and cannot close while saving', async () => {

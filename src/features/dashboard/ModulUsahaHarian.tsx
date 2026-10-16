@@ -4,15 +4,14 @@
 // migrasi belum aktif supaya Beranda tidak dipenuhi modul kosong.
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { BadgeCheck, Store } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { api } from '@/lib/client';
 import { addDays, today } from '@/lib/date';
 import type { Item } from '../records/schemas';
 import { loadCapabilities } from '../workspace/useWorkspace';
-import { recordHref } from '../workspace/workspace-navigation';
+import { Gauge } from '@/components/charts/GrafikLembut';
 
-type Data = { sales: Item[]; attendance: Item[]; staff: Item[]; units: Item[] };
+type Data = { sales: Item[]; attendance: Item[]; staff: Item[] };
 type Keadaan = { status: 'memuat' } | { status: 'nonaktif' } | { status: 'galat'; pesan: string } | ({ status: 'siap' } & Data);
 
 const juta = (nilai: number) =>
@@ -25,13 +24,12 @@ const namaHari = (tanggal: string) =>
 async function muatUsahaHarian(hari: string): Promise<Data | null> {
   if (!(await loadCapabilities()).administration) return null;
   const ambil = (path: string) => api<{ items: Item[] }>(path).then((page) => page.items);
-  const [sales, attendance, staff, units] = await Promise.all([
+  const [sales, attendance, staff] = await Promise.all([
     ambil(`sales?from=${addDays(hari, -6)}&to=${hari}&limit=100`),
     ambil(`attendance?from=${hari}&to=${hari}&limit=100`),
     ambil('staff?limit=100'),
-    ambil('units?limit=100'),
   ]);
-  return { sales, attendance, staff, units };
+  return { sales, attendance, staff };
 }
 
 export function ModulUsahaHarian() {
@@ -50,60 +48,49 @@ export function ModulUsahaHarian() {
   if (keadaan.status === 'nonaktif' || keadaan.status === 'memuat') return null;
   if (keadaan.status === 'galat')
     return (
-      <section className="modul lebar-penuh" aria-label="Usaha harian">
+      <section className="modul beranda-jual" aria-label="Usaha harian">
         <p className="notice error" role="alert">Penjualan dan kehadiran belum dapat dimuat: {keadaan.pesan}</p>
       </section>
     );
   return (
     <>
-      <PenjualanGerai sales={keadaan.sales} units={keadaan.units} hari={hari} />
+      <PenjualanGerai sales={keadaan.sales} hari={hari} />
       <KehadiranHariIni attendance={keadaan.attendance} staff={keadaan.staff} />
     </>
   );
 }
 
-function PenjualanGerai({ sales, units, hari }: { sales: Item[]; units: Item[]; hari: string }) {
+function PenjualanGerai({ sales, hari }: { sales: Item[]; hari: string }) {
   const hariHari = Array.from({ length: 7 }, (_, i) => addDays(hari, i - 6));
   const perHari = hariHari.map((tanggal) =>
     sales.filter((row) => row.data.date === tanggal).reduce((total, row) => total + Number(row.data.amount || 0), 0),
   );
   const puncak = Math.max(1, ...perHari);
-  const perGerai = Object.entries(
-    sales.reduce<Record<string, number>>((total, row) => {
-      const id = String(row.data.unit_id);
-      total[id] = (total[id] || 0) + Number(row.data.amount || 0);
-      return total;
-    }, {}),
-  )
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
-  const namaGerai = (id: string) => String(units.find((row) => row.id === id)?.data.title || 'Gerai');
+  const total = perHari.reduce((n, v) => n + v, 0);
+  const hariTercatat = perHari.filter(Boolean).length;
   return (
-    <section className="modul lebar-separuh" aria-label="Penjualan gerai 7 hari">
+    <section className="modul beranda-jual" aria-label="Penjualan gerai 7 hari">
       <div className="modul-kepala">
-        <span className="modul-ikon pastel-mentega" aria-hidden="true"><Store size={17} /></span>
-        <h2>Penjualan gerai 7 hari</h2>
+        <h2>Penjualan gerai</h2>
         <Link href="/penjualan" className="modul-tautan">Rincian</Link>
       </div>
       {sales.length ? (
-        <div className="jual">
-          <div className="jual-grafik" role="img" aria-label={`Omzet 7 hari: ${perHari.map((n, i) => `${namaHari(hariHari[i])} ${juta(n)}`).join(', ')}`}>
+        <>
+          <div className="kas-angka">
+            <strong>{juta(total)}</strong>
+            <small>7 hari terakhir · {hariTercatat} hari tercatat</small>
+          </div>
+          <div className="jual-grafik" role="img" aria-label={`Omzet 7 hari: ${perHari.map((n, i) => `${namaHari(hariHari[i])} ${n ? juta(n) : 'belum dicatat'}`).join(', ')}`}>
             {perHari.map((nilai, i) => (
-              <div key={hariHari[i]} className={hariHari[i] === hari ? 'is-hari-ini' : undefined}>
-                <i style={{ height: nilai ? `${Math.max(4, (nilai / puncak) * 100)}%` : 0 }} />
+              <div key={hariHari[i]} className={`${hariHari[i] === hari ? 'is-hari-ini' : ''}${nilai === puncak ? ' is-puncak' : ''}${nilai ? '' : ' is-kosong'}`}>
+                {nilai === puncak && <span className="jual-nilai">{juta(nilai)}</span>}
+                <i style={{ height: nilai ? `${Math.max(6, (nilai / puncak) * 100)}%` : undefined }} />
                 <small>{namaHari(hariHari[i])}</small>
               </div>
             ))}
           </div>
-          <ul className="jual-daftar">
-            {perGerai.map(([id, total]) => (
-              <li key={id}>
-                <span>{namaGerai(id)}</span>
-                <b>{juta(total)}</b>
-              </li>
-            ))}
-          </ul>
-        </div>
+          {!perHari[6] && <p className="beranda-kosong">Hari ini belum ada catatan penjualan.</p>}
+        </>
       ) : (
         <EmptyState
           compact
@@ -117,63 +104,34 @@ function PenjualanGerai({ sales, units, hari }: { sales: Item[]; units: Item[]; 
   );
 }
 
-const urutanPerhatian = ['terjadwal', 'alpa', 'terlambat', 'sakit', 'izin', 'cuti', 'hadir', 'libur'];
-
 function KehadiranHariIni({ attendance, staff }: { attendance: Item[]; staff: Item[] }) {
   const aktif = staff.filter((row) => row.data.status === 'aktif');
-  const catatanOf = (id: string) => attendance.find((row) => row.data.staff_id === id);
+  const statusOf = (id: string) => attendance.find((row) => row.data.staff_id === id)?.data.status;
   const hadir = attendance.filter((row) => ['hadir', 'terlambat'].includes(String(row.data.status))).length;
   const absen = attendance.filter((row) => ['izin', 'sakit', 'cuti', 'alpa'].includes(String(row.data.status))).length;
   // Belum absen: terjadwal tapi belum diperbarui, atau petugas aktif tanpa catatan hari ini.
   const belum = aktif.filter((row) => {
-    const status = catatanOf(row.id)?.data.status;
+    const status = statusOf(row.id);
     return !status || status === 'terjadwal';
   }).length;
-  const baris = aktif
-    .map((row) => ({ row, catatan: catatanOf(row.id) }))
-    .sort(
-      (a, b) =>
-        urutanPerhatian.indexOf(String(a.catatan?.data.status || 'terjadwal')) -
-        urutanPerhatian.indexOf(String(b.catatan?.data.status || 'terjadwal')),
-    )
-    .slice(0, 4);
   return (
-    <section className="modul lebar-separuh" aria-label="Kehadiran hari ini">
+    <section className="modul beranda-hadir" aria-label="Kehadiran hari ini">
       <div className="modul-kepala">
-        <span className="modul-ikon pastel-biru" aria-hidden="true"><BadgeCheck size={17} /></span>
-        <h2>Kehadiran hari ini</h2>
-        <Link href="/absensi" className="modul-tautan">Jadwal & absensi</Link>
+        <h2>Kehadiran</h2>
+        <Link href="/absensi" className="modul-tautan">Absensi</Link>
       </div>
       {aktif.length ? (
         <>
-          <div className="beranda-pil hadir-ringkas">
-            <span className="pil pil-netral"><b>{hadir}</b> hadir</span>
-            <span className="pil pil-biru"><b>{absen}</b> izin/sakit/cuti/alpa</span>
-            <span className={`pil ${belum ? 'pil-telat' : 'pil-netral'}`}><b>{belum}</b> belum absen</span>
-          </div>
-          <ul className="beranda-baris is-ringkas">
-            {baris.map(({ row, catatan }) => {
-              const status = String(catatan?.data.status || '');
-              const belumAbsen = !status || status === 'terjadwal';
-              return (
-                <li key={row.id}>
-                  <Link href={catatan ? recordHref('attendance', catatan) : '/absensi?baru=1'}>
-                    <span className="record-avatar" aria-hidden="true">{String(row.data.title || '?').slice(0, 1).toUpperCase()}</span>
-                    <span className="beranda-baris-teks">
-                      <strong>{String(row.data.title)}</strong>
-                      <small>{String(catatan?.data.shift || row.data.work_hours || row.data.role || '')}</small>
-                    </span>
-                    <span className={`beranda-tanggal${belumAbsen || status === 'alpa' ? ' is-telat' : status === 'hadir' ? ' is-hadir' : ''}`}>
-                      {belumAbsen
-                        ? 'Belum absen'
-                        : status === 'hadir' || status === 'terlambat'
-                          ? `${status === 'terlambat' ? 'Terlambat' : 'Hadir'}${catatan?.data.check_in_time ? ` ${String(catatan.data.check_in_time)}` : ''}`
-                          : status.charAt(0).toUpperCase() + status.slice(1)}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
+          <Gauge nilai={hadir} maks={aktif.length} keterangan="petugas hadir" />
+          <ul className="beranda-legenda-daftar">
+            <li>
+              <i className="is-izin" aria-hidden="true" />
+              Izin, sakit, cuti, alpa<b>{absen}</b>
+            </li>
+            <li className={belum ? 'is-telat' : undefined}>
+              <i className="is-belum" aria-hidden="true" />
+              Belum absen<b>{belum}</b>
+            </li>
           </ul>
         </>
       ) : (
