@@ -117,7 +117,7 @@ dialog.task-detail-drawer[open] { display: block; }
 .title-edit-form, .desc-edit-form { display: grid; gap: 8px; }
 .inline-actions { display: flex; justify-content: flex-end; gap: 6px; }
 :is(.btn-tiny-cancel, .btn-tiny-save, .btn-tiny-copy, .btn-tiny-edit, .btn-tiny-delete).ui-btn { min-height: 32px; padding: 0 10px; font-size: 12.5px; }
-.btn-tiny-save.ui-btn { --btn-bg: var(--brand); --btn-fg: var(--on-brand); --btn-line: var(--brand); }
+.btn-tiny-save.ui-btn { --btn-bg: var(--brand-isi); --btn-fg: var(--on-brand); --btn-line: var(--brand); }
 .drawer-properties-grid { display: grid; gap: 2px; padding: 6px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .drawer-prop-row { display: grid; grid-template-columns: 130px minmax(0, 1fr); align-items: center; gap: 10px; min-height: 44px; }
 .drawer-prop-label { color: var(--ink-muted); font-size: 13px; }

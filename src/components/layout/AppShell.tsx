@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { BottomNav } from '@/components/ui/BottomNav';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { ThemeProvider, useTheme } from '@/lib/ThemeContext';
 import { api, resetAuthNavigation } from '@/lib/client';
@@ -47,8 +47,7 @@ function getCoopShortName(title?: string): string {
 function ShellFrame({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [shortcutHelp, setShortcutHelp] = useState(false);
-  const path = usePathname(),
-    query = useSearchParams();
+  const path = usePathname();
   const [desktopSidebarHidden, setDesktopSidebarHidden] = usePreference(
     'hub-sidebar-desktop-collapsed',
     'false',
@@ -267,7 +266,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
         <p><kbd>Ctrl/⌘ K</kbd> Cari · <kbd>Ctrl/⌘ B</kbd> Menu samping · <kbd>Esc</kbd> Tutup</p>
         <Button type="button" onClick={() => setShortcutHelp(false)}>Tutup bantuan</Button>
       </Modal>}
-      <BottomNav path={path} calendar={query.get('view') === 'kalender'} menu={menu} onAction={() => setActionModalOpen(true)} onMenu={() => setMenu(!menu)} />
+      <BottomNav path={path} menu={menu} onAction={() => setActionModalOpen(true)} onMenu={() => setMenu(!menu)} />
 
       {/* Lembar menu ponsel/tablet: semua hub beserta tabnya */}
       <div

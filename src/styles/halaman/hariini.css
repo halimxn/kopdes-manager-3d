@@ -48,7 +48,7 @@
 .meeting-location-text { display: flex; align-items: center; gap: 5px; color: var(--ink-muted); font-size: 12.5px; }
 .meeting-card-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 .meeting-card-actions :is(.ui-btn, a) { min-height: 34px; font-size: 12.5px; }
-.btn-join-meeting { --btn-bg: var(--brand); --btn-fg: var(--on-brand); --btn-line: var(--brand); }
+.btn-join-meeting { --btn-bg: var(--brand-isi); --btn-fg: var(--on-brand); --btn-line: var(--brand); }
 .upcoming-tasks-mini-list { display: grid; }
 .upcoming-mini-item { display: grid; gap: 2px; padding: 10px 4px; border-radius: var(--r-md); cursor: pointer; }
 .upcoming-mini-item + .upcoming-mini-item { border-top: 1px solid var(--line); border-radius: 0; }

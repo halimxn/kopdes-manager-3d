@@ -26,7 +26,7 @@ it('tanggal memakai satu pemicu dan mempertahankan validasi form native', () => 
 });
 it('dock memiliki lima item dan aksi/menu dapat dioperasikan', () => {
   const action = vi.fn(), menu = vi.fn();
-  render(<BottomNav path="/tugas" calendar={false} menu={true} onAction={action} onMenu={menu} />);
+  render(<BottomNav path="/tugas" menu={true} onAction={action} onMenu={menu} />);
   expect(screen.getByRole('navigation').children).toHaveLength(5);
   expect(screen.getByRole('link', { name: 'Pekerjaan' }).getAttribute('aria-current')).toBe('page');
   expect(screen.getByRole('link', { name: 'Dunia' }).getAttribute('href')).toBe('/dunia-koperasi');

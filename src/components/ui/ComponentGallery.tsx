@@ -163,7 +163,6 @@ export function ComponentGallery() {
       </Card>
       <BottomNav
         path="/beranda"
-        calendar={false}
         menu={false}
         onAction={() => setNotice('Aksi')}
         onMenu={() => setNotice('Menu')}

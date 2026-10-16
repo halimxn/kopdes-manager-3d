@@ -158,9 +158,18 @@ export function WorkspacePage({ slug }: { slug: string }) {
         logistics={logistics}
       />
     );
-  if (loading) return <SkeletonLoading slug={slug} />;
+  // Tab hub tampil juga saat memuat/galat: tidak bergeser, dan halaman saudara tetap bisa dibuka.
+  if (loading)
+    return (
+      <>
+        <TabHub path={`/${slug}`} />
+        <SkeletonLoading slug={slug} />
+      </>
+    );
   if (error)
     return (
+      <>
+      <TabHub path={`/${slug}`} />
       <section className="card empty">
         <h1>Ruang kerja belum dapat dimuat</h1>
         <p role="alert">{error}</p>
@@ -169,6 +178,7 @@ export function WorkspacePage({ slug }: { slug: string }) {
           Data kosong tidak ditampilkan sebagai capaian. Periksa koneksi dan konfigurasi server.
         </p>
       </section>
+      </>
     );
   return (
     <div className={`workspace-page page-${slug}`}>

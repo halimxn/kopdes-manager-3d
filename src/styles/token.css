@@ -43,7 +43,7 @@
   --ink: #141522;
   --ink-heading: #141522;
   --ink-muted: #54577a;
-  --ink-subtle: #8e92bc;
+  --ink-subtle: #676c8c;
   --ink-inverse: #ffffff;
 
   /* Garis */
@@ -58,6 +58,9 @@
   --brand-soft-2: #e1e6ff;
   --brand-soft-border: #c8d1ff;
   --brand-ink: #3d58f0;
+  /* Isian biru yang memuat teks putih: #546FFF hanya 4.1:1, jadi tombol/sel aktif memakai biru sedikit lebih tua (dipakai juga mode gelap) */
+  --brand-isi: #4a64f5;
+  --brand-isi-hover: #3d58f0;
   --brand-text: #ffffff;
   --brand-contrast: #ffffff;
   --focus-ring: 0 0 0 3px rgba(84, 111, 255, 0.3);

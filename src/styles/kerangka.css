@@ -11,7 +11,7 @@
   left: 8px;
   padding: 10px 14px;
   border-radius: var(--r-md);
-  background: var(--brand);
+  background: var(--brand-isi);
   color: var(--on-brand);
   font-weight: 600;
   transform: translateY(-160%);
@@ -125,11 +125,11 @@
   padding: 0 18px 0 14px;
   border-color: var(--brand);
   border-radius: var(--r-md);
-  background: var(--brand);
+  background: var(--brand-isi);
   color: var(--on-brand);
   font-weight: 600;
 }
-.manager-actions > .ui-btn.quick-action-hub-btn:hover { background: var(--brand-hover); color: var(--on-brand); }
+.manager-actions > .ui-btn.quick-action-hub-btn:hover { background: var(--brand-isi-hover); color: var(--on-brand); }
 .topbar-cari {
   display: inline-flex;
   align-items: center;
@@ -211,9 +211,9 @@
   margin-bottom: 20px;
   overflow-x: auto;
   border-bottom: 1px solid var(--line);
-  scrollbar-width: none;
+  /* Bilah gulir tipis tetap terlihat agar tab yang terpotong di tablet/desktop dapat dijangkau tetikus */
+  scrollbar-width: thin;
 }
-.tab-hub::-webkit-scrollbar { display: none; }
 .tab-hub a {
   display: inline-flex;
   flex-shrink: 0;
@@ -226,6 +226,8 @@
 }
 .tab-hub a:hover { color: var(--ink-heading); text-decoration: none; }
 .tab-hub a[aria-current='page'] { color: var(--ink-heading); box-shadow: inset 0 -2px 0 var(--brand); }
+/* Wadah bergulir memotong outline di luar tepi; cincin fokus digambar di dalam tautan */
+.tab-hub a:focus-visible { outline-offset: -2px; }
 
 /* Panel kanan (Beranda): kolom ketiga di layar lebar, turun ke bawah isi di layar sempit */
 /* Di dalam halaman, jarak tab hub ke isi diatur oleh gap grid halaman */
@@ -453,7 +455,8 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
   .ui-btn.topbar-nav-menu-btn { display: none; }
   .manager-actions { gap: 4px; }
   .manager-main { padding: 0 var(--gutter) calc(var(--dock-h) + 36px + env(safe-area-inset-bottom)); }
-  .tab-hub { gap: 20px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+  .tab-hub { gap: 20px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
+  .tab-hub::-webkit-scrollbar { display: none; }
 
   .ui-bottom-nav {
     position: fixed;
@@ -497,7 +500,7 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: var(--brand);
+    background: var(--brand-isi);
     color: var(--on-brand);
   }
   .ui-btn.ui-bottom-item[data-action='true'] { color: var(--ink); }
