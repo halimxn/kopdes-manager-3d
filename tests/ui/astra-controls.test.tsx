@@ -28,7 +28,7 @@ it('dock memiliki lima item dan aksi/menu dapat dioperasikan', () => {
   const action = vi.fn(), menu = vi.fn();
   render(<BottomNav path="/tugas" calendar={false} menu={true} onAction={action} onMenu={menu} />);
   expect(screen.getByRole('navigation').children).toHaveLength(5);
-  expect(screen.getByRole('link', { name: 'Tugas' }).getAttribute('aria-current')).toBe('page');
+  expect(screen.getByRole('link', { name: 'Pekerjaan' }).getAttribute('aria-current')).toBe('page');
   expect(screen.getByRole('link', { name: 'Dunia' }).getAttribute('href')).toBe('/dunia-koperasi');
   fireEvent.click(screen.getByRole('button', { name: 'Tambah catatan' }));
   fireEvent.click(screen.getByRole('button', { name: 'Semua halaman' }));

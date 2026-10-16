@@ -213,7 +213,7 @@ it('at 1024px the menu toggles the desktop sidebar and closed mobile navigation 
   const sheet = document.querySelector('.mobile-app-sheet')!;
   expect(sheet.hasAttribute('inert')).toBe(true);
   expect(sheet.getAttribute('aria-hidden')).toBe('true');
-  const links = document.querySelectorAll('.sidebar-nav-item');
+  const links = document.querySelectorAll('.shell-sidebar a');
   expect([...links].every((link) => Boolean(link.getAttribute('aria-label')))).toBe(true);
 });
 

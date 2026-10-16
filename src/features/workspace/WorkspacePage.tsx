@@ -11,6 +11,7 @@ import { today } from '@/lib/date';
 import { SkeletonLoading } from '@/components/ui/SkeletonLoading';
 import { pageEntities, recordingPaths } from './workspace-scope';
 import { ManagerGuide } from './ManagerGuide';
+import { TabHub } from '@/components/layout/TabHub';
 // Tiap halaman hanya memuat komponennya sendiri agar unduhan JS awal kecil.
 // Nama tab bila satu halaman memuat beberapa jenis catatan; selain ini memakai judul katalog.
 const tabLabels: Partial<Record<Entity, string>> = {
@@ -171,6 +172,7 @@ export function WorkspacePage({ slug }: { slug: string }) {
     );
   return (
     <div className={`workspace-page page-${slug}`}>
+      <TabHub path={`/${slug}`} />
       {slug === 'tugas' && (
         <div className="workspace-scope-control" role="group" aria-label="Rentang tugas">
           <Button
