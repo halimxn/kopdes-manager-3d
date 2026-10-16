@@ -7,7 +7,7 @@ Arahan 10 Oktober 2026: dunia meniru panel logistik referensi, dan **seluruh web
 | Permukaan | Gaya dan sumber |
 |---|---|
 | Dunia Koperasi `/dunia-koperasi` | Diorama lembut, kartu mengambang, menu lokasi/cuaca. `src/features/dunia-3d/monitoring.css`. |
-| Halaman operasional | Gaya Cerah: latar abu-lavender #F4F5FA, kartu putih tanpa garis, aksi biru #2F5BEA, aksen jenuh hanya pada grafik/status, Plus Jakarta Sans; terang/gelap. Sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
+| Halaman operasional | Gaya Taskflow: latar abu terang #F5F5F7, kartu putih sudut 16 px, aksen tunggal biru #546FFF, tinta #141522, sidebar enam hub + tab hub di bawah judul, Plus Jakarta Sans; terang/gelap. Sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
 
 Pilihan palet lama tidak dipakai lagi: semua palet tersimpan tampil dengan tema biru yang sama, dan Pengaturan hanya memilih terang/gelap/sistem. Status tetap memakai warna semantik (hijau aman, kuning peringatan, merah terlambat) plus teks.
 
@@ -17,7 +17,8 @@ Seluruh palet, komposisi kartu, scene, karakter, waktu, kendaraan dan rencana up
 
 ## Halaman operasional
 
-- **Gaya Cerah (16 Oktober 2026)**, dipilih pemilik lewat mockup kanvas dari referensi M.project (kerangka), Ckdulz (kalender), Seonizer (tabel/gauge), Selles Lab (grafik pembanding); menggantikan Senja:
+- **Gaya Taskflow (16 Oktober 2026, menggantikan Cerah)**, mengikuti referensi Figma Taskflow dan Free Task Management Dashboard: sidebar putih enam hub (Beranda, Pekerjaan, Catatan, Usaha, Koperasi, Dunia; `src/components/layout/navigasi.ts`), halaman lama menjadi tab hub (`TabHub`) dengan URL tetap, kepala halaman memuat satu-satunya `h1` + cari + lonceng + Tambah + profil, kartu bersampul warna hub (`--sampul-*`) dan ikon tanpa foto, progres bertulis persen, avatar inisial, Beranda dengan panel kanan (kalender mini + agenda) pada ≥ 1440 px. Tablet memakai sidebar ikon 72 px; ponsel memakai dok lima item (Beranda, Pekerjaan, Tambah, Dunia, Menu) dan lembar menu berisi semua hub. Spec: `docs/superpowers/specs/2026-10-16-desain-taskflow-design.md`.
+- **Gaya Cerah (16 Oktober 2026, diganti)**, dipilih pemilik lewat mockup kanvas dari referensi M.project (kerangka), Ckdulz (kalender), Seonizer (tabel/gauge), Selles Lab (grafik pembanding); menggantikan Senja:
   - Latar `#F4F5FA`, kartu putih tanpa garis (`--kartu-garis` transparan; garis hanya di mode gelap) dengan bayangan tipis, teks biru tua `#171A3A`/`#2E3250`; mode gelap biru malam.
   - Bersih dan tenang: warna jenuh hanya untuk grafik, status, dan tombol utama (± 10% layar). Ringkasan kepala halaman berupa satu baris teks, bukan deretan chip. Tanpa ubin ikon di judul kartu, tanpa kartu promosi di menu.
   - Peta aksen: biru = aksi/Tugas, ungu = Proyek, oranye = Buku koperasi, teal = Gerai/penjualan, merah muda = Rapat. Token `--pastel-*` (+ `-ink`) dan `--grafik-biru/oranye/teal/pink/ungu/redup/dasar`.

@@ -2,6 +2,16 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Desain Taskflow: ganti total gaya dan menu enam hub — 16 Oktober 2026
+
+- Pemilik meminta desain diganti total mengikuti Figma Taskflow dan Free Task Management Dashboard, termasuk menyusun ulang menu. Spec dan rencana di `docs/superpowers/specs/2026-10-16-desain-taskflow-design.md` dan `docs/superpowers/plans/2026-10-16-desain-taskflow.md`.
+- Token baru: latar `#F5F5F7`, kartu putih sudut 16 px, aksen tunggal `#546FFF`, tinta `#141522`, judul 24/600, warna sampul per hub (`--sampul-*`) dengan padanan mode gelap; tes token memeriksa kontras teks ≥ 4.5:1 di kedua tema. Ketebalan huruf diseragamkan (≤ 700).
+- Menu: sidebar hanya enam hub (Beranda, Pekerjaan, Catatan, Usaha, Koperasi, Dunia) dari satu sumber `components/layout/navigasi.ts`; halaman lama menjadi tab hub (`TabHub`) di bawah judul, URL lama tetap. Favorit, kelompok lipat, "Proyek saya", kartu Dunia di sidebar, dan rel tablet terpisah dilepas. Tablet memakai sidebar ikon 72 px; ponsel memakai dok Beranda/Pekerjaan/Tambah/Dunia/Menu dan lembar menu per hub. Sub-navigasi buku pencatatan dihapus karena sudah diganti tab hub.
+- Kepala halaman memuat satu-satunya `h1` (judul halaman) + cari + lonceng + Tambah + profil berinisial; judul di isi halaman turun menjadi `h2` berukuran subjudul.
+- Beranda: kartu sapaan, baris "Pekerjaan berjalan" berisi kartu proyek bersampul warna hub (progres bertulis persen, "Belum dinilai" bukan 0%), modul progres/kas/perhatian/tugas/usaha, panel kanan kalender mini (Senin awal minggu, tanggal bertanda dengan label) + agenda; panel kanan menjadi kolom ketiga pada ≥ 1440 px.
+- Kartu proyek di halaman Proyek memakai sampul yang sama dengan garis atas warna proyek pengguna. Dunia 3D dan ikon berganti ke biru `#546FFF`.
+- Verifikasi: tes, typecheck, lint, `lint:ui`, build lulus; JS awal 240 KB. Demo diperiksa di peramban pada 375/768/1024/1440 px; `audit:tampilan` 1440 dan 375 tanpa temuan baru. Pemeriksaan perangkat fisik belum dilakukan.
+
 ## Beranda mengikuti referensi M.project — 16 Oktober 2026
 
 - Pemilik meminta tampilan disesuaikan dengan kumpulan referensi (M.project, Selles, Natz/Analytics, Seonizer). Beranda kini bersusun seperti M.project: baris kartu proyek berwarna (ubin semi-3D, tumpukan avatar penanggung jawab, progres bergaris warna proyek, "N hari lagi" ke milestone, jumlah tugas dan milestone) + kartu Progres keseluruhan (donat persen selesai + legenda); lalu grafik performa kas ala Selles + Agenda + Perlu perhatian (pola Message); lalu Tim hari ini (pola Team Members: bilah hadir/izin/belum + petugas), Fokus hari ini (pola Monthly Tasks: butir berbingkai berubin warna proyek + avatar), dan Penjualan gerai (batang pil ala Natz).

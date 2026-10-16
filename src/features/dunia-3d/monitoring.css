@@ -1,5 +1,5 @@
 /* Monitoring 3D: kanvas penuh, kartu putih melayang bergaya Cerah (abu-lavender, teks biru tua,
-   aksen jenuh hanya untuk grafik/status), aksen biru #2F5BEA, ikon biru kilap. Dunia selalu terang. Gaya dibatasi .mt-root.
+   aksen jenuh hanya untuk grafik/status), aksen biru #546FFF (Taskflow), ikon biru kilap. Dunia selalu terang. Gaya dibatasi .mt-root.
    Tata letak: ≥1280 persis referensi; 768–1279 panel sempit, pelacak + daftar bertumpuk di kiri
    bawah; <768 bilah ringkas, KPI bergeser, detail dalam lembar bawah (intip/setengah/penuh). */
 .mt-root {
@@ -9,8 +9,8 @@
   --mt-line: #eceef5;
   --mt-soft: #f8f9fc;
   --mt-card: rgba(255, 255, 255, 0.97);
-  --mt-blue: #2f5bea;
-  --mt-blue-ink: #2448c7;
+  --mt-blue: #546fff;
+  --mt-blue-ink: #3d58f0;
   --mt-blue-soft: #eaf0ff;
   --mt-green: #0b7a70;
   --mt-green-bar: #2bb7a8;
@@ -160,7 +160,7 @@
   border-color: var(--mt-blue);
   background: var(--mt-blue);
   color: #fff;
-  box-shadow: 0 6px 14px rgba(47, 91, 234, 0.25);
+  box-shadow: 0 6px 14px rgba(84, 111, 255, 0.25);
 }
 .mt-btn.is-primary:hover {
   background: var(--mt-blue-ink);
@@ -303,10 +303,10 @@
   top: 0;
   z-index: 2;
   pointer-events: none;
-  border: 1.5px solid rgba(47, 91, 234, 0.32);
+  border: 1.5px solid rgba(84, 111, 255, 0.32);
   border-radius: 10px;
-  background: rgba(47, 91, 234, 0.06);
-  box-shadow: 0 0 0 4px rgba(47, 91, 234, 0.06);
+  background: rgba(84, 111, 255, 0.06);
+  box-shadow: 0 0 0 4px rgba(84, 111, 255, 0.06);
 }
 .mt-mark[data-jenis='orang'] {
   border-radius: 14px;
@@ -316,7 +316,7 @@
   width: var(--siku);
   height: var(--siku);
   border: 3px solid var(--mt-blue);
-  filter: drop-shadow(0 2px 4px rgba(47, 91, 234, 0.35));
+  filter: drop-shadow(0 2px 4px rgba(84, 111, 255, 0.35));
 }
 .mt-mark i:nth-child(1) {
   top: -3px;
@@ -359,8 +359,8 @@
   display: none;
 }
 .mt-mark-ruang polygon {
-  fill: rgba(47, 91, 234, 0.07);
-  stroke: rgba(47, 91, 234, 0.38);
+  fill: rgba(84, 111, 255, 0.07);
+  stroke: rgba(84, 111, 255, 0.38);
   stroke-width: 1.5;
   stroke-linejoin: round;
 }
@@ -370,7 +370,7 @@
   stroke-width: 3.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  filter: drop-shadow(0 2px 4px rgba(47, 91, 234, 0.35));
+  filter: drop-shadow(0 2px 4px rgba(84, 111, 255, 0.35));
 }
 /* Label pilihan ala "TRK-2307 Docking": nama di pil biru, status di bagian muda. */
 .mt-tag {
@@ -386,7 +386,7 @@
   border-radius: 8px;
   font-size: 12px;
   font-weight: 700;
-  box-shadow: 0 6px 16px rgba(47, 91, 234, 0.28);
+  box-shadow: 0 6px 16px rgba(84, 111, 255, 0.28);
 }
 .mt-tag b {
   padding: 5px 9px;
@@ -529,7 +529,7 @@
 }
 .mt-search:focus-within {
   border-color: #b9cbf8;
-  box-shadow: 0 0 0 3px rgba(47, 91, 234, 0.14);
+  box-shadow: 0 0 0 3px rgba(84, 111, 255, 0.14);
 }
 .mt-search-close,
 .mt-search-open {
@@ -1039,7 +1039,7 @@
 .mt-links a.is-baru {
   background: var(--mt-blue);
   color: #fff;
-  box-shadow: 0 4px 10px rgba(47, 91, 234, 0.25);
+  box-shadow: 0 4px 10px rgba(84, 111, 255, 0.25);
 }
 .mt-links a.is-baru:hover {
   background: var(--mt-blue-ink);
@@ -1048,7 +1048,7 @@
   border-color: var(--mt-blue);
   background: var(--mt-blue);
   color: #fff;
-  box-shadow: 0 6px 14px rgba(47, 91, 234, 0.3);
+  box-shadow: 0 6px 14px rgba(84, 111, 255, 0.3);
 }
 .mt-add:hover {
   background: var(--mt-blue-ink);
@@ -1287,7 +1287,7 @@
   border: 3px solid var(--mt-blue);
   background: #fff;
   color: var(--mt-blue);
-  box-shadow: 0 0 0 5px rgba(47, 91, 234, 0.14);
+  box-shadow: 0 0 0 5px rgba(84, 111, 255, 0.14);
 }
 .mt-steps strong {
   max-width: 100%;
