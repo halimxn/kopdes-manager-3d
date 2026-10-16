@@ -1,6 +1,7 @@
 /*
-  Kerangka aplikasi: sidebar (dinding kantor), bilah atas, rel tablet, dok ponsel, lembar menu,
-  pencarian, dan pusat aksi. Gaya Senja: tenang, krem hangat, tanpa ornamen.
+  Kerangka aplikasi: menu samping, bilah atas, rel tablet, dok ponsel, lembar menu, pencarian,
+  dan pusat aksi. Gaya Cerah: menu samping putih, isi di atas latar abu-lavender, pilihan aktif
+  biru muda; bilah atas = cari, lonceng, Tambah, menu profil.
 */
 
 .skip {
@@ -23,7 +24,7 @@
 }
 .manager-shell.sidebar-collapsed { padding-left: 0; }
 
-/* ---------- Sidebar: menyatu dengan kanvas, halaman aktif berupa kartu putih ---------- */
+/* ---------- Menu samping: panel putih, halaman aktif biru muda ---------- */
 .manager-sidebar {
   position: fixed;
   z-index: 40;
@@ -31,8 +32,8 @@
   display: flex;
   flex-direction: column;
   width: var(--sidebar-w);
-  padding: 16px 12px 12px;
-  background: var(--canvas);
+  padding: 18px 14px 14px;
+  background: var(--surface);
   border-right: 1px solid var(--line);
   transition: transform 260ms var(--ease-out);
 }
@@ -57,14 +58,15 @@
 .sidebar-brand-emblem {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   flex-shrink: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--pastel-biru);
+  box-shadow: 0 8px 16px -10px color-mix(in srgb, var(--brand) 70%, transparent);
 }
 .sidebar-brand-info { display: grid; min-width: 0; line-height: 1.25; }
-.sidebar-brand-info strong { overflow: hidden; font-size: 14px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.sidebar-brand-info strong { overflow: hidden; font-size: 15px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
 .sidebar-brand-info small { color: var(--ink-muted); font-size: 12px; }
 .sidebar-brand-actions .ui-btn {
   width: 34px;
@@ -84,8 +86,8 @@
   min-height: 40px;
   margin-bottom: 10px;
   padding: 0 10px;
-  border-color: var(--line);
-  background: var(--surface);
+  border-color: transparent;
+  background: var(--surface-2);
   color: var(--ink-muted);
   font-weight: 500;
   box-shadow: none;
@@ -146,23 +148,21 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 40px;
-  padding: 0 10px;
+  min-height: 44px;
+  padding: 0 12px;
   border-radius: var(--r-md);
   color: var(--ink-muted);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 14.5px;
+  font-weight: 600;
   text-decoration: none;
   transition: background var(--dur-fast), color var(--dur-fast);
 }
 .sidebar-nav-item:hover { background: var(--surface-3); color: var(--ink); text-decoration: none; }
 .sidebar-nav-item.is-active {
-  background: var(--surface);
-  color: var(--ink-heading);
-  font-weight: 650;
-  box-shadow: var(--shadow-sm), 0 0 0 1px var(--line);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  font-weight: 750;
 }
-:root.dark .sidebar-nav-item.is-active { background: var(--surface-3); }
 .sidebar-item-icon { display: inline-grid; place-items: center; width: 24px; }
 .sidebar-item-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sidebar-item-dot { margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
@@ -261,28 +261,74 @@
 .manager-actions > .ui-btn:hover { background: var(--surface); color: var(--ink); }
 .manager-actions > .ui-btn.quick-action-hub-btn {
   --btn-bg: var(--brand);
+  width: auto;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 18px 0 14px;
   border-color: var(--brand);
+  border-radius: 14px;
   background: var(--brand);
   color: var(--on-brand);
-  box-shadow: none;
+  font-weight: 700;
+  box-shadow: 0 10px 20px -12px var(--brand);
 }
-.manager-actions > .ui-btn.quick-action-hub-btn:hover { background: var(--brand-hover); }
-.topbar-world-link {
+.manager-actions > .ui-btn.quick-action-hub-btn:hover { background: var(--brand-hover); color: var(--on-brand); }
+.topbar-cari {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
+  gap: 10px;
+  width: 260px;
+  min-height: 44px;
   margin-right: 4px;
-  padding: 0 14px 0 8px;
+  padding: 0 12px 0 14px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink-subtle);
+  font: inherit;
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+.topbar-cari:hover { color: var(--ink-muted); box-shadow: var(--shadow); }
+.topbar-cari kbd { margin-left: auto; }
+.topbar-profil { position: relative; margin-left: 4px; }
+.topbar-profil > summary { display: grid; place-items: center; width: 44px; height: 44px; list-style: none; cursor: pointer; }
+.topbar-profil > summary::-webkit-details-marker { display: none; }
+.topbar-profil .manager-avatar-badge { width: 40px; height: 40px; background: linear-gradient(150deg, color-mix(in srgb, var(--grafik-teal) 60%, var(--on-brand)), var(--grafik-teal) 75%); color: var(--on-brand); box-shadow: 0 8px 16px -10px var(--grafik-teal); }
+.topbar-profil-menu {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  gap: 2px;
+  min-width: 220px;
+  padding: 8px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+.topbar-profil-menu strong { padding: 8px 10px 10px; border-bottom: 1px solid var(--line); color: var(--ink-heading); font-size: 14px; }
+.topbar-profil-menu button,
+.topbar-profil-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 10px;
   border: 0;
   border-radius: var(--r-md);
-  background: var(--pastel-biru);
-  color: var(--pastel-biru-ink);
-  font-size: 13.5px;
-  font-weight: 650;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
   text-decoration: none;
+  cursor: pointer;
 }
-.topbar-world-link:hover { background: var(--brand-soft-2); text-decoration: none; }
+.topbar-profil-menu button:hover,
+.topbar-profil-menu a:hover { background: var(--surface-2); text-decoration: none; }
 
 /* ---------- Isi halaman ---------- */
 .manager-main {
@@ -482,8 +528,8 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
   .tablet-rail-link:hover { background: rgba(255, 255, 255, 0.5); text-decoration: none; }
   .tablet-rail-link.is-active { background: var(--surface); color: var(--brand-ink); box-shadow: var(--shadow); }
   .tablet-rail-menu-btn { margin-top: auto; }
-  .topbar-world-link > span:not(.ikon-halaman) { display: none; }
-  .topbar-world-link { width: 40px; justify-content: center; padding: 0; }
+  .topbar-cari { width: 44px; justify-content: center; padding: 0; }
+  .topbar-cari span, .topbar-cari kbd { display: none; }
 }
 
 /* Ponsel: dok mengambang + lembar menu dari bawah */
@@ -493,11 +539,9 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
   .tablet-rail,
   .manager-sidebar,
   .ui-btn.manager-shade,
-  .topbar-world-link,
-  .ui-btn.desktop-lock { display: none; }
+  .manager-actions > .ui-btn.quick-action-hub-btn { display: none; }
   .manager-topbar { padding: 0 12px 0 16px; }
-  .manager-profile { display: inline-flex; }
-  .manager-avatar-badge { width: 30px; height: 30px; font-size: 13px; }
+  .topbar-profil .manager-avatar-badge { width: 36px; height: 36px; font-size: 14px; }
   .manager-actions { gap: 2px; }
   .manager-actions > .ui-btn { width: 38px; min-height: 38px; }
   .manager-main { padding: 6px var(--gutter) calc(var(--dock-h) + 36px + env(safe-area-inset-bottom)); }

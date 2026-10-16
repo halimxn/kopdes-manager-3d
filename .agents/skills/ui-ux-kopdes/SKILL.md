@@ -13,7 +13,7 @@ Sumber gaya: `docs/DESAIN-ANTARMUKA.md`. Konteks produk: `PRODUCT.md`. Untuk kep
 - Dunia 3D punya gaya sendiri: `src/features/dunia-3d/monitoring.css` (lihat skill dunia-koperasi).
 
 ## Bahasa visual
-- Gaya Cerah: latar `--canvas` abu-lavender, kartu putih tanpa garis (`--kartu-garis`), aksi biru `#2F5BEA`, huruf Plus Jakarta Sans, angka `tabular-nums`. Bersih: warna jenuh hanya grafik/status/tombol utama; ringkasan = satu baris teks, bukan chip; tanpa ubin ikon di judul kartu. Peta aksen biru=Tugas, ungu=Proyek, oranye=Buku koperasi, teal=Gerai, merah muda=Rapat. Satu tombol tambah di bilah atas.
+- Gaya Cerah: latar `--canvas` abu-lavender, kartu putih tanpa garis (`--kartu-garis`), aksi biru `#2F5BEA`, huruf Plus Jakarta Sans, angka `tabular-nums`. Bersih: warna jenuh hanya grafik/status/tombol utama; ringkasan = satu baris teks, bukan chip; ubin ikon semi-3D (`.ubin`, `.ubin-kecil` + warna peta) di kartu angka dan judul kartu Beranda; avatar `.avatar-warna`. Bilah atas: cari, lonceng, Tambah, menu profil. Peta aksen biru=Tugas, ungu=Proyek, oranye=Buku koperasi, teal=Gerai, merah muda=Rapat. Satu tombol tambah di bilah atas.
 - Grafik: `components/charts/GrafikLembut.tsx` (`GrafikBanding`, `Donat`, `Gauge`) dengan token `--grafik-*`; SVG tanpa pustaka, setiap grafik ber-`aria-label` berisi angka; tanpa tren karangan.
 - Halaman baru memakai grid modul seimbang: `.modul` + `lebar-separuh`/`lebar-sepertiga`, tinggi rata per baris, setiap data bisa ditindaklanjuti.
 - Status hanya `--ok/--late/--warn` (+ `-bg`, `-line`); status selalu bertuliskan, bukan warna saja.

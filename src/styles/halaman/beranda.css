@@ -5,7 +5,22 @@
 
 /* Kepala: tanggal sebagai judul, ringkasan satu baris teks; hanya "terlambat" berwarna */
 .beranda-kepala { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 8px 0 0; }
-.beranda-kepala h1 { margin: 0 0 6px; font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; }
+.beranda-sapaan { margin: 0 0 2px; color: var(--ink-muted); font-size: 15px; font-weight: 600; }
+.beranda-kepala h1 { margin: 0 0 6px; font-size: 32px; line-height: 1.15; letter-spacing: -0.025em; }
+
+/* Kartu angka: ubin semi-3D + angka besar, seperti baris ringkasan M.project/Selles */
+.beranda-angka { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+/* Ubin + label di baris atas, angka besar memakai lebar penuh agar nominal rupiah tidak terpotong */
+.modul.kartu-angka { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 14px 12px; padding: 18px 20px; color: inherit; text-decoration: none; transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out); }
+.modul.kartu-angka:hover { box-shadow: var(--shadow-md); text-decoration: none; transform: translateY(-2px); }
+.kartu-angka-isi { display: contents; }
+.kartu-angka-isi small { color: var(--ink-muted); font-size: 13.5px; font-weight: 650; line-height: 1.3; }
+.kartu-angka-isi strong { grid-column: 1 / -1; margin-bottom: -10px; overflow: hidden; color: var(--ink-heading); font-size: 26px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.kartu-angka-isi > span { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; color: var(--ink-muted); font-size: 12.5px; }
+.kartu-angka-isi .is-telat { color: var(--late); font-weight: 750; }
+@media (prefers-reduced-motion: reduce) {
+  .modul.kartu-angka:hover { transform: none; }
+}
 .beranda-ringkas { margin: 0; color: var(--ink-muted); font-size: 14.5px; }
 .beranda-ringkas a { color: inherit; font-weight: 600; text-decoration: none; }
 .beranda-ringkas a:hover { color: var(--brand-ink); text-decoration: none; }
@@ -27,6 +42,10 @@
 .beranda-jumlah { color: var(--ink-subtle); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .beranda-jumlah.is-selesai { color: var(--ok); }
 .modul-kepala .modul-tautan { color: var(--brand-ink); }
+.beranda-modul .modul-kepala h2 { font-size: 17px; font-weight: 750; }
+.beranda-hadir, .beranda-status { padding-inline: 18px; }
+.beranda-hadir .modul-kepala, .beranda-status .modul-kepala { flex-wrap: nowrap; gap: 8px; }
+.beranda-hadir .modul-kepala h2, .beranda-status .modul-kepala h2 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* Fokus hari ini: kelompok tenggat, baris tanpa chip */
 .beranda-grup { margin: 10px 0 2px; color: var(--ink-muted); font-size: 13px; font-weight: 750; }
@@ -58,7 +77,7 @@
 
 /* Kas: angka besar, selisih, legenda, pilihan masuk/keluar, grafik banding */
 .beranda-legenda { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; color: var(--ink-muted); font-size: 13px; }
-.beranda-legenda i { display: inline-block; width: 14px; height: 0; margin-left: 8px; border-top: 2.5px solid var(--grafik-oranye); border-radius: 2px; }
+.beranda-legenda i { display: inline-block; width: 16px; height: 0; margin-left: 8px; border-top: 3px solid var(--grafik-oranye); border-radius: 2px; }
 .beranda-legenda i.is-lalu { border-top: 2px dashed var(--grafik-redup); }
 .beranda-pilih { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-md); background: var(--surface-3); }
 .beranda-pilih button {
@@ -85,8 +104,8 @@
 /* Penjualan gerai: batang bergradien lembut, puncak berlabel */
 .jual-grafik { display: grid; flex: 1; grid-template-columns: repeat(7, minmax(0, 1fr)); align-items: end; gap: 10px; min-height: 160px; margin-top: 10px; }
 .jual-grafik > div { position: relative; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; height: 100%; min-width: 0; padding-top: 24px; box-sizing: border-box; }
-.jual-grafik i { width: 100%; max-width: 22px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, color-mix(in srgb, var(--grafik-teal) 32%, transparent), color-mix(in srgb, var(--grafik-teal) 4%, transparent)); }
-.jual-grafik .is-puncak i { background: linear-gradient(180deg, color-mix(in srgb, var(--grafik-teal) 80%, transparent), color-mix(in srgb, var(--grafik-teal) 8%, transparent)); }
+.jual-grafik i { width: 100%; max-width: 24px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, color-mix(in srgb, var(--grafik-teal) 50%, transparent), color-mix(in srgb, var(--grafik-teal) 8%, transparent)); }
+.jual-grafik .is-puncak i { background: linear-gradient(180deg, var(--grafik-teal), color-mix(in srgb, var(--grafik-teal) 15%, transparent)); box-shadow: 0 10px 18px -12px var(--grafik-teal); }
 .jual-grafik .is-kosong i { height: 16px; border: 1.5px dashed var(--line-strong); background: none; }
 .jual-grafik small { color: var(--ink-subtle); font-size: 11.5px; font-weight: 600; }
 .jual-grafik .is-hari-ini small { color: var(--ink-heading); font-weight: 750; }
@@ -197,6 +216,7 @@
 
 /* Tablet: dua kolom */
 @media (max-width: 1100px) {
+  .beranda-angka { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .beranda-modul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .beranda-fokus, .beranda-agenda, .beranda-kas, .beranda-proyek-modul,
   .beranda-modul:not(:has(.beranda-hadir)) .beranda-proyek-modul { grid-column: 1 / -1; }
@@ -207,7 +227,11 @@
 @media (max-width: 767px) {
   .beranda { gap: 14px; }
   .beranda-kepala { padding-top: 4px; }
-  .beranda-kepala h1 { font-size: 22px; }
+  .beranda-kepala h1 { font-size: 24px; }
+  .beranda-angka { gap: 12px; }
+  .modul.kartu-angka { gap: 10px; padding: 14px; }
+  .modul.kartu-angka .ubin { width: 38px; height: 38px; border-radius: 12px; }
+  .kartu-angka-isi strong { font-size: 20px; }
   .beranda-kepala > div, .beranda-proyek { width: 100%; min-width: 0; }
   .beranda-modul { gap: 14px; }
   .beranda-modul > .modul { padding: 16px; }

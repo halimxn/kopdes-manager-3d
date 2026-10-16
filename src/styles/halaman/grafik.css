@@ -4,7 +4,7 @@
 .grafik-banding { display: block; width: 100%; height: auto; overflow: visible; }
 .grafik-bantu { stroke: var(--grafik-dasar); stroke-width: 1; }
 .grafik-sumbu { fill: var(--ink-subtle); font-size: 11px; font-variant-numeric: tabular-nums; }
-.grafik-garis-kini { fill: none; stroke: var(--grafik-oranye); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.grafik-garis-kini { fill: none; stroke: var(--grafik-oranye); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .grafik-garis-lalu { fill: none; stroke: var(--grafik-redup); stroke-width: 2; stroke-dasharray: 5 6; stroke-linecap: round; opacity: 0.8; }
 .grafik-penanda { stroke: var(--ink-subtle); stroke-width: 1; stroke-dasharray: 3 4; opacity: 0.6; }
 .grafik-titik { fill: var(--surface); stroke: var(--grafik-oranye); stroke-width: 3; }
@@ -16,8 +16,8 @@
 .grafik-tip .tip-lalu { fill: none; stroke: var(--grafik-redup); stroke-width: 2; }
 
 .grafik-donat,
-.grafik-gauge { display: block; width: 100%; max-width: 160px; height: auto; margin: 4px auto 0; }
-.grafik-gauge { max-width: 200px; }
+.grafik-gauge { display: block; width: 100%; max-width: 176px; height: auto; margin: 4px auto 0; }
+.grafik-gauge { max-width: 220px; }
 .grafik-dasar-lingkar { fill: none; stroke: var(--grafik-dasar); stroke-width: 14; }
 .grafik-donat-angka { fill: var(--ink-heading); font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
 

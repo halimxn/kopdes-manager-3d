@@ -4,7 +4,7 @@
 // Hanya uang tercatat, bukan saldo.
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Wallet } from 'lucide-react';
 import { api } from '@/lib/client';
 import { monthRange, today } from '@/lib/date';
 import type { Item } from '../records/schemas';
@@ -13,7 +13,11 @@ import { rupiah } from '../operations/ledger';
 import { GrafikBanding } from '@/components/charts/GrafikLembut';
 
 type Arah = 'masuk' | 'keluar';
-type Keadaan = { status: 'memuat' } | { status: 'nonaktif' } | { status: 'galat'; pesan: string } | { status: 'siap'; rows: Item[] };
+export type KeadaanKas =
+  | { status: 'memuat' }
+  | { status: 'nonaktif' }
+  | { status: 'galat'; pesan: string }
+  | { status: 'siap'; rows: Item[] };
 
 /** Jumlah kumulatif per tanggal 1..jumlahHari untuk satu arah kas. */
 export function kumulatifHarian(rows: Item[], awal: string, jumlahHari: number, arah: Arah): number[] {
@@ -27,6 +31,19 @@ export function kumulatifHarian(rows: Item[], awal: string, jumlahHari: number, 
   }
   let total = 0;
   return perHari.map((n) => (total += n));
+}
+
+/** Seri bulan ini dan bulan lalu beserta pembanding pada tanggal yang sama. */
+export function ringkasKas(rows: Item[], hari: string, arah: Arah) {
+  const kini = monthRange(hari);
+  const lalu = monthRange(hari, -1);
+  const hariKe = Number(hari.slice(8, 10));
+  const panjangLalu = Number(lalu.end.slice(8, 10));
+  const seriKini = kumulatifHarian(rows, kini.start, hariKe, arah);
+  const seriLalu = kumulatifHarian(rows, lalu.start, panjangLalu, arah);
+  const total = seriKini.at(-1) || 0;
+  const pembanding = seriLalu[Math.min(hariKe, panjangLalu) - 1] || 0;
+  return { kini, lalu, hariKe, panjangLalu, seriKini, seriLalu, total, pembanding, selisih: total - pembanding };
 }
 
 async function muatKasDuaBulan(hari: string): Promise<Item[] | null> {
@@ -43,13 +60,8 @@ async function muatKasDuaBulan(hari: string): Promise<Item[] | null> {
   throw new Error('Catatan kas dua bulan terlalu banyak untuk grafik.');
 }
 
-const namaBulan = (tanggal: string) =>
-  new Intl.DateTimeFormat('id-ID', { month: 'long', timeZone: 'UTC' }).format(new Date(tanggal + 'T12:00:00Z'));
-
-export function KasBanding() {
-  const hari = today();
-  const [keadaan, setKeadaan] = useState<Keadaan>({ status: 'memuat' });
-  const [arah, setArah] = useState<Arah>('masuk');
+export function useKasDuaBulan(hari: string): KeadaanKas {
+  const [keadaan, setKeadaan] = useState<KeadaanKas>({ status: 'memuat' });
   useEffect(() => {
     let aktif = true;
     muatKasDuaBulan(hari)
@@ -59,23 +71,43 @@ export function KasBanding() {
       aktif = false;
     };
   }, [hari]);
+  return keadaan;
+}
 
-  const kini = monthRange(hari);
-  const lalu = monthRange(hari, -1);
-  const hariKe = Number(hari.slice(8, 10));
-  const panjangLalu = Number(lalu.end.slice(8, 10));
-  const panjangKini = Number(monthRange(hari, 0, '9999-12-31').end.slice(8, 10));
+export const namaBulan = (tanggal: string) =>
+  new Intl.DateTimeFormat('id-ID', { month: 'long', timeZone: 'UTC' }).format(new Date(tanggal + 'T12:00:00Z'));
+
+/** Selisih terhadap bulan lalu: persen bila pembanding ada, rupiah bila bulan lalu nol. */
+export function SelisihKas({ selisih, pembanding, arah }: { selisih: number; pembanding: number; arah: Arah }) {
+  if (!selisih) return null;
+  const naik = selisih > 0;
+  return (
+    <span className={`kas-selisih ${naik === (arah === 'masuk') ? 'is-baik' : 'is-buruk'}`}>
+      {naik ? <ArrowUpRight size={14} aria-hidden="true" /> : <ArrowDownRight size={14} aria-hidden="true" />}
+      {pembanding > 0 ? `${Math.abs(Math.round((selisih / pembanding) * 100))}%` : rupiah(Math.abs(selisih))}
+    </span>
+  );
+}
+
+export function KasBanding({ keadaan }: { keadaan: KeadaanKas }) {
+  const hari = today();
+  const [arah, setArah] = useState<Arah>('masuk');
   const judul = arah === 'masuk' ? 'Uang masuk' : 'Uang keluar';
+  const panjangKini = Number(monthRange(hari, 0, '9999-12-31').end.slice(8, 10));
+  const r = keadaan.status === 'siap' ? ringkasKas(keadaan.rows, hari, arah) : null;
 
   return (
     <section className="modul beranda-kas" aria-label="Kas bulan ini dibanding bulan lalu">
       <div className="modul-kepala">
+        <span className="ubin ubin-kecil ubin-oranye" aria-hidden="true">
+          <Wallet size={17} />
+        </span>
         <h2>{judul}</h2>
         <span className="beranda-legenda">
           <i className="is-kini" aria-hidden="true" />
-          {namaBulan(kini.start)}
+          Bulan ini
           <i className="is-lalu" aria-hidden="true" />
-          {namaBulan(lalu.start)}
+          Bulan lalu
         </span>
         <div className="beranda-pilih" role="group" aria-label="Jenis kas">
           {(['masuk', 'keluar'] as const).map((nilai) => (
@@ -92,42 +124,27 @@ export function KasBanding() {
           Buku kas belum dapat dimuat: {keadaan.pesan}
         </p>
       )}
-      {keadaan.status === 'siap' &&
-        (() => {
-          const seriKini = kumulatifHarian(keadaan.rows, kini.start, hariKe, arah);
-          const seriLalu = kumulatifHarian(keadaan.rows, lalu.start, panjangLalu, arah);
-          const totalKini = seriKini.at(-1) || 0;
-          const pembanding = seriLalu[Math.min(hariKe, panjangLalu) - 1] || 0;
-          const selisih = totalKini - pembanding;
-          const naik = selisih >= 0;
-          return (
-            <>
-              <div className="kas-angka">
-                <strong>{rupiah(totalKini)}</strong>
-                {selisih !== 0 && (
-                  <span className={`kas-selisih ${naik === (arah === 'masuk') ? 'is-baik' : 'is-buruk'}`}>
-                    {naik ? <ArrowUpRight size={14} aria-hidden="true" /> : <ArrowDownRight size={14} aria-hidden="true" />}
-                    {pembanding > 0
-                      ? `${Math.abs(Math.round((selisih / pembanding) * 100))}%`
-                      : rupiah(Math.abs(selisih))}
-                  </span>
-                )}
-                <small>
-                  dibanding 1–{Math.min(hariKe, panjangLalu)} {namaBulan(lalu.start)} ({rupiah(pembanding)}) · uang tercatat, bukan saldo
-                </small>
-              </div>
-              <GrafikBanding
-                kini={seriKini}
-                lalu={seriLalu}
-                jumlahHari={Math.max(panjangKini, panjangLalu)}
-                labelKini={namaBulan(kini.start).slice(0, 3)}
-                labelLalu={namaBulan(lalu.start).slice(0, 3)}
-                tanggalKini={`${hariKe} ${namaBulan(kini.start)}`}
-                ariaLabel={`${judul} kumulatif ${namaBulan(kini.start)} sampai tanggal ${hariKe}: ${rupiah(totalKini)}. ${namaBulan(lalu.start)} pada tanggal yang sama: ${rupiah(pembanding)}, sebulan penuh ${rupiah(seriLalu.at(-1) || 0)}.`}
-              />
-            </>
-          );
-        })()}
+      {r && (
+        <>
+          <div className="kas-angka">
+            <strong>{rupiah(r.total)}</strong>
+            <SelisihKas selisih={r.selisih} pembanding={r.pembanding} arah={arah} />
+            <small>
+              dibanding 1–{Math.min(r.hariKe, r.panjangLalu)} {namaBulan(r.lalu.start)} ({rupiah(r.pembanding)}) · uang
+              tercatat, bukan saldo
+            </small>
+          </div>
+          <GrafikBanding
+            kini={r.seriKini}
+            lalu={r.seriLalu}
+            jumlahHari={Math.max(panjangKini, r.panjangLalu)}
+            labelKini={namaBulan(r.kini.start).slice(0, 3)}
+            labelLalu={namaBulan(r.lalu.start).slice(0, 3)}
+            tanggalKini={`${r.hariKe} ${namaBulan(r.kini.start)}`}
+            ariaLabel={`${judul} kumulatif ${namaBulan(r.kini.start)} sampai tanggal ${r.hariKe}: ${rupiah(r.total)}. ${namaBulan(r.lalu.start)} pada tanggal yang sama: ${rupiah(r.pembanding)}, sebulan penuh ${rupiah(r.seriLalu.at(-1) || 0)}.`}
+          />
+        </>
+      )}
       <div className="modul-kaki">
         <Link className="home-text-link" href="/keuangan">
           Buku kas

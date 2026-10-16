@@ -69,7 +69,7 @@ export function GrafikBanding({
     <svg className="grafik-banding" viewBox={`0 0 ${L} ${T}`} role="img" aria-label={ariaLabel}>
       <defs>
         <linearGradient id={`isi-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="var(--grafik-oranye)" stopOpacity="0.32" />
+          <stop offset="0" stopColor="var(--grafik-oranye)" stopOpacity="0.42" />
           <stop offset="1" stopColor="var(--grafik-oranye)" stopOpacity="0" />
         </linearGradient>
       </defs>

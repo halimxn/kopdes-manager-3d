@@ -7,7 +7,21 @@ import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { usePreference } from '@/lib/usePreference';
 import { Modal } from '@/components/ui/Modal';
-import { Check, Clock, Video, SlidersHorizontal, Plus, Trash2, RotateCcw, X } from 'lucide-react';
+import {
+  CalendarDays,
+  Check,
+  Clock,
+  FolderOpen,
+  ListChecks,
+  PieChart,
+  Video,
+  SlidersHorizontal,
+  Plus,
+  Trash2,
+  RotateCcw,
+  Wallet,
+  X,
+} from 'lucide-react';
 import { getFollowUps, recordHref } from '../workspace/workspace-navigation';
 import type { Workspace } from '../workspace/useWorkspace';
 import { schemas } from '../records/schemas';
@@ -16,8 +30,24 @@ import { today, formatDate } from '@/lib/date';
 import { meetingJoinUrl } from '../meetings/meeting';
 import { Donat } from '@/components/charts/GrafikLembut';
 import { ModulUsahaHarian } from './ModulUsahaHarian';
-import { KasBanding } from './KasBanding';
+import { KasBanding, SelisihKas, namaBulan, ringkasKas, useKasDuaBulan } from './KasBanding';
+import { rupiah } from '../operations/ledger';
 import { Select } from '@/components/ui/Select';
+
+const WARNA_AVATAR = ['biru', 'ungu', 'oranye', 'teal', 'pink'] as const;
+/** Warna avatar tetap per nama agar orang yang sama selalu berwarna sama. */
+function warnaAvatar(nama: string) {
+  let h = 0;
+  for (const huruf of nama) h = (h * 31 + huruf.charCodeAt(0)) >>> 0;
+  return WARNA_AVATAR[h % WARNA_AVATAR.length];
+}
+const inisial = (nama: string) =>
+  nama
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((kata) => kata[0].toUpperCase())
+    .join('') || '?';
 
 const routineSchema = z.array(z.object({ id: z.string(), time: z.string(), title: z.string() }));
 function parseRoutinePreference<T>(text: string, schema: z.ZodType<T>, fallback: T): T {
@@ -134,6 +164,17 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
   const overdueCount = fokusTerlambat.length;
   const dueTodayCount = fokusHariIni.length;
   const perhatian = getFollowUps(data, now);
+  const kas = useKasDuaBulan(now);
+  const kasMasuk = kas.status === 'siap' ? ringkasKas(kas.rows, now, 'masuk') : null;
+  const namaManajer = String(data.organization?.[0]?.data.manager || '').split(' ')[0];
+  const jam = Number(jamSekarang.slice(0, 2));
+  const sapaan = !jamSekarang ? 'Halo' : jam < 11 ? 'Selamat pagi' : jam < 15 ? 'Selamat siang' : jam < 18 ? 'Selamat sore' : 'Selamat malam';
+  const rataProgres = visibleProjects.length
+    ? Math.round(
+        visibleProjects.reduce((n, p) => n + scopeProgress(tasks.filter((t) => t.workstream_id === p.id)), 0) /
+          visibleProjects.length,
+      )
+    : 0;
   const tanggalPanjang = new Intl.DateTimeFormat('id-ID', {
     weekday: 'long',
     day: 'numeric',
@@ -171,6 +212,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
   const barisFokus = (task: (typeof open)[number], jenis: 'telat' | 'hari-ini' | 'nanti') => (
     <li key={task.id}>
       <Link href={`/tugas?task=${encodeURIComponent(task.id)}`}>
+        <span className={`avatar-warna is-${warnaAvatar(task.assignee || '?')}`} aria-hidden="true">
+          {inisial(task.assignee || '?')}
+        </span>
         <span className="beranda-baris-teks">
           <strong>{task.title}</strong>
           <small>
@@ -188,6 +232,10 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     <div className="manager-home beranda">
       <header className="beranda-kepala">
         <div>
+          <p className="beranda-sapaan">
+            {sapaan}
+            {namaManajer ? `, ${namaManajer}` : ''}
+          </p>
           <h1>{tanggalPanjang}</h1>
           <p className="beranda-ringkas">
             <Link href="/tugas?status=terlambat" className={overdueCount ? 'is-telat' : undefined}>
@@ -227,9 +275,76 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
         </label>
       </header>
 
+      <div className="beranda-angka" aria-label="Ringkasan angka">
+        <Link href="/tugas" className="modul kartu-angka">
+          <span className="ubin ubin-biru" aria-hidden="true">
+            <ListChecks size={22} />
+          </span>
+          <span className="kartu-angka-isi">
+            <small>Tugas aktif</small>
+            <strong>{open.length}</strong>
+            <span>
+              {overdueCount > 0 && <b className="is-telat">{overdueCount} terlambat</b>}
+              {overdueCount > 0 && ' · '}
+              {dueTodayCount} hari ini
+            </span>
+          </span>
+        </Link>
+        <Link href="/proyek" className="modul kartu-angka">
+          <span className="ubin ubin-ungu" aria-hidden="true">
+            <FolderOpen size={22} />
+          </span>
+          <span className="kartu-angka-isi">
+            <small>Proyek berjalan</small>
+            <strong>{visibleProjects.length}</strong>
+            <span>rata-rata progres {rataProgres}%</span>
+          </span>
+        </Link>
+        <Link href="/keuangan" className="modul kartu-angka">
+          <span className="ubin ubin-oranye" aria-hidden="true">
+            <Wallet size={22} />
+          </span>
+          <span className="kartu-angka-isi">
+            <small>Uang masuk</small>
+            {kasMasuk ? (
+              <>
+                <strong>{rupiah(kasMasuk.total)}</strong>
+                <span>
+                  {namaBulan(now)}
+                  <SelisihKas selisih={kasMasuk.selisih} pembanding={kasMasuk.pembanding} arah="masuk" />
+                </span>
+              </>
+            ) : (
+              <span>
+                {kas.status === 'memuat'
+                  ? 'Memuat buku kas…'
+                  : kas.status === 'nonaktif'
+                    ? 'Buku kas belum aktif'
+                    : 'Buku kas belum dapat dimuat'}
+              </span>
+            )}
+          </span>
+        </Link>
+        <Link href="/rapat" className="modul kartu-angka">
+          <span className="ubin ubin-pink" aria-hidden="true">
+            <CalendarDays size={22} />
+          </span>
+          <span className="kartu-angka-isi">
+            <small>Agenda hari ini</small>
+            <strong>
+              {routineCompletedCount}/{routines.length}
+            </strong>
+            <span>rutinitas · {rapatHariIni.length} rapat</span>
+          </span>
+        </Link>
+      </div>
+
       <div className="beranda-modul">
         <section className="modul beranda-fokus" aria-label="Fokus hari ini">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-biru" aria-hidden="true">
+              <ListChecks size={17} />
+            </span>
             <h2>Fokus hari ini</h2>
             <span className="beranda-jumlah">{open.length} tugas aktif</span>
             <Link href="/tugas" className="modul-tautan">
@@ -267,6 +382,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
 
         <section className="modul beranda-agenda dashboard-routines" aria-label="Agenda hari ini">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-pink" aria-hidden="true">
+              <CalendarDays size={17} />
+            </span>
             <h2>Agenda</h2>
             <span className={`beranda-jumlah${semuaRutinSelesai ? ' is-selesai' : ''}`}>
               {routineCompletedCount}/{routines.length} rutinitas
@@ -343,11 +461,14 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
           </div>
         </section>
 
-        <KasBanding />
+        <KasBanding keadaan={kas} />
         <ModulUsahaHarian />
 
         <section className="modul beranda-status" aria-label="Status tugas">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-biru" aria-hidden="true">
+              <PieChart size={17} />
+            </span>
             <h2>Status tugas</h2>
           </div>
           <Donat bagian={statusTugas} tengah={String(tasks.length)} keterangan="tugas" />
@@ -364,6 +485,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
 
         <section className="modul beranda-proyek-modul" aria-label="Proyek berjalan">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-ungu" aria-hidden="true">
+              <FolderOpen size={17} />
+            </span>
             <h2>Proyek berjalan</h2>
             <Link href="/proyek" className="modul-tautan">
               Semua proyek

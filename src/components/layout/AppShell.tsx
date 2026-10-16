@@ -18,6 +18,7 @@ import {
   LockKeyhole,
   X,
   Sparkles,
+  Settings,
 } from 'lucide-react';
 import { Ikon3D } from '@/components/ui/Ikon3D';
 import { usePreference } from '@/lib/usePreference';
@@ -213,17 +214,6 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
             {desktopSidebarHidden === 'true' ? <PanelLeftOpen size={18} /> : <Menu size={18} />}
             <span className="topbar-menu-label">Menu</span>
           </Button>
-          <Link
-            href="/beranda"
-            className="manager-profile"
-            aria-label={`Kembali ke Beranda (${name})`}
-            title={`Kembali ke Beranda (${name})`}
-          >
-            <span className="manager-avatar-badge">{name[0] || 'M'}</span>
-          </Link>
-          <span className="topbar-crumb-sep" aria-hidden="true">
-            /
-          </span>
           <div className="manager-location-wrap">
             <span className="manager-location">{current}</span>
             <button
@@ -253,10 +243,17 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         <div className="manager-actions">
-          <Link href="/dunia-koperasi" className="topbar-world-link" aria-label="Dunia Koperasi" title="Buka Dunia Koperasi">
-            <IkonHalaman href="/dunia-koperasi" size={22} />
-            <span>Dunia Koperasi</span>
-          </Link>
+          <button
+            type="button"
+            className="topbar-cari"
+            aria-label="Cari halaman atau catatan"
+            onClick={() => dialog.current?.showModal()}
+          >
+            <Search size={17} aria-hidden="true" />
+            <span>Cari…</span>
+            <kbd>Ctrl K</kbd>
+          </button>
+          <Notifikasi />
           <Button
             type="button"
             className="quick-action-hub-btn"
@@ -265,36 +262,40 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
             aria-label="Tambah catatan"
           >
             <Plus size={18} />
+            <span className="topbar-tambah-label">Tambah</span>
           </Button>
-          <Button
-            aria-label="Cari halaman atau catatan"
-            onClick={() => dialog.current?.showModal()}
-          >
-            <Search size={19} />
-          </Button>
-          <Notifikasi />
-
-          <Button
-            aria-label="Ganti tema"
-            title={theme === 'dark' ? 'Beralih ke mode terang' : 'Beralih ke mode gelap'}
-            onClick={toggleTheme}
-          >
-            {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
-          </Button>
-          <Button
-            className="desktop-lock"
-            aria-label="Kunci aplikasi"
-            onClick={async () => {
-              try {
-                await api('auth/pin', { action: 'logout' });
-                resetAuthNavigation('/pin');
-              } catch (e) {
-                setError((e as Error).message);
-              }
-            }}
-          >
-            <LockKeyhole size={18} />
-          </Button>
+          {/* Tema, pengaturan, dan kunci dikumpulkan di menu profil agar bilah atas tidak ramai. */}
+          <details className="topbar-profil">
+            <summary aria-label={`Menu profil ${name}`} title={name}>
+              <span className="manager-avatar-badge">{name[0] || 'M'}</span>
+            </summary>
+            <div className="topbar-profil-menu">
+              <strong>{name}</strong>
+              <button type="button" onClick={toggleTheme} aria-label="Ganti tema">
+                {theme === 'dark' ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
+                {theme === 'dark' ? 'Mode terang' : 'Mode gelap'}
+              </button>
+              <Link href="/pengaturan">
+                <Settings size={17} aria-hidden="true" />
+                Pengaturan
+              </Link>
+              <button
+                type="button"
+                aria-label="Kunci aplikasi"
+                onClick={async () => {
+                  try {
+                    await api('auth/pin', { action: 'logout' });
+                    resetAuthNavigation('/pin');
+                  } catch (e) {
+                    setError((e as Error).message);
+                  }
+                }}
+              >
+                <LockKeyhole size={17} aria-hidden="true" />
+                Kunci aplikasi
+              </button>
+            </div>
+          </details>
         </div>
       </header>
       <nav className="tablet-rail" aria-label="Navigasi tablet">

@@ -456,6 +456,34 @@ dialog.ui-modal h2 { font-size: 19px; }
   .form-actions > :only-child { grid-column: 1 / -1; }
 }
 
+/* ---------- Ubin ikon semi-3D: gradien dari warna peta aksen, kilau atas, bayangan berwarna ---------- */
+.ubin {
+  --ubin: var(--grafik-biru);
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--ubin) 55%, var(--on-brand)), var(--ubin) 72%);
+  color: var(--on-brand);
+  box-shadow: 0 10px 18px -10px var(--ubin), inset 0 1px 0 color-mix(in srgb, var(--on-brand) 45%, transparent);
+}
+.ubin-kecil { width: 34px; height: 34px; border-radius: 11px; box-shadow: 0 8px 14px -9px var(--ubin), inset 0 1px 0 color-mix(in srgb, var(--on-brand) 45%, transparent); }
+.ubin-biru { --ubin: var(--grafik-biru); }
+.ubin-ungu { --ubin: var(--grafik-ungu); }
+.ubin-oranye { --ubin: var(--grafik-oranye); }
+.ubin-teal { --ubin: var(--grafik-teal); }
+.ubin-pink { --ubin: var(--grafik-pink); }
+
+/* Avatar berwarna tetap per orang */
+.avatar-warna { display: inline-grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; font-size: 12px; font-weight: 800; }
+.avatar-warna.is-biru { background: var(--pastel-biru); color: var(--pastel-biru-ink); }
+.avatar-warna.is-ungu { background: var(--pastel-purple-bg); color: var(--pastel-purple-text); }
+.avatar-warna.is-oranye { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
+.avatar-warna.is-teal { background: var(--pastel-mint); color: var(--pastel-mint-ink); }
+.avatar-warna.is-pink { background: var(--pastel-pink); color: var(--pastel-pink-ink); }
+
 /* ---------- Modul: kartu putih tanpa garis, kepala judul + tautan kanan, isi, kaki aksi ---------- */
 .modul {
   display: flex;

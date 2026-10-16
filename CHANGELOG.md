@@ -2,6 +2,14 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Gaya Cerah: kerangka baru dan Beranda lebih hidup — 16 Oktober 2026
+
+- Pemilik menilai paket 1 "kurang menarik": bilah atas dan menu masih gaya lama, Beranda terlalu polos, tidak ada kartu angka, grafik kurang menonjol. Dipilih warna tingkat tengah dan rombakan kerangka + Beranda.
+- Bilah atas: kolom cari (Ctrl K), lonceng, tombol "Tambah" berlabel, menu profil berisi mode gelap/terang, Pengaturan, dan Kunci aplikasi. Tautan Dunia Koperasi dan avatar kiri dilepas dari bilah atas (Dunia tetap di menu samping dan dok ponsel).
+- Menu samping putih dengan halaman aktif biru muda, butir 44 px.
+- Beranda: sapaan sesuai jam WIB, empat kartu angka berubin ikon semi-3D (Tugas aktif, Proyek berjalan + rata-rata progres, Uang masuk bulan ini + selisih dari bulan lalu, Agenda hari ini), ubin ikon di judul setiap kartu, avatar berwarna tetap per orang di Fokus hari ini, grafik lebih tegas (garis 3 px, isi gradien lebih pekat, batang puncak penjualan penuh). Data kas dimuat sekali untuk kartu angka dan grafik.
+- Verifikasi: 407 tes, typecheck, lint, `lint:ui`, build lulus; JS awal 246 KB. Demo diperiksa pada 1280 dan 375 px (tanpa luber samping).
+
 ## Gaya Cerah paket 1: token, huruf, menu ringkas, Beranda grafik lembut — 16 Oktober 2026
 
 - Pemilik menilai Senja yang dirapikan "masih sama", lalu memilih arah baru lewat mockup kanvas dari referensi M.project, Ckdulz, Seonizer, dan Selles Lab, dengan permintaan "clean, rapi, tanpa banyak yang mengganggu" dan grafik yang lembut.

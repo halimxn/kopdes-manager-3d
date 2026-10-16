@@ -9,6 +9,7 @@ import { api } from '@/lib/client';
 import { addDays, today } from '@/lib/date';
 import type { Item } from '../records/schemas';
 import { loadCapabilities } from '../workspace/useWorkspace';
+import { BadgeCheck, Store } from 'lucide-react';
 import { Gauge } from '@/components/charts/GrafikLembut';
 
 type Data = { sales: Item[]; attendance: Item[]; staff: Item[] };
@@ -71,6 +72,9 @@ function PenjualanGerai({ sales, hari }: { sales: Item[]; hari: string }) {
   return (
     <section className="modul beranda-jual" aria-label="Penjualan gerai 7 hari">
       <div className="modul-kepala">
+        <span className="ubin ubin-kecil ubin-teal" aria-hidden="true">
+          <Store size={17} />
+        </span>
         <h2>Penjualan gerai</h2>
         <Link href="/penjualan" className="modul-tautan">Rincian</Link>
       </div>
@@ -117,6 +121,9 @@ function KehadiranHariIni({ attendance, staff }: { attendance: Item[]; staff: It
   return (
     <section className="modul beranda-hadir" aria-label="Kehadiran hari ini">
       <div className="modul-kepala">
+        <span className="ubin ubin-kecil ubin-teal" aria-hidden="true">
+          <BadgeCheck size={17} />
+        </span>
         <h2>Kehadiran</h2>
         <Link href="/absensi" className="modul-tautan">Absensi</Link>
       </div>
