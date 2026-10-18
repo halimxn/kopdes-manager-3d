@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototipe Pekerjaan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Prototipe statis layar Pekerjaan: rel ikon + panel pohon + bilah atas, tabel bisa dibuka.
+   Keputusan pemilik 18 Okt 2026 (grill): aksen biru #546FFF, chip hitam, merah hanya untuk terlambat. */
+:root {
+  color-scheme: light;
+  --latar: #e9e9ec;
+  --bingkai: #f5f5f7;
+  --panel: #ffffff;
+  --sub: #f3f3f5;
+  --garis: #e6e6ea;
+  --tinta: #141522;
+  --redup: #6b6e80;
+  --pudar: #a3a5b3;
+  --aksen: #546fff;
+  --aksen-muda: #eef1ff;
+  --hitam: #141522;
+  --ok: #157f4b; --ok-muda: #e5f5ec;
+  --late: #c23a1f; --late-muda: #fdeae5;
+  --warn: #8a5a00; --warn-muda: #fdf3dc;
+  --bayang: 0 1px 2px rgb(20 21 34 / .05), 0 4px 16px rgb(20 21 34 / .04);
+  --r-besar: 24px; --r: 16px; --r-kecil: 10px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--latar); color: var(--tinta); font: 14px/1.45 "Plus Jakarta Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--aksen); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.angka { font-variant-numeric: tabular-nums; }
+
+/* ---------- Kerangka ---------- */
+.app { display: grid; grid-template-columns: 72px 232px 1fr; grid-template-rows: 64px 1fr; min-height: 100vh; background: var(--bingkai); }
+@media (min-width: 1200px) { .app { margin: 24px; min-height: calc(100vh - 48px); border-radius: 28px; box-shadow: 0 30px 60px -30px rgb(20 21 34 / .25); overflow: hidden; } }
+
+.rel { grid-row: 1 / 3; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 0; }
+.logo { width: 44px; height: 44px; border-radius: 50%; background: var(--hitam); color: #fff; display: grid; place-items: center; font-weight: 700; text-decoration: none; margin-bottom: 12px; }
+.rel-tombol { width: 44px; height: 44px; border-radius: 14px; border: 0; background: transparent; display: grid; place-items: center; color: var(--redup); text-decoration: none; position: relative; }
+.rel-tombol svg { width: 22px; height: 22px; }
+.rel-tombol:hover { background: var(--panel); }
+.rel-tombol[aria-current="page"] { background: var(--aksen); color: #fff; }
+.rel-tombol .lbl { display: none; }
+.rel-bawah { margin-top: auto; display: grid; gap: 8px; }
+
+.pohon { grid-row: 1 / 3; padding: 20px 12px 20px 4px; overflow-y: auto; }
+.ruang { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 15px; padding: 2px 10px 18px; }
+.ruang small { color: var(--pudar); font-weight: 500; }
+.pohon h2 { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--pudar); font-weight: 600; margin: 18px 10px 6px; display: flex; justify-content: space-between; align-items: center; }
+.pohon h2 button { border: 0; background: none; color: var(--redup); width: 28px; height: 28px; border-radius: 8px; }
+.pohon ul { list-style: none; margin: 0; padding: 0; }
+.pohon a { display: flex; align-items: center; gap: 8px; min-height: 34px; padding: 6px 10px; border-radius: 10px; color: var(--tinta); text-decoration: none; font-size: 13.5px; }
+.pohon a:hover { background: var(--panel); }
+.pohon a[aria-current="page"] { color: var(--aksen); font-weight: 600; background: var(--panel); box-shadow: var(--bayang); }
+.pohon a .ikon { color: var(--pudar); width: 16px; text-align: center; }
+.pohon .jml { margin-left: auto; font-size: 11px; font-weight: 600; min-width: 22px; height: 20px; padding: 0 6px; border-radius: 10px; display: grid; place-items: center; background: var(--garis); color: var(--redup); }
+.pohon .jml.merah { background: var(--late); color: #fff; }
+.pohon .anak { margin-left: 18px; padding-left: 10px; border-left: 1px solid var(--garis); }
+.pohon details summary { list-style: none; display: flex; align-items: center; gap: 8px; min-height: 34px; padding: 6px 10px; border-radius: 10px; cursor: pointer; font-size: 13.5px; }
+.pohon details summary::-webkit-details-marker { display: none; }
+.pohon details summary::after { content: "›"; margin-left: auto; color: var(--pudar); transition: transform .15s; }
+.pohon details[open] > summary::after { transform: rotate(90deg); }
+.pohon details summary:hover { background: var(--panel); }
+
+.atas { grid-column: 3; display: flex; align-items: center; gap: 12px; padding: 12px 24px 8px 8px; }
+.cari { flex: 0 1 420px; display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; background: var(--panel); border-radius: 22px; box-shadow: var(--bayang); color: var(--pudar); }
+.cari input { border: 0; outline: 0; background: none; flex: 1; min-width: 0; }
+.atas-kanan { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.bulat { width: 44px; height: 44px; border-radius: 50%; border: 0; display: grid; place-items: center; background: var(--panel); box-shadow: var(--bayang); position: relative; }
+.bulat .titik { position: absolute; top: 10px; right: 11px; width: 8px; height: 8px; border-radius: 50%; background: var(--late); border: 2px solid var(--panel); }
+.bulat.tambah { background: var(--aksen); color: #fff; font-size: 24px; font-weight: 400; box-shadow: 0 6px 16px -6px var(--aksen); }
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 11.5px; font-weight: 700; color: #fff; flex: none; }
+.av1 { background: #546fff; } .av2 { background: #2f9e8f; } .av3 { background: #d0782a; } .av4 { background: #8a56d6; } .av5 { background: #141522; }
+.bulat .avatar { width: 44px; height: 44px; font-size: 13px; }
+.tombol-menu { display: none; }
+
+/* ---------- Isi ---------- */
+.isi { grid-column: 3; padding: 4px 24px 24px 8px; min-width: 0; }
+.kanvas { background: var(--panel); border-radius: var(--r-besar); padding: 20px 24px 28px; box-shadow: var(--bayang); }
+.jejak { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px 0 4px; border-radius: 18px; border: 1px solid var(--garis); background: var(--panel); font-size: 13px; font-weight: 500; }
+.chip .avatar { width: 28px; height: 28px; font-size: 10.5px; }
+.chip[aria-pressed="true"] { border-color: var(--hitam); background: var(--hitam); color: #fff; }
+.chip.tanpa-av { padding: 0 14px; }
+.chip-label { color: var(--pudar); font-size: 12.5px; margin-right: 4px; }
+.alat { margin-left: auto; display: flex; gap: 8px; }
+.ikon-kotak { width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--garis); background: var(--panel); display: grid; place-items: center; color: var(--redup); }
+
+.kepala { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin: 20px 0 16px; }
+.kepala h1 { font-size: 30px; line-height: 1.15; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+.kepala p { margin: 4px 0 0; color: var(--redup); font-size: 13px; }
+.label-contoh { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--warn-muda); color: var(--warn); vertical-align: middle; margin-left: 8px; letter-spacing: .02em; }
+.pengalih { margin-left: auto; display: inline-flex; padding: 4px; border-radius: 14px; background: var(--sub); }
+.pengalih button { border: 0; background: none; height: 36px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--redup); }
+.pengalih button[aria-pressed="true"] { background: var(--hitam); color: #fff; }
+
+/* KPI */
+.kpi { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 12px; }
+.ubin { border: 1px solid var(--garis); border-radius: var(--r); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-height: 104px; }
+.ubin .judul { font-size: 12.5px; color: var(--redup); display: flex; flex-wrap: wrap; gap: 4px; justify-content: space-between; align-items: center; }
+.ubin .nilai { font-size: 26px; font-weight: 600; line-height: 1.1; }
+.ubin .ket { font-size: 12px; color: var(--redup); margin-top: auto; display: flex; gap: 6px; align-items: center; }
+.ubin.utama { background: var(--hitam); color: #fff; border-color: var(--hitam); }
+.ubin.utama .judul, .ubin.utama .ket { color: #b9bbc8; }
+.ubin.utama .nilai { font-size: 34px; }
+.ubin.utama .nilai small { font-size: 18px; color: #8e90a2; font-weight: 500; }
+.ubin.terlambat { border-color: var(--late); }
+.pil { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.pil.hitam { background: var(--hitam); color: #fff; }
+.pil.abu { background: var(--sub); color: var(--redup); }
+.pil.merah { background: var(--late); color: #fff; }
+.pil.ok { background: var(--ok-muda); color: var(--ok); }
+.pil.warn { background: var(--warn-muda); color: var(--warn); }
+.pil.biru { background: var(--aksen-muda); color: var(--aksen); }
+.batang-progres { height: 6px; border-radius: 3px; background: #2c2e40; overflow: hidden; }
+.batang-progres i { display: block; height: 100%; background: var(--aksen); border-radius: 3px; }
+
+/* Bar PIC ala referensi (pembagian beban) */
+.pembagian { display: flex; gap: 8px; margin: 16px 0 20px; flex-wrap: wrap; align-items: center; }
+.porsi { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px 0 6px; border-radius: 22px; border: 1px solid var(--garis); flex: 1 1 180px; font-size: 13px; }
+.porsi b { font-weight: 600; }
+.porsi .pudar { margin-left: auto; color: var(--pudar); font-size: 12px; }
+.tombol-hitam { height: 44px; padding: 0 20px; border-radius: 22px; border: 0; background: var(--hitam); color: #fff; font-weight: 600; font-size: 13px; }
+
+/* Grid utama */
+.utama-grid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 20px; align-items: start; }
+
+/* Tabel tugas */
+.tabel { border-radius: var(--r); }
+.tabel-alat { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.tabel-alat h2 { font-size: 16px; font-weight: 600; margin: 0; }
+.tabel-alat .alat button { height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--garis); background: var(--panel); font-size: 12.5px; }
+.kolom, .baris-ringkas { display: grid; grid-template-columns: 36px minmax(0, 1fr) 40px 84px 100px 84px 36px; gap: 8px; align-items: center; padding: 0 8px; }
+.kolom { height: 34px; font-size: 11.5px; color: var(--pudar); font-weight: 500; }
+.grup { margin-top: 10px; }
+.grup-kepala { display: flex; align-items: center; gap: 10px; padding: 8px 10px; font-size: 13px; font-weight: 600; }
+.grup-kepala .warna { width: 10px; height: 10px; border-radius: 3px; }
+.grup-kepala .pil { margin-left: 4px; }
+.grup-kepala .sisi { margin-left: auto; color: var(--pudar); font-weight: 500; font-size: 12px; }
+.tugas { border: 1px solid var(--garis); border-radius: 14px; margin-bottom: 6px; background: var(--panel); transition: box-shadow .15s; }
+.tugas:hover { box-shadow: var(--bayang); }
+.tugas.buka { border-color: #c9d1ff; box-shadow: 0 0 0 3px var(--aksen-muda); }
+.baris-ringkas { min-height: 52px; }
+.centang { width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid #c8c9d3; background: var(--panel); display: grid; place-items: center; padding: 0; margin: 0 auto; }
+.centang[aria-checked="true"] { background: var(--ok); border-color: var(--ok); color: #fff; }
+.centang-luas { width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: none; padding: 0; margin: -11px; }
+.judul-tugas { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 120px); column-gap: 10px; align-items: center; }
+.judul-tugas .teks { grid-column: 1 / -1; }
+.judul-tugas .kode { font-size: 11px; color: var(--pudar); font-weight: 600; letter-spacing: .02em; }
+.judul-tugas .teks { font-weight: 500; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.tugas.selesai .teks { color: var(--pudar); text-decoration: line-through; }
+.pic { display: flex; align-items: center; gap: 6px; font-size: 12.5px; min-width: 0; }
+.pic .avatar { width: 26px; height: 26px; font-size: 10px; }
+.pic span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Di desktop kolom PIC cukup avatar; nama muncul di ≥1600 px dan di tampilan kartu. */
+@media (min-width: 1024px) and (max-width: 1599px) { .pic span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
+@media (min-width: 1600px) { .kolom, .baris-ringkas { grid-template-columns: 36px minmax(0, 1fr) 120px 84px 100px 84px 36px; } }
+.tenggat { font-size: 12.5px; }
+.tenggat.lewat { color: var(--late); font-weight: 600; }
+.sub-prog { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--redup); }
+.sub-prog .jalur { flex: 1; height: 5px; background: var(--sub); border-radius: 3px; overflow: hidden; }
+.sub-prog .jalur i { display: block; height: 100%; background: var(--aksen); }
+.buka-tombol { width: 32px; height: 32px; border-radius: 50%; border: 0; background: var(--sub); display: grid; place-items: center; color: var(--redup); transition: transform .15s, background .15s; }
+.tugas.buka .buka-tombol { background: var(--aksen); color: #fff; transform: rotate(180deg); }
+.rinci { display: none; padding: 4px 16px 16px 52px; }
+.tugas.buka .rinci { display: block; }
+.rinci-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; }
+.kotak { background: var(--sub); border-radius: 14px; padding: 12px 14px; }
+.kotak h3 { font-size: 12px; font-weight: 600; color: var(--redup); margin: 0 0 8px; display: flex; justify-content: space-between; }
+.subtugas { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.subtugas label { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 4px 8px; border-radius: 10px; background: var(--panel); font-size: 13px; cursor: pointer; }
+.subtugas input { width: 18px; height: 18px; accent-color: var(--ok); }
+.subtugas input:checked + span { color: var(--pudar); text-decoration: line-through; }
+.aktivitas { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.aktivitas li { display: grid; grid-template-columns: 26px 1fr; gap: 8px; font-size: 12.5px; }
+.aktivitas .avatar { width: 26px; height: 26px; font-size: 10px; }
+.aktivitas time { display: block; color: var(--pudar); font-size: 11.5px; }
+.catatan { margin-top: 12px; font-size: 13px; color: var(--redup); }
+.aksi { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
+.aksi .tombol { height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid var(--garis); background: var(--panel); font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.aksi .tombol.biru { background: var(--aksen); border-color: var(--aksen); color: #fff; }
+.aksi .tombol.hitam { background: var(--hitam); border-color: var(--hitam); color: #fff; margin-left: auto; }
+.aksi select { height: 40px; border-radius: 20px; border: 1px solid var(--garis); padding: 0 12px; font: inherit; font-size: 13px; background: var(--panel); }
+
+/* Sisi kanan */
+.sisi-kanan { display: grid; gap: 16px; }
+.kartu-sisi { background: var(--sub); border-radius: var(--r-besar); padding: 16px; }
+.kartu-sisi h2 { font-size: 14px; font-weight: 600; margin: 0 0 4px; display: flex; justify-content: space-between; align-items: center; }
+.kartu-sisi > p { margin: 0 0 12px; font-size: 12px; color: var(--redup); }
+.beban { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.beban li { background: var(--panel); border-radius: 14px; padding: 10px 12px; display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: center; font-size: 13px; }
+.beban .avatar { width: 30px; height: 30px; font-size: 10.5px; }
+.beban .jalur { grid-column: 2 / 4; height: 6px; background: var(--sub); border-radius: 3px; overflow: hidden; display: flex; }
+.beban .jalur i { height: 100%; }
+.beban .jalur .a { background: var(--aksen); } .beban .jalur .l { background: var(--late); }
+.beban .angka-beban { font-size: 12px; color: var(--redup); }
+.legenda { display: flex; gap: 12px; font-size: 11.5px; color: var(--redup); margin-top: 10px; }
+.legenda span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; background: var(--aksen); }
+.legenda .l::before { background: var(--late); }
+.grafik { background: var(--panel); border-radius: 14px; padding: 12px 8px 6px; }
+.grafik svg { width: 100%; height: auto; display: block; }
+.grafik .catat { display: flex; justify-content: space-between; padding: 0 6px; font-size: 11.5px; color: var(--pudar); }
+.ringkas-grafik { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+.ringkas-grafik b { font-size: 24px; font-weight: 600; }
+
+/* Navigasi bawah & laci (ponsel) */
+.nav-bawah { display: none; }
+.selubung { display: none; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1279px) {
+  .utama-grid { grid-template-columns: 1fr; }
+  .sisi-kanan { grid-template-columns: 1fr 1fr; }
+  .kpi { grid-template-columns: repeat(3, 1fr); }
+  .kpi .ubin.utama { grid-column: span 3; }
+}
+@media (max-width: 1023px) {
+  .app { grid-template-columns: 72px minmax(0, 1fr); }
+  .atas, .isi { grid-column: 2; }
+  .pohon { position: fixed; inset: 0 auto 0 0; width: 280px; z-index: 30; background: var(--bingkai); transform: translateX(-100%); transition: transform .2s; padding-left: 12px; box-shadow: 8px 0 32px rgb(20 21 34 / .15); }
+  body.laci-buka .pohon { transform: none; }
+  body.laci-buka .selubung { display: block; position: fixed; inset: 0; background: rgb(20 21 34 / .35); z-index: 20; }
+  .tombol-menu { display: grid; }
+  .kolom { display: none; }
+  .baris-ringkas { grid-template-columns: 36px 1fr auto 36px; grid-template-areas: "c j s b" "c m m m"; row-gap: 6px; padding: 10px 8px; }
+  .baris-ringkas > :nth-child(1) { grid-area: c; align-self: start; margin-top: 6px; }
+  .baris-ringkas > .judul-tugas { grid-area: j; }
+  .baris-ringkas > .status-sel { grid-area: s; }
+  .baris-ringkas > .buka-tombol { grid-area: b; }
+  .baris-ringkas > .meta { grid-area: m; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  .rinci { padding-left: 16px; }
+  .rinci-grid { grid-template-columns: 1fr; }
+}
+.meta { display: contents; }
+
+/* ---------- Ponsel ---------- */
+@media (max-width: 767px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .rel { display: none; }
+  .atas, .isi { grid-column: 1; }
+  .atas { padding: 12px 16px 8px; gap: 8px; }
+  .cari { flex: 1; min-width: 0; }
+  .cari .ph-panjang { display: none; }
+  .atas-kanan .lonceng { display: none; }
+  .isi { padding: 0 0 16px; }
+  .kanvas { border-radius: 20px; padding: 16px; margin: 0 8px; }
+  .jejak .alat { display: none; }
+  .jejak { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 0 16px 4px; scrollbar-width: none; }
+  .chip { flex: none; }
+  .kepala h1 { font-size: 24px; }
+  .pengalih { margin-left: 0; width: 100%; overflow-x: auto; }
+  .pengalih button { flex: 1; padding: 0 10px; }
+  .kpi { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi .ubin.utama { grid-column: span 2; }
+  .ubin { min-height: 92px; padding: 12px; }
+  .ubin .nilai { font-size: 22px; }
+  .pembagian .porsi:nth-child(n+3) { display: none; }
+  .pembagian .tombol-hitam { flex: 1 1 100%; }
+  .sisi-kanan { grid-template-columns: 1fr; }
+  .baris-ringkas { grid-template-columns: 32px 1fr 32px; grid-template-areas: "c j b" "c s s" "c m m"; }
+  .rinci { padding: 0 12px 12px; }
+  .atas { position: sticky; top: 0; z-index: 5; background: var(--bingkai); }
+  .tabel-alat { flex-wrap: wrap; }
+  .tabel-alat h2 { flex: 1 1 100%; }
+  .tabel-alat .alat { margin-left: 0; }
+  .tabel-alat .alat button { white-space: nowrap; }
+  .grup-kepala .sisi { display: none; }
+  .aksi .tombol.hitam { margin-left: 0; }
+  .aksi > * { flex: 1 1 auto; }
+  .nav-bawah { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--panel); border-top: 1px solid var(--garis); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
+  .nav-bawah a { display: grid; justify-items: center; gap: 2px; min-height: 52px; padding-top: 6px; font-size: 11px; color: var(--redup); text-decoration: none; border-radius: 12px; }
+  .nav-bawah a svg { width: 22px; height: 22px; }
+  .nav-bawah a[aria-current="page"] { color: var(--aksen); font-weight: 600; }
+  .nav-bawah a[aria-current="page"] svg { background: var(--aksen-muda); border-radius: 10px; padding: 2px 10px; width: 44px; box-sizing: content-box; height: 22px; margin: -2px 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-kerja" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+  <symbol id="i-catat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7M9 7h3"/></symbol>
+  <symbol id="i-usaha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9 5.5 4h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5 11v9h14v-9M10 20v-5h4v5"/></symbol>
+  <symbol id="i-kop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.4 3-5.5 6-5.5s5.4 2.1 6 5.5"/><path d="M16 4.5a3 3 0 0 1 0 6.2M18 14.8c1.6.8 2.7 2.6 3 5.2"/></symbol>
+  <symbol id="i-dunia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></symbol>
+  <symbol id="i-atur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol>
+  <symbol id="i-bantu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.8-.9 1.4V14M12 17.5v.1"/></symbol>
+  <symbol id="i-cari" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-lonceng" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+  <symbol id="i-panah" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-cek" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-saring" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+  <symbol id="i-unduh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></symbol>
+</svg>
+
+<div class="app">
+  <!-- Rel ikon: lima area + Beranda di logo -->
+  <nav class="rel" aria-label="Area utama">
+    <a class="logo" href="#beranda" aria-label="Beranda">K</a>
+    <a class="rel-tombol" href="#pekerjaan" aria-current="page" title="Pekerjaan"><svg><use href="#i-kerja"/></svg><span class="sr">Pekerjaan</span></a>
+    <a class="rel-tombol" href="#catatan" title="Catatan"><svg><use href="#i-catat"/></svg><span class="sr">Catatan</span></a>
+    <a class="rel-tombol" href="#usaha" title="Usaha"><svg><use href="#i-usaha"/></svg><span class="sr">Usaha</span></a>
+    <a class="rel-tombol" href="#koperasi" title="Koperasi"><svg><use href="#i-kop"/></svg><span class="sr">Koperasi</span></a>
+    <a class="rel-tombol" href="#dunia" title="Dunia Koperasi"><svg><use href="#i-dunia"/></svg><span class="sr">Dunia Koperasi</span></a>
+    <div class="rel-bawah">
+      <a class="rel-tombol" href="#panduan" title="Panduan"><svg><use href="#i-bantu"/></svg><span class="sr">Panduan</span></a>
+      <a class="rel-tombol" href="#pengaturan" title="Pengaturan"><svg><use href="#i-atur"/></svg><span class="sr">Pengaturan</span></a>
+    </div>
+  </nav>
+
+  <!-- Panel pohon area Pekerjaan -->
+  <aside class="pohon" id="pohon" aria-label="Isi Pekerjaan">
+    <div class="ruang">Pekerjaan <small>· KDMP Contoh</small></div>
+    <ul>
+      <li><a href="#"><span class="ikon">☆</span>Berbintang</a></li>
+      <li><a href="#"><span class="ikon">◷</span>Terakhir dibuka</a></li>
+    </ul>
+    <h2>Tugas</h2>
+    <ul>
+      <li><a href="#" aria-current="page"><span class="ikon">●</span>Semua tugas<span class="jml angka">24</span></a></li>
+      <li><a href="#"><span class="ikon">◉</span>Tugas saya<span class="jml angka">9</span></a></li>
+      <li><a href="#"><span class="ikon">☼</span>Hari ini<span class="jml angka">4</span></a></li>
+      <li><a href="#"><span class="ikon">!</span>Terlambat<span class="jml merah angka">3</span></a></li>
+    </ul>
+    <h2>Proyek <button type="button" aria-label="Tambah proyek">+</button></h2>
+    <ul>
+      <li>
+        <details open>
+          <summary><span class="ikon">▣</span>Gerai sembako</summary>
+          <ul class="anak">
+            <li><a href="#">M1 · Renovasi ruang</a></li>
+            <li><a href="#">M2 · Stok awal</a></li>
+            <li><a href="#">Sprint 3</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary><span class="ikon">▣</span>Rapat anggota tahunan</summary>
+          <ul class="anak"><li><a href="#">M1 · Undangan</a></li><li><a href="#">M2 · Laporan</a></li></ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary><span class="ikon">▣</span>Cold storage desa</summary>
+          <ul class="anak"><li><a href="#">M1 · Pengadaan</a></li></ul>
+        </details>
+      </li>
+      <li><a href="#">Roadmap</a></li>
+    </ul>
+    <h2>Tampilan tersimpan</h2>
+    <ul>
+      <li><a href="#"><span class="ikon">≡</span>Mendesak minggu ini</a></li>
+      <li><a href="#"><span class="ikon">≡</span>Menunggu pemasok</a></li>
+    </ul>
+  </aside>
+  <div class="selubung" onclick="document.body.classList.remove('laci-buka')"></div>
+
+  <!-- Bilah atas -->
+  <header class="atas">
+    <button class="bulat tombol-menu" type="button" aria-label="Buka panel Pekerjaan" aria-controls="pohon" aria-expanded="false" id="tombol-laci"><svg width="22" height="22"><use href="#i-menu"/></svg></button>
+    <label class="cari"><svg width="18" height="18"><use href="#i-cari"/></svg><span class="sr">Cari</span><input type="search" placeholder="Cari tugas, proyek, anggota…"></label>
+    <div class="atas-kanan">
+      <button class="bulat lonceng" type="button" aria-label="Notifikasi, 2 baru"><svg width="20" height="20"><use href="#i-lonceng"/></svg><span class="titik"></span></button>
+      <button class="bulat" type="button" aria-label="Profil"><span class="avatar av5">MA</span></button>
+      <button class="bulat tambah" type="button" aria-label="Tambah cepat: tugas, proyek, atau catatan rapat">+</button>
+    </div>
+  </header>
+
+  <main class="isi">
+    <div class="kanvas">
+      <!-- Filter PIC, gaya chip avatar referensi -->
+      <div class="jejak" role="group" aria-label="Saring menurut PIC">
+        <span class="chip-label">PIC</span>
+        <button class="chip tanpa-av" type="button" aria-pressed="true">Semua</button>
+        <button class="chip" type="button" aria-pressed="false"><span class="avatar av5">MA</span>Saya</button>
+        <button class="chip" type="button" aria-pressed="false"><span class="avatar av1">AR</span>Ayu R.</button>
+        <button class="chip" type="button" aria-pressed="false"><span class="avatar av2">SN</span>Sinta N.</button>
+        <button class="chip" type="button" aria-pressed="false"><span class="avatar av3">BD</span>Budi D.</button>
+        <div class="alat">
+          <button class="ikon-kotak" type="button" aria-label="Saring lanjutan"><svg width="18" height="18"><use href="#i-saring"/></svg></button>
+          <button class="ikon-kotak" type="button" aria-label="Ekspor CSV"><svg width="18" height="18"><use href="#i-unduh"/></svg></button>
+        </div>
+      </div>
+
+      <div class="kepala">
+        <div>
+          <h1>Semua tugas <span class="label-contoh">Contoh</span></h1>
+          <p>3 proyek aktif · diperbarui 18 Okt 2026, 09.12 WIB</p>
+        </div>
+        <div class="pengalih" role="group" aria-label="Tampilan">
+          <button type="button" aria-pressed="true">Daftar</button>
+          <button type="button" aria-pressed="false">Papan</button>
+          <button type="button" aria-pressed="false">Kalender</button>
+          <button type="button" aria-pressed="false">Gantt</button>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <section class="kpi" aria-label="Ringkasan tugas">
+        <div class="ubin utama">
+          <div class="judul">Progres keseluruhan <span class="pil biru">↑ 6% pekan ini</span></div>
+          <div class="nilai angka">62<small>%</small></div>
+          <div class="batang-progres" aria-hidden="true"><i style="width:62%"></i></div>
+          <div class="ket">15 dari 24 tugas selesai</div>
+        </div>
+        <div class="ubin"><div class="judul">Terbuka</div><div class="nilai angka">9</div><div class="ket"><span class="pil abu">4 proses</span> 5 rencana</div></div>
+        <div class="ubin terlambat"><div class="judul">Terlambat <span class="pil merah">perlu tindakan</span></div><div class="nilai angka">3</div><div class="ket">terlama 6 hari</div></div>
+        <div class="ubin"><div class="judul">Selesai minggu ini</div><div class="nilai angka">7</div><div class="ket"><span class="pil ok">↑ 2</span> dari minggu lalu</div></div>
+        <div class="ubin"><div class="judul">Mendesak</div><div class="nilai angka">2</div><div class="ket"><span class="pil hitam">1 tenggat besok</span></div></div>
+      </section>
+
+      <!-- Porsi tugas terbuka per PIC, meniru bar pembagian pada referensi -->
+      <div class="pembagian" aria-label="Porsi tugas terbuka per PIC">
+        <div class="porsi"><span class="avatar av1">AR</span><b class="angka">4 tugas</b><span class="pudar angka">44%</span></div>
+        <div class="porsi"><span class="avatar av5">MA</span><b class="angka">3 tugas</b><span class="pudar angka">33%</span></div>
+        <div class="porsi"><span class="avatar av2">SN</span><b class="angka">1 tugas</b><span class="pudar angka">11%</span></div>
+        <div class="porsi"><span class="avatar av3">BD</span><b class="angka">1 tugas</b><span class="pudar angka">11%</span></div>
+        <button class="tombol-hitam" type="button">Laporan kerja</button>
+      </div>
+
+      <div class="utama-grid">
+        <section class="tabel" aria-labelledby="judul-daftar">
+          <div class="tabel-alat">
+            <h2 id="judul-daftar">Daftar tugas</h2>
+            <div class="alat"><button type="button">Kelompok: Proyek ▾</button><button type="button">Urut: Tenggat ▾</button></div>
+          </div>
+          <div class="kolom" aria-hidden="true"><span></span><span>Tugas</span><span>PIC</span><span>Prioritas</span><span>Tenggat</span><span>Status</span><span></span></div>
+
+          <!-- Grup 1 -->
+          <div class="grup">
+            <div class="grup-kepala"><span class="warna" style="background:var(--aksen)"></span>Gerai sembako<span class="pil abu angka">6 terbuka</span><span class="sisi">M1 · Renovasi ruang</span></div>
+
+            <article class="tugas buka">
+              <div class="baris-ringkas">
+                <button class="centang-luas" type="button" aria-label="Tandai selesai"><span class="centang" role="checkbox" aria-checked="false"></span></button>
+                <div class="judul-tugas"><span class="kode">GRS-014</span><div class="sub-prog"><span class="jalur"><i style="width:50%"></i></span><span class="angka">2/4</span></div><span class="teks">Pasang rak display dan label harga</span></div>
+                <div class="meta">
+                  <div class="pic"><span class="avatar av1">AR</span><span>Ayu R.</span></div>
+                  <div><span class="pil merah">Mendesak</span></div>
+                  <div class="tenggat lewat angka">15 Okt · lewat 3 h</div>
+                </div>
+                <div class="status-sel"><span class="pil biru">Proses</span></div>
+                <button class="buka-tombol" type="button" aria-expanded="true" aria-label="Tutup rincian"><svg width="16" height="16"><use href="#i-panah"/></svg></button>
+              </div>
+              <div class="rinci">
+                <div class="rinci-grid">
+                  <div class="kotak">
+                    <h3>Subtugas <span class="angka">2/4</span></h3>
+                    <ul class="subtugas">
+                      <li><label><input type="checkbox" checked><span>Ukur dinding sisi timur</span></label></li>
+                      <li><label><input type="checkbox" checked><span>Pesan 4 rak besi</span></label></li>
+                      <li><label><input type="checkbox"><span>Pasang rak dan jangkar dinding</span></label></li>
+                      <li><label><input type="checkbox"><span>Cetak label harga</span></label></li>
+                    </ul>
+                  </div>
+                  <div class="kotak">
+                    <h3>Aktivitas terakhir</h3>
+                    <ul class="aktivitas">
+                      <li><span class="avatar av1">AR</span><div>Rak tiba, 1 rak penyok, minta tukar ke pemasok.<time>17 Okt, 16.40</time></div></li>
+                      <li><span class="avatar av5">MA</span><div>Status diubah: Rencana → Proses<time>14 Okt, 08.05</time></div></li>
+                      <li><span class="avatar av5">MA</span><div>Tugas dibuat dari rapat persiapan gerai<time>10 Okt, 10.20</time></div></li>
+                    </ul>
+                    <p class="catatan">Catatan: tinggi rak maks. 180 cm agar lampu tidak tertutup.</p>
+                  </div>
+                </div>
+                <div class="aksi">
+                  <button class="tombol biru" type="button"><svg width="16" height="16"><use href="#i-cek"/></svg>Tandai selesai</button>
+                  <label class="sr" for="status-1">Status</label>
+                  <select id="status-1"><option>Rencana</option><option selected>Proses</option><option>Selesai</option><option>Dibatalkan</option></select>
+                  <button class="tombol" type="button">Ubah tenggat</button>
+                  <button class="tombol hitam" type="button">Detail</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="tugas">
+              <div class="baris-ringkas">
+                <button class="centang-luas" type="button" aria-label="Tandai selesai"><span class="centang" role="checkbox" aria-checked="false"></span></button>
+                <div class="judul-tugas"><span class="kode">GRS-015</span><div class="sub-prog"><span class="jalur"><i style="width:0%"></i></span><span class="angka">0/2</span></div><span class="teks">Uji coba timbangan digital</span></div>
+                <div class="meta">
+                  <div class="pic"><span class="avatar av3">BD</span><span>Budi D.</span></div>
+                  <div><span class="pil warn">Tinggi</span></div>
+                  <div class="tenggat angka">19 Okt · besok</div>
+                </div>
+                <div class="status-sel"><span class="pil abu">Rencana</span></div>
+                <button class="buka-tombol" type="button" aria-expanded="false" aria-label="Buka rincian"><svg width="16" height="16"><use href="#i-panah"/></svg></button>
+              </div>
+              <div class="rinci"><div class="kotak"><h3>Subtugas <span>0/2</span></h3><ul class="subtugas"><li><label><input type="checkbox"><span>Kalibrasi dengan anak timbang 1 kg</span></label></li><li><label><input type="checkbox"><span>Catat selisih di berita acara</span></label></li></ul></div><div class="aksi"><button class="tombol biru" type="button">Tandai selesai</button><button class="tombol hitam" type="button">Detail</button></div></div>
+            </article>
+
+            <article class="tugas selesai">
+              <div class="baris-ringkas">
+                <button class="centang-luas" type="button" aria-label="Batalkan selesai"><span class="centang" role="checkbox" aria-checked="true"><svg width="12" height="12"><use href="#i-cek"/></svg></span></button>
+                <div class="judul-tugas"><span class="kode">GRS-011</span><div class="sub-prog"><span class="jalur"><i style="width:100%"></i></span><span class="angka">3/3</span></div><span class="teks">Pengecatan ulang dinding depan</span></div>
+                <div class="meta">
+                  <div class="pic"><span class="avatar av5">MA</span><span>Saya</span></div>
+                  <div><span class="pil abu">Normal</span></div>
+                  <div class="tenggat angka">12 Okt</div>
+                </div>
+                <div class="status-sel"><span class="pil ok">Selesai</span></div>
+                <button class="buka-tombol" type="button" aria-expanded="false" aria-label="Buka rincian"><svg width="16" height="16"><use href="#i-panah"/></svg></button>
+              </div>
+              <div class="rinci"><p class="catatan">Selesai 12 Okt 2026.</p></div>
+            </article>
+          </div>
+
+          <!-- Grup 2 -->
+          <div class="grup">
+            <div class="grup-kepala"><span class="warna" style="background:#2f9e8f"></span>Rapat anggota tahunan<span class="pil abu angka">2 terbuka</span><span class="sisi">M1 · Undangan</span></div>
+            <article class="tugas">
+              <div class="baris-ringkas">
+                <button class="centang-luas" type="button" aria-label="Tandai selesai"><span class="centang" role="checkbox" aria-checked="false"></span></button>
+                <div class="judul-tugas"><span class="kode">RAT-003</span><div class="sub-prog"><span class="jalur"><i style="width:66%"></i></span><span class="angka">2/3</span></div><span class="teks">Kirim undangan RAT ke 214 anggota</span></div>
+                <div class="meta">
+                  <div class="pic"><span class="avatar av2">SN</span><span>Sinta N.</span></div>
+                  <div><span class="pil merah">Mendesak</span></div>
+                  <div class="tenggat lewat angka">14 Okt · lewat 4 h</div>
+                </div>
+                <div class="status-sel"><span class="pil biru">Proses</span></div>
+                <button class="buka-tombol" type="button" aria-expanded="false" aria-label="Buka rincian"><svg width="16" height="16"><use href="#i-panah"/></svg></button>
+              </div>
+              <div class="rinci"><div class="kotak"><h3>Subtugas <span>2/3</span></h3><ul class="subtugas"><li><label><input type="checkbox" checked><span>Cetak undangan</span></label></li><li><label><input type="checkbox" checked><span>Bagikan lewat ketua RT</span></label></li><li><label><input type="checkbox"><span>Rekap tanda terima</span></label></li></ul></div><div class="aksi"><button class="tombol biru" type="button">Tandai selesai</button><button class="tombol hitam" type="button">Detail</button></div></div>
+            </article>
+            <article class="tugas">
+              <div class="baris-ringkas">
+                <button class="centang-luas" type="button" aria-label="Tandai selesai"><span class="centang" role="checkbox" aria-checked="false"></span></button>
+                <div class="judul-tugas"><span class="kode">RAT-004</span><div class="sub-prog"><span class="jalur"><i style="width:20%"></i></span><span class="angka">1/5</span></div><span class="teks">Susun draf laporan pertanggungjawaban</span></div>
+                <div class="meta">
+                  <div class="pic"><span class="avatar av5">MA</span><span>Saya</span></div>
+                  <div><span class="pil warn">Tinggi</span></div>
+                  <div class="tenggat angka">25 Okt</div>
+                </div>
+                <div class="status-sel"><span class="pil biru">Proses</span></div>
+                <button class="buka-tombol" type="button" aria-expanded="false" aria-label="Buka rincian"><svg width="16" height="16"><use href="#i-panah"/></svg></button>
+              </div>
+              <div class="rinci"><p class="catatan">Menunggu angka buku kas Oktober.</p><div class="aksi"><button class="tombol biru" type="button">Tandai selesai</button><button class="tombol hitam" type="button">Detail</button></div></div>
+            </article>
+          </div>
+
+          <!-- Grup 3 -->
+          <div class="grup">
+            <div class="grup-kepala"><span class="warna" style="background:#d0782a"></span>Cold storage desa<span class="pil abu angka">1 terbuka</span><span class="sisi">M1 · Pengadaan</span></div>
+            <article class="tugas">
+              <div class="baris-ringkas">
+                <button class="centang-luas" type="button" aria-label="Tandai selesai"><span class="centang" role="checkbox" aria-checked="false"></span></button>
+                <div class="judul-tugas"><span class="kode">CLD-002</span><div class="sub-prog"><span class="jalur"><i style="width:33%"></i></span><span class="angka">1/3</span></div><span class="teks">Bandingkan 3 penawaran unit pendingin</span></div>
+                <div class="meta">
+                  <div class="pic"><span class="avatar av1">AR</span><span>Ayu R.</span></div>
+                  <div><span class="pil abu">Normal</span></div>
+                  <div class="tenggat lewat angka">12 Okt · lewat 6 h</div>
+                </div>
+                <div class="status-sel"><span class="pil abu">Rencana</span></div>
+                <button class="buka-tombol" type="button" aria-expanded="false" aria-label="Buka rincian"><svg width="16" height="16"><use href="#i-panah"/></svg></button>
+              </div>
+              <div class="rinci"><p class="catatan">Satu penawaran belum masuk.</p><div class="aksi"><button class="tombol biru" type="button">Tandai selesai</button><button class="tombol hitam" type="button">Detail</button></div></div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="sisi-kanan" aria-label="Beban dan tren">
+          <section class="kartu-sisi">
+            <h2>Beban per PIC <span class="pil hitam angka">9 terbuka</span></h2>
+            <p>Tugas terbuka; merah = terlambat.</p>
+            <ul class="beban">
+              <li><span class="avatar av1">AR</span><span>Ayu R.</span><span class="angka-beban angka">4 · 2 terlambat</span><span class="jalur"><i class="a" style="width:50%"></i><i class="l" style="width:50%"></i></span></li>
+              <li><span class="avatar av5">MA</span><span>Saya</span><span class="angka-beban angka">3</span><span class="jalur"><i class="a" style="width:75%"></i></span></li>
+              <li><span class="avatar av2">SN</span><span>Sinta N.</span><span class="angka-beban angka">1 · 1 terlambat</span><span class="jalur"><i class="l" style="width:25%"></i></span></li>
+              <li><span class="avatar av3">BD</span><span>Budi D.</span><span class="angka-beban angka">1</span><span class="jalur"><i class="a" style="width:25%"></i></span></li>
+            </ul>
+            <div class="legenda"><span>Tepat waktu</span><span class="l">Terlambat</span></div>
+          </section>
+
+          <section class="kartu-sisi">
+            <h2>Penyelesaian 4 minggu</h2>
+            <p>Tugas selesai per minggu; putus-putus = periode sebelumnya.</p>
+            <div class="grafik">
+              <div class="ringkas-grafik"><b class="angka">21</b><span class="pil ok">↑ 17%</span></div>
+              <svg viewBox="0 0 260 110" role="img" aria-label="Tugas selesai per minggu: 3, 5, 6, 7. Periode sebelumnya: 4, 3, 6, 5.">
+                <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#546fff" stop-opacity=".25"/><stop offset="1" stop-color="#546fff" stop-opacity="0"/></linearGradient></defs>
+                <g stroke="#e6e6ea"><line x1="0" y1="20" x2="260" y2="20"/><line x1="0" y1="55" x2="260" y2="55"/><line x1="0" y1="90" x2="260" y2="90"/></g>
+                <path d="M15 72 C55 72 75 83 115 83 S175 48 195 48 S235 62 245 62" fill="none" stroke="#a3a5b3" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <path d="M15 83 C55 83 75 62 115 62 S175 48 195 48 S235 37 245 37 L245 100 L15 100 Z" fill="url(#g)"/>
+                <path d="M15 83 C55 83 75 62 115 62 S175 48 195 48 S235 37 245 37" fill="none" stroke="#546fff" stroke-width="2"/>
+                <circle cx="245" cy="37" r="4" fill="#fff" stroke="#546fff" stroke-width="2"/>
+              </svg>
+              <div class="catat"><span>M1</span><span>M2</span><span>M3</span><span>M4</span></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Navigasi bawah ponsel: rel menjadi lima area -->
+<nav class="nav-bawah" aria-label="Area utama">
+  <a href="#pekerjaan" aria-current="page"><svg><use href="#i-kerja"/></svg>Pekerjaan</a>
+  <a href="#catatan"><svg><use href="#i-catat"/></svg>Catatan</a>
+  <a href="#usaha"><svg><use href="#i-usaha"/></svg>Usaha</a>
+  <a href="#koperasi"><svg><use href="#i-kop"/></svg>Koperasi</a>
+  <a href="#dunia"><svg><use href="#i-dunia"/></svg>Dunia</a>
+</nav>
+
+<script>
+// Interaksi prototipe saja: buka baris, laci pohon, chip PIC, pengalih tampilan.
+document.querySelectorAll('.buka-tombol').forEach((b) => b.addEventListener('click', () => {
+  const t = b.closest('.tugas');
+  const buka = t.classList.toggle('buka');
+  b.setAttribute('aria-expanded', buka);
+  b.setAttribute('aria-label', buka ? 'Tutup rincian' : 'Buka rincian');
+}));
+const laci = document.getElementById('tombol-laci');
+laci.addEventListener('click', () => {
+  const buka = document.body.classList.toggle('laci-buka');
+  laci.setAttribute('aria-expanded', buka);
+});
+document.querySelectorAll('[role=group]').forEach((g) => g.addEventListener('click', (e) => {
+  const b = e.target.closest('button[aria-pressed]');
+  if (!b) return;
+  g.querySelectorAll('button[aria-pressed]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+}));
+</script>
+</body>
+</html>
