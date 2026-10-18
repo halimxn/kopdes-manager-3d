@@ -29,7 +29,7 @@ button { cursor: pointer; background: none; border: 0; padding: 0; }
 svg.i { width: 17px; height: 17px; flex: none; }
 
 /* ---------- Kerangka ---------- */
-.app { display: grid; grid-template-columns: var(--lebar-sb) minmax(0, 1fr) 0; height: 100vh; height: 100dvh; transition: grid-template-columns .2s ease; }
+.app { display: grid; overflow: hidden; grid-template-columns: var(--lebar-sb) minmax(0, 1fr) 0; height: 100vh; height: 100dvh; transition: grid-template-columns .2s ease; }
 .app.peek-buka { grid-template-columns: var(--lebar-sb) minmax(0, 1fr) var(--lebar-peek); }
 
 /* Sidebar */
@@ -37,19 +37,19 @@ svg.i { width: 17px; height: 17px; flex: none; }
 .sb-ruang { display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 8px; border-radius: 8px; font-weight: 600; margin-bottom: 6px; }
 .sb-ruang:hover { background: var(--hover); }
 .logo { width: 26px; height: 26px; border-radius: 8px; background: var(--aksen); color: #fff; display: grid; place-items: center; font-size: 12.5px; font-weight: 700; }
-.sb-ruang small { display: block; font-size: 11px; color: var(--pudar); font-weight: 500; line-height: 1.1; }
+
 .sb-i { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 32px; padding: 0 8px; border-radius: 8px; color: #45475a; text-align: left; font-size: 13.5px; text-decoration: none; }
 .sb-i:hover { background: var(--hover); }
 .sb-i[aria-current="page"] { background: #e9e9ee; color: var(--tinta); font-weight: 600; }
 .sb-i svg { color: var(--pudar); }
 .sb-i[aria-current="page"] svg { color: var(--aksen); }
 .sb-i .n { margin-left: auto; font-size: 11.5px; color: var(--pudar); font-weight: 500; }
-.sb-i .n.m { color: var(--late); font-weight: 600; }
+
 .sb-i kbd { margin-left: auto; font: 500 10.5px "Plus Jakarta Sans"; color: var(--pudar); }
 .sb-judul { font-size: 11.5px; font-weight: 600; color: var(--pudar); padding: 16px 8px 4px; display: flex; align-items: center; justify-content: space-between; }
 .sb-judul button { width: 22px; height: 22px; border-radius: 6px; color: var(--pudar); }
 .sb-judul button:hover { background: var(--hover); }
-.kp { width: 18px; height: 18px; border-radius: 5px; display: inline-grid; place-items: center; font-size: 10px; font-weight: 700; color: #fff; flex: none; }
+.kp { width: 8px; height: 8px; border-radius: 50%; display: inline-block; font-size: 0; flex: none; margin: 0 5px; }
 .sb-anak { padding-left: 28px; }
 .sb-anak .sb-i { min-height: 28px; font-size: 12.5px; color: var(--redup); }
 .sb-bawah { margin-top: auto; padding-top: 12px; }
@@ -60,22 +60,24 @@ svg.i { width: 17px; height: 17px; flex: none; }
 .jejak { color: var(--redup); font-size: 12.5px; display: flex; gap: 6px; align-items: center; min-width: 0; white-space: nowrap; overflow: hidden; }
 .jejak b { color: var(--tinta); font-weight: 500; }
 .atas .kanan { margin-left: auto; display: flex; gap: 2px; align-items: center; }
+.cari-atas { display: flex; align-items: center; gap: 8px; height: 32px; width: 220px; padding: 0 10px; border-radius: 8px; background: var(--sisi); color: var(--pudar); }
+.cari-atas:focus-within { background: #fff; box-shadow: 0 0 0 1px var(--garis-kuat); }
+.cari-atas input { border: 0; outline: 0; background: none; flex: 1; min-width: 0; font-size: 13px; }
+.cari-atas kbd { font: 500 11px "Plus Jakarta Sans"; }
 .ikon-t { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--redup); }
 .ikon-t:hover { background: var(--hover); }
 .tombol-menu { display: none; }
 .gulir { flex: 1; overflow-y: auto; overflow-x: hidden; }
-.dalam { max-width: 1080px; padding: 12px 48px 64px; margin: 0 auto; }
+.dalam { max-width: 960px; padding: 12px 48px 64px; margin: 0 auto; }
 .app.peek-buka .dalam { padding: 12px 28px 64px; }
-.judul-hal { font-size: 32px; font-weight: 700; letter-spacing: -.02em; margin: 8px 0 4px; display: flex; align-items: center; gap: 12px; line-height: 1.2; }
-.contoh { font-size: 10.5px; font-weight: 600; color: var(--warn); background: var(--warn-muda); padding: 2px 7px; border-radius: 5px; letter-spacing: .03em; }
-.ringkas { color: var(--redup); font-size: 13px; margin: 0 0 18px; }
+.judul-hal { font-size: 30px; font-weight: 700; letter-spacing: -.02em; margin: 16px 0 4px; display: flex; align-items: center; gap: 12px; line-height: 1.2; }
+.contoh { font-size: 11px; font-weight: 500; color: var(--pudar); border: 1px solid var(--garis-kuat); padding: 1px 7px; border-radius: 5px; }
+.ringkas { color: var(--redup); font-size: 13.5px; margin: 0 0 24px; }
 .ringkas b { color: var(--tinta); font-weight: 600; }
 .ringkas .m { color: var(--late); font-weight: 600; }
 
 /* Tab + alat */
 .alat { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; border-bottom: 1px solid var(--garis); margin-bottom: 4px; }
-/* Panel terbuka: alat naik ke atas tab agar tab tetap menempel garis. */
-.app.peek-buka .alat .kanan { order: -1; width: 100%; justify-content: flex-end; margin: 0 0 6px; }
 .tabs { display: flex; gap: 2px; }
 .tab { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 10px; color: var(--redup); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 13.5px; }
 .tab svg { width: 15px; height: 15px; }
@@ -92,30 +94,31 @@ svg.i { width: 17px; height: 17px; flex: none; }
 .catatan-tab { font-size: 12.5px; color: var(--redup); background: var(--sisi); border-radius: 10px; padding: 14px 16px; margin-top: 12px; }
 
 /* Tabel (grid) */
-.kolom, .baris { display: grid; grid-template-columns: 28px minmax(0, 1fr) 112px 128px 92px 104px; align-items: center; column-gap: 10px; padding: 0 8px; }
-.app.peek-buka .kolom, .app.peek-buka .baris { grid-template-columns: 28px minmax(0, 1fr) 104px 36px 76px; }
-.app.peek-buka .k-prio { display: none; }
+.kolom, .baris { display: grid; grid-template-columns: 28px minmax(0, 1fr) 112px 132px 88px; align-items: center; column-gap: 10px; padding: 0 8px; }
+.app.peek-buka .kolom, .app.peek-buka .baris { grid-template-columns: 28px minmax(0, 1fr) 104px 30px 76px; }
 .app.peek-buka .baris .orang .nama { display: none; }
-.kolom { height: 36px; font-size: 12px; color: var(--pudar); font-weight: 500; border-bottom: 1px solid var(--garis); }
+.kolom { height: 32px; font-size: 12px; color: var(--pudar); font-weight: 500; border-bottom: 1px solid var(--garis); }
 .kolom span { display: flex; align-items: center; gap: 5px; }
 .kolom svg { width: 13px; height: 13px; }
-.grup-k { display: flex; align-items: center; gap: 8px; height: 44px; padding: 10px 4px 0; font-weight: 600; width: 100%; text-align: left; }
+.grup-k { display: flex; align-items: center; gap: 6px; height: 48px; padding: 16px 4px 0; font-weight: 600; font-size: 13px; width: 100%; text-align: left; }
 .grup-k .panah { width: 18px; height: 18px; display: grid; place-items: center; color: var(--pudar); transition: transform .15s; }
 .grup-k[aria-expanded="false"] .panah { transform: rotate(-90deg); }
 .grup-k .jml { color: var(--pudar); font-weight: 500; font-size: 12px; }
 .grup-k .prog { width: 72px; height: 4px; border-radius: 2px; background: var(--garis); overflow: hidden; margin-left: 4px; }
 .grup-k .prog i { display: block; height: 100%; background: var(--ok); }
-.baris { min-height: 42px; border-bottom: 1px solid var(--garis); cursor: pointer; border-radius: 0; }
+.baris { min-height: 46px; border-bottom: 1px solid #f3f3f5; cursor: pointer; border-radius: 8px; }
 .baris:hover { background: #fafafb; }
 .baris.pilih-ini { background: var(--aksen-muda); box-shadow: inset 2px 0 0 var(--aksen); }
-.baris .judul { display: flex; align-items: center; gap: 10px; min-width: 0; text-align: left; font-weight: 500; }
+.baris .judul { display: flex; align-items: center; gap: 8px; min-width: 0; text-align: left; font-weight: 500; }
 .baris .judul .t { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .baris.selesai .judul .t { color: var(--pudar); text-decoration: line-through; }
 .baris .meta-hp { display: none; }
 .subp { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--pudar); font-weight: 500; flex: none; }
 .cincin { width: 13px; height: 13px; border-radius: 50%; background: conic-gradient(var(--aksen) calc(var(--p) * 1%), var(--garis-kuat) 0); -webkit-mask: radial-gradient(circle 3.5px, transparent 98%, #000 100%); mask: radial-gradient(circle 3.5px, transparent 98%, #000 100%); }
-.tambah-baris { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; color: var(--pudar); font-size: 12.5px; width: 100%; text-align: left; border-radius: 6px; }
+.tambah-baris { opacity: 0; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; color: var(--pudar); font-size: 12.5px; width: 100%; text-align: left; border-radius: 6px; }
 .tambah-baris:hover { background: var(--hover); color: var(--redup); }
+section:hover > .tambah-baris, .tambah-baris:focus-visible { opacity: 1; }
+@media (hover: none) { .tambah-baris { opacity: 1; } }
 .kosong { padding: 32px 8px; color: var(--redup); text-align: center; font-size: 13px; }
 
 /* Properti */
@@ -125,44 +128,47 @@ svg.i { width: 17px; height: 17px; flex: none; }
 .cek[aria-checked="true"]::after { content: ""; width: 8px; height: 4px; border: solid #fff; border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(1px, -1px); }
 .cek.p-mendesak { border-color: var(--late); background: var(--late-muda); }
 .cek.p-tinggi { border-color: #d39b2a; background: var(--warn-muda); }
-.st { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 500; white-space: nowrap; }
-.st i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.st.rencana { background: var(--abu-muda); color: #5b5e70; }
-.st.proses { background: var(--aksen-muda); color: var(--aksen); }
-.st.selesai { background: var(--ok-muda); color: var(--ok); }
-.st.dibatalkan { background: var(--abu-muda); color: var(--pudar); text-decoration: line-through; }
+/* Status cukup titik berwarna + teks abu; latar berwarna membuat daftar ramai. */
+.st { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--redup); white-space: nowrap; }
+.st i { width: 8px; height: 8px; border-radius: 50%; background: #c9cad4; flex: none; }
+.st.proses i { background: var(--aksen); }
+.st.selesai i { background: var(--ok); }
+.st.dibatalkan { color: var(--pudar); text-decoration: line-through; }
 .pr { font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; color: var(--redup); white-space: nowrap; }
 .pr svg { width: 13px; height: 13px; }
-.pr.mendesak { color: var(--late); } .pr.tinggi { color: var(--warn); } .pr.rendah { color: var(--pudar); }
-.av { width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 9.5px; font-weight: 700; color: #fff; flex: none; }
-.orang { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; white-space: nowrap; min-width: 0; }
+.pr.mendesak { color: var(--late); }
+.bendera { color: var(--late); display: inline-flex; flex: none; }
+.bendera svg { width: 13px; height: 13px; }
+.av { width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 9.5px; font-weight: 600; color: #4a4c5e; background: #ececf0; flex: none; }
+.orang { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--redup); white-space: nowrap; min-width: 0; }
 .orang .nama { overflow: hidden; text-overflow: ellipsis; }
-.tgl { font-size: 12.5px; white-space: nowrap; }
-.tgl.lewat { color: var(--late); font-weight: 600; }
-.tgl.dekat { color: var(--warn); font-weight: 600; }
+.tgl { font-size: 13px; white-space: nowrap; color: var(--redup); }
+.tgl.lewat { color: var(--late); font-weight: 500; }
+.tgl.dekat { color: var(--tinta); font-weight: 500; }
 
 /* ---------- Hari ini ---------- */
 .fokus { max-width: 720px; margin: 0 auto; padding: 12px 24px 64px; }
-.tambah-cepat { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 8px 0 14px; border: 1px solid var(--garis-kuat); border-radius: 12px; box-shadow: 0 1px 2px rgb(29 30 44 / .04); }
+.tambah-cepat { display: flex; align-items: center; gap: 10px; min-height: 48px; margin-bottom: 28px; padding: 0 8px 0 14px; border: 1px solid var(--garis-kuat); border-radius: 12px; box-shadow: 0 1px 2px rgb(29 30 44 / .04); }
 .tambah-cepat:focus-within { border-color: var(--aksen); box-shadow: 0 0 0 3px var(--aksen-muda); }
 .tambah-cepat .plus { width: 20px; height: 20px; border-radius: 50%; background: var(--aksen); color: #fff; display: grid; place-items: center; font-size: 15px; flex: none; }
 .tambah-cepat input { flex: 1; border: 0; outline: 0; min-width: 0; height: 46px; background: none; }
 .tambah-cepat kbd { font: 500 11px "Plus Jakarta Sans"; color: var(--redup); border: 1px solid var(--garis-kuat); border-radius: 5px; padding: 1px 6px; }
-.petunjuk { font-size: 11.5px; color: var(--pudar); margin: 6px 0 20px 4px; }
+.petunjuk { display: none; }
 .petunjuk code { font: 600 11.5px "Plus Jakarta Sans"; color: var(--aksen); background: var(--aksen-muda); padding: 0 5px; border-radius: 4px; }
-.bagian { margin-bottom: 18px; }
-.bagian h2 { font-size: 13px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; padding: 0 6px; height: 32px; border-bottom: 1px solid var(--garis); }
+.bagian { margin-bottom: 28px; }
+.bagian h2 { font-size: 13px; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px; padding: 0 6px; height: 32px; }
 .bagian h2 .n { color: var(--pudar); font-weight: 500; }
 .bagian h2.merah { color: var(--late); }
 .bagian h2 button { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--aksen); padding: 4px 8px; border-radius: 6px; }
 .bagian h2 button:hover { background: var(--aksen-muda); }
-.kartu { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 3px 12px; padding: 10px 6px; border-bottom: 1px solid var(--garis); align-items: start; cursor: pointer; }
+.kartu { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 6px; border-radius: 8px; align-items: start; cursor: pointer; }
 .kartu:hover { background: #fafafb; }
 .kartu.pilih-ini { background: var(--aksen-muda); }
 .kartu .cek { margin-top: 2px; }
 .kartu .jdl { font-weight: 500; text-align: left; }
 .kartu.selesai .jdl { color: var(--pudar); text-decoration: line-through; }
-.kartu .meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--redup); align-items: center; }
+.kartu .meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--pudar); align-items: center; }
+.kartu .meta .kp { margin: 0 2px 0 0; }
 .kartu .meta > span { display: inline-flex; align-items: center; gap: 5px; }
 .kartu .kanan { grid-row: 1 / 3; grid-column: 3; display: flex; align-items: center; gap: 10px; align-self: center; }
 
@@ -176,7 +182,7 @@ svg.i { width: 17px; height: 17px; flex: none; }
 .pk-kode { font-size: 12px; color: var(--pudar); font-weight: 600; letter-spacing: .02em; }
 .pk-judul { font-size: 22px; font-weight: 700; letter-spacing: -.01em; line-height: 1.3; margin: 4px 0 16px; outline: 0; border-radius: 6px; }
 .pk-judul:focus { background: var(--sisi); box-shadow: 0 0 0 4px var(--sisi); }
-.props { display: grid; grid-template-columns: 112px minmax(0, 1fr); row-gap: 2px; font-size: 13px; margin: 0 0 20px; }
+.props { display: grid; grid-template-columns: 112px minmax(0, 1fr); row-gap: 0; font-size: 13px; margin: 0 0 16px; }
 .props dt { color: var(--redup); display: flex; align-items: center; gap: 8px; min-height: 34px; }
 .props dt svg { width: 15px; height: 15px; color: var(--pudar); }
 .props dd { margin: 0; display: flex; align-items: center; min-height: 34px; position: relative; }
@@ -188,7 +194,7 @@ select.prop-ubah { color: transparent; }
 select.prop-ubah option { color: var(--tinta); }
 input[type=date].prop-ubah { color: transparent; }
 input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
-.pk h3 { font-size: 13px; font-weight: 600; margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; }
+.pk h3 { font-size: 12px; font-weight: 600; color: var(--redup); margin: 8px 0 6px; display: flex; justify-content: space-between; align-items: center; }
 .pk h3 span { color: var(--pudar); font-weight: 500; }
 .sublist { list-style: none; margin: 0 0 6px; padding: 0; }
 .sublist li { display: flex; align-items: center; gap: 10px; min-height: 34px; font-size: 13px; border-radius: 6px; padding: 0 4px; }
@@ -205,7 +211,7 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
 .komentar:focus-within { border-color: var(--aksen); }
 .komentar input { flex: 1; border: 0; outline: 0; font-size: 13px; min-width: 0; height: 32px; }
 .komentar button { height: 32px; padding: 0 12px; border-radius: 8px; background: var(--aksen); color: #fff; font-weight: 600; font-size: 12.5px; }
-.pk-catatan { font-size: 13px; color: var(--redup); background: var(--sisi); border-radius: 10px; padding: 10px 12px; margin: 0 0 20px; }
+.pk-catatan { font-size: 13.5px; color: var(--redup); margin: 0 0 24px; padding-top: 16px; border-top: 1px solid var(--garis); }
 
 /* Bilah bawah ponsel + selubung */
 .fab { display: none; }
@@ -237,12 +243,15 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
 /* ---------- < 768: tabel jadi daftar kartu ---------- */
 @media (max-width: 767px) {
   .judul-hal { font-size: 26px; }
+  /* Ponsel: cari berupa ikon yang melebar saat disentuh. */
+  .cari-atas { width: 44px; height: 44px; padding: 0 13px; background: none; transition: width .15s; }
+  .cari-atas input { width: 0; }
+  .cari-atas kbd { display: none; }
+  .cari-atas:focus-within { width: 200px; background: var(--sisi); }
   .dalam, .app.peek-buka .dalam, .fokus { padding: 4px 16px 112px; }
   .alat { flex-wrap: wrap; border-bottom: 0; }
   .tabs { width: 100%; border-bottom: 1px solid var(--garis); overflow-x: auto; scrollbar-width: none; }
   .alat .kanan, .app.peek-buka .alat .kanan { order: 0; margin: 8px 0 4px; width: 100%; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
-  .cari-kecil { flex: 1 1 100%; background: var(--sisi); height: 44px; }
-  .cari-kecil input { width: 100%; }
   .pilih { height: 40px; }
   .alat .baru { display: none; }
   .kolom { display: none; }
@@ -250,7 +259,6 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
   .baris > .cek { grid-area: c; margin-top: 2px; }
   .baris > .judul { grid-area: j; }
   .baris > .judul .t { white-space: normal; }
-  .baris > .judul .subp { display: none; }
   .baris > .sel { display: none; }
   .baris .meta-hp { grid-area: m; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-size: 12px; color: var(--redup); }
   .pk-isi { padding: 16px 20px 40px; }
@@ -292,12 +300,11 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
 
 <div class="app" id="app">
   <nav class="sb" aria-label="Navigasi ruang kerja">
-    <div class="sb-ruang"><span class="logo">K</span><div>KDMP Contoh<small>Manajer</small></div></div>
-    <button class="sb-i" type="button" data-fokus-cari><svg class="i"><use href="#cari"/></svg>Cari<kbd>/</kbd></button>
-    <a class="sb-i" href="#"><svg class="i"><use href="#masuk"/></svg>Kotak masuk<span class="n">2</span></a>
+    <div class="sb-ruang"><span class="logo">K</span>KDMP Contoh</div>
+    <button class="sb-i" type="button" data-fokus-cari><svg class="i"><use href="#cari"/></svg>Cari</button>
     <button class="sb-i" type="button" data-tampil="hari"><svg class="i"><use href="#hari"/></svg>Hari ini<span class="n" data-hitung="hari"></span></button>
     <button class="sb-i" type="button" data-tampil="saya"><svg class="i"><use href="#saya"/></svg>Tugas saya<span class="n" data-hitung="saya"></span></button>
-    <button class="sb-i" type="button" data-tampil="semua"><svg class="i"><use href="#semua"/></svg>Semua tugas<span class="n m" data-hitung="lewat"></span></button>
+    <button class="sb-i" type="button" data-tampil="semua"><svg class="i"><use href="#semua"/></svg>Semua tugas<span class="n" data-hitung="semua"></span></button>
     <div class="sb-judul">Proyek <button type="button" aria-label="Tambah proyek"><svg class="i" style="width:14px;height:14px"><use href="#plus"/></svg></button></div>
     <div id="sb-proyek"></div>
     <div class="sb-judul">Ruang lain</div>
@@ -313,7 +320,7 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
     <div class="atas">
       <button class="ikon-t tombol-menu" type="button" id="tombol-laci" aria-label="Buka navigasi" aria-expanded="false"><svg class="i"><use href="#menu"/></svg></button>
       <div class="jejak" id="jejak"></div>
-      <div class="kanan"><button class="ikon-t" type="button" aria-label="Opsi halaman"><svg class="i"><use href="#lainnya"/></svg></button></div>
+      <div class="kanan"><label class="cari-atas"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari tugas"><kbd>/</kbd></label></div>
     </div>
     <div class="gulir" id="gulir"></div>
   </main>
@@ -321,11 +328,9 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
   <aside class="peek" id="peek" aria-label="Detail tugas" aria-hidden="true">
     <div class="pk-atas">
       <button class="ikon-t" type="button" data-tutup aria-label="Tutup panel (Esc)"><svg class="i"><use href="#tutup"/></svg></button>
-      <button class="ikon-t" type="button" aria-label="Buka sebagai halaman penuh"><svg class="i"><use href="#perbesar"/></svg></button>
       <button class="ikon-t" type="button" data-geser="-1" aria-label="Tugas sebelumnya (↑)"><svg class="i"><use href="#atas-p"/></svg></button>
       <button class="ikon-t" type="button" data-geser="1" aria-label="Tugas berikutnya (↓)"><svg class="i"><use href="#bawah-p"/></svg></button>
       <span class="posisi" id="posisi"></span>
-      <div class="kanan"><button class="ikon-t" type="button" aria-label="Opsi tugas"><svg class="i"><use href="#lainnya"/></svg></button></div>
     </div>
     <div class="pk-isi pk" id="pk-isi"></div>
   </aside>
@@ -379,13 +384,15 @@ function labelTgl(t, panjang) {
   return { teks: dasar, kls: '' };
 }
 const besar = (s) => s[0].toUpperCase() + s.slice(1);
-const av = (k) => `<span class="av" style="background:${ORANG[k].w}">${k}</span>`;
+const av = (k) => `<span class="av" title="${ORANG[k].nama}">${k}</span>`;
 const orang = (k) => `<span class="orang">${av(k)}<span class="nama">${ORANG[k].nama}</span></span>`;
 const st = (s) => `<span class="st ${s}"><i></i>${besar(s)}</span>`;
 const pr = (p) => `<span class="pr ${p}">${p === 'normal' || p === 'rendah' ? '' : '<svg><use href="#bendera"/></svg>'}${besar(p)}</span>`;
 const kp = (p) => `<span class="kp" style="background:${proyek(p).w}">${p}</span>`;
+// Hanya prioritas mendesak yang diberi tanda; sisanya ada di panel.
+const bendera = (t) => (t.pr === 'mendesak' && !tutupStatus(t) ? '<span class="bendera" title="Mendesak"><svg><use href="#bendera"/></svg></span>' : '');
 const subp = (t) => { if (!t.sub.length) return ''; const n = t.sub.filter((s) => s.ok).length; return `<span class="subp"><span class="cincin" style="--p:${Math.round((n / t.sub.length) * 100)}"></span>${n}/${t.sub.length}</span>`; };
-const cek = (t) => `<button class="cek ${tutupStatus(t) ? '' : 'p-' + t.pr}" type="button" role="checkbox" aria-checked="${t.st === 'selesai'}" aria-label="Tandai ${esc(t.judul)} selesai" data-cek="${t.kode}"></button>`;
+const cek = (t) => `<button class="cek" type="button" role="checkbox" aria-checked="${t.st === 'selesai'}" aria-label="Tandai ${esc(t.judul)} selesai" data-cek="${t.kode}"></button>`;
 
 // ---------- Pemilihan tugas yang terlihat ----------
 function tugasTerlihat() {
@@ -412,8 +419,7 @@ function renderSidebar() {
   const buka = TUGAS.filter((t) => !tutupStatus(t));
   $('[data-hitung="hari"]').textContent = buka.filter((t) => t.tgl <= HARI_INI).length || '';
   $('[data-hitung="saya"]').textContent = buka.filter((t) => t.pic === 'MA').length || '';
-  const nLewat = buka.filter(lewat).length;
-  $('[data-hitung="lewat"]').textContent = nLewat ? `${nLewat} terlambat` : '';
+  $('[data-hitung="semua"]').textContent = buka.length || '';
 }
 
 function ringkasan(daftar) {
@@ -421,19 +427,18 @@ function ringkasan(daftar) {
   const nLewat = buka.filter(lewat).length;
   const nDesak = buka.filter((t) => t.pr === 'mendesak').length;
   const minggu = daftar.filter((t) => t.st === 'selesai' && selisih(HARI_INI, t.tgl) < 7).length;
-  return `<b>${buka.length} terbuka</b>${nLewat ? ` · <span class="m">${nLewat} terlambat</span>` : ''}${nDesak ? ` · ${nDesak} mendesak` : ''} · ${minggu} selesai 7 hari terakhir`;
+  return `${buka.length} terbuka${nLewat ? ` · <span class="m">${nLewat} terlambat</span>` : ''}`;
 }
 
 function renderBaris(t) {
   const tg = labelTgl(t);
   return `<div class="baris ${t.st === 'selesai' ? 'selesai' : ''} ${S.dipilih === t.kode ? 'pilih-ini' : ''}" data-buka="${t.kode}">
     ${cek(t)}
-    <button class="judul" type="button"><span class="t">${esc(t.judul)}</span>${subp(t)}</button>
+    <button class="judul" type="button"><span class="t">${esc(t.judul)}</span>${bendera(t)}</button>
     <span class="sel">${st(t.st)}</span>
     <span class="sel">${orang(t.pic)}</span>
     <span class="sel tgl ${tg.kls}">${tg.teks}</span>
-    <span class="sel k-prio">${pr(t.pr)}</span>
-    <span class="meta-hp">${st(t.st)}${orang(t.pic)}<span class="tgl ${tg.kls}">${tg.teks}</span>${t.pr === 'mendesak' || t.pr === 'tinggi' ? pr(t.pr) : ''}${subp(t)}</span>
+    <span class="meta-hp">${st(t.st)}<span class="tgl ${tg.kls}">${tg.teks}</span>${av(t.pic)}</span>
   </div>`;
 }
 
@@ -453,14 +458,13 @@ function renderDaftar() {
     const isi = g.isi.sort(urut);
     const tutup = S.lipat.has(g.id);
     if (!tutup) urutanAktif.push(...isi.map((t) => t.kode));
-    const pct = Math.round((isi.filter((t) => t.st === 'selesai').length / isi.length) * 100);
     return `<section>
-      <button class="grup-k" type="button" data-lipat="${g.id}" aria-expanded="${!tutup}"><span class="panah"><svg class="i" style="width:14px;height:14px"><use href="#bawah-p"/></svg></span>${g.ikon}${esc(g.label)}<span class="jml">${isi.length}</span>${S.kelompok === 'proyek' ? `<span class="prog" title="${pct}% selesai"><i style="width:${pct}%"></i></span>` : ''}</button>
-      ${tutup ? '' : isi.map(renderBaris).join('') + `<button class="tambah-baris" type="button" data-baru="${S.kelompok === 'proyek' ? g.id : ''}"><svg class="i" style="width:14px;height:14px"><use href="#plus"/></svg>Tugas baru</button>`}
+      <button class="grup-k" type="button" data-lipat="${g.id}" aria-expanded="${!tutup}"><span class="panah"><svg class="i" style="width:14px;height:14px"><use href="#bawah-p"/></svg></span>${g.ikon}${esc(g.label)}<span class="jml">${isi.length}</span></button>
+      ${tutup ? '' : isi.map(renderBaris).join('')}
     </section>`;
   }).join('');
   const isiTab = S.tab === 'daftar'
-    ? `<div class="kolom" aria-hidden="true"><span></span><span>Aa Tugas</span><span><svg><use href="#status"/></svg>Status</span><span><svg><use href="#saya"/></svg>PIC</span><span><svg><use href="#hari"/></svg>Tenggat</span><span class="k-prio"><svg><use href="#bendera"/></svg>Prioritas</span></div>
+    ? `<div class="kolom" aria-hidden="true"><span></span><span>Tugas</span><span>Status</span><span>PIC</span><span>Tenggat</span></div>
        ${isiGrup || `<p class="kosong">Tidak ada tugas yang cocok. Ubah saringan atau buat tugas baru.</p>`}`
     : `<p class="catatan-tab">Prototipe ini hanya menggambar tampilan Daftar. ${besar(S.tab)} memakai data dan panel samping yang sama.</p>`;
   $('#gulir').innerHTML = `<div class="dalam">
@@ -471,11 +475,8 @@ function renderDaftar() {
         ${[['daftar', 'Daftar'], ['papan', 'Papan'], ['kalender', 'Kalender'], ['gantt', 'Gantt']].map(([id, l]) => `<button class="tab" role="tab" type="button" data-tab="${id}" aria-selected="${S.tab === id}"><svg><use href="#${id === 'kalender' ? 'hari' : id}"/></svg>${l}</button>`).join('')}
       </div>
       <div class="kanan">
-        <label class="cari-kecil"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari…" value="${esc(S.cari)}"></label>
-        <label class="sr" for="saring-pic">PIC</label>
-        <select class="pilih ${S.pic ? 'on' : ''}" id="saring-pic"><option value="">PIC: Semua</option>${Object.keys(ORANG).map((k) => `<option value="${k}" ${S.pic === k ? 'selected' : ''}>PIC: ${ORANG[k].nama}</option>`).join('')}</select>
         <label class="sr" for="kelompok">Kelompokkan</label>
-        <select class="pilih" id="kelompok">${[['proyek', 'Proyek'], ['status', 'Status'], ['pic', 'PIC']].map(([v, l]) => `<option value="${v}" ${S.kelompok === v ? 'selected' : ''}>Kelompok: ${l}</option>`).join('')}</select>
+        <select class="pilih" id="kelompok">${[['proyek', 'Proyek'], ['status', 'Status'], ['pic', 'PIC']].map(([v, l]) => `<option value="${v}" ${S.kelompok === v ? 'selected' : ''}>Per ${l.toLowerCase()}</option>`).join('')}</select>
         <button class="baru" type="button" data-baru=""><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg>Baru</button>
       </div>
     </div>
@@ -486,8 +487,8 @@ function renderDaftar() {
 function renderKartu(t) {
   const tg = labelTgl(t);
   return `<div class="kartu ${t.st === 'selesai' ? 'selesai' : ''} ${S.dipilih === t.kode ? 'pilih-ini' : ''}" data-buka="${t.kode}">
-    ${cek(t)}<button class="jdl" type="button">${esc(t.judul)}</button>
-    <span class="meta"><span>${kp(t.p)}${proyek(t.p).nama}</span>${subp(t)}${t.pr === 'mendesak' || t.pr === 'tinggi' ? pr(t.pr) : ''}</span>
+    ${cek(t)}<button class="jdl" type="button">${esc(t.judul)} ${bendera(t)}</button>
+    <span class="meta"><span>${kp(t.p)}${proyek(t.p).nama}</span></span>
     <span class="kanan"><span class="tgl ${tg.kls}">${tg.teks}</span>${av(t.pic)}</span>
   </div>`;
 }
@@ -502,8 +503,8 @@ function renderHariIni() {
   const nHari = hari.filter((t) => !tutupStatus(t)).length;
   $('#gulir').innerHTML = `<div class="fokus">
     <h1 class="judul-hal">Hari ini <span class="contoh">CONTOH</span></h1>
-    <p class="ringkas">Sabtu, 18 Oktober 2026 · <b>${nHari} tugas</b> jatuh tempo hari ini${terlambat.length ? ` · <span class="m">${terlambat.length} terlambat</span>` : ''}</p>
-    <form class="tambah-cepat" id="form-cepat"><span class="plus" aria-hidden="true">+</span><label class="sr" for="cepat">Tambah tugas cepat</label><input id="cepat" autocomplete="off" placeholder="Tambah tugas…"><kbd>C</kbd></form>
+    <p class="ringkas">Sabtu, 18 Oktober 2026</p>
+    <form class="tambah-cepat" id="form-cepat"><span class="plus" aria-hidden="true">+</span><label class="sr" for="cepat">Tambah tugas cepat</label><input id="cepat" autocomplete="off" placeholder="Tambah tugas, mis. Cek stok gula @Budi #Gerai besok"><kbd>C</kbd></form>
     <p class="petunjuk">Contoh: Cek stok gula <code>@Budi</code> <code>#Gerai</code> <code>!tinggi</code> <code>besok</code> lalu tekan Enter.</p>
     ${terlambat.length ? bagian('Terlambat', terlambat, 'merah', '<button type="button" data-jadwal-ulang>Pindah ke hari ini</button>') : ''}
     ${bagian('Hari ini', hari)}
@@ -538,7 +539,7 @@ function renderPeek() {
     <h3>Subtugas <span>${t.sub.length ? `${n}/${t.sub.length}` : ''}</span></h3>
     <ul class="sublist">${t.sub.map((s, j) => `<li class="${s.ok ? 'ok' : ''}"><button class="cek" type="button" role="checkbox" aria-checked="${!!s.ok}" data-sub="${j}" aria-label="${esc(s.t)}"></button><span>${esc(s.t)}</span></li>`).join('')}</ul>
     <form class="sub-tambah" id="form-sub"><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg><label class="sr" for="sub-baru">Subtugas baru</label><input id="sub-baru" placeholder="Tambah subtugas"></form>
-    <h3>Aktivitas</h3>
+    <h3>Aktivitas <span>${t.akt.length || ''}</span></h3>
     <ul class="akt">${t.akt.map(([k, teks, w]) => `<li>${av(k)}<div><b>${ORANG[k].nama}</b> ${teks}<time>${w}</time></div></li>`).join('') || '<li style="grid-template-columns:1fr;color:var(--pudar)">Belum ada aktivitas.</li>'}</ul>
     <form class="komentar" id="form-komentar">${av('MA')}<label class="sr" for="komentar">Komentar</label><input id="komentar" placeholder="Tulis komentar…" autocomplete="off"><button type="submit">Kirim</button></form>`;
 }
@@ -621,7 +622,7 @@ document.addEventListener('change', (e) => {
   }
 });
 document.addEventListener('input', (e) => {
-  if (e.target.id === 'cari') { S.cari = e.target.value; const pos = e.target.selectionStart; renderDaftar(); const c = $('#cari'); c.focus(); c.setSelectionRange(pos, pos); }
+  if (e.target.id === 'cari') { S.cari = e.target.value; if (S.tampil === 'hari') { S.tampil = 'semua'; renderSidebar(); } renderDaftar(); renderPeek(); }
 });
 document.addEventListener('focusout', (e) => {
   if (e.target.matches?.('[data-judul]')) { const t = TUGAS.find((x) => x.kode === S.dipilih); const v = e.target.textContent.trim(); if (t && v && v !== t.judul) { t.judul = v; render(); } }
