@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototipe Tugas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Prototipe layar tugas varian B (database + panel samping) dengan tampilan Hari ini ala varian C.
+   Keputusan pemilik 18 Okt 2026. Hanya mode terang; data fiktif berlabel Contoh. */
+:root {
+  color-scheme: light;
+  --kertas: #fff; --sisi: #f7f7f8; --hover: #f2f2f4; --garis: #ececef; --garis-kuat: #dfdfe5;
+  --tinta: #1d1e2c; --redup: #6b6e80; --pudar: #9a9cab;
+  --aksen: #546fff; --aksen-muda: #eef1ff; --aksen-garis: #c9d2ff;
+  --ok: #157f4b; --ok-muda: #e6f4ec; --late: #c23a1f; --late-muda: #fbeae6; --warn: #8a5a00; --warn-muda: #fbf1d9;
+  --abu-muda: #f0f0f3;
+  --bayang-panel: -16px 0 40px -28px rgb(29 30 44 / .35);
+  --lebar-sb: 248px; --lebar-peek: 440px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--kertas); color: var(--tinta); font: 14px/1.5 "Plus Jakarta Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+:focus-visible { outline: 2px solid var(--aksen); outline-offset: 2px; border-radius: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg.i { width: 17px; height: 17px; flex: none; }
+
+/* ---------- Kerangka ---------- */
+.app { display: grid; grid-template-columns: var(--lebar-sb) minmax(0, 1fr) 0; height: 100vh; height: 100dvh; transition: grid-template-columns .2s ease; }
+.app.peek-buka { grid-template-columns: var(--lebar-sb) minmax(0, 1fr) var(--lebar-peek); }
+
+/* Sidebar */
+.sb { background: var(--sisi); border-right: 1px solid var(--garis); padding: 10px 8px; display: flex; flex-direction: column; gap: 1px; overflow-y: auto; }
+.sb-ruang { display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 8px; border-radius: 8px; font-weight: 600; margin-bottom: 6px; }
+.sb-ruang:hover { background: var(--hover); }
+.logo { width: 26px; height: 26px; border-radius: 8px; background: var(--aksen); color: #fff; display: grid; place-items: center; font-size: 12.5px; font-weight: 700; }
+.sb-ruang small { display: block; font-size: 11px; color: var(--pudar); font-weight: 500; line-height: 1.1; }
+.sb-i { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 32px; padding: 0 8px; border-radius: 8px; color: #45475a; text-align: left; font-size: 13.5px; text-decoration: none; }
+.sb-i:hover { background: var(--hover); }
+.sb-i[aria-current="page"] { background: #e9e9ee; color: var(--tinta); font-weight: 600; }
+.sb-i svg { color: var(--pudar); }
+.sb-i[aria-current="page"] svg { color: var(--aksen); }
+.sb-i .n { margin-left: auto; font-size: 11.5px; color: var(--pudar); font-weight: 500; }
+.sb-i .n.m { color: var(--late); font-weight: 600; }
+.sb-i kbd { margin-left: auto; font: 500 10.5px "Plus Jakarta Sans"; color: var(--pudar); }
+.sb-judul { font-size: 11.5px; font-weight: 600; color: var(--pudar); padding: 16px 8px 4px; display: flex; align-items: center; justify-content: space-between; }
+.sb-judul button { width: 22px; height: 22px; border-radius: 6px; color: var(--pudar); }
+.sb-judul button:hover { background: var(--hover); }
+.kp { width: 18px; height: 18px; border-radius: 5px; display: inline-grid; place-items: center; font-size: 10px; font-weight: 700; color: #fff; flex: none; }
+.sb-anak { padding-left: 28px; }
+.sb-anak .sb-i { min-height: 28px; font-size: 12.5px; color: var(--redup); }
+.sb-bawah { margin-top: auto; padding-top: 12px; }
+
+/* Area utama */
+.utama { display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.atas { height: 48px; display: flex; align-items: center; gap: 6px; padding: 0 16px 0 20px; flex: none; }
+.jejak { color: var(--redup); font-size: 12.5px; display: flex; gap: 6px; align-items: center; min-width: 0; white-space: nowrap; overflow: hidden; }
+.jejak b { color: var(--tinta); font-weight: 500; }
+.atas .kanan { margin-left: auto; display: flex; gap: 2px; align-items: center; }
+.ikon-t { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--redup); }
+.ikon-t:hover { background: var(--hover); }
+.tombol-menu { display: none; }
+.gulir { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.dalam { max-width: 1080px; padding: 12px 48px 64px; margin: 0 auto; }
+.app.peek-buka .dalam { padding: 12px 28px 64px; }
+.judul-hal { font-size: 32px; font-weight: 700; letter-spacing: -.02em; margin: 8px 0 4px; display: flex; align-items: center; gap: 12px; line-height: 1.2; }
+.contoh { font-size: 10.5px; font-weight: 600; color: var(--warn); background: var(--warn-muda); padding: 2px 7px; border-radius: 5px; letter-spacing: .03em; }
+.ringkas { color: var(--redup); font-size: 13px; margin: 0 0 18px; }
+.ringkas b { color: var(--tinta); font-weight: 600; }
+.ringkas .m { color: var(--late); font-weight: 600; }
+
+/* Tab + alat */
+.alat { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; border-bottom: 1px solid var(--garis); margin-bottom: 4px; }
+/* Panel terbuka: alat naik ke atas tab agar tab tetap menempel garis. */
+.app.peek-buka .alat .kanan { order: -1; width: 100%; justify-content: flex-end; margin: 0 0 6px; }
+.tabs { display: flex; gap: 2px; }
+.tab { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 10px; color: var(--redup); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 13.5px; }
+.tab svg { width: 15px; height: 15px; }
+.tab[aria-selected="true"] { color: var(--tinta); border-color: var(--tinta); }
+.alat .kanan { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+.pilih { height: 30px; border: 0; border-radius: 7px; padding: 0 8px; color: var(--redup); font-size: 12.5px; background: none; cursor: pointer; }
+.pilih:hover { background: var(--hover); }
+.pilih.on { color: var(--aksen); background: var(--aksen-muda); font-weight: 600; }
+.cari-kecil { display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 8px; border-radius: 7px; color: var(--redup); }
+.cari-kecil:focus-within { background: var(--hover); }
+.cari-kecil input { border: 0; outline: 0; background: none; width: 120px; font-size: 12.5px; }
+.baru { height: 32px; padding: 0 14px; border-radius: 8px; background: var(--aksen); color: #fff; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; margin-left: 4px; }
+.baru:hover { background: #4560f0; }
+.catatan-tab { font-size: 12.5px; color: var(--redup); background: var(--sisi); border-radius: 10px; padding: 14px 16px; margin-top: 12px; }
+
+/* Tabel (grid) */
+.kolom, .baris { display: grid; grid-template-columns: 28px minmax(0, 1fr) 112px 128px 92px 104px; align-items: center; column-gap: 10px; padding: 0 8px; }
+.app.peek-buka .kolom, .app.peek-buka .baris { grid-template-columns: 28px minmax(0, 1fr) 104px 36px 76px; }
+.app.peek-buka .k-prio { display: none; }
+.app.peek-buka .baris .orang .nama { display: none; }
+.kolom { height: 36px; font-size: 12px; color: var(--pudar); font-weight: 500; border-bottom: 1px solid var(--garis); }
+.kolom span { display: flex; align-items: center; gap: 5px; }
+.kolom svg { width: 13px; height: 13px; }
+.grup-k { display: flex; align-items: center; gap: 8px; height: 44px; padding: 10px 4px 0; font-weight: 600; width: 100%; text-align: left; }
+.grup-k .panah { width: 18px; height: 18px; display: grid; place-items: center; color: var(--pudar); transition: transform .15s; }
+.grup-k[aria-expanded="false"] .panah { transform: rotate(-90deg); }
+.grup-k .jml { color: var(--pudar); font-weight: 500; font-size: 12px; }
+.grup-k .prog { width: 72px; height: 4px; border-radius: 2px; background: var(--garis); overflow: hidden; margin-left: 4px; }
+.grup-k .prog i { display: block; height: 100%; background: var(--ok); }
+.baris { min-height: 42px; border-bottom: 1px solid var(--garis); cursor: pointer; border-radius: 0; }
+.baris:hover { background: #fafafb; }
+.baris.pilih-ini { background: var(--aksen-muda); box-shadow: inset 2px 0 0 var(--aksen); }
+.baris .judul { display: flex; align-items: center; gap: 10px; min-width: 0; text-align: left; font-weight: 500; }
+.baris .judul .t { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.baris.selesai .judul .t { color: var(--pudar); text-decoration: line-through; }
+.baris .meta-hp { display: none; }
+.subp { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--pudar); font-weight: 500; flex: none; }
+.cincin { width: 13px; height: 13px; border-radius: 50%; background: conic-gradient(var(--aksen) calc(var(--p) * 1%), var(--garis-kuat) 0); -webkit-mask: radial-gradient(circle 3.5px, transparent 98%, #000 100%); mask: radial-gradient(circle 3.5px, transparent 98%, #000 100%); }
+.tambah-baris { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; color: var(--pudar); font-size: 12.5px; width: 100%; text-align: left; border-radius: 6px; }
+.tambah-baris:hover { background: var(--hover); color: var(--redup); }
+.kosong { padding: 32px 8px; color: var(--redup); text-align: center; font-size: 13px; }
+
+/* Properti */
+.cek { width: 18px; height: 18px; border-radius: 50%; border: 1.6px solid #c4c5d0; display: grid; place-items: center; flex: none; background: #fff; position: relative; }
+.cek::before { content: ""; position: absolute; inset: -13px; }
+.cek[aria-checked="true"] { background: var(--ok); border-color: var(--ok); }
+.cek[aria-checked="true"]::after { content: ""; width: 8px; height: 4px; border: solid #fff; border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(1px, -1px); }
+.cek.p-mendesak { border-color: var(--late); background: var(--late-muda); }
+.cek.p-tinggi { border-color: #d39b2a; background: var(--warn-muda); }
+.st { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.st i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.st.rencana { background: var(--abu-muda); color: #5b5e70; }
+.st.proses { background: var(--aksen-muda); color: var(--aksen); }
+.st.selesai { background: var(--ok-muda); color: var(--ok); }
+.st.dibatalkan { background: var(--abu-muda); color: var(--pudar); text-decoration: line-through; }
+.pr { font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; color: var(--redup); white-space: nowrap; }
+.pr svg { width: 13px; height: 13px; }
+.pr.mendesak { color: var(--late); } .pr.tinggi { color: var(--warn); } .pr.rendah { color: var(--pudar); }
+.av { width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 9.5px; font-weight: 700; color: #fff; flex: none; }
+.orang { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; white-space: nowrap; min-width: 0; }
+.orang .nama { overflow: hidden; text-overflow: ellipsis; }
+.tgl { font-size: 12.5px; white-space: nowrap; }
+.tgl.lewat { color: var(--late); font-weight: 600; }
+.tgl.dekat { color: var(--warn); font-weight: 600; }
+
+/* ---------- Hari ini ---------- */
+.fokus { max-width: 720px; margin: 0 auto; padding: 12px 24px 64px; }
+.tambah-cepat { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 8px 0 14px; border: 1px solid var(--garis-kuat); border-radius: 12px; box-shadow: 0 1px 2px rgb(29 30 44 / .04); }
+.tambah-cepat:focus-within { border-color: var(--aksen); box-shadow: 0 0 0 3px var(--aksen-muda); }
+.tambah-cepat .plus { width: 20px; height: 20px; border-radius: 50%; background: var(--aksen); color: #fff; display: grid; place-items: center; font-size: 15px; flex: none; }
+.tambah-cepat input { flex: 1; border: 0; outline: 0; min-width: 0; height: 46px; background: none; }
+.tambah-cepat kbd { font: 500 11px "Plus Jakarta Sans"; color: var(--redup); border: 1px solid var(--garis-kuat); border-radius: 5px; padding: 1px 6px; }
+.petunjuk { font-size: 11.5px; color: var(--pudar); margin: 6px 0 20px 4px; }
+.petunjuk code { font: 600 11.5px "Plus Jakarta Sans"; color: var(--aksen); background: var(--aksen-muda); padding: 0 5px; border-radius: 4px; }
+.bagian { margin-bottom: 18px; }
+.bagian h2 { font-size: 13px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; padding: 0 6px; height: 32px; border-bottom: 1px solid var(--garis); }
+.bagian h2 .n { color: var(--pudar); font-weight: 500; }
+.bagian h2.merah { color: var(--late); }
+.bagian h2 button { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--aksen); padding: 4px 8px; border-radius: 6px; }
+.bagian h2 button:hover { background: var(--aksen-muda); }
+.kartu { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 3px 12px; padding: 10px 6px; border-bottom: 1px solid var(--garis); align-items: start; cursor: pointer; }
+.kartu:hover { background: #fafafb; }
+.kartu.pilih-ini { background: var(--aksen-muda); }
+.kartu .cek { margin-top: 2px; }
+.kartu .jdl { font-weight: 500; text-align: left; }
+.kartu.selesai .jdl { color: var(--pudar); text-decoration: line-through; }
+.kartu .meta { grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--redup); align-items: center; }
+.kartu .meta > span { display: inline-flex; align-items: center; gap: 5px; }
+.kartu .kanan { grid-row: 1 / 3; grid-column: 3; display: flex; align-items: center; gap: 10px; align-self: center; }
+
+/* ---------- Panel samping ---------- */
+.peek { border-left: 1px solid var(--garis); background: #fff; display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--bayang-panel); min-width: 0; }
+.app:not(.peek-buka) .peek { visibility: hidden; }
+.pk-atas { height: 48px; display: flex; align-items: center; gap: 2px; padding: 0 10px; border-bottom: 1px solid var(--garis); flex: none; color: var(--redup); font-size: 12px; }
+.pk-atas .posisi { margin-left: 6px; }
+.pk-atas .kanan { margin-left: auto; display: flex; gap: 2px; }
+.pk-isi { padding: 20px 28px 40px; overflow-y: auto; flex: 1; }
+.pk-kode { font-size: 12px; color: var(--pudar); font-weight: 600; letter-spacing: .02em; }
+.pk-judul { font-size: 22px; font-weight: 700; letter-spacing: -.01em; line-height: 1.3; margin: 4px 0 16px; outline: 0; border-radius: 6px; }
+.pk-judul:focus { background: var(--sisi); box-shadow: 0 0 0 4px var(--sisi); }
+.props { display: grid; grid-template-columns: 112px minmax(0, 1fr); row-gap: 2px; font-size: 13px; margin: 0 0 20px; }
+.props dt { color: var(--redup); display: flex; align-items: center; gap: 8px; min-height: 34px; }
+.props dt svg { width: 15px; height: 15px; color: var(--pudar); }
+.props dd { margin: 0; display: flex; align-items: center; min-height: 34px; position: relative; }
+.prop-ubah { width: 100%; min-height: 34px; border: 0; border-radius: 6px; padding: 0 8px; background: none; cursor: pointer; appearance: none; -webkit-appearance: none; }
+.prop-ubah:hover { background: var(--hover); }
+.prop-ubah:focus { outline: 2px solid var(--aksen-garis); background: #fff; }
+.prop-tampil { position: absolute; left: 8px; pointer-events: none; display: flex; align-items: center; }
+select.prop-ubah { color: transparent; }
+select.prop-ubah option { color: var(--tinta); }
+input[type=date].prop-ubah { color: transparent; }
+input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
+.pk h3 { font-size: 13px; font-weight: 600; margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; }
+.pk h3 span { color: var(--pudar); font-weight: 500; }
+.sublist { list-style: none; margin: 0 0 6px; padding: 0; }
+.sublist li { display: flex; align-items: center; gap: 10px; min-height: 34px; font-size: 13px; border-radius: 6px; padding: 0 4px; }
+.sublist li:hover { background: var(--sisi); }
+.sublist .cek { width: 16px; height: 16px; border-radius: 5px; }
+.sublist li.ok span { color: var(--pudar); text-decoration: line-through; }
+.sub-tambah { display: flex; align-items: center; gap: 10px; min-height: 34px; padding: 0 4px; margin-bottom: 20px; color: var(--pudar); }
+.sub-tambah input { border: 0; outline: 0; flex: 1; font-size: 13px; background: none; min-width: 0; }
+.akt { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-size: 12.5px; }
+.akt li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+.akt b { font-weight: 600; }
+.akt time { color: var(--pudar); font-size: 11.5px; margin-left: 6px; }
+.komentar { margin-top: 16px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--garis-kuat); border-radius: 10px; padding: 6px 6px 6px 10px; }
+.komentar:focus-within { border-color: var(--aksen); }
+.komentar input { flex: 1; border: 0; outline: 0; font-size: 13px; min-width: 0; height: 32px; }
+.komentar button { height: 32px; padding: 0 12px; border-radius: 8px; background: var(--aksen); color: #fff; font-weight: 600; font-size: 12.5px; }
+.pk-catatan { font-size: 13px; color: var(--redup); background: var(--sisi); border-radius: 10px; padding: 10px 12px; margin: 0 0 20px; }
+
+/* Bilah bawah ponsel + selubung */
+.fab { display: none; }
+.selubung { display: none; }
+
+/* ---------- 1024–1279: panel menimpa daftar ---------- */
+@media (max-width: 1279px) {
+  .app.peek-buka { grid-template-columns: var(--lebar-sb) minmax(0, 1fr) 0; }
+  .peek { position: fixed; top: 0; right: 0; bottom: 0; width: var(--lebar-peek); z-index: 30; transform: translateX(100%); transition: transform .2s ease; }
+  .app.peek-buka .peek { transform: none; }
+  /* Lebar sedang: Prioritas cukup lewat warna cincin centang dan panel. */
+  .kolom, .baris, .app.peek-buka .kolom, .app.peek-buka .baris { grid-template-columns: 28px minmax(0, 1fr) 104px 120px 84px; }
+  .k-prio, .app.peek-buka .k-prio { display: none; }
+  .app.peek-buka .baris .orang .nama { display: inline; }
+  .dalam, .app.peek-buka .dalam { padding: 12px 32px 64px; }
+  .app.peek-buka .alat .kanan { order: 0; width: auto; margin: 0 0 0 auto; }
+}
+/* ---------- < 1024: sidebar jadi laci, panel layar penuh ---------- */
+@media (max-width: 1023px) {
+  .app, .app.peek-buka { grid-template-columns: minmax(0, 1fr); }
+  .sb { position: fixed; inset: 0 auto 0 0; width: 288px; z-index: 40; transform: translateX(-100%); transition: transform .2s ease; box-shadow: 16px 0 40px -20px rgb(29 30 44 / .35); }
+  body.laci-buka .sb { transform: none; }
+  body.laci-buka .selubung { display: block; position: fixed; inset: 0; z-index: 35; background: rgb(29 30 44 / .3); }
+  .tombol-menu { display: grid; }
+  .atas { padding-left: 8px; }
+  .peek { width: 100%; }
+  .dalam, .app.peek-buka .dalam { padding: 8px 24px 96px; }
+}
+/* ---------- < 768: tabel jadi daftar kartu ---------- */
+@media (max-width: 767px) {
+  .judul-hal { font-size: 26px; }
+  .dalam, .app.peek-buka .dalam, .fokus { padding: 4px 16px 112px; }
+  .alat { flex-wrap: wrap; border-bottom: 0; }
+  .tabs { width: 100%; border-bottom: 1px solid var(--garis); overflow-x: auto; scrollbar-width: none; }
+  .alat .kanan, .app.peek-buka .alat .kanan { order: 0; margin: 8px 0 4px; width: 100%; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
+  .cari-kecil { flex: 1 1 100%; background: var(--sisi); height: 44px; }
+  .cari-kecil input { width: 100%; }
+  .pilih { height: 40px; }
+  .alat .baru { display: none; }
+  .kolom { display: none; }
+  .baris, .app.peek-buka .baris { grid-template-columns: 28px minmax(0, 1fr); grid-template-areas: "c j" "c m"; row-gap: 4px; padding: 10px 4px; min-height: 56px; align-items: start; }
+  .baris > .cek { grid-area: c; margin-top: 2px; }
+  .baris > .judul { grid-area: j; }
+  .baris > .judul .t { white-space: normal; }
+  .baris > .judul .subp { display: none; }
+  .baris > .sel { display: none; }
+  .baris .meta-hp { grid-area: m; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-size: 12px; color: var(--redup); }
+  .pk-isi { padding: 16px 20px 40px; }
+  .props { grid-template-columns: 100px minmax(0, 1fr); }
+  .fab { display: grid; position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); width: 56px; height: 56px; border-radius: 18px; background: var(--aksen); color: #fff; place-items: center; font-size: 28px; font-weight: 300; z-index: 20; box-shadow: 0 10px 24px -8px rgb(84 111 255 / .6); }
+  .app.peek-buka ~ .fab { display: none; }
+  .kartu { padding: 12px 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .app, .sb, .peek, .grup-k .panah { transition: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="cari" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="masuk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h4l2 3h4l2-3h4"/><path d="M5.5 6.5 4 13v5h16v-5l-1.5-6.5A2 2 0 0 0 16.6 5H7.4a2 2 0 0 0-1.9 1.5z"/></symbol>
+  <symbol id="hari" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+  <symbol id="saya" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6"/></symbol>
+  <symbol id="semua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 7 1.5 1.5L8 6M4 13l1.5 1.5L8 12M4 19l1.5 1.5L8 18M11 7h9M11 13h9M11 19h9"/></symbol>
+  <symbol id="catat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h5"/></symbol>
+  <symbol id="toko" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9 5.5 4h13L20 9M5 11v9h14v-9M4 9a2.7 2.7 0 0 0 16 0"/></symbol>
+  <symbol id="grup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.4 3-5.5 6-5.5s5.4 2.1 6 5.5M16 4.5a3 3 0 0 1 0 6.2M18 14.8c1.6.8 2.7 2.6 3 5.2"/></symbol>
+  <symbol id="kubus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"/></symbol>
+  <symbol id="atur" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol>
+  <symbol id="daftar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+  <symbol id="papan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="4" height="13" rx="1.5"/></symbol>
+  <symbol id="gantt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h8M8 12h10M6 18h7"/></symbol>
+  <symbol id="status" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></symbol>
+  <symbol id="bendera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+  <symbol id="map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 7h7l2 2h9v10H3z"/></symbol>
+  <symbol id="milestone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 9 9-9 9-9-9z"/></symbol>
+  <symbol id="tutup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m13 6 6 6-6 6M5 6l6 6-6 6"/></symbol>
+  <symbol id="atas-p" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="bawah-p" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="perbesar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></symbol>
+  <symbol id="lainnya" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></symbol>
+  <symbol id="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+</svg>
+
+<div class="app" id="app">
+  <nav class="sb" aria-label="Navigasi ruang kerja">
+    <div class="sb-ruang"><span class="logo">K</span><div>KDMP Contoh<small>Manajer</small></div></div>
+    <button class="sb-i" type="button" data-fokus-cari><svg class="i"><use href="#cari"/></svg>Cari<kbd>/</kbd></button>
+    <a class="sb-i" href="#"><svg class="i"><use href="#masuk"/></svg>Kotak masuk<span class="n">2</span></a>
+    <button class="sb-i" type="button" data-tampil="hari"><svg class="i"><use href="#hari"/></svg>Hari ini<span class="n" data-hitung="hari"></span></button>
+    <button class="sb-i" type="button" data-tampil="saya"><svg class="i"><use href="#saya"/></svg>Tugas saya<span class="n" data-hitung="saya"></span></button>
+    <button class="sb-i" type="button" data-tampil="semua"><svg class="i"><use href="#semua"/></svg>Semua tugas<span class="n m" data-hitung="lewat"></span></button>
+    <div class="sb-judul">Proyek <button type="button" aria-label="Tambah proyek"><svg class="i" style="width:14px;height:14px"><use href="#plus"/></svg></button></div>
+    <div id="sb-proyek"></div>
+    <div class="sb-judul">Ruang lain</div>
+    <a class="sb-i" href="#"><svg class="i"><use href="#catat"/></svg>Catatan &amp; rapat</a>
+    <a class="sb-i" href="#"><svg class="i"><use href="#toko"/></svg>Usaha &amp; gerai</a>
+    <a class="sb-i" href="#"><svg class="i"><use href="#grup"/></svg>Koperasi</a>
+    <a class="sb-i" href="#"><svg class="i"><use href="#kubus"/></svg>Dunia Koperasi</a>
+    <div class="sb-bawah"><a class="sb-i" href="#"><svg class="i"><use href="#atur"/></svg>Pengaturan</a></div>
+  </nav>
+  <div class="selubung" id="selubung"></div>
+
+  <main class="utama">
+    <div class="atas">
+      <button class="ikon-t tombol-menu" type="button" id="tombol-laci" aria-label="Buka navigasi" aria-expanded="false"><svg class="i"><use href="#menu"/></svg></button>
+      <div class="jejak" id="jejak"></div>
+      <div class="kanan"><button class="ikon-t" type="button" aria-label="Opsi halaman"><svg class="i"><use href="#lainnya"/></svg></button></div>
+    </div>
+    <div class="gulir" id="gulir"></div>
+  </main>
+
+  <aside class="peek" id="peek" aria-label="Detail tugas" aria-hidden="true">
+    <div class="pk-atas">
+      <button class="ikon-t" type="button" data-tutup aria-label="Tutup panel (Esc)"><svg class="i"><use href="#tutup"/></svg></button>
+      <button class="ikon-t" type="button" aria-label="Buka sebagai halaman penuh"><svg class="i"><use href="#perbesar"/></svg></button>
+      <button class="ikon-t" type="button" data-geser="-1" aria-label="Tugas sebelumnya (↑)"><svg class="i"><use href="#atas-p"/></svg></button>
+      <button class="ikon-t" type="button" data-geser="1" aria-label="Tugas berikutnya (↓)"><svg class="i"><use href="#bawah-p"/></svg></button>
+      <span class="posisi" id="posisi"></span>
+      <div class="kanan"><button class="ikon-t" type="button" aria-label="Opsi tugas"><svg class="i"><use href="#lainnya"/></svg></button></div>
+    </div>
+    <div class="pk-isi pk" id="pk-isi"></div>
+  </aside>
+</div>
+<button class="fab" type="button" id="fab" aria-label="Tugas baru">+</button>
+
+<script>
+// ---------- Data contoh (fiktif) ----------
+const HARI_INI = '2026-10-18';
+const ORANG = { MA: { nama: 'Saya', w: '#1d1e2c' }, AR: { nama: 'Ayu R.', w: '#546fff' }, SN: { nama: 'Sinta N.', w: '#1f9d8b' }, BD: { nama: 'Budi D.', w: '#e0822e' } };
+const PROYEK = [
+  { id: 'G', nama: 'Gerai sembako', w: '#546fff', kode: 'GRS', milestone: ['Renovasi ruang', 'Stok awal'] },
+  { id: 'R', nama: 'Rapat anggota tahunan', w: '#1f9d8b', kode: 'RAT', milestone: ['Undangan', 'Laporan'] },
+  { id: 'C', nama: 'Cold storage desa', w: '#e0822e', kode: 'CLD', milestone: ['Pengadaan'] },
+];
+const STATUS = ['rencana', 'proses', 'selesai', 'dibatalkan'];
+const PRIO = ['rendah', 'normal', 'tinggi', 'mendesak'];
+const sub = (s) => s.map(([t, ok]) => ({ t, ok }));
+let TUGAS = [
+  { kode: 'GRS-014', judul: 'Pasang rak display dan label harga', p: 'G', ms: 'Renovasi ruang', pic: 'AR', tgl: '2026-10-15', st: 'proses', pr: 'mendesak', catatan: 'Tinggi rak maksimal 180 cm agar lampu tidak tertutup.', sub: sub([['Ukur dinding sisi timur', 1], ['Pesan 4 rak besi', 1], ['Pasang rak dan jangkar dinding', 0], ['Cetak label harga', 0]]), akt: [['AR', 'Rak tiba, 1 rak penyok, minta tukar ke pemasok.', '17 Okt'], ['MA', 'mengubah status ke <b>Proses</b>', '14 Okt'], ['MA', 'membuat tugas dari rapat persiapan gerai', '10 Okt']] },
+  { kode: 'GRS-015', judul: 'Uji coba timbangan digital', p: 'G', ms: 'Stok awal', pic: 'BD', tgl: '2026-10-19', st: 'rencana', pr: 'tinggi', sub: sub([['Kalibrasi dengan anak timbang 1 kg', 0], ['Catat selisih di berita acara', 0]]), akt: [['MA', 'membuat tugas', '15 Okt']] },
+  { kode: 'GRS-016', judul: 'Daftar harga beli 20 barang pokok', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'proses', pr: 'tinggi', sub: sub([['Survei 3 pemasok', 1], ['Bandingkan harga', 0], ['Kirim ke ketua', 0]]), akt: [] },
+  { kode: 'GRS-011', judul: 'Pengecatan ulang dinding depan', p: 'G', ms: 'Renovasi ruang', pic: 'MA', tgl: '2026-10-12', st: 'selesai', pr: 'normal', sub: sub([['Beli cat', 1], ['Cat lapis 1', 1], ['Cat lapis 2', 1]]), akt: [['MA', 'menandai selesai', '12 Okt']] },
+  { kode: 'RAT-003', judul: 'Kirim undangan RAT ke 214 anggota', p: 'R', ms: 'Undangan', pic: 'SN', tgl: '2026-10-14', st: 'proses', pr: 'mendesak', sub: sub([['Cetak undangan', 1], ['Bagikan lewat ketua RT', 1], ['Rekap tanda terima', 0]]), akt: [['SN', '180 undangan sudah dibagikan.', '16 Okt']] },
+  { kode: 'RAT-004', judul: 'Susun draf laporan pertanggungjawaban', p: 'R', ms: 'Laporan', pic: 'MA', tgl: '2026-10-25', st: 'proses', pr: 'tinggi', catatan: 'Menunggu angka buku kas Oktober.', sub: sub([['Kerangka laporan', 1], ['Bagian usaha', 0], ['Bagian keuangan', 0], ['Bagian keanggotaan', 0], ['Tinjau ketua', 0]]), akt: [] },
+  { kode: 'RAT-005', judul: 'Pesan tenda dan kursi untuk 250 orang', p: 'R', ms: 'Undangan', pic: 'BD', tgl: '2026-10-18', st: 'rencana', pr: 'normal', sub: [], akt: [] },
+  { kode: 'CLD-002', judul: 'Bandingkan 3 penawaran unit pendingin', p: 'C', ms: 'Pengadaan', pic: 'AR', tgl: '2026-10-12', st: 'rencana', pr: 'normal', catatan: 'Satu penawaran belum masuk.', sub: sub([['Penawaran A', 1], ['Penawaran B', 0], ['Penawaran C', 0]]), akt: [] },
+  { kode: 'CLD-003', judul: 'Cek daya listrik gudang (kVA)', p: 'C', ms: 'Pengadaan', pic: 'MA', tgl: '2026-10-22', st: 'rencana', pr: 'rendah', sub: [], akt: [] },
+];
+
+// ---------- Keadaan ----------
+const S = { tampil: 'semua', proyek: null, cari: '', pic: '', kelompok: 'proyek', tab: 'daftar', dipilih: null, lipat: new Set() };
+
+// ---------- Utilitas ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+const selisih = (a, b) => Math.round((new Date(a) - new Date(b)) / 864e5);
+const tambahHari = (n) => { const d = new Date(HARI_INI); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+const tutupStatus = (t) => t.st === 'selesai' || t.st === 'dibatalkan';
+const lewat = (t) => !tutupStatus(t) && t.tgl < HARI_INI;
+const proyek = (id) => PROYEK.find((p) => p.id === id);
+function labelTgl(t, panjang) {
+  const d = selisih(t.tgl, HARI_INI);
+  const [y, m, h] = t.tgl.split('-');
+  const dasar = `${+h} ${BULAN[+m - 1]}${panjang ? ' ' + y : ''}`;
+  if (tutupStatus(t)) return { teks: dasar, kls: '' };
+  if (d < 0) return { teks: panjang ? `${dasar} · lewat ${-d} hari` : dasar, kls: 'lewat' };
+  if (d === 0) return { teks: 'Hari ini', kls: 'dekat' };
+  if (d === 1) return { teks: 'Besok', kls: 'dekat' };
+  return { teks: dasar, kls: '' };
+}
+const besar = (s) => s[0].toUpperCase() + s.slice(1);
+const av = (k) => `<span class="av" style="background:${ORANG[k].w}">${k}</span>`;
+const orang = (k) => `<span class="orang">${av(k)}<span class="nama">${ORANG[k].nama}</span></span>`;
+const st = (s) => `<span class="st ${s}"><i></i>${besar(s)}</span>`;
+const pr = (p) => `<span class="pr ${p}">${p === 'normal' || p === 'rendah' ? '' : '<svg><use href="#bendera"/></svg>'}${besar(p)}</span>`;
+const kp = (p) => `<span class="kp" style="background:${proyek(p).w}">${p}</span>`;
+const subp = (t) => { if (!t.sub.length) return ''; const n = t.sub.filter((s) => s.ok).length; return `<span class="subp"><span class="cincin" style="--p:${Math.round((n / t.sub.length) * 100)}"></span>${n}/${t.sub.length}</span>`; };
+const cek = (t) => `<button class="cek ${tutupStatus(t) ? '' : 'p-' + t.pr}" type="button" role="checkbox" aria-checked="${t.st === 'selesai'}" aria-label="Tandai ${esc(t.judul)} selesai" data-cek="${t.kode}"></button>`;
+
+// ---------- Pemilihan tugas yang terlihat ----------
+function tugasTerlihat() {
+  return TUGAS.filter((t) => {
+    if (S.tampil === 'saya' && t.pic !== 'MA') return false;
+    if (S.tampil === 'proyek' && t.p !== S.proyek) return false;
+    if (S.pic && t.pic !== S.pic) return false;
+    if (S.cari && !(t.judul + ' ' + t.kode).toLowerCase().includes(S.cari.toLowerCase())) return false;
+    return true;
+  });
+}
+const urut = (a, b) => (tutupStatus(a) - tutupStatus(b)) || a.tgl.localeCompare(b.tgl);
+let urutanAktif = [];
+
+// ---------- Render ----------
+function renderSidebar() {
+  $('#sb-proyek').innerHTML = PROYEK.map((p) => `
+    <button class="sb-i" type="button" data-tampil="proyek" data-proyek="${p.id}">${kp(p.id)}${p.nama}</button>
+    ${S.tampil === 'proyek' && S.proyek === p.id ? `<div class="sb-anak">${p.milestone.map((m) => `<a class="sb-i" href="#">${m}</a>`).join('')}</div>` : ''}`).join('');
+  document.querySelectorAll('.sb [data-tampil]').forEach((b) => {
+    const aktif = b.dataset.tampil === S.tampil && (S.tampil !== 'proyek' || b.dataset.proyek === S.proyek);
+    aktif ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current');
+  });
+  const buka = TUGAS.filter((t) => !tutupStatus(t));
+  $('[data-hitung="hari"]').textContent = buka.filter((t) => t.tgl <= HARI_INI).length || '';
+  $('[data-hitung="saya"]').textContent = buka.filter((t) => t.pic === 'MA').length || '';
+  const nLewat = buka.filter(lewat).length;
+  $('[data-hitung="lewat"]').textContent = nLewat ? `${nLewat} terlambat` : '';
+}
+
+function ringkasan(daftar) {
+  const buka = daftar.filter((t) => !tutupStatus(t));
+  const nLewat = buka.filter(lewat).length;
+  const nDesak = buka.filter((t) => t.pr === 'mendesak').length;
+  const minggu = daftar.filter((t) => t.st === 'selesai' && selisih(HARI_INI, t.tgl) < 7).length;
+  return `<b>${buka.length} terbuka</b>${nLewat ? ` · <span class="m">${nLewat} terlambat</span>` : ''}${nDesak ? ` · ${nDesak} mendesak` : ''} · ${minggu} selesai 7 hari terakhir`;
+}
+
+function renderBaris(t) {
+  const tg = labelTgl(t);
+  return `<div class="baris ${t.st === 'selesai' ? 'selesai' : ''} ${S.dipilih === t.kode ? 'pilih-ini' : ''}" data-buka="${t.kode}">
+    ${cek(t)}
+    <button class="judul" type="button"><span class="t">${esc(t.judul)}</span>${subp(t)}</button>
+    <span class="sel">${st(t.st)}</span>
+    <span class="sel">${orang(t.pic)}</span>
+    <span class="sel tgl ${tg.kls}">${tg.teks}</span>
+    <span class="sel k-prio">${pr(t.pr)}</span>
+    <span class="meta-hp">${st(t.st)}${orang(t.pic)}<span class="tgl ${tg.kls}">${tg.teks}</span>${t.pr === 'mendesak' || t.pr === 'tinggi' ? pr(t.pr) : ''}${subp(t)}</span>
+  </div>`;
+}
+
+function kelompokkan(daftar) {
+  if (S.kelompok === 'status') return STATUS.map((s) => ({ id: s, label: besar(s), ikon: st(s).replace(/>[A-Z][a-z]+</, '><'), isi: daftar.filter((t) => t.st === s) }));
+  if (S.kelompok === 'pic') return Object.keys(ORANG).map((k) => ({ id: k, label: ORANG[k].nama, ikon: av(k), isi: daftar.filter((t) => t.pic === k) }));
+  return PROYEK.map((p) => ({ id: p.id, label: p.nama, ikon: kp(p.id), isi: daftar.filter((t) => t.p === p.id) }));
+}
+
+function renderDaftar() {
+  const daftar = tugasTerlihat();
+  const judul = S.tampil === 'saya' ? 'Tugas saya' : S.tampil === 'proyek' ? proyek(S.proyek).nama : 'Semua tugas';
+  $('#jejak').innerHTML = `Pekerjaan <span>/</span> <b>${esc(judul)}</b>`;
+  const grup = kelompokkan(daftar).filter((g) => g.isi.length);
+  urutanAktif = [];
+  const isiGrup = grup.map((g) => {
+    const isi = g.isi.sort(urut);
+    const tutup = S.lipat.has(g.id);
+    if (!tutup) urutanAktif.push(...isi.map((t) => t.kode));
+    const pct = Math.round((isi.filter((t) => t.st === 'selesai').length / isi.length) * 100);
+    return `<section>
+      <button class="grup-k" type="button" data-lipat="${g.id}" aria-expanded="${!tutup}"><span class="panah"><svg class="i" style="width:14px;height:14px"><use href="#bawah-p"/></svg></span>${g.ikon}${esc(g.label)}<span class="jml">${isi.length}</span>${S.kelompok === 'proyek' ? `<span class="prog" title="${pct}% selesai"><i style="width:${pct}%"></i></span>` : ''}</button>
+      ${tutup ? '' : isi.map(renderBaris).join('') + `<button class="tambah-baris" type="button" data-baru="${S.kelompok === 'proyek' ? g.id : ''}"><svg class="i" style="width:14px;height:14px"><use href="#plus"/></svg>Tugas baru</button>`}
+    </section>`;
+  }).join('');
+  const isiTab = S.tab === 'daftar'
+    ? `<div class="kolom" aria-hidden="true"><span></span><span>Aa Tugas</span><span><svg><use href="#status"/></svg>Status</span><span><svg><use href="#saya"/></svg>PIC</span><span><svg><use href="#hari"/></svg>Tenggat</span><span class="k-prio"><svg><use href="#bendera"/></svg>Prioritas</span></div>
+       ${isiGrup || `<p class="kosong">Tidak ada tugas yang cocok. Ubah saringan atau buat tugas baru.</p>`}`
+    : `<p class="catatan-tab">Prototipe ini hanya menggambar tampilan Daftar. ${besar(S.tab)} memakai data dan panel samping yang sama.</p>`;
+  $('#gulir').innerHTML = `<div class="dalam">
+    <h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1>
+    <p class="ringkas">${ringkasan(daftar)}</p>
+    <div class="alat">
+      <div class="tabs" role="tablist" aria-label="Tampilan">
+        ${[['daftar', 'Daftar'], ['papan', 'Papan'], ['kalender', 'Kalender'], ['gantt', 'Gantt']].map(([id, l]) => `<button class="tab" role="tab" type="button" data-tab="${id}" aria-selected="${S.tab === id}"><svg><use href="#${id === 'kalender' ? 'hari' : id}"/></svg>${l}</button>`).join('')}
+      </div>
+      <div class="kanan">
+        <label class="cari-kecil"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari…" value="${esc(S.cari)}"></label>
+        <label class="sr" for="saring-pic">PIC</label>
+        <select class="pilih ${S.pic ? 'on' : ''}" id="saring-pic"><option value="">PIC: Semua</option>${Object.keys(ORANG).map((k) => `<option value="${k}" ${S.pic === k ? 'selected' : ''}>PIC: ${ORANG[k].nama}</option>`).join('')}</select>
+        <label class="sr" for="kelompok">Kelompokkan</label>
+        <select class="pilih" id="kelompok">${[['proyek', 'Proyek'], ['status', 'Status'], ['pic', 'PIC']].map(([v, l]) => `<option value="${v}" ${S.kelompok === v ? 'selected' : ''}>Kelompok: ${l}</option>`).join('')}</select>
+        <button class="baru" type="button" data-baru=""><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg>Baru</button>
+      </div>
+    </div>
+    ${isiTab}
+  </div>`;
+}
+
+function renderKartu(t) {
+  const tg = labelTgl(t);
+  return `<div class="kartu ${t.st === 'selesai' ? 'selesai' : ''} ${S.dipilih === t.kode ? 'pilih-ini' : ''}" data-buka="${t.kode}">
+    ${cek(t)}<button class="jdl" type="button">${esc(t.judul)}</button>
+    <span class="meta"><span>${kp(t.p)}${proyek(t.p).nama}</span>${subp(t)}${t.pr === 'mendesak' || t.pr === 'tinggi' ? pr(t.pr) : ''}</span>
+    <span class="kanan"><span class="tgl ${tg.kls}">${tg.teks}</span>${av(t.pic)}</span>
+  </div>`;
+}
+
+function renderHariIni() {
+  $('#jejak').innerHTML = `Pekerjaan <span>/</span> <b>Hari ini</b>`;
+  const terlambat = TUGAS.filter(lewat).sort(urut);
+  const hari = TUGAS.filter((t) => t.tgl === HARI_INI).sort(urut);
+  const berikut = TUGAS.filter((t) => !tutupStatus(t) && t.tgl > HARI_INI && t.tgl <= tambahHari(7)).sort(urut);
+  urutanAktif = [...terlambat, ...hari, ...berikut].map((t) => t.kode);
+  const bagian = (judul, isi, kls = '', aksi = '') => `<section class="bagian"><h2 class="${kls}">${judul} <span class="n">${isi.length}</span>${aksi}</h2>${isi.map(renderKartu).join('') || '<p class="kosong">Kosong.</p>'}</section>`;
+  const nHari = hari.filter((t) => !tutupStatus(t)).length;
+  $('#gulir').innerHTML = `<div class="fokus">
+    <h1 class="judul-hal">Hari ini <span class="contoh">CONTOH</span></h1>
+    <p class="ringkas">Sabtu, 18 Oktober 2026 · <b>${nHari} tugas</b> jatuh tempo hari ini${terlambat.length ? ` · <span class="m">${terlambat.length} terlambat</span>` : ''}</p>
+    <form class="tambah-cepat" id="form-cepat"><span class="plus" aria-hidden="true">+</span><label class="sr" for="cepat">Tambah tugas cepat</label><input id="cepat" autocomplete="off" placeholder="Tambah tugas…"><kbd>C</kbd></form>
+    <p class="petunjuk">Contoh: Cek stok gula <code>@Budi</code> <code>#Gerai</code> <code>!tinggi</code> <code>besok</code> lalu tekan Enter.</p>
+    ${terlambat.length ? bagian('Terlambat', terlambat, 'merah', '<button type="button" data-jadwal-ulang>Pindah ke hari ini</button>') : ''}
+    ${bagian('Hari ini', hari)}
+    ${bagian('7 hari ke depan', berikut)}
+  </div>`;
+}
+
+function renderPeek() {
+  const app = $('#app');
+  const t = TUGAS.find((x) => x.kode === S.dipilih);
+  app.classList.toggle('peek-buka', !!t);
+  $('#peek').setAttribute('aria-hidden', !t);
+  if (!t) return;
+  const i = urutanAktif.indexOf(t.kode);
+  $('#posisi').textContent = i >= 0 ? `${i + 1} dari ${urutanAktif.length}` : '';
+  const tg = labelTgl(t, true);
+  const p = proyek(t.p);
+  const n = t.sub.filter((s) => s.ok).length;
+  const pilihan = (nama, nilai, opsi, tampil) => `<select class="prop-ubah" data-prop="${nama}" aria-label="${besar(nama)}">${opsi.map(([v, l]) => `<option value="${v}" ${v === nilai ? 'selected' : ''}>${l}</option>`).join('')}</select><span class="prop-tampil">${tampil}</span>`;
+  $('#pk-isi').innerHTML = `
+    <div class="pk-kode">${t.kode}</div>
+    <h2 class="pk-judul" contenteditable="true" spellcheck="false" data-judul aria-label="Judul tugas">${esc(t.judul)}</h2>
+    <dl class="props">
+      <dt><svg><use href="#status"/></svg>Status</dt><dd>${pilihan('st', t.st, STATUS.map((s) => [s, besar(s)]), st(t.st))}</dd>
+      <dt><svg><use href="#saya"/></svg>PIC</dt><dd>${pilihan('pic', t.pic, Object.keys(ORANG).map((k) => [k, ORANG[k].nama]), orang(t.pic))}</dd>
+      <dt><svg><use href="#hari"/></svg>Tenggat</dt><dd><input class="prop-ubah" type="date" data-prop="tgl" value="${t.tgl}" aria-label="Tenggat"><span class="prop-tampil tgl ${tg.kls}">${tg.teks}</span></dd>
+      <dt><svg><use href="#bendera"/></svg>Prioritas</dt><dd>${pilihan('pr', t.pr, PRIO.map((s) => [s, besar(s)]), pr(t.pr))}</dd>
+      <dt><svg><use href="#map"/></svg>Proyek</dt><dd>${pilihan('p', t.p, PROYEK.map((x) => [x.id, x.nama]), `<span class="orang">${kp(t.p)}${p.nama}</span>`)}</dd>
+      <dt><svg><use href="#milestone"/></svg>Milestone</dt><dd>${pilihan('ms', t.ms, p.milestone.map((m) => [m, m]), esc(t.ms || '—'))}</dd>
+    </dl>
+    ${t.catatan ? `<p class="pk-catatan">${esc(t.catatan)}</p>` : ''}
+    <h3>Subtugas <span>${t.sub.length ? `${n}/${t.sub.length}` : ''}</span></h3>
+    <ul class="sublist">${t.sub.map((s, j) => `<li class="${s.ok ? 'ok' : ''}"><button class="cek" type="button" role="checkbox" aria-checked="${!!s.ok}" data-sub="${j}" aria-label="${esc(s.t)}"></button><span>${esc(s.t)}</span></li>`).join('')}</ul>
+    <form class="sub-tambah" id="form-sub"><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg><label class="sr" for="sub-baru">Subtugas baru</label><input id="sub-baru" placeholder="Tambah subtugas"></form>
+    <h3>Aktivitas</h3>
+    <ul class="akt">${t.akt.map(([k, teks, w]) => `<li>${av(k)}<div><b>${ORANG[k].nama}</b> ${teks}<time>${w}</time></div></li>`).join('') || '<li style="grid-template-columns:1fr;color:var(--pudar)">Belum ada aktivitas.</li>'}</ul>
+    <form class="komentar" id="form-komentar">${av('MA')}<label class="sr" for="komentar">Komentar</label><input id="komentar" placeholder="Tulis komentar…" autocomplete="off"><button type="submit">Kirim</button></form>`;
+}
+
+function render() {
+  renderSidebar();
+  S.tampil === 'hari' ? renderHariIni() : renderDaftar();
+  renderPeek();
+}
+
+// ---------- Aksi ----------
+function catat(t, teks) { t.akt.unshift(['MA', teks, '18 Okt']); }
+function buka(kode) { S.dipilih = kode; render(); }
+function tutup() { S.dipilih = null; render(); }
+function geser(arah) {
+  if (!S.dipilih) return;
+  const i = urutanAktif.indexOf(S.dipilih);
+  const j = Math.min(urutanAktif.length - 1, Math.max(0, i + arah));
+  if (urutanAktif[j]) { buka(urutanAktif[j]); document.querySelector(`[data-buka="${S.dipilih}"]`)?.scrollIntoView({ block: 'nearest' }); }
+}
+function tugasBaru(data = {}) {
+  const p = proyek(data.p || S.proyek || 'G');
+  const no = Math.max(0, ...TUGAS.filter((t) => t.p === p.id).map((t) => +t.kode.split('-')[1])) + 1;
+  const t = { kode: `${p.kode}-${String(no).padStart(3, '0')}`, judul: data.judul || 'Tugas baru', p: p.id, ms: p.milestone[0], pic: data.pic || 'MA', tgl: data.tgl || HARI_INI, st: 'rencana', pr: data.pr || 'normal', sub: [], akt: [['MA', 'membuat tugas', '18 Okt']] };
+  TUGAS.push(t);
+  return t;
+}
+function bacaCepat(teks) {
+  const d = { judul: teks };
+  d.judul = d.judul.replace(/@(\w+)/, (_, n) => { const k = Object.keys(ORANG).find((k) => ORANG[k].nama.toLowerCase().startsWith(n.toLowerCase()) || k === n.toUpperCase()); if (k) d.pic = k; return ''; });
+  d.judul = d.judul.replace(/#(\w+)/, (_, n) => { const p = PROYEK.find((p) => p.nama.toLowerCase().includes(n.toLowerCase())); if (p) d.p = p.id; return ''; });
+  d.judul = d.judul.replace(/!(\w+)/, (_, n) => { if (PRIO.includes(n.toLowerCase())) d.pr = n.toLowerCase(); return ''; });
+  d.judul = d.judul.replace(/\b(besok|lusa|hari ini)\b/i, (m) => { d.tgl = tambahHari({ 'hari ini': 0, besok: 1, lusa: 2 }[m.toLowerCase()]); return ''; });
+  d.judul = d.judul.replace(/\s+/g, ' ').trim();
+  return d;
+}
+
+document.addEventListener('click', (e) => {
+  const el = e.target;
+  const c = el.closest('[data-cek]');
+  if (c) { const t = TUGAS.find((x) => x.kode === c.dataset.cek); t.st = t.st === 'selesai' ? 'proses' : 'selesai'; catat(t, `mengubah status ke <b>${besar(t.st)}</b>`); render(); return; }
+  const sb = el.closest('[data-sub]');
+  if (sb) { const t = TUGAS.find((x) => x.kode === S.dipilih); const s = t.sub[+sb.dataset.sub]; s.ok = !s.ok; render(); return; }
+  const tampil = el.closest('[data-tampil]');
+  if (tampil) { S.tampil = tampil.dataset.tampil; S.proyek = tampil.dataset.proyek || null; S.tab = 'daftar'; document.body.classList.remove('laci-buka'); render(); $('#gulir').scrollTop = 0; return; }
+  const lipat = el.closest('[data-lipat]');
+  if (lipat) { const id = lipat.dataset.lipat; S.lipat.has(id) ? S.lipat.delete(id) : S.lipat.add(id); render(); return; }
+  const tab = el.closest('[data-tab]');
+  if (tab) { S.tab = tab.dataset.tab; render(); return; }
+  const baru = el.closest('[data-baru]');
+  if (baru || el.closest('#fab')) {
+    if (S.tampil === 'hari') { $('#cepat').focus(); return; }
+    const t = tugasBaru({ p: baru?.dataset.baru || undefined, judul: 'Tugas baru' });
+    buka(t.kode);
+    const j = $('[data-judul]'); j.focus(); document.getSelection().selectAllChildren(j);
+    return;
+  }
+  if (el.closest('[data-jadwal-ulang]')) { TUGAS.filter(lewat).forEach((t) => { t.tgl = HARI_INI; catat(t, 'memindahkan tenggat ke <b>hari ini</b>'); }); render(); return; }
+  if (el.closest('[data-tutup]')) { tutup(); return; }
+  const g = el.closest('[data-geser]');
+  if (g) { geser(+g.dataset.geser); return; }
+  if (el.closest('[data-fokus-cari]')) { document.body.classList.remove('laci-buka'); if (S.tampil === 'hari') { S.tampil = 'semua'; render(); } $('#cari').focus(); return; }
+  const row = el.closest('[data-buka]');
+  if (row) { S.dipilih === row.dataset.buka ? tutup() : buka(row.dataset.buka); return; }
+});
+
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  if (el.id === 'saring-pic') { S.pic = el.value; render(); return; }
+  if (el.id === 'kelompok') { S.kelompok = el.value; S.lipat.clear(); render(); return; }
+  if (el.dataset.prop) {
+    const t = TUGAS.find((x) => x.kode === S.dipilih);
+    const k = el.dataset.prop;
+    t[k] = el.value;
+    if (k === 'p') t.ms = proyek(t.p).milestone[0];
+    const label = { st: 'status', pic: 'PIC', tgl: 'tenggat', pr: 'prioritas', p: 'proyek', ms: 'milestone' }[k];
+    const nilai = k === 'pic' ? ORANG[t.pic].nama : k === 'p' ? proyek(t.p).nama : k === 'tgl' ? labelTgl(t, true).teks : besar(String(t[k]));
+    catat(t, `mengubah ${label} ke <b>${esc(nilai)}</b>`);
+    render();
+  }
+});
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'cari') { S.cari = e.target.value; const pos = e.target.selectionStart; renderDaftar(); const c = $('#cari'); c.focus(); c.setSelectionRange(pos, pos); }
+});
+document.addEventListener('focusout', (e) => {
+  if (e.target.matches?.('[data-judul]')) { const t = TUGAS.find((x) => x.kode === S.dipilih); const v = e.target.textContent.trim(); if (t && v && v !== t.judul) { t.judul = v; render(); } }
+});
+document.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const f = e.target;
+  if (f.id === 'form-cepat') { const v = $('#cepat').value.trim(); if (!v) return; const d = bacaCepat(v); if (!d.judul) return; tugasBaru(d); render(); $('#cepat').focus(); }
+  if (f.id === 'form-sub') { const v = $('#sub-baru').value.trim(); if (!v) return; TUGAS.find((x) => x.kode === S.dipilih).sub.push({ t: v, ok: false }); render(); $('#sub-baru').focus(); }
+  if (f.id === 'form-komentar') { const v = $('#komentar').value.trim(); if (!v) return; catat(TUGAS.find((x) => x.kode === S.dipilih), esc(v)); render(); }
+});
+document.addEventListener('keydown', (e) => {
+  const mengetik = !!e.target.matches?.('input, select, textarea, [contenteditable="true"]');
+  if (e.key === 'Escape') { if (mengetik) { e.target.blur(); return; } if (document.body.classList.contains('laci-buka')) { document.body.classList.remove('laci-buka'); return; } tutup(); return; }
+  if (e.key === 'Enter' && e.target.matches?.('[data-judul]')) { e.preventDefault(); e.target.blur(); return; }
+  if (mengetik) return;
+  if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); S.dipilih ? geser(1) : urutanAktif[0] && buka(urutanAktif[0]); }
+  if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); geser(-1); }
+  if (e.key === '/') { e.preventDefault(); if (S.tampil === 'hari') { S.tampil = 'semua'; render(); } $('#cari').focus(); }
+  if (e.key === 'c' || e.key === 'C') { e.preventDefault(); if (S.tampil === 'hari') $('#cepat').focus(); else $('[data-baru]').click(); }
+});
+$('#tombol-laci').addEventListener('click', () => { document.body.classList.add('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'true'); });
+$('#selubung').addEventListener('click', () => { document.body.classList.remove('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'false'); });
+
+render();
+</script>
+</body>
+</html>
