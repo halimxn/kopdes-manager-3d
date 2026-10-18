@@ -29,7 +29,7 @@ button { cursor: pointer; background: none; border: 0; padding: 0; }
 svg.i { width: 17px; height: 17px; flex: none; }
 
 /* ---------- Kerangka ---------- */
-.app { display: grid; overflow: hidden; grid-template-columns: var(--lebar-sb) minmax(0, 1fr) 0; height: 100vh; height: 100dvh; transition: grid-template-columns .2s ease; }
+.app { display: grid; position: relative; overflow: hidden; grid-template-columns: var(--lebar-sb) minmax(0, 1fr) 0; height: 100vh; height: 100dvh; transition: grid-template-columns .2s ease; }
 .app.peek-buka { grid-template-columns: var(--lebar-sb) minmax(0, 1fr) var(--lebar-peek); }
 
 /* Sidebar */
@@ -268,6 +268,64 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
   .kartu { padding: 12px 4px; }
 }
 @media (prefers-reduced-motion: reduce) { .app, .sb, .peek, .grup-k .panah { transition: none; } }
+
+/* ---------- Pengalih gaya (alat prototipe, bukan fitur) ---------- */
+.gaya { display: flex; gap: 2px; padding: 3px; border-radius: 9px; background: var(--sisi); margin-right: 8px; }
+.gaya button { height: 26px; padding: 0 10px; border-radius: 7px; font-size: 12px; color: var(--redup); font-weight: 500; }
+.gaya button[aria-pressed="true"] { background: #fff; color: var(--tinta); box-shadow: 0 1px 2px rgb(29 30 44 / .12); }
+.sampul, .ikon-hal, .sapa { display: none; }
+.sapa { align-items: center; gap: 16px; padding: 18px 20px; border-radius: 18px; background: linear-gradient(135deg, #eef1ff, #f8efff 70%); margin: 4px 0 24px; }
+.sapa b { display: block; font-size: 16px; font-weight: 600; }
+.sapa span { color: var(--redup); font-size: 13px; }
+.cincin-besar { width: 52px; height: 52px; border-radius: 50%; flex: none; background: conic-gradient(var(--aksen) calc(var(--p) * 1%), #dde2fb 0); -webkit-mask: radial-gradient(circle 19px, transparent 98%, #000 100%); mask: radial-gradient(circle 19px, transparent 98%, #000 100%); }
+.sapa .persen { margin-left: auto; font-size: 26px; font-weight: 700; color: var(--aksen); letter-spacing: -.02em; }
+
+/* ---------- Gaya Sampul: sampul halaman + ikon ala Notion ---------- */
+body[data-gaya="sampul"] .sampul { display: block; height: 156px; position: relative; background: radial-gradient(110% 140% at 0% 0%, #c3cdff 0%, transparent 55%), radial-gradient(90% 130% at 100% 0%, #e6c9ff 0%, transparent 60%), linear-gradient(120deg, #e3e8ff, #f1e4ff 55%, #ffe6d3); }
+body[data-gaya="sampul"] .sampul::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgb(84 111 255 / .16) 1px, transparent 1.2px); background-size: 18px 18px; -webkit-mask: linear-gradient(to bottom, #000, transparent); mask: linear-gradient(to bottom, #000, transparent); }
+body[data-gaya="sampul"] .ikon-hal { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 20px; background: #fff; color: var(--aksen); margin-top: -46px; position: relative; box-shadow: 0 0 0 1px var(--garis), 0 10px 24px -12px rgb(29 30 44 / .35); }
+body[data-gaya="sampul"] .ikon-hal svg { width: 32px; height: 32px; }
+body[data-gaya="sampul"] .judul-hal { margin-top: 14px; }
+body[data-gaya="sampul"] .av, body[data-gaya="pastel"] .av { background: color-mix(in srgb, var(--w) 15%, #fff); color: var(--w); }
+body[data-gaya="sampul"] .st.proses { color: var(--aksen); font-weight: 500; }
+body[data-gaya="sampul"] .grup-k .kp { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ---------- Gaya Tinta: sidebar gelap, tegas ala Linear ---------- */
+body[data-gaya="tinta"] .sb { background: #15162a; border-color: #15162a; }
+body[data-gaya="tinta"] .sb-ruang, body[data-gaya="tinta"] .sb-i { color: #c3c5da; }
+body[data-gaya="tinta"] .sb-ruang:hover, body[data-gaya="tinta"] .sb-i:hover { background: rgb(255 255 255 / .06); }
+body[data-gaya="tinta"] .sb-i[aria-current="page"] { background: rgb(84 111 255 / .22); color: #fff; }
+body[data-gaya="tinta"] .sb-i svg, body[data-gaya="tinta"] .sb-i .n, body[data-gaya="tinta"] .sb-judul, body[data-gaya="tinta"] .sb-judul button { color: #757896; }
+body[data-gaya="tinta"] .sb-i[aria-current="page"] svg { color: #9db0ff; }
+body[data-gaya="tinta"] .sb-anak .sb-i { color: #9496b0; }
+body[data-gaya="tinta"] .logo { background: linear-gradient(135deg, #7b8fff, #4a63f2); box-shadow: 0 4px 12px -4px rgb(84 111 255 / .8); }
+body[data-gaya="tinta"] .judul-hal { font-size: 36px; letter-spacing: -.03em; margin-top: 20px; }
+body[data-gaya="tinta"] .baru { background: linear-gradient(180deg, #6c84ff, #4a63f2); box-shadow: 0 6px 16px -6px rgb(84 111 255 / .75), inset 0 1px 0 rgb(255 255 255 / .25); }
+body[data-gaya="tinta"] .tab[aria-selected="true"] { border-color: var(--aksen); color: var(--aksen); }
+body[data-gaya="tinta"] .grup-k { text-transform: uppercase; font-size: 11.5px; letter-spacing: .06em; color: var(--redup); }
+body[data-gaya="tinta"] .baris.pilih-ini, body[data-gaya="tinta"] .kartu.pilih-ini { background: #f3f5ff; box-shadow: inset 3px 0 0 var(--aksen); }
+body[data-gaya="tinta"] .cek[aria-checked="true"] { background: var(--aksen); border-color: var(--aksen); }
+body[data-gaya="tinta"] .st.proses { color: var(--tinta); font-weight: 500; }
+
+/* ---------- Gaya Pastel: kartu lembut di atas latar abu ---------- */
+body[data-gaya="pastel"], body[data-gaya="pastel"] .utama, body[data-gaya="pastel"] .sb, body[data-gaya="pastel"] .atas { background: #f3f4f9; }
+body[data-gaya="pastel"] .sb { border-right: 0; }
+body[data-gaya="pastel"] .sb-i[aria-current="page"] { background: #fff; box-shadow: 0 1px 3px rgb(29 30 44 / .08); }
+body[data-gaya="pastel"] .cari-atas { background: #fff; }
+body[data-gaya="pastel"] .sapa { display: flex; background: linear-gradient(135deg, #e4e9ff, #f4e8ff 70%); }
+body[data-gaya="pastel"] .alat { border-bottom: 0; margin-bottom: 10px; }
+body[data-gaya="pastel"] .tabs { background: #e7e8f1; padding: 3px; border-radius: 10px; }
+body[data-gaya="pastel"] .tab { height: 30px; border: 0; margin: 0; border-radius: 8px; }
+body[data-gaya="pastel"] .tab[aria-selected="true"] { background: #fff; box-shadow: 0 1px 2px rgb(29 30 44 / .1); }
+body[data-gaya="pastel"] .kolom { display: none; }
+body[data-gaya="pastel"] .baris, body[data-gaya="pastel"] .kartu { background: #fff; border: 0; border-radius: 14px; margin-bottom: 6px; min-height: 54px; box-shadow: 0 1px 2px rgb(29 30 44 / .05); }
+body[data-gaya="pastel"] .kartu { padding: 12px 10px; }
+body[data-gaya="pastel"] .baris:hover, body[data-gaya="pastel"] .kartu:hover { background: #fff; box-shadow: 0 6px 16px -8px rgb(29 30 44 / .22); }
+body[data-gaya="pastel"] .baris.pilih-ini, body[data-gaya="pastel"] .kartu.pilih-ini { background: #fff; box-shadow: 0 0 0 2px var(--aksen); }
+body[data-gaya="pastel"] .tambah-cepat { background: #fff; border-color: transparent; box-shadow: 0 2px 10px -4px rgb(29 30 44 / .12); }
+body[data-gaya="pastel"] .grup-k .kp { width: 10px; height: 10px; }
+body[data-gaya="pastel"] .peek { border-left: 0; }
+@media (max-width: 767px) { .gaya button { padding: 0 7px; } .sapa { padding: 14px 16px; } .sapa .persen { font-size: 22px; } }
 </style>
 </head>
 <body>
@@ -320,7 +378,7 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
     <div class="atas">
       <button class="ikon-t tombol-menu" type="button" id="tombol-laci" aria-label="Buka navigasi" aria-expanded="false"><svg class="i"><use href="#menu"/></svg></button>
       <div class="jejak" id="jejak"></div>
-      <div class="kanan"><label class="cari-atas"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari tugas"><kbd>/</kbd></label></div>
+      <div class="kanan"><div class="gaya" role="group" aria-label="Gaya prototipe"><button type="button" data-gaya="sampul">Sampul</button><button type="button" data-gaya="tinta">Tinta</button><button type="button" data-gaya="pastel">Pastel</button></div><label class="cari-atas"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari tugas"><kbd>/</kbd></label></div>
     </div>
     <div class="gulir" id="gulir"></div>
   </main>
@@ -358,6 +416,7 @@ let TUGAS = [
   { kode: 'RAT-004', judul: 'Susun draf laporan pertanggungjawaban', p: 'R', ms: 'Laporan', pic: 'MA', tgl: '2026-10-25', st: 'proses', pr: 'tinggi', catatan: 'Menunggu angka buku kas Oktober.', sub: sub([['Kerangka laporan', 1], ['Bagian usaha', 0], ['Bagian keuangan', 0], ['Bagian keanggotaan', 0], ['Tinjau ketua', 0]]), akt: [] },
   { kode: 'RAT-005', judul: 'Pesan tenda dan kursi untuk 250 orang', p: 'R', ms: 'Undangan', pic: 'BD', tgl: '2026-10-18', st: 'rencana', pr: 'normal', sub: [], akt: [] },
   { kode: 'CLD-002', judul: 'Bandingkan 3 penawaran unit pendingin', p: 'C', ms: 'Pengadaan', pic: 'AR', tgl: '2026-10-12', st: 'rencana', pr: 'normal', catatan: 'Satu penawaran belum masuk.', sub: sub([['Penawaran A', 1], ['Penawaran B', 0], ['Penawaran C', 0]]), akt: [] },
+  { kode: 'GRS-017', judul: 'Setor kas harian ke bank', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'selesai', pr: 'normal', sub: [], akt: [['MA', 'menandai selesai', '18 Okt']] },
   { kode: 'CLD-003', judul: 'Cek daya listrik gudang (kVA)', p: 'C', ms: 'Pengadaan', pic: 'MA', tgl: '2026-10-22', st: 'rencana', pr: 'rendah', sub: [], akt: [] },
 ];
 
@@ -384,7 +443,7 @@ function labelTgl(t, panjang) {
   return { teks: dasar, kls: '' };
 }
 const besar = (s) => s[0].toUpperCase() + s.slice(1);
-const av = (k) => `<span class="av" title="${ORANG[k].nama}">${k}</span>`;
+const av = (k) => `<span class="av" style="--w:${ORANG[k].w}" title="${ORANG[k].nama}">${k}</span>`;
 const orang = (k) => `<span class="orang">${av(k)}<span class="nama">${ORANG[k].nama}</span></span>`;
 const st = (s) => `<span class="st ${s}"><i></i>${besar(s)}</span>`;
 const pr = (p) => `<span class="pr ${p}">${p === 'normal' || p === 'rendah' ? '' : '<svg><use href="#bendera"/></svg>'}${besar(p)}</span>`;
@@ -408,6 +467,16 @@ const urut = (a, b) => (tutupStatus(a) - tutupStatus(b)) || a.tgl.localeCompare(
 let urutanAktif = [];
 
 // ---------- Render ----------
+function kepalaHalaman(ikon, daftar, label) {
+  const tot = daftar.length;
+  const n = daftar.filter((t) => t.st === 'selesai').length;
+  const pct = tot ? Math.round((n / tot) * 100) : 0;
+  return {
+    sampul: '<div class="sampul" aria-hidden="true"></div>',
+    ikon: `<div class="ikon-hal" aria-hidden="true">${ikon}</div>`,
+    sapa: `<div class="sapa"><span class="cincin-besar" style="--p:${pct}" aria-hidden="true"></span><div><b>Selamat pagi</b><span>${n} dari ${tot} ${label} selesai</span></div><span class="persen">${pct}%</span></div>`,
+  };
+}
 function renderSidebar() {
   $('#sb-proyek').innerHTML = PROYEK.map((p) => `
     <button class="sb-i" type="button" data-tampil="proyek" data-proyek="${p.id}">${kp(p.id)}${p.nama}</button>
@@ -467,9 +536,13 @@ function renderDaftar() {
     ? `<div class="kolom" aria-hidden="true"><span></span><span>Tugas</span><span>Status</span><span>PIC</span><span>Tenggat</span></div>
        ${isiGrup || `<p class="kosong">Tidak ada tugas yang cocok. Ubah saringan atau buat tugas baru.</p>`}`
     : `<p class="catatan-tab">Prototipe ini hanya menggambar tampilan Daftar. ${besar(S.tab)} memakai data dan panel samping yang sama.</p>`;
-  $('#gulir').innerHTML = `<div class="dalam">
+  const ikon = S.tampil === 'proyek' ? `<span style="font-size:30px;font-weight:700;color:${proyek(S.proyek).w}">${S.proyek}</span>` : `<svg><use href="#${S.tampil === 'saya' ? 'saya' : 'semua'}"/></svg>`;
+  const kh = kepalaHalaman(ikon, daftar, 'tugas');
+  $('#gulir').innerHTML = `${kh.sampul}<div class="dalam">
+    ${kh.ikon}
     <h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1>
     <p class="ringkas">${ringkasan(daftar)}</p>
+    ${kh.sapa}
     <div class="alat">
       <div class="tabs" role="tablist" aria-label="Tampilan">
         ${[['daftar', 'Daftar'], ['papan', 'Papan'], ['kalender', 'Kalender'], ['gantt', 'Gantt']].map(([id, l]) => `<button class="tab" role="tab" type="button" data-tab="${id}" aria-selected="${S.tab === id}"><svg><use href="#${id === 'kalender' ? 'hari' : id}"/></svg>${l}</button>`).join('')}
@@ -501,9 +574,12 @@ function renderHariIni() {
   urutanAktif = [...terlambat, ...hari, ...berikut].map((t) => t.kode);
   const bagian = (judul, isi, kls = '', aksi = '') => `<section class="bagian"><h2 class="${kls}">${judul} <span class="n">${isi.length}</span>${aksi}</h2>${isi.map(renderKartu).join('') || '<p class="kosong">Kosong.</p>'}</section>`;
   const nHari = hari.filter((t) => !tutupStatus(t)).length;
-  $('#gulir').innerHTML = `<div class="fokus">
+  const kh = kepalaHalaman('<svg><use href="#hari"/></svg>', hari, 'tugas hari ini');
+  $('#gulir').innerHTML = `${kh.sampul}<div class="fokus">
+    ${kh.ikon}
     <h1 class="judul-hal">Hari ini <span class="contoh">CONTOH</span></h1>
     <p class="ringkas">Sabtu, 18 Oktober 2026</p>
+    ${kh.sapa}
     <form class="tambah-cepat" id="form-cepat"><span class="plus" aria-hidden="true">+</span><label class="sr" for="cepat">Tambah tugas cepat</label><input id="cepat" autocomplete="off" placeholder="Tambah tugas, mis. Cek stok gula @Budi #Gerai besok"><kbd>C</kbd></form>
     <p class="petunjuk">Contoh: Cek stok gula <code>@Budi</code> <code>#Gerai</code> <code>!tinggi</code> <code>besok</code> lalu tekan Enter.</p>
     ${terlambat.length ? bagian('Terlambat', terlambat, 'merah', '<button type="button" data-jadwal-ulang>Pindah ke hari ini</button>') : ''}
@@ -647,6 +723,16 @@ document.addEventListener('keydown', (e) => {
 $('#tombol-laci').addEventListener('click', () => { document.body.classList.add('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'true'); });
 $('#selubung').addEventListener('click', () => { document.body.classList.remove('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'false'); });
 
+// Pengalih gaya hanya alat banding prototipe; pilihan diingat per peramban.
+function pakaiGaya(nama) {
+  document.body.dataset.gaya = nama;
+  document.querySelectorAll('[data-gaya]').forEach((b) => b !== document.body && b.setAttribute('aria-pressed', b.dataset.gaya === nama));
+  try { localStorage.setItem('prototipe-gaya', nama); } catch {}
+}
+document.querySelector('.gaya').addEventListener('click', (e) => { const b = e.target.closest('[data-gaya]'); if (b) pakaiGaya(b.dataset.gaya); });
+let gayaAwal = 'sampul';
+try { gayaAwal = localStorage.getItem('prototipe-gaya') || gayaAwal; } catch {}
+pakaiGaya(gayaAwal);
 render();
 </script>
 </body>
