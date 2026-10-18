@@ -57,6 +57,14 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
   const [menu, setMenu] = useState(false),
     [error, setError] = useState(''),
     [actionModalOpen, setActionModalOpen] = useState(false);
+  // Di ≥1024 px tombol kepala menciutkan sidebar; di bawahnya membuka lembar menu.
+  const [layarLebar, setLayarLebar] = useState(false);
+  useEffect(() => {
+    const periksa = () => setLayarLebar(window.innerWidth >= 1024);
+    periksa();
+    window.addEventListener('resize', periksa);
+    return () => window.removeEventListener('resize', periksa);
+  }, []);
   const dialog = useRef<HTMLDialogElement>(null);
   const mobileSheet = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -186,10 +194,17 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
           <Button
             type="button"
             className="topbar-nav-menu-btn"
-            aria-label="Buka menu navigasi"
+            aria-label={
+              layarLebar
+                ? desktopSidebarHidden === 'true'
+                  ? 'Tampilkan sidebar navigasi'
+                  : 'Ciutkan sidebar navigasi'
+                : 'Buka menu navigasi'
+            }
+            aria-expanded={layarLebar ? desktopSidebarHidden !== 'true' : menu}
             title="Menu navigasi (Ctrl+B)"
             onClick={() => {
-              if (window.innerWidth >= 1024) {
+              if (layarLebar) {
                 setDesktopSidebarHidden(desktopSidebarHidden === 'true' ? 'false' : 'true');
               } else {
                 setMenu(!menu);

@@ -28,12 +28,20 @@ it('TabHub menampilkan tab hub dan menandai halaman aktif', () => {
   expect(within(daftar).getByRole('link', { name: 'Tugas' }).getAttribute('aria-current')).toBe('page');
 });
 
-it('TabHub menggulir tab aktif ke dalam pandangan di layar sempit', () => {
+it('TabHub menggulir bilah tab saja agar tab aktif terlihat, tanpa menggeser halaman', () => {
   const gulir = vi.fn();
   Element.prototype.scrollIntoView = gulir;
+  const lebar = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(300);
+  const kiri = vi.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockImplementation(function (this: HTMLElement) {
+    return this.getAttribute('href') === '/stok-opname' ? 700 : 0;
+  });
+  const tabLebar = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(100);
   render(<TabHub path="/stok-opname" />);
-  expect(gulir).toHaveBeenCalledWith({ block: 'nearest', inline: 'center' });
-  expect((gulir.mock.contexts[0] as Element).getAttribute('href')).toBe('/stok-opname');
+  const daftar = screen.getByRole('navigation', { name: 'Bagian Usaha' });
+  // Tengah tab (700 + 50) dikurangi setengah lebar bilah (150).
+  expect(daftar.scrollLeft).toBe(600);
+  expect(gulir).not.toHaveBeenCalled();
+  [lebar, kiri, tabLebar].forEach((mata) => mata.mockRestore());
 });
 
 it('TabHub tidak dirender untuk hub satu tab atau halaman tanpa hub', () => {

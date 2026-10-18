@@ -57,7 +57,7 @@ img, svg { flex-shrink: 0; }
 :where(table, td, th) { font-variant-numeric: tabular-nums; }
 
 /* Permukaan browser ikut tema */
-::selection { background: rgba(84, 111, 255, 0.2); color: inherit; }
+::selection { background: color-mix(in srgb, var(--brand) 20%, transparent); color: inherit; }
 :root { accent-color: var(--brand); caret-color: var(--brand); }
 * { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }

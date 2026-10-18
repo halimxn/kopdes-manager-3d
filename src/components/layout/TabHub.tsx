@@ -9,10 +9,12 @@ export function TabHub({ path }: { path: string }) {
   const hub = hubUntuk(path);
   const aktif = path.split(/[?#]/)[0];
   // Hub Usaha punya delapan tab; di ponsel tab aktif bisa berada di luar layar.
+  // Gulir bilah tab saja: scrollIntoView ikut menggeser halaman secara vertikal.
   useEffect(() => {
-    daftar.current
-      ?.querySelector('[aria-current="page"]')
-      ?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+    const bilah = daftar.current;
+    const tab = bilah?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!bilah || !tab) return;
+    bilah.scrollLeft = tab.offsetLeft + tab.offsetWidth / 2 - bilah.clientWidth / 2;
   }, [aktif]);
   if (!hub || hub.tabs.length < 2) return null;
   return (

@@ -80,6 +80,8 @@
 .beranda-status { grid-column: span 4; }
 .beranda-kas { grid-column: span 8; }
 .beranda-perhatian { grid-column: span 5; }
+/* Sasaran tautan lama /tindak-lanjut dan bilah Perlu perhatian; jangan tertutup kepala kerangka. */
+#perhatian { scroll-margin-top: calc(var(--topbar-h) + 16px); }
 .beranda-fokus { grid-column: span 7; order: 1; }
 .beranda-hadir, .beranda-jual { grid-column: span 6; order: 2; }
 /* Migrasi 10 belum aktif: tim dan penjualan tidak tampil */

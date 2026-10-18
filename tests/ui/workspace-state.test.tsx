@@ -206,7 +206,7 @@ it('at 1024px the menu toggles the desktop sidebar and closed mobile navigation 
       <p>Isi ruang kerja</p>
     </AppShell>,
   );
-  fireEvent.click(screen.getByRole('button', { name: 'Buka menu navigasi' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Ciutkan sidebar navigasi' }));
   expect(document.querySelector('.manager-shell')?.classList.contains('sidebar-collapsed')).toBe(
     true,
   );

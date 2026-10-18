@@ -331,16 +331,13 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
 
         <KasBanding keadaan={kas} />
 
-        <section className="modul beranda-perhatian" aria-label="Perlu perhatian">
+        <section id="perhatian" className="modul beranda-perhatian" aria-label="Perlu perhatian">
           <div className="modul-kepala">
             <span className="ubin ubin-kecil ubin-oranye" aria-hidden="true">
               <Bell size={17} />
             </span>
             <h2>Perlu perhatian</h2>
             <span className="beranda-jumlah">{perhatian.length}</span>
-            <Link href="/tindak-lanjut" className="modul-tautan">
-              Semua
-            </Link>
           </div>
           {perhatian.length ? (
             <ul className="beranda-baris">

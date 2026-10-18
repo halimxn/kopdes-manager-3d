@@ -45,6 +45,18 @@
         "3200"
       ],
       "port": 3200
+    },
+    {
+      "name": "desain",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "3300",
+        "-d",
+        "docs/desain"
+      ],
+      "port": 3300
     }
   ]
 }

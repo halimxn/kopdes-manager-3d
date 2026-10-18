@@ -310,7 +310,7 @@ export function Ikon3D({
         strokeWidth="2.1"
         className="ikon3d-simbol"
         // Gaya inline: aturan lama `svg { stroke/fill }` di CSS tidak boleh menimpa warna ikon.
-        style={{ stroke: `url(#${id}-g)`, fill: 'var(--ikon-isi, #dfe8ff)', color: '#546fff' }}
+        style={{ stroke: `url(#${id}-g)`, fill: 'var(--ikon-isi, #dfe8ff)', color: 'var(--brand)' }}
       />
     </svg>
   );

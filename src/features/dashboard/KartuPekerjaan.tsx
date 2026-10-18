@@ -22,8 +22,12 @@ export function KartuPekerjaan({
   keterangan?: string;
   terlambat?: boolean;
 }) {
+  // Isi kartu dibacakan berulang (label progres, keterangan); pembaca layar cukup mendengar ringkasannya.
+  const namaAksesibel = [judul, `progres ${progres === null ? 'belum dinilai' : `${progres}%`}`, tenggat]
+    .filter(Boolean)
+    .join(', ');
   return (
-    <Link href={href} className={`kartu-pekerjaan sampul-${hub}`}>
+    <Link href={href} className={`kartu-pekerjaan sampul-${hub}`} aria-label={namaAksesibel}>
       <span className="kartu-pekerjaan-sampul" aria-hidden="true">
         <IkonHalaman href={IKON[hub]} size={36} />
       </span>

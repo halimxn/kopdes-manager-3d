@@ -17,6 +17,14 @@ it('kartu pekerjaan menampilkan judul, progres bertulis, dan tautan', () => {
   expect(screen.getByText(/20 Okt/)).toBeTruthy();
 });
 
+it('nama aksesibel kartu pekerjaan ringkas: judul, progres, tenggat', () => {
+  render(<KartuPekerjaan judul="Siapkan rak gerai" hub="usaha" href="/tugas?task=1" progres={40} tenggat="20 Okt" keterangan="Aktif · 3 tugas" />);
+  expect(screen.getByRole('link', { name: 'Siapkan rak gerai, progres 40%, 20 Okt' })).toBeTruthy();
+  cleanup();
+  render(<KartuPekerjaan judul="Rapat pengurus" hub="catatan" href="/rapat" progres={null} />);
+  expect(screen.getByRole('link', { name: 'Rapat pengurus, progres belum dinilai' })).toBeTruthy();
+});
+
 it('kartu tanpa progres menulis "Belum dinilai", bukan 0%', () => {
   render(<KartuPekerjaan judul="Rapat pengurus" hub="catatan" href="/rapat" progres={null} />);
   expect(screen.getByText('Belum dinilai')).toBeTruthy();

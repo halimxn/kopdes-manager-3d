@@ -171,7 +171,7 @@ export function WorkspacePage({ slug }: { slug: string }) {
       <>
       <TabHub path={`/${slug}`} />
       <section className="card empty">
-        <h1>Ruang kerja belum dapat dimuat</h1>
+        <h2>Ruang kerja belum dapat dimuat</h2>
         <p role="alert">{error}</p>
         <Button onClick={() => void refresh()}>Coba lagi</Button>
         <p>
