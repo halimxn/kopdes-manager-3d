@@ -1268,6 +1268,42 @@ body[data-kulit="lekuk"] .kolom-kanan { gap: 12px; }
 .ps-tautan { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; margin-top: 8px; padding: 0 4px; font-size: 13px; font-weight: 600; color: var(--aksen); }
 .ps-tautan svg { width: 14px; height: 14px; }
 .ps-tautan:hover { text-decoration: underline; }
+
+/* ---------- Nav bawah ponsel: melayang, kaca, indikator meluncur ---------- */
+.nav-indikator, .lencana-nav { display: none; }
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .nav-dok {
+    left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); height: 68px; padding: 0 6px;
+    border-radius: 28px; background: rgb(255 255 255 / .82); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 18px 36px -18px rgb(76 60 160 / .55), inset 0 1px 0 rgb(255 255 255 / .9);
+    -webkit-mask: radial-gradient(circle 39px at 50% -4px, transparent 97%, #000 100%); mask: radial-gradient(circle 39px at 50% -4px, transparent 97%, #000 100%);
+  }
+  body[data-kulit="lekuk"] .nav-dok .nav-indikator { display: block; position: absolute; left: 0; top: 8px; width: 58px; height: 32px; border-radius: 999px; background: var(--aksen-muda); transition: transform .35s cubic-bezier(.3, 1.4, .5, 1), opacity .2s; pointer-events: none; }
+  .nav-dok button { position: relative; z-index: 1; display: grid; justify-items: center; align-content: center; gap: 4px; height: 68px; padding-top: 2px; color: #8b88a0; font-size: 11px; font-weight: 500; transition: color .2s, transform .12s; }
+  .nav-dok button::after { display: none; }
+  .nav-dok button:active { transform: scale(.92); }
+  .nav-ikon { position: relative; display: grid; place-items: center; width: 58px; height: 32px; }
+  .nav-ikon svg { width: 22px; height: 22px; transition: transform .25s cubic-bezier(.3, 1.4, .5, 1); }
+  .nav-dok button[aria-current="page"] { color: var(--aksen); font-weight: 700; }
+  .nav-dok button[aria-current="page"] .nav-ikon svg { transform: translateY(-1px) scale(1.08); }
+  .lencana-nav { display: grid; place-items: center; position: absolute; top: 0; right: 10px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #ff8b6a; color: #fff; font: 700 10px/1 "Plus Jakarta Sans"; font-style: normal; box-shadow: 0 0 0 2px #fff; }
+  .lencana-nav[hidden] { display: none; }
+  body[data-kulit="lekuk"] .dok-fab {
+    bottom: calc(48px + env(safe-area-inset-bottom)); width: 60px; height: 60px; margin-left: -30px;
+    background: linear-gradient(145deg, #b39dff, #7c5cf5); box-shadow: 0 12px 24px -8px rgb(124 92 245 / .85), inset 0 1px 0 rgb(255 255 255 / .45);
+    transition: transform .3s cubic-bezier(.3, 1.4, .5, 1), box-shadow .2s;
+  }
+  body[data-kulit="lekuk"] .dok-fab:active { transform: scale(.92); }
+  body[data-kulit="lekuk"] .dok-fab[aria-expanded="true"] { transform: rotate(135deg); background: #1d1b26; box-shadow: 0 12px 24px -8px rgb(29 27 38 / .7); }
+  body[data-kulit="lekuk"] .lembar-baru:not(:empty) { bottom: calc(124px + env(safe-area-inset-bottom)); border-radius: 26px; animation: naik .22s cubic-bezier(.2, .9, .3, 1.2) both; }
+  .lembar-baru .menu-baru button { animation: naik .3s ease both; }
+  .lembar-baru .menu-baru button:nth-child(2) { animation-delay: .04s; }
+  .lembar-baru .menu-baru button:nth-child(3) { animation-delay: .08s; }
+  .toast { bottom: calc(100px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-kulit="lekuk"] .nav-dok .nav-indikator, .nav-dok button, .nav-ikon svg, body[data-kulit="lekuk"] .dok-fab, body[data-kulit="lekuk"] .lembar-baru:not(:empty), .lembar-baru .menu-baru button { transition: none; animation: none; }
+}
 </style>
 </head>
 <body>
@@ -1361,11 +1397,12 @@ body[data-kulit="lekuk"] .kolom-kanan { gap: 12px; }
 </div>
 <button class="fab" type="button" id="fab" aria-label="Tugas baru">+</button>
 <nav class="nav-dok" aria-label="Navigasi utama">
-  <button type="button" data-tampil="hari"><svg><use href="#hari"/></svg><span>Hari ini</span></button>
-  <button type="button" data-tampil="semua"><svg><use href="#semua"/></svg><span>Tugas</span></button>
-  <span aria-hidden="true"></span>
-  <button type="button" data-tampil="agenda"><svg><use href="#waktu"/></svg><span>Agenda</span></button>
-  <button type="button" data-buka-laci><svg><use href="#menu"/></svg><span>Menu</span></button>
+  <span class="nav-indikator" aria-hidden="true"></span>
+  <button type="button" data-tampil="hari"><span class="nav-ikon"><svg><use href="#hari"/></svg><i class="lencana-nav" data-lencana="rutin" hidden></i></span><span class="nav-label">Hari ini</span></button>
+  <button type="button" data-tampil="semua"><span class="nav-ikon"><svg><use href="#semua"/></svg></span><span class="nav-label">Tugas</span></button>
+  <span class="nav-celah" aria-hidden="true"></span>
+  <button type="button" data-tampil="agenda"><span class="nav-ikon"><svg><use href="#waktu"/></svg><i class="lencana-nav" data-lencana="agenda" hidden></i></span><span class="nav-label">Agenda</span></button>
+  <button type="button" data-buka-laci><span class="nav-ikon"><svg><use href="#menu"/></svg></span><span class="nav-label">Lainnya</span></button>
 </nav>
 <button class="dok-fab" id="dok-fab" type="button" data-fab aria-haspopup="menu" aria-expanded="false" aria-label="Tambah tugas, agenda, atau kegiatan"><svg><use href="#plus"/></svg></button>
 <div class="lembar-baru" id="lembar-baru"></div>
@@ -2114,6 +2151,8 @@ function renderSidebar() {
   const rutin = TUGAS.filter((t) => t.rutin);
   $('[data-hitung="rutin"]').textContent = `${rutin.filter((t) => t.st === 'selesai').length}/${rutin.length}`;
   $('[data-hitung="agenda"]').textContent = AGENDA.filter((a) => a.tgl === HARI_INI).length || '';
+  const lencana = { rutin: rutin.filter((t) => t.st !== 'selesai').length, agenda: AGENDA.filter((a) => a.tgl === HARI_INI && a.selesai > JAM_KINI).length };
+  document.querySelectorAll('[data-lencana]').forEach((e) => { const n = lencana[e.dataset.lencana]; e.textContent = n || ''; e.hidden = !n; e.setAttribute('aria-label', `${n} belum selesai`); });
 }
 
 function ringkasan(daftar) {
@@ -2295,7 +2334,17 @@ function render() {
   const kunci = [S.tampil, S.proyek, S.tab, S.hariAgenda].join('|');
   if (kunci !== kunciTampilLalu && gerakBoleh()) $('#gulir > .dalam')?.classList.add('masuk');
   kunciTampilLalu = kunci;
+  posisiIndikator();
 }
+function posisiIndikator() {
+  const nav = $('.nav-dok');
+  const ind = nav?.querySelector('.nav-indikator');
+  if (!ind || !nav.offsetWidth) return;
+  const aktif = nav.querySelector('[aria-current="page"]');
+  ind.style.opacity = aktif ? 1 : 0;
+  if (aktif) ind.style.transform = `translateX(${aktif.offsetLeft + aktif.offsetWidth / 2 - ind.offsetWidth / 2}px)`;
+}
+window.addEventListener('resize', posisiIndikator);
 
 // ---------- Aksi ----------
 function catat(t, teks) { t.akt.unshift(['MA', teks, '18 Okt']); }
