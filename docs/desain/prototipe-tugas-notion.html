@@ -927,6 +927,120 @@ body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
   .agenda { grid-template-columns: 44px minmax(0, 1fr); gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .dok-fab, .rutin-progres i { transition: none; } }
+
+/* ---------- Interaksi: toast, letupan, konfeti, masuk, papan, kalender, palet, notifikasi ---------- */
+.sb-i kbd { font: 500 10.5px "Plus Jakarta Sans"; color: var(--pudar); }
+body[data-kulit="lekuk"] .sb-i[aria-current="page"] kbd { color: #fff; }
+.toast { position: fixed; left: 50%; bottom: 24px; z-index: 60; display: flex; align-items: center; gap: 14px; max-width: min(520px, calc(100vw - 32px)); padding: 10px 10px 10px 18px; border-radius: 999px; background: #1d1b26; color: #fff; font-size: 13.5px; box-shadow: 0 18px 36px -14px rgb(29 27 38 / .6); transform: translate(-50%, 140%); opacity: 0; transition: transform .25s cubic-bezier(.2, .9, .3, 1.2), opacity .2s; pointer-events: none; }
+.toast.tampil { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+.toast span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.toast button { flex: none; height: 36px; padding: 0 16px; border-radius: 999px; background: #8f78f0; color: #fff; font-weight: 600; font-size: 13px; }
+@media (max-width: 767px) { .toast { bottom: calc(96px + env(safe-area-inset-bottom)); } }
+
+@keyframes letup { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes cincin-letup { from { opacity: .7; transform: scale(.6); } to { opacity: 0; transform: scale(1.9); } }
+.cek.letup { animation: letup .35s ease; position: relative; }
+.cek.letup[aria-checked="true"]::before { content: ""; position: absolute; inset: -4px; border-radius: inherit; border: 2px solid var(--ok); animation: cincin-letup .5s ease-out forwards; }
+.kartu-rutin { overflow: visible; }
+.kartu-rutin.rayakan .rutin-progres i { background: linear-gradient(90deg, #fff, #fbd35f, #fff); }
+.konfeti { position: absolute; top: 40%; z-index: 4; width: 8px; height: 12px; border-radius: 2px; pointer-events: none; animation: konfeti 1.1s cubic-bezier(.2, .7, .3, 1) forwards; }
+@keyframes konfeti { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(var(--x), calc(var(--y) + 220px)) rotate(var(--r)); opacity: 0; } }
+@keyframes naik { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.masuk > * { animation: naik .4s cubic-bezier(.2, .8, .3, 1) both; }
+.masuk > :nth-child(2) { animation-delay: .04s; } .masuk > :nth-child(3) { animation-delay: .08s; } .masuk > :nth-child(4) { animation-delay: .12s; } .masuk > :nth-child(5) { animation-delay: .16s; } .masuk > :nth-child(n+6) { animation-delay: .2s; }
+body[data-kulit="lekuk"] .kartu-b, body[data-kulit="lekuk"] .baris, .kartu-papan, .agenda-isi, .hari-pita, .ubin { transition: transform .15s ease, box-shadow .15s ease, background .15s; }
+body[data-kulit="lekuk"] .baris:active, .kartu-papan:active, .agenda-isi:active, .hari-pita:active, .ringkas-baris:active, .bulat-aksi:active, .takik-btn:active { transform: scale(.98); }
+.hari-pita:hover { transform: translateY(-2px); }
+
+/* Papan. */
+.petunjuk-papan { margin: 4px 0 12px; font-size: 12.5px; color: var(--redup); }
+.papan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
+/* Papan dan kalender butuh lebar penuh; ringkasan kanan disembunyikan sementara. */
+body[data-kulit="lekuk"] .isi-grid.penuh { grid-template-columns: minmax(0, 1fr); }
+body[data-kulit="lekuk"] .isi-grid.penuh .kolom-kanan { display: none; }
+.kolom-papan, .kartu-papan { min-width: 0; }
+.kartu-papan b { overflow-wrap: anywhere; }
+.kolom-papan { min-height: 240px; padding: 10px; border-radius: 24px; background: rgb(255 255 255 / .55); border: 2px dashed transparent; transition: border-color .15s, background .15s; }
+.kolom-papan.sasaran { border-color: var(--aksen); background: var(--aksen-muda); }
+.kolom-papan header { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 10px; }
+.kolom-papan header .n { min-width: 24px; height: 24px; display: grid; place-items: center; border-radius: 999px; background: #fff; font-size: 12px; font-weight: 600; }
+.isi-kolom { display: grid; gap: 8px; }
+.kartu-papan { display: grid; gap: 8px; padding: 14px; border-radius: 20px; background: #fff; cursor: grab; }
+.kartu-papan:hover { box-shadow: 0 12px 24px -16px rgb(29 27 38 / .45); transform: translateY(-2px); }
+.kartu-papan.diseret { opacity: .4; transform: rotate(2deg); }
+.kartu-papan.pilih-ini { box-shadow: 0 0 0 2px var(--aksen); }
+.kartu-papan .tag { justify-self: start; }
+.kartu-papan b { font-size: 14px; font-weight: 600; line-height: 1.35; }
+.kaki-papan { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--redup); }
+.kaki-papan > span:not(.av) { display: inline-flex; align-items: center; gap: 5px; }
+.kaki-papan svg { width: 14px; height: 14px; }
+.kaki-papan .av { margin-left: auto; width: 26px; height: 26px; font-size: 9.5px; }
+.kosong-kolom { margin: 0; padding: 28px 8px; text-align: center; font-size: 12.5px; color: var(--pudar); border-radius: 16px; border: 1.5px dashed var(--garis); }
+
+/* Kalender. */
+.kalender { padding: 14px; border-radius: 26px; background: #fff; }
+.kal-judul { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin: 0 4px 12px; font-size: 17px; font-weight: 700; }
+.kal-judul span { font-size: 12px; font-weight: 500; color: var(--redup); }
+.kal-hari, .kal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.kal-hari span { padding: 0 6px 6px; font-size: 11.5px; font-weight: 600; color: var(--pudar); }
+.kal-sel { position: relative; display: grid; align-content: start; gap: 4px; min-height: 92px; padding: 6px; border-radius: 16px; background: #f8f5fe; }
+.kal-sel.kosong-sel { background: transparent; }
+.kal-sel.ini { background: var(--aksen-muda); box-shadow: inset 0 0 0 2px var(--aksen); }
+.kal-tgl { justify-self: start; min-width: 30px; height: 30px; border-radius: 10px; font-size: 13px; font-weight: 700; }
+.kal-tgl:hover { background: #fff; }
+.kal-sel.ini .kal-tgl { background: var(--aksen); color: #fff; }
+.kal-titik { position: absolute; top: 14px; right: 8px; display: flex; gap: 3px; }
+.kal-titik i { width: 7px; height: 7px; border-radius: 50%; background: var(--w); }
+.kal-tugas { display: block; width: 100%; padding: 3px 8px; border-radius: 8px; background: #fff; font-size: 11.5px; font-weight: 500; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.kal-tugas.telat { background: #ffe4dc; color: var(--late); }
+.kal-tugas.beres { color: var(--pudar); text-decoration: line-through; }
+.kal-lagi { padding-left: 4px; font-size: 11px; color: var(--redup); }
+.kal-n { display: none; }
+
+/* Palet perintah. */
+.palet-latar { position: fixed; inset: 0; z-index: 70; display: grid; justify-items: center; align-items: start; padding: 12vh 16px 16px; background: rgb(29 27 38 / .35); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.palet-latar[hidden] { display: none; }
+.palet { width: min(620px, 100%); border-radius: 26px; background: #fff; box-shadow: 0 30px 60px -20px rgb(29 27 38 / .5); overflow: hidden; animation: naik .2s ease both; }
+.palet-cari { display: flex; align-items: center; gap: 12px; padding: 0 18px; border-bottom: 1px solid var(--garis); }
+.palet-cari svg { width: 20px; height: 20px; color: var(--redup); }
+.palet-cari input { flex: 1; min-width: 0; height: 60px; border: 0; outline: 0; font-size: 15px; background: none; }
+.palet kbd { font: 500 11px "Plus Jakarta Sans"; padding: 2px 7px; border-radius: 6px; border: 1px solid var(--garis); color: var(--redup); }
+#palet-hasil { list-style: none; margin: 0; padding: 8px; max-height: 50vh; overflow-y: auto; }
+#palet-hasil li { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 12px; align-items: center; min-height: 52px; padding: 6px 10px; border-radius: 16px; cursor: pointer; }
+#palet-hasil li[aria-selected="true"] { background: var(--aksen-muda); }
+#palet-hasil b { display: block; font-size: 14px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#palet-hasil small { font-size: 12px; color: var(--redup); }
+#palet-hasil em { font-style: normal; font-size: 11.5px; color: var(--pudar); }
+.palet-ikon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; background: color-mix(in srgb, var(--w, #9d89f2) 30%, #fff); color: var(--tinta); }
+.palet-ikon svg { width: 17px; height: 17px; }
+.palet-ikon.merah { background: #ffe4dc; color: var(--late); }
+.palet-ikon .av { width: 36px; height: 36px; }
+.palet-kaki { display: flex; gap: 16px; padding: 10px 18px; border-top: 1px solid var(--garis); font-size: 12px; color: var(--redup); }
+
+/* Notifikasi. */
+.sb-profil { position: relative; }
+.notif-panel { position: fixed; left: 16px; top: 68px; z-index: 50; width: 320px; padding: 8px; border-radius: 22px; background: #fff; box-shadow: 0 24px 48px -16px rgb(29 27 38 / .4), 0 0 0 1px var(--garis); animation: naik .18s ease both; }
+.notif-judul { display: flex; justify-content: space-between; padding: 6px 10px 8px; font-size: 14px; font-weight: 700; }
+.notif-judul span { font-size: 12px; font-weight: 500; color: var(--aksen); }
+.notif-panel button { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; align-items: center; width: 100%; min-height: 56px; padding: 6px 8px; border-radius: 16px; text-align: left; }
+.notif-panel button:hover { background: var(--aksen-muda); }
+.notif-panel b { display: block; font-size: 13px; font-weight: 600; }
+.notif-panel small { font-size: 12px; color: var(--redup); }
+
+@media (max-width: 1023px) { .papan { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 767px) {
+  .kal-sel { min-height: 54px; padding: 4px; border-radius: 12px; }
+  .kal-tugas, .kal-lagi { display: none; }
+  .kal-titik { position: static; }
+  .kal-n { display: grid; place-items: center; justify-self: start; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px; background: var(--aksen); color: #fff; font-size: 10px; font-weight: 700; }
+  .kal-tgl { min-width: 26px; height: 26px; font-size: 12px; }
+  .notif-panel { position: fixed; left: 12px; right: 12px; top: 72px; width: auto; }
+  .palet-latar { padding-top: 8vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast, .masuk > *, .palet, .notif-panel, .kolom-papan, .kartu-papan, .hari-pita { transition: none; animation: none; }
+  .hari-pita:hover, .kartu-papan:hover { transform: none; }
+}
 </style>
 </head>
 <body>
@@ -972,9 +1086,9 @@ body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
 <div class="app" id="app">
   <nav class="sb" aria-label="Navigasi ruang kerja">
     <div class="sb-ruang"><span class="logo">K</span>KDMP Contoh</div>
-    <div class="sb-profil"><span class="av" style="--w:#1d1e2c">MA</span><div><b>Manajer</b><small>KDMP Contoh</small></div><button class="sb-lonceng" type="button" aria-label="Notifikasi, 2 baru"><svg><use href="#lonceng"/></svg><i></i></button></div>
+    <div class="sb-profil"><span class="av" style="--w:#1d1e2c">MA</span><div><b>Manajer</b><small>KDMP Contoh</small></div><button class="sb-lonceng" type="button" data-notif aria-haspopup="dialog" aria-expanded="false" aria-label="Notifikasi, 3 baru"><svg><use href="#lonceng"/></svg><i></i></button><div id="notif"></div></div>
     <div class="sb-kartu">
-    <button class="sb-i" type="button" data-fokus-cari><svg class="i"><use href="#cari"/></svg>Cari</button>
+    <button class="sb-i" type="button" data-fokus-cari><svg class="i"><use href="#cari"/></svg>Cari<kbd>Ctrl K</kbd></button>
     <button class="sb-i" type="button" data-tampil="hari"><svg class="i"><use href="#hari"/></svg>Hari ini<span class="n" data-hitung="hari"></span></button>
     <button class="sb-i" type="button" data-tampil="rutin"><svg class="i"><use href="#ulang"/></svg>Rutin harian<span class="n" data-hitung="rutin"></span></button>
     <button class="sb-i" type="button" data-tampil="agenda"><svg class="i"><use href="#waktu"/></svg>Agenda<span class="n" data-hitung="agenda"></span></button>
@@ -1027,6 +1141,8 @@ body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
 </nav>
 <button class="dok-fab" id="dok-fab" type="button" data-fab aria-haspopup="menu" aria-expanded="false" aria-label="Tambah tugas, agenda, atau kegiatan"><svg><use href="#plus"/></svg></button>
 <div class="lembar-baru" id="lembar-baru"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="palet-latar" id="palet" hidden></div>
 <nav class="nav-pil" aria-label="Navigasi cepat">
   <button type="button" data-tampil="hari" aria-label="Hari ini"><svg><use href="#hari"/></svg></button>
   <button type="button" data-tampil="semua" aria-label="Semua tugas"><svg><use href="#semua"/></svg></button>
@@ -1088,7 +1204,7 @@ let AGENDA = [
 let JURNAL = [
   { id: 'J1', tgl: '2026-10-16', uraian: 'Lokasi cold storage cocok, perlu cek daya listrik gudang.', agenda: 'A6', tugas: 'CLD-003' },
 ];
-const S = { hariAgenda: '', jenis: '', agendaForm: false, jurnalForm: null, draft: null, pilihBaru: '', menu: '', status: '', tampil: 'hari', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
+const S = { palet: false, paletQ: '', paletI: 0, notif: false, batal: null, seret: null, hariAgenda: '', jenis: '', agendaForm: false, jurnalForm: null, draft: null, pilihBaru: '', menu: '', status: '', tampil: 'hari', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
 
 // ---------- Utilitas ----------
 const $ = (s, el = document) => el.querySelector(s);
@@ -1414,6 +1530,139 @@ function formJurnal() {
   </form>`;
 }
 
+// ---------- Papan: seret kartu antar status ----------
+function kartuPapan(t) {
+  const tg = labelTgl(t);
+  const n = t.sub.filter((x) => x.ok).length;
+  return `<article class="kartu-papan ${S.dipilih === t.kode ? 'pilih-ini' : ''}" draggable="true" data-seret="${t.kode}" data-buka="${t.kode}" tabindex="0" aria-label="${esc(t.judul)}, ${besar(t.st)}">
+    <span class="tag ${t.pr}">${besar(t.pr)}</span>
+    <b>${esc(t.judul)}</b>
+    <span class="kaki-papan"><span class="tgl ${tg.kls}"><svg><use href="#hari"/></svg>${tg.teks}</span>${t.sub.length ? `<span><svg><use href="#semua"/></svg>${n}/${t.sub.length}</span>` : ''}${av(t.pic)}</span>
+  </article>`;
+}
+function renderPapan(daftar) {
+  const kolom = [['rencana', 'Rencana'], ['proses', 'Proses'], ['selesai', 'Selesai']];
+  urutanAktif = [];
+  return `<p class="petunjuk-papan">Seret kartu ke kolom lain untuk mengubah status. Di layar sentuh, buka kartu lalu ubah status.</p><div class="papan">${kolom.map(([k, l]) => {
+    const isi = daftar.filter((t) => t.st === k).sort(urut);
+    urutanAktif.push(...isi.map((t) => t.kode));
+    return `<section class="kolom-papan" data-kolom="${k}" aria-label="Kolom ${l}"><header><span class="st ${k}"><i></i>${l}</span><span class="n">${isi.length}</span></header><div class="isi-kolom">${isi.map(kartuPapan).join('') || '<p class="kosong-kolom">Lepas tugas di sini</p>'}</div></section>`;
+  }).join('')}</div>`;
+}
+
+// ---------- Kalender bulan berjalan ----------
+function renderKalender(daftar) {
+  const [y, m] = HARI_INI.split('-').map(Number);
+  const offset = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+  const jml = new Date(y, m, 0).getDate();
+  const sel = [];
+  for (let i = 0; i < offset; i++) sel.push('<div class="kal-sel kosong-sel" aria-hidden="true"></div>');
+  for (let d = 1; d <= jml; d++) {
+    const tgl = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const tugas = daftar.filter((t) => t.tgl === tgl).sort(urut);
+    const agenda = AGENDA.filter((a) => a.tgl === tgl).sort(urutAgenda);
+    sel.push(`<div class="kal-sel ${tgl === HARI_INI ? 'ini' : ''}">
+      <button class="kal-tgl" type="button" data-hari-agenda="${tgl}" aria-label="${tglPanjang(tgl)}: ${tugas.length} tugas, ${agenda.length} agenda">${d}</button>
+      ${agenda.length ? `<span class="kal-titik">${agenda.slice(0, 4).map((a) => `<i style="--w:${JENIS[a.jenis].w}" title="${esc(a.judul)}"></i>`).join('')}</span>` : ''}
+      ${tugas.slice(0, 2).map((t) => `<button class="kal-tugas ${lewat(t) ? 'telat' : ''} ${t.st === 'selesai' ? 'beres' : ''}" type="button" data-buka="${t.kode}">${esc(t.judul)}</button>`).join('')}
+      ${tugas.length > 2 ? `<span class="kal-lagi">+${tugas.length - 2} tugas</span>` : ''}
+      ${tugas.length ? `<span class="kal-n">${tugas.length}</span>` : ''}
+    </div>`);
+  }
+  urutanAktif = daftar.slice().sort((a, b) => a.tgl.localeCompare(b.tgl)).map((t) => t.kode);
+  return `<div class="kalender"><div class="kal-judul">${tglPanjang(HARI_INI).split(', ')[1].split(' ')[1]} ${y}<span>Klik tanggal untuk membuka agenda hari itu</span></div>
+    <div class="kal-hari" aria-hidden="true">${['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'].map((h) => `<span>${h}</span>`).join('')}</div>
+    <div class="kal-grid">${sel.join('')}</div></div>`;
+}
+
+// ---------- Toast dengan Batalkan ----------
+let waktuToast;
+function toast(pesan, batal) {
+  const el = $('#toast');
+  el.innerHTML = `<span>${pesan}</span>${batal ? '<button type="button" data-batal>Batalkan</button>' : ''}`;
+  el.classList.add('tampil');
+  S.batal = batal || null;
+  clearTimeout(waktuToast);
+  waktuToast = setTimeout(() => { el.classList.remove('tampil'); S.batal = null; }, 5000);
+}
+
+// ---------- Animasi kecil ----------
+const gerakBoleh = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
+function letupkan(kode) {
+  if (!gerakBoleh()) return;
+  document.querySelectorAll(`[data-cek="${kode}"]`).forEach((e) => e.classList.add('letup'));
+}
+function rayakanRutin() {
+  const kartu = $('.kartu-rutin');
+  if (!kartu) return;
+  kartu.classList.add('rayakan');
+  if (!gerakBoleh()) return;
+  const warna = ['#fff', '#fbd35f', '#ecaeee', '#5cc76e', '#ff8b6a'];
+  for (let i = 0; i < 28; i++) {
+    const c = document.createElement('i');
+    c.className = 'konfeti';
+    c.style.cssText = `--x:${(Math.random() * 2 - 1) * 160}px;--y:${-60 - Math.random() * 120}px;--r:${Math.random() * 540}deg;background:${warna[i % warna.length]};left:${30 + Math.random() * 40}%;animation-delay:${Math.random() * 120}ms`;
+    kartu.appendChild(c);
+    setTimeout(() => c.remove(), 1300);
+  }
+}
+
+// ---------- Palet perintah (Ctrl+K) ----------
+function hasilPalet(q) {
+  const cocok = (x) => x.toLowerCase().includes(q.toLowerCase());
+  const tugas = q ? TUGAS.filter((t) => cocok(t.judul + ' ' + t.kode)).slice(0, 5).map((t) => ({ jenis: t.rutin ? 'Rutin' : 'Tugas', ikon: t.rutin ? 'ulang' : 'semua', label: t.judul, sub: `${labelTgl(t).teks} · ${ORANG[t.pic].nama}`, aksi: { buka: t.kode } })) : [];
+  const agenda = q ? AGENDA.filter((a) => cocok(a.judul)).slice(0, 4).map((a) => ({ jenis: JENIS[a.jenis].label, ikon: JENIS[a.jenis].ikon, label: a.judul, sub: `${namaHari(a.tgl)} ${jam(a.mulai)}`, aksi: { agenda: a.id } })) : [];
+  const halaman = [['hari', 'Hari ini', 'hari'], ['rutin', 'Rutin harian', 'ulang'], ['agenda', 'Agenda', 'waktu'], ['saya', 'Tugas saya', 'saya'], ['semua', 'Semua tugas', 'semua']]
+    .filter(([, l]) => !q || cocok(l)).map(([k, l, i]) => ({ jenis: 'Halaman', ikon: i, label: l, aksi: { tampil: k } }));
+  const buat = [{ jenis: 'Buat', ikon: 'plus', label: q ? `Tugas baru: “${q}”` : 'Tugas baru', aksi: { baru: q } }, { jenis: 'Buat', ikon: 'waktu', label: 'Agenda baru', aksi: { agendaBaru: true } }];
+  return [...tugas, ...agenda, ...halaman, ...buat];
+}
+function renderDaftarPalet() {
+  const hasil = hasilPalet(S.paletQ || '');
+  S.paletI = Math.min(S.paletI, hasil.length - 1);
+  $('#palet-hasil').innerHTML = hasil.map((h, i) => `<li id="palet-${i}" role="option" aria-selected="${i === S.paletI}" data-palet-i="${i}"><span class="palet-ikon"><svg><use href="#${h.ikon}"/></svg></span><span><b>${esc(h.label)}</b>${h.sub ? `<small>${esc(h.sub)}</small>` : ''}</span><em>${h.jenis}</em></li>`).join('') || '<li class="kosong">Tidak ada hasil.</li>';
+  $('#palet-q').setAttribute('aria-activedescendant', `palet-${S.paletI}`);
+  $('#palet-' + S.paletI)?.scrollIntoView({ block: 'nearest' });
+}
+function bukaPalet() {
+  S.palet = true; S.paletQ = ''; S.paletI = 0; S.pilihBaru = ''; S.notif = false;
+  document.body.classList.remove('laci-buka');
+  const el = $('#palet');
+  el.hidden = false;
+  el.innerHTML = `<div class="palet" role="dialog" aria-modal="true" aria-label="Cari dan perintah">
+    <div class="palet-cari"><svg><use href="#cari"/></svg><input id="palet-q" role="combobox" aria-expanded="true" aria-controls="palet-hasil" autocomplete="off" placeholder="Cari tugas, agenda, halaman, atau ketik judul tugas baru"><kbd>Esc</kbd></div>
+    <ul id="palet-hasil" role="listbox" aria-label="Hasil"></ul>
+    <div class="palet-kaki"><span><kbd>↑</kbd><kbd>↓</kbd> pilih</span><span><kbd>Enter</kbd> buka</span></div>
+  </div>`;
+  renderDaftarPalet();
+  $('#palet-q').focus();
+}
+function tutupPalet() { S.palet = false; const el = $('#palet'); el.hidden = true; el.innerHTML = ''; }
+function jalankanPalet(i) {
+  const h = hasilPalet(S.paletQ || '')[i];
+  if (!h) return;
+  tutupPalet();
+  const a = h.aksi;
+  if (a.tampil) { S.tampil = a.tampil; S.proyek = null; S.tab = 'daftar'; S.dipilih = null; render(); }
+  else if (a.buka) buka(a.buka);
+  else if (a.agenda) { const x = AGENDA.find((y) => y.id === a.agenda); S.draft = { ...x, peserta: [...x.peserta] }; S.dipilih = null; S.jurnalForm = null; S.agendaForm = true; render(); }
+  else if (a.agendaBaru) { S.draft = { jenis: 'rapat', judul: '', tgl: HARI_INI, mulai: '09:00', selesai: '10:00', lokasi: '', tautan: '', peserta: ['MA'], catatan: '' }; S.dipilih = null; S.jurnalForm = null; S.agendaForm = true; render(); $('#a-judul')?.focus(); }
+  else if ('baru' in a) { const t = tugasBaru({ judul: a.baru || 'Tugas baru' }); buka(t.kode); }
+}
+
+// ---------- Notifikasi ----------
+function panelNotif() {
+  const berikut = AGENDA.filter((a) => a.tgl === HARI_INI && a.mulai > JAM_KINI).sort(urutAgenda)[0];
+  const menit = berikut ? (+berikut.mulai.slice(0, 2) * 60 + +berikut.mulai.slice(3)) - (+JAM_KINI.slice(0, 2) * 60 + +JAM_KINI.slice(3)) : 0;
+  const nLewat = TUGAS.filter(lewat).length;
+  const item = [
+    berikut && `<button type="button" data-agenda="${berikut.id}"><span class="palet-ikon" style="--w:${JENIS[berikut.jenis].w}"><svg><use href="#${JENIS[berikut.jenis].ikon}"/></svg></span><span><b>${esc(berikut.judul)}</b><small>${menit} menit lagi · ${jam(berikut.mulai)}</small></span></button>`,
+    nLewat && `<button type="button" data-saring-status="lewat"><span class="palet-ikon merah"><svg><use href="#seru"/></svg></span><span><b>${nLewat} tugas terlambat</b><small>Buka daftar yang terlambat</small></span></button>`,
+    `<button type="button" data-buka="GRS-014"><span class="palet-ikon">${av('AR')}</span><span><b>Ayu R. berkomentar</b><small>“Rak tiba, 1 rak penyok…” · Pasang rak display</small></span></button>`,
+  ].filter(Boolean);
+  return `<div class="notif-panel" role="dialog" aria-label="Notifikasi"><div class="notif-judul">Notifikasi<span>${item.length} baru</span></div>${item.join('')}</div>`;
+}
+
 // ---------- Render ----------
 function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   const tot = daftar.length;
@@ -1508,7 +1757,9 @@ function renderDaftar() {
   const isiTab = S.tab === 'daftar'
     ? `<div class="kolom" aria-hidden="true"><span></span><span>Tugas</span><span>Status</span><span>PIC</span><span>Tenggat</span></div>
        ${isiGrup || `<p class="kosong">Tidak ada tugas yang cocok. Ubah saringan atau buat tugas baru.</p>`}`
-    : `<p class="catatan-tab">Prototipe ini hanya menggambar tampilan Daftar. ${besar(S.tab)} memakai data dan panel samping yang sama.</p>`;
+    : S.tab === 'papan' ? renderPapan(daftar)
+    : S.tab === 'kalender' ? renderKalender(daftar)
+    : `<p class="catatan-tab">Gantt memakai tanggal mulai dan dependensi tugas (start_date, dependencies); digambar saat penerapan agar tidak memakai tanggal karangan.</p>`;
   const ikon = S.tampil === 'proyek' ? `<span style="font-size:30px;font-weight:700;color:${proyek(S.proyek).w}">${S.proyek}</span>` : `<svg><use href="#${S.tampil === 'saya' ? 'saya' : 'semua'}"/></svg>`;
   const kh = kepalaHalaman(ikon, daftar, 'tugas', tugasTerlihat(true));
   $('#gulir').innerHTML = `${kh.sampul}<div class="dalam">
@@ -1516,7 +1767,7 @@ function renderDaftar() {
     <div class="judul-baris"><h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1><button class="bulat-aksi utama" type="button" data-baru="" aria-label="Tugas baru"><svg><use href="#plus"/></svg></button><button class="bulat-aksi" type="button" aria-label="Opsi halaman"><svg><use href="#lainnya"/></svg></button></div>
     <p class="ringkas">${ringkasan(daftar)}</p>
     ${kh.sapa}<div class="ringkas-atas">${kh.ubin}${grafikStatistik()}</div>
-    <div class="isi-grid"><div class="kolom-utama">
+    <div class="isi-grid ${S.tab !== 'daftar' ? 'penuh' : ''}"><div class="kolom-utama">
     <div class="alat">
       <div class="tabs" role="tablist" aria-label="Tampilan">
         ${[['daftar', 'Daftar'], ['papan', 'Papan'], ['kalender', 'Kalender'], ['gantt', 'Gantt']].map(([id, l]) => `<button class="tab" role="tab" type="button" data-tab="${id}" aria-selected="${S.tab === id}"><svg><use href="#${id === 'kalender' ? 'hari' : id}"/></svg>${l}</button>`).join('')}
@@ -1615,14 +1866,21 @@ function renderPeek() {
     <button class="f-simpan ${t.st === 'selesai' ? 'lagi' : ''}" type="button" data-cek="${t.kode}">${t.st === 'selesai' ? 'Buka lagi tugas ini' : 'Tandai selesai'}</button>`;
 }
 
+let kunciTampilLalu = '';
 function render() {
   renderSidebar();
+  $('#notif').innerHTML = S.notif ? panelNotif() : '';
+  $('[data-notif]').setAttribute('aria-expanded', !!S.notif);
   if (S.tampil === 'hari') renderBeranda();
   else if (S.tampil === 'agenda') renderAgenda();
   else renderDaftar();
   $('#lembar-baru').innerHTML = S.pilihBaru === 'fab' ? menuBaru() : '';
   $('#dok-fab')?.setAttribute('aria-expanded', S.pilihBaru === 'fab');
   renderPeek();
+  // Animasi masuk hanya ketika tampilan berganti, bukan setiap klik.
+  const kunci = [S.tampil, S.proyek, S.tab, S.hariAgenda].join('|');
+  if (kunci !== kunciTampilLalu && gerakBoleh()) $('#gulir > .dalam')?.classList.add('masuk');
+  kunciTampilLalu = kunci;
 }
 
 // ---------- Aksi ----------
@@ -1655,6 +1913,11 @@ function bacaCepat(teks) {
 document.addEventListener('click', (e) => {
   const el = e.target;
   if (el.closest('a.aksi-kecil')) return;
+  if (el.closest('[data-batal]')) { const b = S.batal; S.batal = null; $('#toast').classList.remove('tampil'); b?.(); return; }
+  if (S.palet) { const li = el.closest('[data-palet-i]'); if (li) { jalankanPalet(+li.dataset.paletI); return; } if (!el.closest('.palet')) { tutupPalet(); return; } return; }
+  if (el.closest('[data-notif]')) { S.notif = !S.notif; render(); return; }
+  if (S.notif && !el.closest('.notif-panel')) { S.notif = false; render(); if (!el.closest('[data-buka],[data-agenda],[data-tampil]')) return; }
+  if (el.closest('.notif-panel')) S.notif = false;
   if (S.pilihBaru && !el.closest('.menu-baru') && !el.closest('[data-pilih-baru]') && !el.closest('[data-fab]')) { S.pilihBaru = ''; render(); }
   if (el.closest('.menu-baru')) S.pilihBaru = '';
   const pb = el.closest('[data-pilih-baru]');
@@ -1676,7 +1939,7 @@ document.addEventListener('click', (e) => {
   const ps = el.closest('[data-peserta]');
   if (ps) { const k = ps.dataset.peserta; const d = S.draft; d.peserta = d.peserta.includes(k) ? d.peserta.filter((x) => x !== k) : [...d.peserta, k]; renderPeek(); return; }
   const ha = el.closest('[data-hapus-agenda]');
-  if (ha) { AGENDA = AGENDA.filter((x) => x.id !== ha.dataset.hapusAgenda); tutup(); return; }
+  if (ha) { const salinan = AGENDA; const x = AGENDA.find((y) => y.id === ha.dataset.hapusAgenda); AGENDA = AGENDA.filter((y) => y !== x); tutup(); toast(`Agenda dihapus: ${esc(x.judul)}`, () => { AGENDA = salinan; render(); }); return; }
   const ch = el.closest('[data-catat-hasil]');
   if (ch) { S.dipilih = null; S.agendaForm = false; S.jurnalForm = { agenda: ch.dataset.catatHasil }; render(); $('#j-uraian')?.focus(); return; }
   if (el.closest('[data-jurnal-baru]')) { S.dipilih = null; S.agendaForm = false; S.jurnalForm = {}; render(); $('#j-uraian')?.focus(); return; }
@@ -1694,7 +1957,7 @@ document.addEventListener('click', (e) => {
   const bd = el.closest('[data-buka-detail]');
   if (bd) { S.menu = ''; buka(bd.dataset.bukaDetail); return; }
   const kh = el.closest('[data-ke-hari]');
-  if (kh) { const t = TUGAS.find((x) => x.kode === kh.dataset.keHari); t.tgl = HARI_INI; S.menu = ''; catat(t, 'memindahkan tenggat ke <b>hari ini</b>'); render(); return; }
+  if (kh) { const t = TUGAS.find((x) => x.kode === kh.dataset.keHari); const lama = t.tgl; t.tgl = HARI_INI; S.menu = ''; catat(t, 'memindahkan tenggat ke <b>hari ini</b>'); render(); toast('Dijadwalkan hari ini', () => { t.tgl = lama; render(); }); return; }
   if (S.menu && !el.closest('.menu-kartu')) { S.menu = ''; if (!el.closest('[data-buka]')) { render(); return; } }
   const ul = el.closest('[data-ulang]');
   if (ul) { const t = TUGAS.find((x) => x.kode === S.dipilih); if (t.rutin) { t.rutin = false; t.ulang = 'tidak'; catat(t, 'mematikan rutin harian'); render(); return; } t.ulang = t.ulang === 'mingguan' ? 'tidak' : 'mingguan'; catat(t, t.ulang === 'mingguan' ? 'mengaktifkan <b>ulang tiap minggu</b>' : 'mematikan pengulangan'); render(); return; }
@@ -1703,7 +1966,19 @@ document.addEventListener('click', (e) => {
   if (el.closest('[data-pic-buka]')) { S.picBuka = !S.picBuka; render(); if (S.picBuka) $('.pic-op[aria-selected="true"]')?.focus(); return; }
   if (S.picBuka && !el.closest('.pic-pop')) { S.picBuka = false; renderPeek(); }
   const c = el.closest('[data-cek]');
-  if (c) { S.menu = ''; const t = TUGAS.find((x) => x.kode === c.dataset.cek); t.st = t.st === 'selesai' ? 'proses' : 'selesai'; catat(t, `mengubah status ke <b>${besar(t.st)}</b>`); render(); return; }
+  if (c) {
+    S.menu = '';
+    const t = TUGAS.find((x) => x.kode === c.dataset.cek);
+    const lama = t.st;
+    const rutinBelum = TUGAS.filter((x) => x.rutin && x.st !== 'selesai').length;
+    t.st = t.st === 'selesai' ? (t.rutin ? 'rencana' : 'proses') : 'selesai';
+    catat(t, `mengubah status ke <b>${besar(t.st)}</b>`);
+    render();
+    letupkan(t.kode);
+    if (t.rutin && t.st === 'selesai' && rutinBelum === 1) { rayakanRutin(); toast('Rutin hari ini beres semua. Mantap!'); }
+    else toast(t.st === 'selesai' ? `Selesai: ${esc(t.judul)}` : `Dibuka lagi: ${esc(t.judul)}`, () => { t.st = lama; catat(t, 'membatalkan perubahan status'); render(); });
+    return;
+  }
   const sb = el.closest('[data-sub]');
   if (sb) { const t = TUGAS.find((x) => x.kode === S.dipilih); const s = t.sub[+sb.dataset.sub]; s.ok = !s.ok; render(); return; }
   const sp = el.closest('[data-saring-pic]');
@@ -1736,7 +2011,7 @@ document.addEventListener('click', (e) => {
   if (el.closest('[data-tutup]')) { tutup(); return; }
   const g = el.closest('[data-geser]');
   if (g) { geser(+g.dataset.geser); return; }
-  if (el.closest('[data-fokus-cari]')) { document.body.classList.remove('laci-buka'); if (S.tampil === 'hari') { S.tampil = 'semua'; render(); } $('#cari').focus(); return; }
+  if (el.closest('[data-fokus-cari]')) { bukaPalet(); return; }
   const row = el.closest('[data-buka]');
   if (row) { S.dipilih === row.dataset.buka ? tutup() : buka(row.dataset.buka); return; }
 });
@@ -1759,6 +2034,7 @@ document.addEventListener('change', (e) => {
 document.addEventListener('input', (e) => {
   if (e.target.id === 'cari') { S.cari = e.target.value; if (S.tampil === 'hari' || S.tampil === 'agenda') { S.tampil = 'semua'; renderSidebar(); } renderDaftar(); renderPeek(); }
   if (e.target.dataset?.d && S.draft) S.draft[e.target.dataset.d] = e.target.value;
+  if (e.target.id === 'palet-q') { S.paletQ = e.target.value; S.paletI = 0; renderDaftarPalet(); }
 });
 document.addEventListener('focusout', (e) => {
   if (e.target.matches?.('[data-catatan]')) { const t = TUGAS.find((x) => x.kode === S.dipilih); const v = e.target.textContent.trim(); if (t && v !== (t.catatan || '')) { t.catatan = v; catat(t, 'memperbarui deskripsi'); render(); } return; }
@@ -1795,6 +2071,17 @@ document.addEventListener('submit', (e) => {
   if (f.id === 'form-komentar') { const v = $('#komentar').value.trim(); if (!v) return; catat(TUGAS.find((x) => x.kode === S.dipilih), esc(v)); render(); }
 });
 document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); S.palet ? tutupPalet() : bukaPalet(); return; }
+  if (S.palet) {
+    const n = hasilPalet(S.paletQ || '').length;
+    if (e.key === 'Escape') { e.preventDefault(); tutupPalet(); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); S.paletI = (S.paletI + 1) % n; renderDaftarPalet(); return; }
+    if (e.key === 'ArrowUp') { e.preventDefault(); S.paletI = (S.paletI - 1 + n) % n; renderDaftarPalet(); return; }
+    if (e.key === 'Enter') { e.preventDefault(); jalankanPalet(S.paletI); return; }
+    return;
+  }
+  if (e.key === 'Escape' && S.notif) { S.notif = false; render(); return; }
+  if (e.key === 'Enter' && e.target.matches?.('.kartu-papan')) { e.preventDefault(); e.target.click(); return; }
   const mengetik = !!e.target.matches?.('input, select, textarea, [contenteditable="true"]');
   if (e.key === 'Escape' && S.pilihBaru) { S.pilihBaru = ''; render(); return; }
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches?.('.agenda-isi')) { e.preventDefault(); e.target.click(); return; }
@@ -1804,8 +2091,38 @@ document.addEventListener('keydown', (e) => {
   if (mengetik) return;
   if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); S.dipilih ? geser(1) : urutanAktif[0] && buka(urutanAktif[0]); }
   if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); geser(-1); }
-  if (e.key === '/') { e.preventDefault(); if (S.tampil === 'hari') { S.tampil = 'semua'; render(); } $('#cari').focus(); }
+  if (e.key === '/') { e.preventDefault(); bukaPalet(); }
   if (e.key === 'c' || e.key === 'C') { e.preventDefault(); $('[data-baru]')?.click(); }
+});
+// Seret-lepas di Papan memakai satu sumber status yang sama dengan daftar dan panel.
+document.addEventListener('dragstart', (e) => {
+  const k = e.target.closest?.('[data-seret]');
+  if (!k) return;
+  S.seret = k.dataset.seret;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', S.seret);
+  requestAnimationFrame(() => k.classList.add('diseret'));
+});
+document.addEventListener('dragend', () => { S.seret = null; document.querySelectorAll('.diseret, .sasaran').forEach((x) => x.classList.remove('diseret', 'sasaran')); });
+document.addEventListener('dragover', (e) => {
+  const kol = e.target.closest?.('[data-kolom]');
+  if (!kol || !S.seret) return;
+  e.preventDefault();
+  document.querySelectorAll('.sasaran').forEach((x) => x !== kol && x.classList.remove('sasaran'));
+  kol.classList.add('sasaran');
+});
+document.addEventListener('drop', (e) => {
+  const kol = e.target.closest?.('[data-kolom]');
+  if (!kol || !S.seret) return;
+  e.preventDefault();
+  const t = TUGAS.find((x) => x.kode === S.seret);
+  const lama = t.st;
+  S.seret = null;
+  if (lama === kol.dataset.kolom) { render(); return; }
+  t.st = kol.dataset.kolom;
+  catat(t, `memindahkan ke <b>${besar(t.st)}</b>`);
+  render();
+  toast(`Dipindah ke ${besar(t.st)}: ${esc(t.judul)}`, () => { t.st = lama; render(); });
 });
 $('#tombol-laci').addEventListener('click', () => { document.body.classList.add('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'true'); });
 $('#selubung').addEventListener('click', () => { document.body.classList.remove('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'false'); });
