@@ -1233,6 +1233,40 @@ body[data-kulit="lekuk"] .kartu-statistik.pasar, .kartu-statistik.pasar { displa
 .ps-cta { display: grid; place-items: center; height: 48px; margin-top: 12px; border-radius: 999px; background: var(--aksen); color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; }
 .ps-cta:hover { background: #7f66ea; }
 @media (max-width: 767px) { .ps-harga b { font-size: 30px; } .ps-statistik > div { padding: 0 8px; } }
+
+/* ---------- Task manager: daftar dahulu, ubin ringkas, grafik kemajuan di kanan ---------- */
+body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+body[data-kulit="lekuk"] .ubin { --n: 40px; --r: 14px; min-height: 0; padding: 8px 14px 10px; border-radius: 22px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0 8px; }
+body[data-kulit="lekuk"] .ubin .ikon-u { width: 34px; height: 34px; border-radius: 12px; }
+body[data-kulit="lekuk"] .ubin .ikon-u svg { width: 15px; height: 15px; }
+body[data-kulit="lekuk"] .ubin .atas-u { padding-left: 36px; min-height: 28px; }
+body[data-kulit="lekuk"] .ubin .lbl-u { font-size: 13px; font-weight: 600; padding: 2px 4px; }
+body[data-kulit="lekuk"] .ubin .angka-u { margin: 0; font-size: 22px; font-weight: 700; line-height: 1; }
+body[data-kulit="lekuk"] .ubin .angka-u small { display: none; }
+body[data-kulit="lekuk"] .ubin::before { border-bottom-right-radius: 14px; }
+.ps-kepala { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-right: 40px; }
+.ps-kepala b { font-size: 15px; font-weight: 700; }
+.ps-kepala .pilih.kendali { height: 32px; padding: 0 10px 0 12px; background: #f6f2fd; max-width: 150px; }
+.ps-harga { margin: 10px 0 2px; }
+.ps-harga b { font-size: 30px; }
+.ps-harga b small { font-size: 13px; font-weight: 600; color: var(--redup); letter-spacing: 0; }
+.ps-ubah em { font-style: normal; color: var(--late); }
+.pasar .volume { fill: #ddd3fb; }
+.ps-legenda { display: flex; gap: 14px; margin: 4px 2px 0; font-size: 11.5px; color: var(--redup); }
+.ps-legenda span::before { content: ""; display: inline-block; width: 12px; height: 3px; margin-right: 6px; border-radius: 2px; background: var(--w); vertical-align: middle; }
+.ps-legenda .vol::before { width: 8px; height: 10px; background: #ddd3fb; }
+.ps-rentang { margin: 10px 0 12px; }
+.ps-rentang button { height: 32px; }
+.ps-statistik b small { font-size: 11px; font-weight: 500; color: var(--redup); }
+.ps-cta { width: 100%; border: 0; }
+body[data-kulit="lekuk"] .kolom-kanan { gap: 12px; }
+@media (max-width: 1279px) { body[data-kulit="lekuk"] .isi-grid { grid-template-columns: minmax(0, 1fr) 280px; } }
+@media (max-width: 1023px) { body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .judul-baris .contoh { display: none; }
+  body[data-kulit="lekuk"] .isi-grid { grid-template-columns: minmax(0, 1fr); }
+}
 </style>
 </head>
 <body>
@@ -1399,7 +1433,7 @@ let AGENDA = [
 let JURNAL = [
   { id: 'J1', tgl: '2026-10-16', uraian: 'Lokasi cold storage cocok, perlu cek daya listrik gudang.', agenda: 'A6', tugas: 'CLD-003' },
 ];
-const S = { rentang: '7H', seriMati: new Set(), pop: null, popI: 0, popBulan: '', modal: null, palet: false, paletQ: '', paletI: 0, notif: false, batal: null, seret: null, hariAgenda: '', jenis: '', agendaForm: false, jurnalForm: null, draft: null, pilihBaru: '', menu: '', status: '', tampil: 'hari', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
+const S = { proyekGrafik: '', rentang: '7H', seriMati: new Set(), pop: null, popI: 0, popBulan: '', modal: null, palet: false, paletQ: '', paletI: 0, notif: false, batal: null, seret: null, hariAgenda: '', jenis: '', agendaForm: false, jurnalForm: null, draft: null, pilihBaru: '', menu: '', status: '', tampil: 'hari', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
 
 // ---------- Utilitas ----------
 const $ = (s, el = document) => el.querySelector(s);
@@ -1519,70 +1553,69 @@ function spark(data, w, h, warna, isi = true) {
   const d = garisHalus(pts);
   return `<svg class="spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warna}" stop-opacity=".35"/><stop offset="1" stop-color="${warna}" stop-opacity="0"/></linearGradient></defs>${isi ? `<path d="${d} L${pts.at(-1)[0]},${h} L${pts[0][0]},${h} Z" fill="url(#${id})"/>` : ''}<path d="${d}" fill="none" stroke="${warna}" stroke-width="2" stroke-linecap="round"/><circle cx="${pts.at(-1)[0]}" cy="${pts.at(-1)[1]}" r="2.6" fill="${warna}"/></svg>`;
 }
-// Grafik "pasar": satu deret bergerigi seperti grafik harga crypto, di kartu terang.
-// Indeks progres = persen tugas selesai dari seluruh tugas pada tiap titik waktu (contoh).
+// Grafik kemajuan: garis "tugas terbuka" (burndown) + batang "selesai per hari" seperti volume.
+// Nilai akhir memakai data tugas asli; riwayat harian contoh sampai completed_at tersedia.
 const KINI = new Date('2026-10-18T09:12:00');
 const GRAFIK = {};
-const RENTANG = {
-  H: { label: 'Hari ini', n: 48, jam: 0.5 },
-  '7H': { label: '7 hari', n: 84, jam: 2 },
-  '1B': { label: '1 bulan', n: 120, jam: 6 },
-  '3B': { label: '3 bulan', n: 90, jam: 24 },
-  '1T': { label: '1 tahun', n: 104, jam: 84 },
-};
-function labelWaktu(k, i) {
-  const r = RENTANG[k];
-  const d = new Date(KINI.getTime() - (r.n - 1 - i) * r.jam * 3600e3);
-  const jj = `${String(d.getHours()).padStart(2, '0')}.${String(d.getMinutes()).padStart(2, '0')}`;
-  const tg = `${d.getDate()} ${BULAN[d.getMonth()]}`;
-  return k === 'H' ? jj : k === '7H' ? `${HARI[d.getDay()].slice(0, 3)} ${tg}, ${jj}` : k === '1T' ? `${tg} ${d.getFullYear()}` : tg;
+const RENTANG = { '7H': { label: '7 hari', n: 7 }, '14H': { label: '14 hari', n: 14 }, '30H': { label: '30 hari', n: 30 } };
+function labelHariKe(n, i) {
+  const d = new Date(KINI.getTime() - (n - 1 - i) * 864e5);
+  return `${HARI[d.getDay()].slice(0, 3)}, ${d.getDate()} ${BULAN[d.getMonth()]}`;
 }
-function deretPasar(n, awal, akhir, ayun, benih) {
+function riwayatTerbuka(n, akhir, benih) {
   const r = acak(benih);
-  const v = [awal];
-  for (let i = 1; i < n; i++) v.push(v[i - 1] + (r() - 0.47) * ayun + (r() < 0.06 ? (r() - 0.5) * ayun * 4 : 0));
-  // Tarik ujung deret ke nilai akhir agar angka besar dan grafik sepakat.
-  const geser = (akhir - v[n - 1]) / (n - 1);
-  return v.map((x, i) => Math.round((x + geser * i) * 10) / 10);
+  const selesai = Array.from({ length: n }, () => Math.floor(r() * 4));
+  const masuk = Array.from({ length: n }, () => (r() < 0.45 ? Math.floor(r() * 3) : 0));
+  const terbuka = new Array(n);
+  terbuka[n - 1] = akhir;
+  for (let i = n - 1; i > 0; i--) terbuka[i - 1] = Math.max(0, terbuka[i] + selesai[i] - masuk[i]);
+  return { terbuka, selesai, masuk };
 }
 function grafikStatistik() {
+  if (!RENTANG[S.rentang]) S.rentang = '7H';
   const r = RENTANG[S.rentang];
-  const awal = { H: 61.2, '7H': 59.3, '1B': 54.8, '3B': 47.5, '1T': 31.0 }[S.rentang];
-  const akhir = 62.4;
-  const data = deretPasar(r.n, awal, akhir, { H: 0.35, '7H': 0.6, '1B': 0.9, '3B': 1.1, '1T': 1.6 }[S.rentang], 17 + r.n);
-  const ubah = Math.round((akhir - awal) * 10) / 10;
-  const persen = Math.round((ubah / awal) * 1000) / 10;
-  const naik = ubah >= 0;
-  const warna = naik ? '#16a34a' : '#e11d48';
-  const W = 360, H = 170, L = 4, R = 44, T = 10, B = 8;
-  const min = Math.min(...data), maks = Math.max(...data);
-  const pad = (maks - min) * 0.12 || 1;
-  const lo = min - pad, hi = maks + pad;
-  const X = (i) => L + i * ((W - L - R) / (r.n - 1));
-  const Y = (v) => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
-  GRAFIK.stat = { W, L, R, n: r.n, X, Y, seri: [{ k: 'progres', label: 'Indeks progres', w: warna, data }], label: (i) => labelWaktu(S.rentang, i), fmt: (v) => `${String(v).replace('.', ',')}%` };
-  const garis = data.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  const langkah = (hi - lo) / 4;
-  const sumbuY = [1, 2, 3].map((k) => { const v = lo + langkah * k; return `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="kisi"/><text x="${W - R + 8}" y="${Y(v) + 3}">${v.toFixed(1).replace('.', ',')}%</text>`; }).join('');
-  const fmt = (x) => String(Math.abs(x)).replace('.', ',');
+  const pr = S.proyekGrafik;
+  const cakupan = TUGAS.filter((t) => !t.rutin && (!pr || t.p === pr));
+  const akhir = cakupan.filter((t) => !tutupStatus(t)).length;
+  const nLewat = cakupan.filter(lewat).length;
+  const { terbuka, selesai, masuk } = riwayatTerbuka(r.n, akhir, 23 + r.n + (pr ? pr.charCodeAt(0) : 0));
+  const ubah = akhir - terbuka[0];
+  const baik = ubah <= 0;
+  const warna = baik ? '#16a34a' : '#e11d48';
+  const totalSelesai = selesai.reduce((a, b) => a + b, 0);
+  const totalMasuk = masuk.reduce((a, b) => a + b, 0);
+  const W = 300, H = 150, L = 4, R = 26, T = 10, B = 4, VOL = 26;
+  const maks = Math.max(4, ...terbuka) * 1.15;
+  const maksVol = Math.max(3, ...selesai);
+  const X = (i) => L + (r.n === 1 ? 0 : i * ((W - L - R) / (r.n - 1)));
+  const Y = (v) => T + (H - T - B - VOL - 6) * (1 - v / maks);
+  const lebarBatang = Math.max(2, ((W - L - R) / r.n) * 0.55);
+  GRAFIK.stat = { W, L, R, n: r.n, X, Y, seri: [{ k: 'terbuka', label: 'Terbuka', w: warna, data: terbuka }], label: (i) => labelHariKe(r.n, i), info: (i) => `<span style="--w:#c4b5fd">Selesai<em>${selesai[i]}</em></span><span style="--w:#fbbf24">Masuk<em>${masuk[i]}</em></span>` };
+  const garis = terbuka.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  const dasar = Y(0);
+  const kisi = [maks / 3, (2 * maks) / 3].map((v) => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="kisi"/><text x="${W - R + 6}" y="${Y(v) + 3}">${Math.round(v)}</text>`).join('');
+  const batang = selesai.map((v, i) => `<rect x="${(X(i) - lebarBatang / 2).toFixed(1)}" y="${(H - B - (v / maksVol) * VOL).toFixed(1)}" width="${lebarBatang.toFixed(1)}" height="${((v / maksVol) * VOL).toFixed(1)}" rx="1.5" class="volume"/>`).join('');
+  const rataRata = { '7H': '2,4', '14H': '2,7', '30H': '3,1' }[S.rentang];
+  const opsiProyek = [['', 'Semua proyek', '#8f78f0'], ...PROYEK.map((x) => [x.id, x.nama, x.w])];
   return `<section class="kartu-statistik pasar bertakik" aria-labelledby="judul-stat">
     <button class="takik-btn" type="button" aria-label="Opsi grafik"><svg><use href="#lainnya"/></svg></button>
-    <div class="ps-kepala"><span class="ps-ikon"><svg><use href="#semua"/></svg></span><div><b id="judul-stat">Indeks progres</b><small>Semua proyek · contoh</small></div></div>
-    <div class="ps-harga"><b>${String(akhir).replace('.', ',')}%</b><span class="ps-ubah ${naik ? 'naik' : 'turun'}">${naik ? '+' : '−'}${fmt(ubah)} poin (${naik ? '+' : '−'}${fmt(persen)}%)</span></div>
+    <div class="ps-kepala"><b id="judul-stat">Kemajuan tugas</b>${kendali('pilih-proyek-grafik', { jenis: 'pilih', nilai: pr, label: 'Proyek grafik', kelas: 'pilih', opsi: opsiProyek, onPilih: (v) => { S.proyekGrafik = v; render(); } })}</div>
+    <div class="ps-harga"><b>${akhir} <small>tugas terbuka</small></b><span class="ps-ubah ${baik ? 'naik' : 'turun'}">${ubah === 0 ? 'Tetap' : `${ubah < 0 ? '−' : '+'}${Math.abs(ubah)}`} sejak ${r.label} lalu${nLewat ? ` · <em>${nLewat} terlambat</em>` : ''}</span></div>
     <div class="grafik-bungkus" data-grafik="stat">
-      <svg class="grafik-k" viewBox="0 0 ${W} ${H}" role="img" aria-label="Indeks progres ${r.label}: dari ${fmt(awal)}% menjadi ${fmt(akhir)}%">
-        <defs><linearGradient id="gs-pasar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warna}" stop-opacity=".28"/><stop offset="1" stop-color="${warna}" stop-opacity="0"/></linearGradient></defs>
-        ${sumbuY}
-        <path d="${garis} L${X(r.n - 1)},${H} L${X(0)},${H} Z" fill="url(#gs-pasar)"/>
-        <path d="${garis}" fill="none" stroke="${warna}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>
+      <svg class="grafik-k" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tugas terbuka ${r.label} terakhir: dari ${terbuka[0]} menjadi ${akhir}. Selesai per hari: ${selesai.join(', ')}.">
+        <defs><linearGradient id="gs-pasar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warna}" stop-opacity=".22"/><stop offset="1" stop-color="${warna}" stop-opacity="0"/></linearGradient></defs>
+        ${kisi}${batang}
+        <path d="${garis} L${X(r.n - 1)},${dasar} L${X(0)},${dasar} Z" fill="url(#gs-pasar)"/>
+        <path d="${garis}" fill="none" stroke="${warna}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
         <circle cx="${X(r.n - 1)}" cy="${Y(akhir)}" r="4" fill="${warna}" class="denyut"/>
-        <g class="silang" style="display:none"><line class="silang-garis" y1="${T}" y2="${H}"/><circle r="5" fill="${warna}" stroke="#fff" stroke-width="2.5" data-titik="progres"/></g>
+        <g class="silang" style="display:none"><line class="silang-garis" y1="${T}" y2="${H}"/><circle r="5" fill="${warna}" stroke="#fff" stroke-width="2.5" data-titik="terbuka"/></g>
       </svg>
       <div class="tooltip-k" hidden></div>
     </div>
-    <div class="ps-rentang" role="group" aria-label="Rentang waktu">${Object.entries(RENTANG).map(([k, x]) => `<button type="button" data-rentang="${k}" aria-pressed="${S.rentang === k}" title="${x.label}">${k === 'H' ? 'Hari ini' : k}</button>`).join('')}</div>
-    <div class="ps-statistik"><div><small>Selesai</small><b>35</b></div><div><small>Tugas baru</small><b>28</b></div><div><small>Terlambat</small><b>3</b></div></div>
-    <a class="ps-cta" href="#laporan">Lihat laporan kerja</a>
+    <div class="ps-legenda"><span style="--w:${warna}">Tugas terbuka</span><span class="vol">Selesai per hari</span></div>
+    <div class="ps-rentang" role="group" aria-label="Rentang waktu">${Object.entries(RENTANG).map(([k, x]) => `<button type="button" data-rentang="${k}" aria-pressed="${S.rentang === k}" title="${x.label}">${k}</button>`).join('')}</div>
+    <div class="ps-statistik"><div><small>Selesai</small><b>${totalSelesai}</b></div><div><small>Masuk</small><b>${totalMasuk}</b></div><div><small>Rata-rata</small><b>${rataRata} <small>hari</small></b></div></div>
+    <button class="ps-cta" type="button" ${pr ? `data-tampil="proyek" data-proyek="${pr}"` : 'data-ke-daftar'}>Lihat tugas tersisa</button>
   </section>`;
 }
 function geserSilang(bungkus, clientX) {
@@ -1599,7 +1632,7 @@ function geserSilang(bungkus, clientX) {
   gfx.seri.forEach((sr) => { const c = silang.querySelector(`[data-titik="${sr.k}"]`); c.setAttribute('cx', gfx.X(i)); c.setAttribute('cy', gfx.Y(sr.data[i])); });
   const tip = bungkus.querySelector('.tooltip-k');
   tip.hidden = false;
-  tip.innerHTML = `<b>${gfx.label(i)}</b>${gfx.seri.map((sr) => `<span style="--w:${sr.w}">${sr.label}<em>${gfx.fmt ? gfx.fmt(sr.data[i]) : sr.data[i]}</em></span>`).join('')}`;
+  tip.innerHTML = `<b>${gfx.label(i)}</b>${gfx.seri.map((sr) => `<span style="--w:${sr.w}">${sr.label}<em>${gfx.fmt ? gfx.fmt(sr.data[i]) : sr.data[i]}</em></span>`).join('')}${gfx.info ? gfx.info(i) : ''}`;
   const px = (gfx.X(i) / gfx.W) * kotak.width;
   tip.style.left = Math.min(Math.max(px, 70), kotak.width - 70) + 'px';
 }
@@ -1631,7 +1664,8 @@ function panelKanan() {
     const terbuka = isi.length - n;
     return `<button class="proyek-baris" type="button" data-tampil="proyek" data-proyek="${pr.id}"><span class="kp" style="background:${pr.w}"></span><span><b>${pr.nama}</b><small>${terbuka} terbuka · ${Math.round((terbuka / totalBuka) * 100)}% beban</small></span><span class="pct">${pct}%<i style="--p:${pct};--w:${pr.w}"></i></span></button>`;
   }).join('');
-  return `<aside class="kolom-kanan" aria-label="Beban tim dan progres proyek">
+  return `<aside class="kolom-kanan" aria-label="Kemajuan, beban tim, dan progres proyek">
+    ${grafikStatistik()}
     <section class="kartu-kanan bertakik"><h2>Beban per PIC</h2><p>Tugas terbuka · perubahan sejak kemarin · klik untuk menyaring</p><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a>${beban}</section>
     <section class="kartu-kanan bertakik"><h2>Progres proyek</h2><p>Persen tugas selesai · klik untuk membuka</p><button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>
       ${proyekHtml}</section>
@@ -2147,7 +2181,7 @@ function renderDaftar() {
     ${kh.halo}${kh.hero}${kh.ikon}
     <div class="judul-baris"><h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1><button class="bulat-aksi utama" type="button" data-baru="" aria-label="Tugas baru"><svg><use href="#plus"/></svg></button><button class="bulat-aksi" type="button" aria-label="Opsi halaman"><svg><use href="#lainnya"/></svg></button></div>
     <p class="ringkas">${ringkasan(daftar)}</p>
-    ${kh.sapa}<div class="ringkas-atas">${kh.ubin}${grafikStatistik()}</div>
+    ${kh.sapa}${kh.ubin}
     <div class="isi-grid ${S.tab !== 'daftar' ? 'penuh' : ''}"><div class="kolom-utama">
     <div class="alat">
       <div class="tabs" role="tablist" aria-label="Tampilan">
@@ -2318,6 +2352,7 @@ document.addEventListener('click', (e) => {
     if (!el.closest('#pop')) { S.pop = null; renderPop(); }
     else return;
   }
+  if (el.closest('[data-ke-daftar]')) { S.status = ''; $('.kolom-utama')?.scrollIntoView({ behavior: gerakBoleh() ? 'smooth' : 'auto', block: 'start' }); return; }
   const rg = el.closest('[data-rentang]');
   if (rg) { S.rentang = rg.dataset.rentang; render(); return; }
   const sr = el.closest('[data-seri]');
