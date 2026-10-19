@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pilih Nav Bawah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Pembanding tiga varian nav bawah ponsel (19 Okt 2026). Klik menu untuk melihat animasinya. */
+:root { color-scheme: light; --latar: #f1eafc; --aksen: #8f78f0; --aksen-muda: #ece6fd; --tinta: #1d1b26; --redup: #6b6880; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #e7def8; color: var(--tinta); font: 14px/1.5 "Plus Jakarta Sans", system-ui, sans-serif; }
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--aksen); outline-offset: 2px; }
+.halaman { max-width: 1180px; margin: 0 auto; padding: 36px 20px 60px; }
+h1 { margin: 0 0 4px; font-size: 26px; }
+.halaman > p { margin: 0 0 28px; color: var(--redup); }
+.daftar { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; justify-items: center; }
+.varian { display: grid; gap: 12px; justify-items: center; }
+.varian h2 { margin: 0; font-size: 17px; display: flex; gap: 10px; align-items: center; }
+.varian h2 .huruf { width: 30px; height: 30px; border-radius: 10px; display: inline-grid; place-items: center; background: var(--tinta); color: #fff; font-size: 14px; }
+.varian > p { margin: 0; max-width: 320px; text-align: center; font-size: 13px; color: var(--redup); }
+
+/* Bingkai ponsel dengan isi tiruan. */
+.hp { position: relative; width: 320px; height: 600px; border-radius: 40px; background: var(--latar); overflow: hidden; box-shadow: 0 30px 60px -30px rgb(60 40 140 / .5), 0 0 0 10px #fff; }
+.isi { padding: 26px 16px; display: grid; gap: 10px; }
+.isi .judul { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.kartu { height: 74px; border-radius: 22px; background: #fff; }
+.kartu.ungu { height: 150px; background: #9d89f2; }
+.kartu.pendek { height: 56px; }
+
+svg.i { width: 22px; height: 22px; }
+
+/* ---------- A. Cekungan berpindah ---------- */
+@property --x { syntax: "<percentage>"; inherits: true; initial-value: 50%; }
+.nav-a { position: absolute; left: 10px; right: 10px; bottom: 12px; height: 66px; --x: 50%; transition: --x .45s cubic-bezier(.3, 1.2, .5, 1); }
+.nav-a .bilah { position: absolute; inset: 0; border-radius: 26px; background: linear-gradient(135deg, #a48bff, #7c5cf5); box-shadow: 0 16px 30px -14px rgb(124 92 245 / .8);
+  -webkit-mask: radial-gradient(circle 34px at var(--x) -2px, transparent 97%, #000 100%); mask: radial-gradient(circle 34px at var(--x) -2px, transparent 97%, #000 100%); }
+.nav-a .gelembung { position: absolute; top: -26px; left: var(--x); width: 56px; height: 56px; margin-left: -28px; border-radius: 50%; background: #fff; color: var(--aksen); display: grid; place-items: center; box-shadow: 0 10px 20px -8px rgb(124 92 245 / .7); }
+.nav-a .gelembung svg { width: 24px; height: 24px; }
+.nav-a .menu { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
+.nav-a .menu button { display: grid; justify-items: center; align-content: end; gap: 2px; padding-bottom: 10px; color: rgb(255 255 255 / .75); font-size: 11px; font-weight: 500; }
+.nav-a .menu button svg { transition: opacity .2s, transform .3s; }
+.nav-a .menu button[aria-current="page"] { color: #fff; font-weight: 700; }
+.nav-a .menu button[aria-current="page"] svg { opacity: 0; transform: translateY(-14px); }
+
+/* ---------- B. Pil mengembang ---------- */
+.nav-b { position: absolute; left: 10px; right: 10px; bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.nav-b .pil { flex: 1; min-width: 0; display: flex; justify-content: space-between; height: 60px; padding: 5px; border-radius: 999px; background: rgb(255 255 255 / .9); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: 0 14px 28px -14px rgb(60 40 140 / .5); }
+.nav-b .pil button { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 42px; height: 50px; padding: 0 10px; font-size: 12px; border-radius: 999px; color: var(--redup); font-size: 13px; font-weight: 600; transition: background .3s, color .3s, padding .3s; }
+.nav-b .pil button span { max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .35s ease; }
+.nav-b .pil button[aria-current="page"] { background: var(--aksen); color: #fff; padding: 0 12px; }
+.nav-b .pil button[aria-current="page"] span { max-width: 60px; }
+.nav-b .tambah { width: 56px; height: 56px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--tinta); color: #fff; box-shadow: 0 14px 24px -12px rgb(29 27 38 / .8); }
+.nav-b .tambah svg { width: 26px; height: 26px; }
+
+/* ---------- C. Pil gelap referensi ---------- */
+.nav-c { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 8px; padding: 8px; border-radius: 999px; background: #17162a; box-shadow: 0 18px 30px -14px rgb(23 22 42 / .8); }
+.nav-c button { position: relative; width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; color: #fff; border: 1px solid rgb(255 255 255 / .16); transition: background .25s, border-color .25s, transform .15s; }
+.nav-c button:active { transform: scale(.92); }
+.nav-c button[aria-current="page"] { background: var(--aksen); border-color: var(--aksen); }
+.nav-c button .label { position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translate(-50%, 4px); padding: 4px 10px; border-radius: 999px; background: var(--tinta); color: #fff; font-size: 11px; font-weight: 600; white-space: nowrap; opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; }
+.nav-c button[aria-current="page"] .label { opacity: 1; transform: translate(-50%, 0); }
+.nav-c .tambah { background: #fff; color: var(--tinta); border-color: #fff; }
+
+.lencana { position: absolute; top: 4px; right: 4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #ff8b6a; color: #fff; font-size: 10px; font-weight: 700; display: grid; place-items: center; box-shadow: 0 0 0 2px #fff; }
+.nav-c .lencana { box-shadow: 0 0 0 2px #17162a; }
+@media (prefers-reduced-motion: reduce) { .nav-a, .nav-a .gelembung, .nav-a .menu button svg, .nav-b .pil button, .nav-b .pil button span, .nav-c button, .nav-c button .label { transition: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="hari" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+  <symbol id="tugas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 7 1.5 1.5L8 6M4 13l1.5 1.5L8 12M4 19l1.5 1.5L8 18M11 7h9M11 13h9M11 19h9"/></symbol>
+  <symbol id="agenda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="tim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.4 3-5.5 6-5.5s5.4 2.1 6 5.5M16 4.5a3 3 0 0 1 0 6.2M18 14.8c1.6.8 2.7 2.6 3 5.2"/></symbol>
+  <symbol id="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+</svg>
+
+<div class="halaman">
+  <h1>Pilih nav bawah ponsel</h1>
+  <p>Klik menu di setiap ponsel untuk mencoba animasinya. Isi layar hanya tiruan.</p>
+  <div class="daftar">
+
+    <section class="varian">
+      <h2><span class="huruf">A</span>Cekungan berpindah</h2>
+      <div class="hp"><div class="isi"><div class="judul">Hari ini</div><div class="kartu ungu"></div><div class="kartu"></div><div class="kartu"></div><div class="kartu pendek"></div></div>
+        <nav class="nav-a" aria-label="Contoh A">
+          <div class="bilah"></div>
+          <span class="gelembung" aria-hidden="true"><svg><use href="#hari"/></svg></span>
+          <div class="menu">
+            <button type="button" data-ikon="hari" aria-current="page"><svg class="i"><use href="#hari"/></svg>Hari ini</button>
+            <button type="button" data-ikon="tugas"><svg class="i"><use href="#tugas"/></svg>Tugas</button>
+            <button type="button" data-ikon="plus"><svg class="i"><use href="#plus"/></svg>Tambah</button>
+            <button type="button" data-ikon="agenda"><svg class="i"><use href="#agenda"/></svg>Agenda</button>
+            <button type="button" data-ikon="menu"><svg class="i"><use href="#menu"/></svg>Lainnya</button>
+          </div>
+        </nav>
+      </div>
+      <p>Lekukan dan gelembung putih ikut bergeser ke menu aktif, senada dengan kartu bertakik. Paling unik.</p>
+    </section>
+
+    <section class="varian">
+      <h2><span class="huruf">B</span>Pil mengembang</h2>
+      <div class="hp"><div class="isi"><div class="judul">Hari ini</div><div class="kartu ungu"></div><div class="kartu"></div><div class="kartu"></div><div class="kartu pendek"></div></div>
+        <nav class="nav-b" aria-label="Contoh B">
+          <div class="pil">
+            <button type="button" aria-current="page"><svg class="i"><use href="#hari"/></svg><span>Hari ini</span></button>
+            <button type="button"><svg class="i"><use href="#tugas"/></svg><span>Tugas</span></button>
+            <button type="button"><svg class="i"><use href="#agenda"/></svg><span>Agenda</span></button>
+            <button type="button"><svg class="i"><use href="#menu"/></svg><span>Lainnya</span></button>
+          </div>
+          <button class="tambah" type="button" aria-label="Tambah"><svg><use href="#plus"/></svg></button>
+        </nav>
+      </div>
+      <p>Menu aktif melebar menjadi pil ungu berlabel; tombol tambah gelap terpisah. Paling rapi dan mudah dibaca.</p>
+    </section>
+
+    <section class="varian">
+      <h2><span class="huruf">C</span>Pil gelap referensi</h2>
+      <div class="hp"><div class="isi"><div class="judul">Hari ini</div><div class="kartu ungu"></div><div class="kartu"></div><div class="kartu"></div><div class="kartu pendek"></div></div>
+        <nav class="nav-c" aria-label="Contoh C">
+          <button type="button" aria-current="page" aria-label="Hari ini"><svg class="i"><use href="#hari"/></svg><span class="label">Hari ini</span><span class="lencana">3</span></button>
+          <button type="button" aria-label="Tugas"><svg class="i"><use href="#tugas"/></svg><span class="label">Tugas</span></button>
+          <button type="button" aria-label="Agenda"><svg class="i"><use href="#agenda"/></svg><span class="label">Agenda</span><span class="lencana">3</span></button>
+          <button type="button" class="tambah" aria-label="Tambah"><svg class="i"><use href="#plus"/></svg><span class="label">Tambah</span></button>
+        </nav>
+      </div>
+      <p>Kapsul gelap berisi lingkaran seperti referensi awal; label muncul di atas menu aktif. Paling ringkas.</p>
+    </section>
+
+  </div>
+</div>
+
+<script>
+// A: geser lekukan dan gelembung ke menu yang diklik.
+document.querySelectorAll('.nav-a').forEach((nav) => {
+  const tombol = [...nav.querySelectorAll('.menu button')];
+  const geser = (b) => {
+    tombol.forEach((x) => x.removeAttribute('aria-current'));
+    b.setAttribute('aria-current', 'page');
+    const persen = ((tombol.indexOf(b) + 0.5) / tombol.length) * 100;
+    nav.style.setProperty('--x', persen + '%');
+    nav.querySelector('.gelembung use').setAttribute('href', '#' + b.dataset.ikon);
+  };
+  tombol.forEach((b) => b.addEventListener('click', () => geser(b)));
+  geser(tombol[0]);
+});
+// B dan C: pindahkan status aktif.
+document.querySelectorAll('.nav-b .pil, .nav-c').forEach((grup) => {
+  grup.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    grup.querySelectorAll('button').forEach((x) => x.removeAttribute('aria-current'));
+    b.setAttribute('aria-current', 'page');
+  });
+});
+</script>
+</body>
+</html>
