@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prototipe Bento Lembut</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Prototipe statis task manager. Gaya bento lembut. Data contoh, tidak disimpan. */
+:root{--bg:#F4F5F1;--card:#FFFFFF;--card2:#F6F7F3;--ink:#272925;--mut:#80837A;--line:#ECEEE7;
+--hijau:#D3E6AE;--hijau-t:#5A7434;--peach:#F6D3BC;--peach-t:#97603D;--langit:#C8E0EA;--langit-t:#41697A;--lila:#DDD5F0;--lila-t:#655A8C;--kuning:#F3E3B0;--kuning-t:#7D6624;
+--bayang:0 1px 2px rgb(40 40 30/.03),0 6px 20px rgb(40 40 30/.04);--r:22px}
+[data-mode=gelap]{--bg:#1B1D1A;--card:#232622;--card2:#2A2D28;--ink:#ECEDE8;--mut:#9DA196;--line:#30332C;
+--hijau:#3F4B2E;--hijau-t:#C9DEA0;--peach:#4D3A2E;--peach-t:#EBC6AE;--langit:#2E4249;--langit-t:#B9D6E2;--lila:#3B3650;--lila-t:#D3CAEB;--kuning:#4A4128;--kuning-t:#EAD8A0;--bayang:0 0 0 1px #2E312B;color-scheme:dark}
+*{box-sizing:border-box;margin:0}[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 Figtree,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+button,input{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--hijau-t);outline-offset:2px;border-radius:10px}
+svg{display:block}
+.app{display:grid;max-width:1480px;margin:0 auto}
+aside{display:none}
+.logo{display:flex;gap:10px;align-items:center;font-weight:800;font-size:18px;padding:4px 10px 24px}
+.logo span{width:34px;height:34px;border-radius:11px;background:var(--hijau);color:var(--hijau-t);display:grid;place-items:center}
+.grup{font-size:11px;font-weight:700;color:var(--mut);letter-spacing:.06em;padding:16px 12px 8px}
+.nav{display:flex;gap:12px;align-items:center;width:100%;min-height:44px;padding:0 12px;border-radius:14px;color:var(--mut);font-weight:600}
+.nav:hover{background:var(--card2);color:var(--ink)}
+.nav[aria-current=page]{background:var(--hijau);color:var(--hijau-t)}
+.nav .bdg{margin-left:auto;font-size:11px;background:var(--card);border-radius:8px;padding:1px 7px}
+.top{display:flex;align-items:center;gap:10px;padding:14px 16px}
+.remah{font-size:13px;color:var(--mut);flex:1}.remah b{color:var(--ink);font-weight:600}
+.mode{display:flex;background:var(--card);border-radius:12px;padding:3px;box-shadow:var(--bayang)}
+.mode button{min-height:36px;padding:0 12px;border-radius:9px;font-size:12px;font-weight:700;color:var(--mut)}
+.mode button[aria-pressed=true]{background:var(--card2);color:var(--ink)}
+.ava{width:40px;height:40px;border-radius:50%;background:var(--peach);color:var(--peach-t);display:grid;place-items:center;font-weight:800;font-size:13px}
+main{padding:4px 16px 24px}
+.sambut{margin-bottom:16px}
+.sambut h1{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.2}.sambut p{color:var(--mut);font-size:13px;margin-top:4px}
+.bento{display:grid;gap:14px}
+.k{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--bayang);animation:naik .45s both}
+.kh{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:14px}
+.kh small{font-weight:600;color:var(--mut);font-size:12px}
+.kh .ka{margin-left:auto;font-size:12px;font-weight:700;color:var(--hijau-t)}
+.besar{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}.kecil{color:var(--mut);font-size:12px}
+/* catat cepat */
+.catat{display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:16px;padding:6px 6px 6px 14px;border:1.5px solid transparent;transition:border-color .15s}
+.catat:focus-within{border-color:var(--hijau-t);background:var(--card)}
+.catat input{flex:1;min-width:0;border:0;background:none;min-height:42px;outline:0;font-size:15px}
+.catat button{width:42px;height:42px;border-radius:12px;background:var(--hijau);color:var(--hijau-t);font-size:20px;font-weight:700;flex:none}
+.opsi{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.chip{min-height:34px;padding:0 12px;border-radius:99px;background:var(--card2);font-size:12px;font-weight:600;color:var(--mut);display:inline-flex;gap:6px;align-items:center;border:1.5px solid transparent}
+.chip[aria-pressed=true]{background:var(--card);border-color:currentColor}
+.chip i{width:8px;height:8px;border-radius:50%}
+.pisah{height:1px;background:var(--line);margin:12px 0}
+/* daftar tugas */
+.tg{display:flex;align-items:center;gap:12px;padding:10px 4px;border-radius:12px;animation:naik .3s both}
+.tg+.tg{border-top:1px solid var(--line)}
+.cb{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);flex:none;display:grid;place-items:center;transition:.15s}
+.tg.ok .cb{background:var(--hijau-t);border-color:var(--hijau-t)}
+.tg.ok .cb::after{content:"";width:9px;height:5px;border:2px solid var(--card);border-top:0;border-right:0;transform:rotate(-45deg) translateY(-1px)}
+.tg.ok .jd{text-decoration:line-through;color:var(--mut)}
+.tg .isi{flex:1;min-width:0}.tg .jd{font-weight:600;font-size:14px}.tg .mt{font-size:12px;color:var(--mut)}
+.tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.kosong{color:var(--mut);text-align:center;padding:16px}
+/* grafik clean */
+.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;align-items:end;height:140px;margin-top:18px}
+.bars .kl{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;height:100%;cursor:pointer}
+.bars .bt{width:100%;max-width:30px;border-radius:10px;background:var(--card2);position:relative;overflow:hidden;transform-origin:bottom;animation:tumbuh .7s cubic-bezier(.2,.8,.2,1) both}
+.bars .bt i{position:absolute;left:0;right:0;bottom:0;background:var(--hijau);border-radius:10px;transition:background .2s}
+.bars .kl.on .bt i{background:var(--hijau-t)}
+.bars span{font-size:11px;color:var(--mut);font-weight:600}.bars .kl.on span{color:var(--ink)}
+.cincin{display:flex;align-items:center;gap:18px}
+.cincin svg{width:120px;flex:none}
+.leg{display:grid;gap:8px;flex:1}
+.leg div{display:flex;align-items:center;gap:8px;font-size:13px}
+.leg i{width:8px;height:8px;border-radius:50%}.leg span{margin-left:auto;font-weight:700}
+.pr+.pr{margin-top:14px}
+.pr .at{display:flex;justify-content:space-between;font-size:13px;font-weight:600}.pr .at span{color:var(--mut)}
+.tr{height:8px;border-radius:99px;background:var(--card2);margin-top:6px;overflow:hidden}.tr i{display:block;height:100%;border-radius:99px;transform-origin:left;animation:lebar .9s cubic-bezier(.2,.8,.2,1) both}
+/* tabel tugas */
+.alat{display:flex;gap:6px;margin-left:auto}
+.tw{overflow-x:auto;margin:0 -18px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:var(--mut);font-weight:600;font-size:12px;padding:8px 18px;white-space:nowrap}
+td{padding:11px 18px;border-top:1px solid var(--line);white-space:nowrap}
+tbody tr:hover{background:var(--card2)}
+.status{cursor:pointer;border:0}
+.tambah-baris td{color:var(--mut);cursor:pointer}.tambah-baris:hover td{color:var(--hijau-t)}
+/* nav bawah */
+nav.bawah{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-radius:22px;box-shadow:0 10px 30px rgb(0 0 0/.08);display:flex;padding:6px;z-index:5}
+nav.bawah button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;border-radius:16px;font-size:11px;font-weight:600;color:var(--mut)}
+nav.bawah button[aria-current=page]{background:var(--hijau);color:var(--hijau-t)}
+nav.bawah .plus{flex:none;width:56px;background:var(--hijau-t);color:var(--card);margin:0 4px;font-size:22px}
+.toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,16px);background:var(--ink);color:var(--card);padding:10px 16px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;z-index:9}.toast.ada{opacity:1;transform:translate(-50%,0)}
+@keyframes naik{from{opacity:0;transform:translateY(10px)}}@keyframes tumbuh{from{transform:scaleY(0)}}@keyframes lebar{from{transform:scaleX(0)}}
+.bento>.k:nth-child(2){animation-delay:.05s}.bento>.k:nth-child(3){animation-delay:.1s}.bento>.k:nth-child(4){animation-delay:.15s}.bento>.k:nth-child(5){animation-delay:.2s}
+@media (min-width:768px){.bento{grid-template-columns:1fr 1fr}.ga,.ge{grid-column:span 2}}
+@media (min-width:1100px){
+ body{padding-bottom:0}nav.bawah{display:none}
+ .app{grid-template-columns:232px 1fr;padding:14px;gap:14px}
+ aside{display:flex;flex-direction:column;background:var(--card);border-radius:26px;padding:20px 12px;position:sticky;top:14px;height:calc(100vh - 28px);box-shadow:var(--bayang)}
+ aside .bwh{margin-top:auto}.top{padding:6px 4px 14px}main{padding:0 4px}
+ .bento{grid-template-columns:1.2fr 1fr 1fr;grid-template-areas:"a b c" "a d d" "e e e"}
+ .ga{grid-area:a}.gb{grid-area:b}.gc{grid-area:c}.gd{grid-area:d}.ge{grid-area:e}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside aria-label="Menu utama">
+ <div class="logo"><span>K</span>Kopdes</div>
+ <div class="grup">KERJA</div>
+ <button class="nav" aria-current="page">Ringkasan</button>
+ <button class="nav">Tugas <span class="bdg" id="bdg">0</span></button>
+ <button class="nav">Rutin gerai</button>
+ <button class="nav">Proyek</button>
+ <button class="nav">Catatan</button>
+ <div class="grup">PENCATATAN</div>
+ <button class="nav">Penjualan</button>
+ <button class="nav">Buku kas</button>
+ <button class="nav">Stok barang</button>
+ <button class="nav">Anggota</button>
+ <div class="bwh"><button class="nav">Pengaturan</button></div>
+</aside>
+
+<div>
+<header class="top">
+ <div class="remah">Kerja / <b>Ringkasan</b></div>
+ <div class="mode" role="group" aria-label="Mode tampilan"><button aria-pressed="true" data-m="">Terang</button><button aria-pressed="false" data-m="gelap">Gelap</button></div>
+ <div class="ava" aria-hidden="true">PM</div>
+</header>
+<main>
+ <div class="sambut"><h1>Selamat pagi, Pak Manajer</h1><p id="ringkas">Sabtu, 17 Oktober 2026</p></div>
+
+ <div class="bento">
+  <!-- catat cepat + tugas hari ini -->
+  <section class="k ga" aria-label="Tugas hari ini">
+   <div class="kh">Catat cepat</div>
+   <form class="catat" id="fCatat"><input id="iCatat" placeholder="Tulis tugas atau kegiatan, lalu Enter" aria-label="Tugas atau kegiatan baru" autocomplete="off"><button aria-label="Tambah">+</button></form>
+   <div class="opsi" id="oJenis" role="group" aria-label="Jenis"></div>
+   <div class="opsi" id="oKat" role="group" aria-label="Kategori"></div>
+   <div class="opsi" id="oHari" role="group" aria-label="Tanggal"></div>
+   <div class="pisah"></div>
+   <div class="kh" style="margin-bottom:6px">Hari ini <small id="hInfo"></small></div>
+   <div id="hari"></div>
+  </section>
+
+  <!-- tugas selesai per hari -->
+  <section class="k gb" aria-label="Tugas selesai minggu ini">
+   <div class="kh">Selesai minggu ini</div>
+   <div class="besar" id="bVal">–</div><div class="kecil" id="bLbl">tugas selesai · ketuk hari</div>
+   <div class="bars" id="bars"></div>
+  </section>
+
+  <!-- status tugas -->
+  <section class="k gc" aria-label="Status tugas">
+   <div class="kh">Status tugas</div>
+   <div class="cincin"><svg viewBox="0 0 120 120" id="cin"></svg><div class="leg" id="leg"></div></div>
+  </section>
+
+  <!-- rutin + proyek -->
+  <section class="k gd" aria-label="Rutin dan proyek">
+   <div class="kh">Rutin gerai & proyek <button class="ka" data-x>Lihat semua</button></div>
+   <div id="prog"></div>
+  </section>
+
+  <!-- semua tugas -->
+  <section class="k ge" aria-label="Semua tugas">
+   <div class="kh">Semua tugas <div class="alat" id="tFil" role="group" aria-label="Saring status"></div></div>
+   <div class="tw"><table><thead><tr><th>Tugas</th><th>Kategori</th><th>Tenggat</th><th>Status</th></tr></thead><tbody id="tBody"></tbody></table></div>
+  </section>
+ </div>
+</main>
+</div>
+</div>
+
+<nav class="bawah" aria-label="Menu utama">
+ <button aria-current="page">Ringkasan</button>
+ <button data-x>Tugas</button>
+ <button class="plus" id="plus" aria-label="Catat cepat">+</button>
+ <button data-x>Rutin</button>
+ <button data-x>Lainnya</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('ada');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('ada'),1800)}
+$$('.nav,[data-x]').forEach(b=>b.onclick=()=>toast('Halaman contoh'));
+$$('.mode button').forEach(b=>b.onclick=()=>{$$('.mode button').forEach(x=>x.setAttribute('aria-pressed',x===b));b.dataset.m?document.documentElement.dataset.mode='gelap':delete document.documentElement.dataset.mode;cincin()});
+$('#plus').onclick=()=>{scrollTo({top:0,behavior:'smooth'});$('#iCatat').focus()};
+
+/* data contoh */
+const KAT={Gerai:'peach',Gudang:'langit',Rapat:'hijau',Administrasi:'lila',Anggota:'kuning'};
+const ST=[['Belum','lila'],['Dikerjakan','kuning'],['Selesai','hijau']];
+let T=[['Briefing pagi EBITDA','Rapat','Hari ini',2],['Hitung modal laci kasir','Gerai','Hari ini',2],['Pindah barang ke rak (FIFO)','Gudang','Hari ini',1],['Setor uang ke bank mitra','Gerai','Hari ini',0],['Cek target EBITDA besok','Administrasi','Hari ini',0],
+ ['Susun laporan bulanan','Administrasi','23 Okt',1],['Pendataan anggota baru','Anggota','25 Okt',0],['Kunjungan pemasok beras','Gudang','28 Okt',0],['Rapat anggota bulanan','Rapat','20 Okt',0]];
+
+/* catat cepat: pilihan sekali ketuk */
+let pil={jenis:'Tugas',kat:'Gerai',hari:'Hari ini'};
+function opsi(id,key,arr,warna){$(id).innerHTML=arr.map(v=>`<button type="button" class="chip" aria-pressed="${pil[key]===v}" ${warna?`style="color:var(--${KAT[v]}-t)"`:''}>${warna?`<i style="background:var(--${KAT[v]})"></i>`:''}${v}</button>`).join('');
+ $$(id+' button').forEach(b=>b.onclick=()=>{pil[key]=b.textContent;opsi(id,key,arr,warna)})}
+opsi('#oJenis','jenis',['Tugas','Kegiatan','Catatan']);opsi('#oKat','kat',Object.keys(KAT),1);opsi('#oHari','hari',['Hari ini','Besok','Minggu ini']);
+$('#fCatat').onsubmit=e=>{e.preventDefault();const v=$('#iCatat').value.trim();if(!v){$('#iCatat').focus();return}
+ if(pil.jenis==='Tugas')T.unshift([v,pil.kat,pil.hari,0]);$('#iCatat').value='';semua();toast(`${pil.jenis} ditambahkan · ${pil.kat} · ${pil.hari}`)};
+
+/* daftar hari ini */
+const tag=(t,w)=>`<span class="tag" style="background:var(--${w});color:var(--${w}-t)">${t}</span>`;
+function hari(){const h=T.filter(t=>t[2]==='Hari ini'),s=h.filter(t=>t[3]===2).length;$('#hInfo').textContent=`${s}/${h.length} selesai`;
+ $('#ringkas').textContent=`Sabtu, 17 Oktober 2026 · ${h.length-s} tugas tersisa hari ini`;$('#bdg').textContent=T.filter(t=>t[3]<2).length;
+ $('#hari').innerHTML=h.length?h.map(t=>`<div class="tg ${t[3]===2?'ok':''}" data-i="${T.indexOf(t)}"><button class="cb" aria-label="Tandai selesai: ${t[0]}"></button><div class="isi"><div class="jd">${t[0]}</div></div>${tag(t[1],KAT[t[1]])}</div>`).join(''):'<div class="kosong">Belum ada tugas hari ini.</div>';
+ $$('#hari .cb').forEach(b=>b.onclick=()=>{const t=T[+b.parentElement.dataset.i];t[3]=t[3]===2?0:2;semua()})}
+
+/* grafik batang lembut */
+const H=['Sen','Sel','Rab','Kam','Jum','Sab','Min'],SEL=[4,6,3,7,5,0,0];
+function bars(){SEL[5]=T.filter(t=>t[2]==='Hari ini'&&t[3]===2).length;const mx=Math.max(...SEL,8),tot=SEL.reduce((a,b)=>a+b,0);
+ $('#bars').innerHTML=SEL.map((v,i)=>`<div class="kl ${i===5?'on':''}" data-i="${i}" role="button" tabindex="0" aria-label="${H[i]}: ${v} tugas"><div class="bt" style="height:100%;animation-delay:${i*.05}s"><i style="height:${v/mx*100}%"></i></div><span>${H[i][0]}</span></div>`).join('');
+ $('#bVal').textContent=tot+' tugas';
+ $$('#bars .kl').forEach(k=>k.onclick=()=>{$$('#bars .kl').forEach(x=>x.classList.toggle('on',x===k));const i=+k.dataset.i;$('#bVal').textContent=SEL[i]+' tugas';$('#bLbl').textContent=`${H[i]}, ${11+i} Okt · ketuk lagi untuk total`;k.ondblclick=null;k.onclick=()=>{bars()}})}
+
+/* cincin status */
+function cincin(){const n=ST.map((_,i)=>T.filter(t=>t[3]===i).length),tot=T.length,r=48,k=2*Math.PI*r,cs=getComputedStyle(document.documentElement);let o=0;
+ $('#cin').innerHTML=`<circle cx="60" cy="60" r="${r}" fill="none" stroke="${cs.getPropertyValue('--card2')}" stroke-width="10"/>`+n.map((v,i)=>{const l=v/tot*k,s=`<circle cx="60" cy="60" r="${r}" fill="none" stroke="${cs.getPropertyValue(i===2?'--hijau-t':'--'+ST[i][1])}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${Math.max(.1,l-8)} ${k}" stroke-dashoffset="${-o-4}" transform="rotate(-90 60 60)"/>`;o+=l;return v?s:''}).join('')+
+ `<text x="60" y="58" text-anchor="middle" font-size="22" font-weight="800" fill="${cs.getPropertyValue('--ink')}">${Math.round(n[2]/tot*100)}%</text><text x="60" y="75" text-anchor="middle" font-size="10" fill="${cs.getPropertyValue('--mut')}">selesai</text>`;
+ $('#leg').innerHTML=ST.map(([s,w],i)=>`<div><i style="background:var(${i===2?'--hijau-t':'--'+w})"></i>${s}<span>${n[i]}</span></div>`).join('')}
+
+/* progres rutin & proyek */
+function prog(){const P=[['Rutin gerai hari ini',4,11,'hijau-t'],['Kesiapan gerai baru',12,17,'peach-t'],['Pendataan anggota',9,20,'langit-t']];
+ $('#prog').innerHTML=P.map(([n,a,b,w],i)=>`<div class="pr"><div class="at">${n}<span>${a}/${b}</span></div><div class="tr"><i style="width:${a/b*100}%;background:var(--${w});opacity:.75;animation-delay:${i*.08}s"></i></div></div>`).join('')}
+
+/* tabel semua tugas */
+let fSt=-1;
+function tabel(){$('#tFil').innerHTML=[['Semua',-1],...ST.map((s,i)=>[s[0],i])].map(([n,i])=>`<button class="chip" aria-pressed="${i===fSt}" data-s="${i}">${n}</button>`).join('');
+ $$('#tFil button').forEach(b=>b.onclick=()=>{fSt=+b.dataset.s;tabel()});
+ const r=T.filter(t=>fSt<0||t[3]===fSt);
+ $('#tBody').innerHTML=r.map(t=>`<tr><td style="font-weight:600">${t[0]}</td><td>${tag(t[1],KAT[t[1]])}</td><td class="kecil">${t[2]}</td><td><button class="tag status" data-i="${T.indexOf(t)}" style="background:var(--${ST[t[3]][1]});color:var(--${ST[t[3]][1]}-t)" aria-label="Ubah status ${t[0]}">${ST[t[3]][0]} ▾</button></td></tr>`).join('')+
+ `<tr class="tambah-baris"><td colspan="4">+ Tambah tugas</td></tr>`;
+ $$('.status').forEach(b=>b.onclick=()=>{const t=T[+b.dataset.i];t[3]=(t[3]+1)%3;semua()});
+ $('.tambah-baris').onclick=$('#plus').onclick}
+
+function semua(){hari();bars();cincin();prog();tabel()}
+semua();
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pilih Konsep</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=DM+Sans:wght@400;500;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Empat konsep dengan tata letak, bentuk, dan cara mencatat yang berbeda. Data contoh. */
+*{box-sizing:border-box;margin:0}
+body{background:#E9E9EC;font:14px/1.5 Inter,system-ui,sans-serif;color:#222;padding:24px 16px 60px}
+h1{font-size:22px;text-align:center}.ket{text-align:center;color:#666;margin:6px 0 26px}
+.deret{display:grid;gap:30px;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));max-width:1480px;margin:0 auto}
+.label{font-weight:700;font-size:15px;margin-bottom:6px}.label span{display:block;color:#777;font-weight:500;font-size:13px}
+.hp{border-radius:36px;overflow:hidden;box-shadow:0 24px 50px -22px rgb(0 0 0/.3);height:740px;position:relative;display:flex;flex-direction:column}
+.isi{flex:1;overflow:auto;scrollbar-width:none}
+button,input{font:inherit;color:inherit;border:0;background:none}
+svg{display:block}
+
+/* ===== A. Dompet: kartu bertumpuk ===== */
+.a{background:#F4F2EE;color:#1E1E1E;font-family:Inter}
+.a .isi{padding:22px 18px}
+.a .atas{display:flex;justify-content:space-between;align-items:center}
+.a .atas b{font-size:22px;letter-spacing:-.02em}
+.a .tumpuk{position:relative;height:250px;margin:18px 0 6px}
+.a .kd{position:absolute;left:0;right:0;border-radius:24px;padding:18px;color:#fff;transition:transform .35s cubic-bezier(.2,.8,.2,1);cursor:pointer;box-shadow:0 14px 30px -14px rgb(0 0 0/.35)}
+.a .kd small{opacity:.8;font-weight:600}.a .kd .n{font-size:30px;font-weight:700;letter-spacing:-.03em}
+.a .kd:nth-child(1){top:0;transform:scale(.9)}
+.a .kd:nth-child(2){top:34px;transform:scale(.95)}
+.a .kd:nth-child(3){top:68px;height:180px}
+.a .kd svg{margin-top:10px}
+.a .ttl{font-weight:700;font-size:15px;margin:18px 0 8px}
+.a .baris{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #E4E0D8;cursor:pointer}
+.a .baris .ik{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;font-weight:700}
+.a .baris b{flex:1;font-weight:600}.a .baris small{color:#8A8680}
+.a .baris.ok b{text-decoration:line-through;color:#aaa}
+.a .bawah{padding:12px 18px 18px;background:#F4F2EE}
+.a .catat{display:flex;gap:8px;background:#1E1E1E;border-radius:20px;padding:6px 6px 6px 16px;color:#fff}
+.a .catat input{flex:1;outline:0;min-height:44px;color:#fff}.a .catat input::placeholder{color:#fff8}
+.a .catat button{width:44px;border-radius:15px;background:#fff;color:#1E1E1E;font-size:20px;font-weight:700}
+
+/* ===== B. Majalah: huruf besar, tanpa kartu ===== */
+.b{background:#FBFAF6;color:#211F1A;font-family:Inter}
+.b .isi{padding:26px 22px}
+.b .tg{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9A958A;font-weight:600}
+.b h2{font-family:Fraunces,serif;font-size:40px;line-height:1.02;font-weight:500;letter-spacing:-.02em;margin:8px 0 18px}
+.b h2 em{font-style:italic;color:#B5876B}
+.b .angka{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #211F1A;border-bottom:1px solid #E6E2D8}
+.b .angka div{padding:12px 0}.b .angka div+div{padding-left:12px;border-left:1px solid #E6E2D8}
+.b .angka b{font-family:Fraunces,serif;font-size:26px;font-weight:500;display:block;line-height:1.1}.b .angka small{font-size:11px;color:#9A958A}
+.b .graf{margin:20px 0 6px}
+.b .sub{font-family:Fraunces,serif;font-size:20px;margin:22px 0 4px}
+.b .tulis{border-bottom:1.5px solid #211F1A;display:flex;align-items:center;gap:8px}
+.b .tulis input{flex:1;min-height:48px;outline:0;font-family:Fraunces,serif;font-size:18px}
+.b .tulis button{font-weight:700;font-size:13px;letter-spacing:.08em}
+.b .item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #E6E2D8;cursor:pointer;align-items:baseline}
+.b .item .no{font-family:Fraunces,serif;color:#B5876B;font-size:15px;width:22px}
+.b .item b{flex:1;font-weight:500;font-size:15px}.b .item small{color:#9A958A;font-size:12px}
+.b .item.ok b{text-decoration:line-through;color:#B9B4AA}
+
+/* ===== C. Ubin warna: lingkaran progres ===== */
+.c{background:#EEF0FB;color:#262842;font-family:"DM Sans"}
+.c .isi{padding:22px 16px}
+.c h2{font-size:22px;letter-spacing:-.02em}.c .sb{color:#7F82A3;font-size:13px}
+.c .ubin{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.c .u{border-radius:24px;padding:14px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:transform .2s}
+.c .u:active{transform:scale(.96)}
+.c .u b{font-size:15px}.c .u small{font-size:12px;opacity:.75}
+.c .u.lebar{grid-column:span 2;min-height:auto;flex-direction:row;align-items:center;gap:14px}
+.c .cin{width:64px;height:64px}
+.c .cin text{font:700 15px "DM Sans"}
+.c .tombol{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.c .tombol button{background:#fff;border-radius:18px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:700;box-shadow:0 4px 14px -8px rgb(60 60 120/.3)}
+.c .tombol span{font-size:20px}
+.c .tl{background:#fff;border-radius:22px;padding:6px 14px;margin-top:14px}
+.c .tl div{display:flex;gap:10px;align-items:center;padding:10px 0;cursor:pointer}.c .tl div+div{border-top:1px solid #EEF0FB}
+.c .tl i{width:20px;height:20px;border-radius:7px;border:2px solid #CDD0EA}.c .tl .ok i{background:#7C83E8;border-color:#7C83E8}.c .tl .ok b{text-decoration:line-through;color:#A9ACC6}
+.c .tl b{flex:1;font-weight:500}
+
+/* ===== D. Obrolan: catat seperti kirim pesan ===== */
+.d{background:#FFF9F5;color:#3A2F2A;font-family:Nunito}
+.d .kep{padding:20px 18px 10px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #F3E6DD}
+.d .kep .av{width:42px;height:42px;border-radius:50%;background:#F7D9C8;display:grid;place-items:center;font-weight:800;color:#A9634A}
+.d .kep b{font-size:17px;font-weight:800;display:block;line-height:1.2}.d .kep small{color:#A6948A}
+.d .isi{padding:14px 16px}
+.d .hari{text-align:center;font-size:11px;font-weight:700;color:#B9A79D;margin:6px 0 12px}
+.d .gel{max-width:82%;padding:10px 14px;border-radius:20px 20px 6px 20px;background:#F2A98C;color:#fff;margin:0 0 8px auto;font-weight:600;animation:mk .3s both;width:fit-content}
+.d .gel small{display:block;font-size:11px;opacity:.85;font-weight:600;margin-top:2px}
+.d .bal{max-width:86%;padding:12px 14px;border-radius:20px 20px 20px 6px;background:#fff;margin:0 0 10px;box-shadow:0 4px 14px -8px rgb(150 90 60/.25);animation:mk .3s both}
+.d .bal b{font-weight:800}
+.d .pil{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.d .pil span{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:#FDEBE2;color:#B0664A}
+.d .peta{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}.d .peta i{aspect-ratio:1;border-radius:6px}
+.d .saran{display:flex;gap:6px;overflow-x:auto;padding:8px 16px 0;scrollbar-width:none}
+.d .saran button{flex:none;background:#fff;border:1.5px solid #F3E0D5;border-radius:99px;padding:6px 12px;font-weight:700;font-size:12px;color:#A9634A}
+.d .ketik{display:flex;gap:8px;padding:10px 14px 18px;align-items:center}
+.d .ketik input{flex:1;background:#fff;border-radius:99px;min-height:48px;padding:0 18px;outline:0;box-shadow:0 2px 10px -6px rgb(150 90 60/.3)}
+.d .ketik button{width:48px;height:48px;border-radius:50%;background:#F2A98C;color:#fff;font-size:20px}
+@keyframes mk{from{opacity:0;transform:translateY(8px)}}
+.pilih{display:block;width:100%;margin-top:12px;min-height:46px;border-radius:14px;border:2px solid #222;background:#fff;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Pilih satu konsep</h1>
+<p class="ket">Kali ini tata letak, bentuk, huruf, grafik, dan cara mencatatnya berbeda semua. Semuanya bisa disentuh dan dicoba.</p>
+<div class="deret">
+
+<!-- A -->
+<div><div class="label">A. Dompet<span>kartu bertumpuk seperti dompet digital; ketuk kartu untuk menaikkannya. Catat di bilah bawah.</span></div>
+<div class="hp a"><div class="isi">
+ <div class="atas"><b>Hari ini</b><small style="color:#8A8680">Sab, 17 Okt</small></div>
+ <div class="tumpuk" id="aT">
+  <div class="kd" style="background:linear-gradient(135deg,#9FB4D9,#7C93C3)"><small>Tugas selesai</small><div class="n">2 / 5</div></div>
+  <div class="kd" style="background:linear-gradient(135deg,#E9B9A2,#D69A81)"><small>Rutin gerai</small><div class="n">36%</div></div>
+  <div class="kd" style="background:linear-gradient(135deg,#8FB8A3,#6E9C86)"><small>Penjualan gerai</small><div class="n">Rp 3,04 jt</div><svg viewBox="0 0 280 60" id="aG"></svg></div>
+ </div>
+ <div class="ttl">Daftar tugas</div>
+ <div id="aL"></div>
+</div>
+<div class="bawah"><form class="catat" id="aF"><input placeholder="Catat tugas…" aria-label="Catat tugas"><button aria-label="Tambah">+</button></form></div>
+</div><button class="pilih" data-p="A">Pilih konsep A</button></div>
+
+<!-- B -->
+<div><div class="label">B. Majalah<span>huruf besar ala koran, tanpa kotak-kotak, banyak ruang kosong. Catat langsung di garis.</span></div>
+<div class="hp b"><div class="isi">
+ <div class="tg">Sabtu · 17 Oktober</div>
+ <h2>Tiga tugas lagi, <em>Pak Manajer.</em></h2>
+ <div class="angka"><div><b>2/5</b><small>tugas</small></div><div><b>36%</b><small>rutin gerai</small></div><div><b>3,04</b><small>juta rupiah</small></div></div>
+ <div class="graf"><svg viewBox="0 0 300 70" id="bG"></svg></div>
+ <div class="sub">Catatan hari ini</div>
+ <form class="tulis" id="bF"><input placeholder="Tulis di sini…" aria-label="Catat tugas"><button>SIMPAN</button></form>
+ <div id="bL"></div>
+</div></div><button class="pilih" data-p="B">Pilih konsep B</button></div>
+
+<!-- C -->
+<div><div class="label">C. Ubin ceria<span>ubin warna dengan lingkaran progres; catat lewat tombol besar sesuai jenis.</span></div>
+<div class="hp c"><div class="isi">
+ <h2>Halo, Pak Manajer</h2><div class="sb">Sabtu, 17 Oktober</div>
+ <div class="ubin" id="cU"></div>
+ <div class="tombol" id="cB"><button><span>✓</span>Tugas</button><button><span>◎</span>Kegiatan</button><button><span>₨</span>Penjualan</button></div>
+ <div class="tl" id="cL"></div>
+</div></div><button class="pilih" data-p="C">Pilih konsep C</button></div>
+
+<!-- D -->
+<div><div class="label">D. Obrolan<span>catat seperti kirim pesan; aplikasi membalas dengan ringkasan dan grafik kecil.</span></div>
+<div class="hp d">
+ <div class="kep"><div class="av">K</div><div><b>Catatan Kopdes</b><small>ketik apa saja yang dikerjakan</small></div></div>
+ <div class="isi" id="dI">
+  <div class="hari">HARI INI</div>
+  <div class="bal">Selamat pagi! Hari ini ada <b>5 tugas</b>, 2 sudah selesai.<div class="pil"><span>Gerai 3</span><span>Gudang 1</span><span>Rapat 1</span></div></div>
+  <div class="gel">Briefing pagi beres<small>07.45</small></div>
+  <div class="bal">Dicatat ✓ <b>Briefing pagi</b> · Rapat · 07.45</div>
+  <div class="bal">Kesibukan 3 minggu terakhir:<div class="peta" id="dP"></div></div>
+ </div>
+ <div class="saran" id="dS"><button>Cek stok beras</button><button>Setor uang</button><button>Rekap EBITDA</button><button>Buka toko</button></div>
+ <form class="ketik" id="dF"><input placeholder="Ketik kegiatan…" aria-label="Ketik kegiatan"><button aria-label="Kirim">➤</button></form>
+</div><button class="pilih" data-p="D">Pilih konsep D</button></div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const DATA=[2.1,2.0,2.25,2.18,2.4,2.32,2.5,2.45,2.38,2.6,2.55,2.72,2.66,2.8,2.74,2.9,2.84,2.95,2.88,3.04];
+const halus=(d,W,H,pad=4)=>{const mx=Math.max(...d),mn=Math.min(...d),p=d.map((v,i)=>[i*W/(d.length-1),pad+(1-(v-mn)/(mx-mn))*(H-2*pad)]);return p.map((q,i)=>{if(!i)return`M${q}`;const o=p[i-1],c=(o[0]+q[0])/2;return`C${c},${o[1]} ${c},${q[1]} ${q}`}).join(' ')};
+const T=[['Briefing pagi','Rapat',1],['Hitung modal kasir','Gerai',1],['Pindah barang ke rak','Gudang',0],['Setor uang ke bank','Gerai',0],['Cek target EBITDA','Admin',0]];
+$$('.pilih').forEach(b=>b.onclick=()=>alert('Konsep '+b.dataset.p+' dipilih. Sampaikan pilihan ini di chat.'));
+
+/* A */
+$('#aG').innerHTML=`<path d="${halus(DATA,280,60)}" fill="none" stroke="#fff" stroke-width="1.6" stroke-opacity=".9"/>`;
+$$('#aT .kd').forEach(k=>k.onclick=()=>{const p=k.parentElement;p.appendChild(k);$$('#aT .kd').forEach(x=>x.style.height='')});
+const AW={Rapat:'#DDE5F4',Gerai:'#F6E0D5',Gudang:'#DCEBE3',Admin:'#ECE6F6'};
+const aL=()=>$('#aL').innerHTML=T.map((t,i)=>`<div class="baris ${t[2]?'ok':''}" data-i="${i}"><span class="ik" style="background:${AW[t[1]]}">${t[1][0]}</span><b>${t[0]}</b><small>${t[2]?'Selesai':t[1]}</small></div>`).join('');
+aL();$('#aL').onclick=e=>{const r=e.target.closest('.baris');if(r){T[+r.dataset.i][2]^=1;semua()}};
+$('#aF').onsubmit=e=>{e.preventDefault();const i=e.target[0];if(i.value.trim()){T.push([i.value.trim(),'Gerai',0]);i.value='';semua()}};
+
+/* B */
+const bp=halus(DATA,300,60,6);
+$('#bG').innerHTML=`<path d="${bp}" fill="none" stroke="#211F1A" stroke-width="1.2"/><line x1="0" x2="300" y1="69" y2="69" stroke="#E6E2D8"/><text x="0" y="69" font-size="0"></text>`;
+const bL=()=>$('#bL').innerHTML=T.map((t,i)=>`<div class="item ${t[2]?'ok':''}" data-i="${i}"><span class="no">${String(i+1).padStart(2,'0')}</span><b>${t[0]}</b><small>${t[1]}</small></div>`).join('');
+$('#bL').onclick=e=>{const r=e.target.closest('.item');if(r){T[+r.dataset.i][2]^=1;semua()}};
+$('#bF').onsubmit=e=>{e.preventDefault();const i=e.target[0];if(i.value.trim()){T.push([i.value.trim(),'Gerai',0]);i.value='';semua()}};
+
+/* C */
+const cin=(p,w,t)=>{const r=26,k=2*Math.PI*r;return`<svg class="cin" viewBox="0 0 64 64"><circle cx="32" cy="32" r="${r}" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="6"/><circle cx="32" cy="32" r="${r}" fill="none" stroke="${w}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${k*p} ${k}" transform="rotate(-90 32 32)" style="transition:stroke-dasharray .5s"/><text x="32" y="37" text-anchor="middle" fill="${t}">${Math.round(p*100)}%</text></svg>`};
+const cU=()=>{const s=T.filter(t=>t[2]).length/T.length;$('#cU').innerHTML=
+ `<div class="u" style="background:#D9DBFB;color:#3E43A3">${cin(s,'#7C83E8','#3E43A3')}<div><b>Tugas</b><br><small>${T.filter(t=>t[2]).length} dari ${T.length}</small></div></div>`+
+ `<div class="u" style="background:#CFEBDF;color:#2F6E57">${cin(.36,'#5DAE8D','#2F6E57')}<div><b>Rutin gerai</b><br><small>4 dari 11</small></div></div>`+
+ `<div class="u lebar" style="background:#FBE0D3;color:#9B5638">${cin(.76,'#EB9C7C','#9B5638')}<div style="flex:1"><b>Target penjualan</b><br><small>Rp 3,04 jt dari Rp 4 jt</small><svg viewBox="0 0 200 30" style="margin-top:6px"><path d="${halus(DATA,200,30)}" fill="none" stroke="#EB9C7C" stroke-width="1.6"/></svg></div></div>`};
+const cL=()=>$('#cL').innerHTML=T.map((t,i)=>`<div class="${t[2]?'ok':''}" data-i="${i}"><i></i><b>${t[0]}</b></div>`).join('');
+$('#cL').onclick=e=>{const r=e.target.closest('[data-i]');if(r){T[+r.dataset.i][2]^=1;semua()}};
+$$('#cB button').forEach(b=>b.onclick=()=>{const n=prompt('Catat '+b.textContent.slice(1).toLowerCase()+':');if(n){T.push([n,'Gerai',0]);semua()}});
+
+/* D */
+$('#dP').innerHTML=Array.from({length:21},(_,i)=>{const v=(Math.sin(i*1.3)+1)/2;return`<i style="background:rgb(242 169 140/${.15+v*.75})"></i>`}).join('');
+function kirim(t){if(!t.trim())return;const j=new Date().toTimeString().slice(0,5).replace(':','.'),io=$('#dI');
+ io.insertAdjacentHTML('beforeend',`<div class="gel">${t}<small>${j}</small></div>`);T.push([t,'Gerai',1]);
+ setTimeout(()=>{io.insertAdjacentHTML('beforeend',`<div class="bal">Dicatat ✓ <b>${t}</b> · ${j}. Total hari ini ${T.filter(x=>x[2]).length} beres.</div>`);io.scrollTop=io.scrollHeight;semua()},450);io.scrollTop=io.scrollHeight}
+$('#dF').onsubmit=e=>{e.preventDefault();kirim(e.target[0].value);e.target[0].value=''};
+$$('#dS button').forEach(b=>b.onclick=()=>kirim(b.textContent));
+
+function semua(){aL();bL();cU();cL()}
+semua();
+</script>
+</body>
+</html>

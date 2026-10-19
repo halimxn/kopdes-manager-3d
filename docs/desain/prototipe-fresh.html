@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prototipe Senja Tropis</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Prototipe statis task manager, palet "Senja Tropis". Data contoh, tidak disimpan. */
+:root{--bg:#FFF7EE;--card:#FFFFFF;--ink:#2D2440;--mut:#8A8197;--line:#F1E7DC;
+--koral:#FFB4A2;--koral-t:#A34B39;--mint:#A8E0CC;--mint-t:#2E7560;--mentega:#FFE29A;--mentega-t:#8A6512;--lila:#CDBEFA;--lila-t:#5B47A8;--langit:#B7DBFF;--langit-t:#2F6198;
+--r:26px;--bayang:0 2px 0 rgb(45 36 64/.04),0 12px 30px -12px rgb(45 36 64/.12)}
+*{box-sizing:border-box;margin:0}[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+body::before{content:"";position:fixed;inset:-20% -10% auto auto;width:70vw;height:70vw;max-width:620px;max-height:620px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--koral) 45%,transparent),transparent 65%);z-index:-1}
+body::after{content:"";position:fixed;left:-15%;bottom:-15%;width:60vw;height:60vw;max-width:520px;max-height:520px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--mint) 40%,transparent),transparent 65%);z-index:-1}
+button,input{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2.5px solid var(--lila-t);outline-offset:2px;border-radius:12px}
+.judul{font-family:"Bricolage Grotesque",Figtree,sans-serif;letter-spacing:-.02em}
+svg{display:block}
+.wadah{max-width:1240px;margin:0 auto;padding:0 16px}
+/* kepala */
+.kepala{display:flex;align-items:center;gap:12px;padding:18px 0 8px}
+.tgl{display:flex;align-items:center;gap:12px;flex:1}
+.tgl .no{font-family:"Bricolage Grotesque";font-weight:800;font-size:54px;line-height:.9;letter-spacing:-.04em}
+.tgl small{display:block;color:var(--mut);font-weight:600;font-size:13px;line-height:1.3}
+.tgl b{font-family:"Bricolage Grotesque";font-size:20px;font-weight:700;line-height:1.1}
+.ava{width:46px;height:46px;border-radius:16px;background:var(--lila);color:var(--lila-t);display:grid;place-items:center;font-weight:800;transform:rotate(-6deg)}
+.minggu{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+.minggu button{flex:1 0 46px;min-height:62px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;color:var(--mut);font-weight:600;position:relative;transition:.2s}
+.minggu b{font-size:17px;color:var(--ink)}
+.minggu button[aria-pressed=true]{background:var(--ink);color:#fff8}.minggu button[aria-pressed=true] b{color:#fff}
+.minggu .tt{position:absolute;bottom:7px;width:5px;height:5px;border-radius:50%;background:var(--koral)}
+/* tata letak */
+.grid{display:grid;gap:16px;margin-top:14px}
+@media(min-width:1024px){.grid{grid-template-columns:1fr 380px;align-items:start}.kanan{position:sticky;top:16px}}
+.h2{display:flex;align-items:baseline;justify-content:space-between;margin:26px 0 12px}
+.h2 h2{font-family:"Bricolage Grotesque";font-size:22px;font-weight:700;letter-spacing:-.02em}
+.h2 button{font-size:13px;font-weight:700;color:var(--lila-t)}
+/* catat cepat ala kertas tempel */
+.tempel{background:var(--mentega);border-radius:var(--r);padding:18px;position:relative;box-shadow:var(--bayang);transform:rotate(-.6deg);transition:transform .2s}
+.tempel:focus-within{transform:none}
+.tempel::before{content:"";position:absolute;top:-10px;left:50%;width:84px;height:22px;background:color-mix(in srgb,#fff 60%,transparent);transform:translateX(-50%) rotate(2deg);border-radius:4px}
+.tempel h3{font-family:"Bricolage Grotesque";font-size:18px;color:var(--mentega-t);margin-bottom:10px}
+.tulis{display:flex;gap:8px;background:#fffc;border-radius:18px;padding:6px 6px 6px 16px}
+.tulis input{flex:1;min-width:0;border:0;background:none;outline:0;min-height:44px;font-size:16px}
+.tulis button{width:44px;height:44px;border-radius:14px;background:var(--ink);color:#fff;font-size:22px;flex:none;transition:transform .15s}
+.tulis button:active{transform:scale(.9)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{min-height:34px;padding:0 12px;border-radius:99px;background:#fff8;font-size:13px;font-weight:600;color:var(--mentega-t);transition:.15s}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff}
+/* catat pintar: kalimat dibaca jadi label */
+.baca{display:flex;flex-wrap:wrap;gap:6px;min-height:0;margin-top:10px}
+.baca:empty{display:none}
+.tok{display:inline-flex;gap:5px;align-items:center;min-height:30px;padding:0 10px;border-radius:99px;background:#fff;font-size:12px;font-weight:700;color:var(--ink);animation:masuk .2s both;box-shadow:0 1px 0 rgb(45 36 64/.06)}
+.tok i{font-style:normal;opacity:.6;font-weight:600}
+.petunjuk{font-size:12px;color:var(--mentega-t);margin-top:10px;line-height:1.5}
+.contoh{font-weight:700;text-decoration:underline dotted;color:var(--ink);font-size:12px}
+.templat-j{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mentega-t);margin-top:14px;opacity:.8}
+/* ubin warna */
+.ubin{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.u{border-radius:var(--r);padding:16px;min-height:150px;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:var(--bayang);transition:transform .2s}
+.u:hover{transform:translateY(-3px) rotate(-.5deg)}
+.u small{font-weight:700;font-size:13px;opacity:.85}
+.u .n{font-family:"Bricolage Grotesque";font-size:34px;font-weight:800;line-height:1;margin-top:6px;letter-spacing:-.03em}
+.u .s{font-size:12px;font-weight:600;opacity:.8;margin-top:4px}
+.u svg{margin-top:auto}
+.u.lebar{grid-column:span 2;min-height:auto}
+/* daftar fokus */
+.waktu{display:flex;align-items:center;gap:10px;margin:18px 0 8px;font-weight:700;font-size:13px;color:var(--mut)}
+.waktu::after{content:"";flex:1;height:1.5px;background:var(--line)}
+.waktu .em{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;font-size:14px}
+.t{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:20px;padding:14px 16px;margin-bottom:8px;box-shadow:var(--bayang);animation:masuk .35s both;transition:opacity .25s}
+.t .cb{width:26px;height:26px;border-radius:50%;border:2.5px solid var(--line);flex:none;display:grid;place-items:center;transition:.2s}
+.t.ok{opacity:.55}.t.ok .cb{background:var(--mint-t);border-color:var(--mint-t);animation:loncat .3s}
+.t.ok .cb::after{content:"";width:10px;height:6px;border:2.5px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translateY(-1px)}
+.t.ok .jd{text-decoration:line-through}
+.t .isi{flex:1;min-width:0}.t .jd{font-weight:600}.t .mt{font-size:12px;color:var(--mut)}
+.lbl{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap}
+/* grafik ritme */
+.kartu{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--bayang)}
+.ritme-k{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.ritme-k .n{font-family:"Bricolage Grotesque";font-size:28px;font-weight:800;line-height:1}
+.seg{display:flex;background:var(--bg);border-radius:12px;padding:3px}
+.seg button{min-height:32px;padding:0 10px;border-radius:9px;font-size:12px;font-weight:700;color:var(--mut)}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgb(0 0 0/.08)}
+.rbung{position:relative}
+.tip{position:absolute;top:0;transform:translate(-50%,-110%);background:var(--ink);color:#fff;font-size:12px;font-weight:700;padding:5px 10px;border-radius:10px;white-space:nowrap;pointer-events:none;transition:left .2s,top .2s}
+/* grafik ala kripto: kartu gelap berkedalaman */
+.kripto{background:radial-gradient(120% 80% at 100% 0%,#4A3A72 0,transparent 60%),linear-gradient(165deg,#2D2440,#231C33);color:#fff;border-radius:var(--r);padding:18px 16px 14px;box-shadow:0 20px 40px -18px rgb(45 36 64/.6),inset 0 1px 0 #ffffff14;position:relative;overflow:hidden}
+.kp-atas{display:flex;justify-content:space-between;gap:8px}
+.seg2{display:flex;background:#ffffff12;border-radius:12px;padding:3px}
+.seg2 button{min-height:32px;padding:0 10px;border-radius:9px;font-size:12px;font-weight:700;color:#fff9;transition:.2s}
+.seg2 button[aria-pressed=true]{background:#ffffff24;color:#fff;box-shadow:inset 0 1px 0 #ffffff1f}
+.kp-nilai{display:flex;align-items:center;gap:10px;margin-top:16px}
+.kp-nilai .n{font-family:"Bricolage Grotesque";font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.pil-ub{font-size:12px;font-weight:800;padding:4px 9px;border-radius:99px}
+.pil-ub.naik{background:#7FE0BE33;color:#8FF0CC}.pil-ub.turun{background:#FF9E8F33;color:#FFB4A2}
+.kecil-p{font-size:12px;color:#fff9;margin-top:4px}
+.tf{margin-top:8px;justify-content:space-between}.tf button{flex:1}
+.ktip{font:700 11px Figtree}
+/* papan */
+.papan{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+@media(min-width:700px){.papan{grid-auto-columns:1fr}}
+.kol{scroll-snap-align:start;border-radius:var(--r);padding:12px}
+.kol h4{font-family:"Bricolage Grotesque";font-size:16px;display:flex;justify-content:space-between;margin:2px 4px 10px}
+.kk{background:#fffd;border-radius:16px;padding:12px;margin-bottom:8px;font-weight:600;font-size:14px;cursor:pointer;transition:transform .15s;animation:masuk .3s both}
+.kk:hover{transform:translateX(3px)}
+.kk small{display:block;font-weight:500;color:var(--mut);font-size:12px;margin-top:2px}
+/* navigasi bawah */
+nav.bawah{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));display:flex;gap:4px;background:var(--ink);border-radius:26px;padding:7px;box-shadow:0 14px 34px -8px rgb(45 36 64/.5);z-index:5;width:min(420px,calc(100% - 24px))}
+nav.bawah button{flex:1;min-height:52px;border-radius:20px;color:#fff9;font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:.2s}
+nav.bawah button[aria-current=page]{background:#ffffff1f;color:#fff}
+nav.bawah .plus{flex:none;width:60px;background:var(--koral);color:var(--ink);font-size:26px}
+nav.bawah svg{width:22px;height:22px}
+.toast{position:fixed;left:50%;bottom:110px;transform:translate(-50%,16px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:14px;font-weight:600;opacity:0;transition:.25s;z-index:9}.toast.ada{opacity:1;transform:translate(-50%,0)}
+@keyframes masuk{from{opacity:0;transform:translateY(10px)}}@keyframes loncat{50%{transform:scale(1.25)}}
+.muncul>*{animation:masuk .45s both}.muncul>*:nth-child(2){animation-delay:.06s}.muncul>*:nth-child(3){animation-delay:.12s}.muncul>*:nth-child(n+4){animation-delay:.18s}
+.gg{stroke-dasharray:1000;stroke-dashoffset:1000;animation:gg 1.3s ease forwards}@keyframes gg{to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.gg{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<div class="wadah">
+ <header class="kepala">
+  <div class="tgl"><span class="no">17</span><div><small>Sabtu · Oktober 2026</small><b>Halo, Pak Manajer</b></div></div>
+  <div class="ava" aria-hidden="true">PM</div>
+ </header>
+ <div class="minggu" id="minggu" role="group" aria-label="Pilih hari"></div>
+
+ <div class="grid">
+  <div class="muncul">
+   <section class="tempel" aria-label="Catat cepat">
+    <h3>Mau catat apa?</h3>
+    <form class="tulis" id="form"><input id="inp" placeholder="Tulis seperti biasa…" aria-label="Tugas baru" aria-describedby="baca" autocomplete="off"><button aria-label="Tambah">+</button></form>
+    <div class="baca" id="baca" aria-live="polite"></div>
+    <p class="petunjuk">Cukup tulis kalimat biasa, misalnya <button type="button" class="contoh">rapat pengurus besok jam 9 penting</button>. Hari, jam, kategori, dan prioritas terbaca otomatis.</p>
+    <div class="templat-j">Sekali ketuk</div>
+    <div class="chips" id="templat"></div>
+   </section>
+
+   <div class="h2"><h2>Fokus hari ini</h2><button id="info"></button></div>
+   <div id="fokus"></div>
+
+   <div class="h2"><h2>Papan tugas</h2><button data-x>Lihat semua</button></div>
+   <div class="papan" id="papan"></div>
+  </div>
+
+  <div class="kanan muncul">
+   <div class="ubin" style="margin-top:4px">
+    <div class="u" style="background:var(--lila);color:var(--lila-t)"><small>Sisa hari ini</small><span class="n" id="uSisa">0</span><span class="s">tugas</span><svg viewBox="0 0 100 30" id="uBar"></svg></div>
+    <div class="u" style="background:var(--mint);color:var(--mint-t)"><small>Rutin gerai</small><span class="n">4/11</span><span class="s">36% selesai</span><svg viewBox="0 0 100 30"><rect x="0" y="12" width="100" height="10" rx="5" fill="#fff8"/><rect x="0" y="12" width="36" height="10" rx="5" fill="currentColor"/></svg></div>
+    <div class="u lebar" style="background:var(--koral);color:var(--koral-t)"><small>Penjualan gerai hari ini</small><span class="n">Rp 2,4 jt</span><span class="s">▲ 8% dari kemarin</span></div>
+   </div>
+
+   <div class="h2"><h2>Pasar gerai</h2></div>
+   <div class="kripto">
+    <div class="kp-atas">
+     <div class="seg2" id="metrik" role="group" aria-label="Data"><button aria-pressed="true" data-m="jual">Penjualan</button><button aria-pressed="false" data-m="tugas">Tugas selesai</button></div>
+     <div class="seg2" id="gaya" role="group" aria-label="Bentuk grafik"><button aria-pressed="true" data-g="garis" aria-label="Garis">〰</button><button aria-pressed="false" data-g="lilin" aria-label="Lilin">┃</button></div>
+    </div>
+    <div class="kp-nilai"><span class="n" id="kN">–</span><span class="pil-ub" id="kU"></span></div>
+    <div class="kecil-p" id="kL"></div>
+    <div class="rbung"><svg viewBox="0 0 340 200" id="kGraf" style="width:100%;margin-top:10px;overflow:visible"></svg></div>
+    <div class="seg2 tf" id="tf" role="group" aria-label="Rentang waktu"><button data-n="7" aria-pressed="false">1M</button><button data-n="30" aria-pressed="true">1B</button><button data-n="90" aria-pressed="false">3B</button></div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<nav class="bawah" aria-label="Menu utama">
+ <button aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9H3z"/></svg>Hari ini</button>
+ <button data-x><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="5"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Tugas</button>
+ <button class="plus" id="plus" aria-label="Catat cepat">+</button>
+ <button data-x><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9l2-5h12l2 5M4 9v11h16V9M4 9h16"/></svg>Usaha</button>
+ <button data-x><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg>Lainnya</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('ada');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('ada'),1800)}
+$$('[data-x]').forEach(b=>b.onclick=()=>toast('Halaman contoh'));
+$('#plus').onclick=()=>{scrollTo({top:0,behavior:'smooth'});$('#inp').focus()};
+
+const KAT={Gerai:'koral',Gudang:'langit',Rapat:'lila',Admin:'mentega',Anggota:'mint'};
+const WKT=[['Pagi','☀','mentega'],['Siang','◐','koral'],['Sore','☾','lila']];
+let T=[['Briefing pagi EBITDA','Rapat','Pagi','07.30',1,'selesai'],['Hitung modal laci kasir','Gerai','Pagi','07.45',1,'selesai'],['Pindah barang ke rak (FIFO)','Gudang','Pagi','08.05',0,'jalan'],
+ ['Tawarkan produk promo','Gerai','Siang','11.00',0,'akan'],['Konsolidasi produk lokal','Gudang','Siang','13.00',0,'akan'],['Cocokkan uang kasir & POS','Admin','Sore','16.00',0,'akan'],['Setor uang ke bank mitra','Gerai','Sore','16.30',0,'akan'],['Cek target EBITDA besok','Admin','Sore','17.00',0,'akan']];
+let pil={w:'Pagi',k:'Gerai'};
+
+/* minggu */
+const NH=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+$('#minggu').innerHTML=Array.from({length:7},(_,i)=>{const d=new Date(2026,9,12+i);return`<button aria-pressed="${d.getDate()===17}">${NH[d.getDay()]}<b>${d.getDate()}</b>${[13,15,17,18].includes(d.getDate())?'<span class="tt"></span>':''}</button>`}).join('');
+$$('#minggu button').forEach(b=>b.onclick=()=>{$$('#minggu button').forEach(x=>x.setAttribute('aria-pressed',x===b));toast('Menampilkan '+b.textContent.replace(/(\D+)(\d+)/,'$1 $2')+' Okt (contoh)')});
+
+/* catat pintar ala Todoist: kalimat biasa dibaca menjadi hari, jam, kategori, prioritas, ulangan */
+const KATA={Gerai:['gerai','kasir','toko','jual','promo','setor'],Gudang:['gudang','stok','barang','rak','chiller','opname'],Rapat:['rapat','briefing','koordinasi','pertemuan'],Admin:['laporan','rekap','admin','ebitda','surat'],Anggota:['anggota','simpanan','iuran']};
+function baca(s){const t=s.toLowerCase(),r={hari:'Hari ini',jam:null,kat:null,pent:false,ulang:false};
+ if(/\blusa\b/.test(t))r.hari='Lusa';else if(/\bbesok\b/.test(t))r.hari='Besok';else{const h=t.match(/\b(senin|selasa|rabu|kamis|jumat|sabtu|minggu)\b/);if(h)r.hari=h[1][0].toUpperCase()+h[1].slice(1)}
+ const j=t.match(/\b(?:jam|pukul)\s*(\d{1,2})(?:[.:](\d{2}))?/)||t.match(/\b(\d{1,2})[.:](\d{2})\b/);
+ if(j)r.jam=String(Math.min(23,+j[1])).padStart(2,'0')+'.'+(j[2]||'00');else if(/\bpagi\b/.test(t))r.jam='08.00';else if(/\bsiang\b/.test(t))r.jam='12.00';else if(/\bsore\b/.test(t))r.jam='16.00';
+ const tag=t.match(/#(\w+)/);for(const[k,ws]of Object.entries(KATA))if((tag&&k.toLowerCase().startsWith(tag[1]))||ws.some(w=>t.includes(w))){r.kat=k;break}
+ r.pent=/\b(penting|segera|urgent)\b|!/.test(t);r.ulang=/\b(tiap hari|setiap hari|rutin|harian)\b/.test(t);return r}
+const bersih=s=>s.replace(/#\w+|!|\b(besok|lusa|hari ini|tiap hari|setiap hari|harian|penting|segera|urgent)\b|\b(jam|pukul)\s*\d{1,2}([.:]\d{2})?|\b\d{1,2}[.:]\d{2}\b/gi,'').replace(/\s{2,}/g,' ').trim();
+const slot=j=>!j?'Pagi':+j.slice(0,2)<11?'Pagi':+j.slice(0,2)<15?'Siang':'Sore';
+function pratinjau(){const v=$('#inp').value;if(!v.trim()){$('#baca').innerHTML='';return}const r=baca(v),k=r.kat||'Gerai';
+ $('#baca').innerHTML=`<span class="tok"><i>Hari</i>${r.hari}</span><span class="tok"><i>Jam</i>${r.jam||'bebas'}</span><span class="tok" style="background:color-mix(in srgb,var(--${KAT[k]}) 70%,#fff);color:var(--${KAT[k]}-t)"><i>#</i>${k}${r.kat?'':' (tebakan)'}</span>${r.pent?'<span class="tok" style="background:var(--koral);color:var(--koral-t)">! Penting</span>':''}${r.ulang?'<span class="tok" style="background:var(--mint);color:var(--mint-t)">↻ Tiap hari</span>':''}`}
+$('#inp').oninput=pratinjau;
+$('.contoh').onclick=()=>{$('#inp').value=$('.contoh').textContent;pratinjau();$('#inp').focus()};
+$('#form').onsubmit=e=>{e.preventDefault();const v=$('#inp').value.trim();if(!v)return $('#inp').focus();const r=baca(v),j=bersih(v)||v,k=r.kat||'Gerai';
+ if(r.hari==='Hari ini')T.push([(r.pent?'❗ ':'')+j[0].toUpperCase()+j.slice(1),k,slot(r.jam),r.jam||'–',0,'akan']);
+ $('#inp').value='';pratinjau();semua();toast(`Tersimpan · ${r.hari}${r.jam?' '+r.jam:''} · ${k}`)};
+/* templat sekali ketuk dari rutin gerai */
+const TPL=[['Buka toko','Gerai','07.45'],['Cek chiller','Gudang','09.00'],['Setor uang','Gerai','16.30'],['Rekap EBITDA','Admin','17.00'],['Briefing','Rapat','07.30']];
+$('#templat').innerHTML=TPL.map(([n,k])=>`<button type="button" class="chip">+ ${n}</button>`).join('');
+$$('#templat button').forEach((b,i)=>b.onclick=()=>{const[n,k,j]=TPL[i];T.push([n,k,slot(j),j,0,'akan']);semua();toast(`${n} ditambahkan pukul ${j}`)});
+/* placeholder bergilir memberi contoh cara menulis */
+const PH=['cek stok beras besok pagi','rapat pengurus jumat jam 10','setor uang jam 16.30 penting','rekap EBITDA tiap hari #admin'];let ph=0;
+setInterval(()=>{if(document.activeElement!==$('#inp'))$('#inp').placeholder='Misal: '+PH[ph++%PH.length]},2600);
+
+const lbl=k=>`<span class="lbl" style="background:color-mix(in srgb,var(--${KAT[k]}) 55%,#fff);color:var(--${KAT[k]}-t)">${k}</span>`;
+function fokus(){let h='';WKT.forEach(([w,ik,c])=>{const x=T.filter(t=>t[2]===w);if(!x.length)return;
+ h+=`<div class="waktu"><span class="em" style="background:var(--${c});color:var(--${c}-t)">${ik}</span>${w} · ${x.filter(t=>t[4]).length}/${x.length}</div>`+
+ x.map((t,i)=>`<div class="t ${t[4]?'ok':''}" data-i="${T.indexOf(t)}" style="animation-delay:${i*.04}s"><button class="cb" aria-label="Tandai selesai: ${t[0]}"></button><div class="isi"><div class="jd">${t[0]}</div><div class="mt">${t[3]}</div></div>${lbl(t[1])}</div>`).join('')});
+ $('#fokus').innerHTML=h;const s=T.filter(t=>!t[4]).length;$('#info').textContent=`${T.length-s} dari ${T.length} selesai`;$('#uSisa').textContent=s;
+ $$('#fokus .cb').forEach(b=>b.onclick=()=>{const t=T[+b.parentElement.dataset.i];t[4]=t[4]?0:1;t[5]=t[4]?'selesai':'akan';semua();if(t[4])toast('Mantap, satu beres!')})}
+
+function papan(){const K=[['akan','Akan','langit'],['jalan','Dikerjakan','mentega'],['selesai','Selesai','mint']];
+ $('#papan').innerHTML=K.map(([k,n,c])=>{const x=T.filter(t=>t[5]===k);return`<div class="kol" style="background:color-mix(in srgb,var(--${c}) 45%,transparent)"><h4 style="color:var(--${c}-t)">${n}<span>${x.length}</span></h4>${x.map(t=>`<div class="kk" data-i="${T.indexOf(t)}" role="button" tabindex="0">${t[0]}<small>${t[1]} · ${t[2]} · ketuk untuk geser</small></div>`).join('')}</div>`}).join('');
+ $$('#papan .kk').forEach(c=>c.onclick=()=>{const t=T[+c.dataset.i],u=['akan','jalan','selesai'];t[5]=u[(u.indexOf(t[5])+1)%3];t[4]=t[5]==='selesai'?1:0;semua()})}
+
+function mini(){const v=[3,5,2,6,4,T.filter(t=>t[4]).length,0],mx=Math.max(...v,6);$('#uBar').innerHTML=v.map((x,i)=>`<rect x="${i*14.5}" y="${30-Math.max(3,x/mx*28)}" width="9" height="${Math.max(3,x/mx*28)}" rx="4.5" fill="currentColor" opacity="${i===5?1:.35}"/>`).join('')}
+
+/* grafik ala kripto: garis bercahaya atau lilin, volume, garis bidik, label harga di sumbu kanan */
+const DATA={jual:Array.from({length:90},(_,i)=>{const b=1.9+i*.006+Math.sin(i*.45)*.28+Math.sin(i*1.7)*.12+(i%7===5?.35:0);const o=b+Math.sin(i*2.3)*.18,h=Math.max(b,o)+.12+Math.abs(Math.sin(i*3.1))*.15,l=Math.min(b,o)-.1-Math.abs(Math.cos(i*2.7))*.14;return{o,c:b,h,l,v:Math.round(150+b*40+Math.sin(i*1.3)*30)}}),
+ tugas:Array.from({length:90},(_,i)=>{const b=4+Math.sin(i*.6)*2+(i%7===6?-3:0)+i*.01;const o=b+Math.sin(i*1.9)*1.2;return{o,c:b,h:Math.max(b,o)+.8,l:Math.max(0,Math.min(b,o)-.8),v:Math.round(5+Math.abs(b))}})};
+let kM='jual',kG='garis',kNn=30;
+const fmtV=v=>kM==='jual'?'Rp '+v.toFixed(2).replace('.',',')+' jt':v.toFixed(1).replace('.',',')+' tugas';
+function kripto(){const d=DATA[kM].slice(-kNn),n=d.length,W=300,H=140,vH=36,mx=Math.max(...d.map(x=>x.h)),mn=Math.min(...d.map(x=>x.l)),pad=(mx-mn)*.08;
+ const X=i=>6+i*((W-12)/(n-1||1)),Y=v=>8+(1-(v-mn+pad)/(mx-mn+2*pad))*(H-8),vm=Math.max(...d.map(x=>x.v));
+ const last=d[n-1].c,first=d[0].c,up=last>=first,pct=(last/first-1)*100;
+ $('#kN').textContent=fmtV(last);const u=$('#kU');u.className='pil-ub '+(up?'naik':'turun');u.textContent=(up?'▲ ':'▼ ')+Math.abs(pct).toFixed(1).replace('.',',')+'%';
+ $('#kL').textContent=`${kM==='jual'?'Penjualan harian':'Tugas selesai per hari'} · ${n} hari terakhir`;
+ const p=d.map((x,i)=>[X(i),Y(x.c)]),ln=p.map((q,i)=>{if(!i)return`M${q}`;const o=p[i-1],c=(o[0]+q[0])/2;return`C${c},${o[1]} ${c},${q[1]} ${q}`}).join(' ');
+ const grid=[0,1,2,3].map(k=>{const v=mn-pad+(mx-mn+2*pad)*(1-k/3),y=Y(v);return`<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="#fff" stroke-opacity=".06"/><text x="${W+6}" y="${y+3}" class="ktip" fill="#fff" fill-opacity=".4">${kM==='jual'?v.toFixed(1):Math.round(v)}</text>`}).join('');
+ const vol=d.map((x,i)=>{const h=x.v/vm*vH,bw=Math.max(1.5,(W-12)/n*.6);return`<rect x="${X(i)-bw/2}" y="${H+20+vH-h}" width="${bw}" height="${h}" rx="${Math.min(2,bw/2)}" fill="${x.c>=x.o?'#8FF0CC':'#FFB4A2'}" fill-opacity=".35"/>`}).join('');
+ let isi;
+ if(kG==='garis')isi=`<path d="${ln} L${X(n-1)},${H} L${X(0)},${H}Z" fill="url(#kArea)"/><path d="${ln}" fill="none" stroke="url(#kGaris)" stroke-width="5" stroke-opacity=".35" filter="url(#kGlow)"/><path d="${ln}" fill="none" stroke="url(#kGaris)" stroke-width="2.4" stroke-linecap="round" class="gg"/>`;
+ else{const bw=Math.max(2,(W-12)/n*.62);isi=d.map((x,i)=>{const c=x.c>=x.o?'#8FF0CC':'#FFB4A2',t=Y(Math.max(x.o,x.c)),b=Y(Math.min(x.o,x.c));return`<line x1="${X(i)}" x2="${X(i)}" y1="${Y(x.h)}" y2="${Y(x.l)}" stroke="${c}" stroke-width="1.2" stroke-opacity=".8"/><rect x="${X(i)-bw/2}" y="${t}" width="${bw}" height="${Math.max(1.5,b-t)}" rx="${Math.min(2,bw/3)}" fill="${c}"/>`}).join('')}
+ const ly=Y(last);
+ $('#kGraf').innerHTML=`<defs><linearGradient id="kGaris" x1="0" x2="1"><stop offset="0" stop-color="#CDBEFA"/><stop offset="1" stop-color="#FFB4A2"/></linearGradient>
+  <linearGradient id="kArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#CDBEFA" stop-opacity=".45"/><stop offset=".6" stop-color="#CDBEFA" stop-opacity=".08"/><stop offset="1" stop-color="#CDBEFA" stop-opacity="0"/></linearGradient>
+  <filter id="kGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4"/></filter></defs>
+  ${grid}${vol}${isi}
+  <line x1="0" x2="${W}" y1="${ly}" y2="${ly}" stroke="#fff" stroke-opacity=".35" stroke-dasharray="2 4"/>
+  ${kG==='garis'?`<circle cx="${X(n-1)}" cy="${ly}" r="9" fill="#FFB4A2" fill-opacity=".25"><animate attributeName="r" values="5;11;5" dur="2s" repeatCount="indefinite"/></circle><circle cx="${X(n-1)}" cy="${ly}" r="4" fill="#FFB4A2" stroke="#2D2440" stroke-width="2"/>`:''}
+  <rect x="${W+2}" y="${ly-9}" width="38" height="18" rx="6" fill="${up?'#8FF0CC':'#FFB4A2'}"/><text x="${W+21}" y="${ly+4}" text-anchor="middle" class="ktip" fill="#2D2440">${kM==='jual'?last.toFixed(2):Math.round(last)}</text>
+  <g id="kBidik" style="opacity:0;transition:opacity .15s"><line id="kbV" y1="0" y2="${H+20+vH}" stroke="#fff" stroke-opacity=".4" stroke-dasharray="3 3"/><line id="kbH" x1="0" x2="${W}" stroke="#fff" stroke-opacity=".25" stroke-dasharray="3 3"/><circle id="kbC" r="4.5" fill="#fff" stroke="#CDBEFA" stroke-width="2"/>
+   <rect id="kbR" height="34" rx="8" fill="#ffffff" fill-opacity=".95"/><text id="kbT1" class="ktip" fill="#2D2440"></text><text id="kbT2" class="ktip" fill="#8A8197" style="font-weight:600"></text></g>`;
+ const s=$('#kGraf'),g=$('#kBidik');
+ s.onpointermove=e=>{const r=s.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*340,i=Math.max(0,Math.min(n-1,Math.round((x-6)/((W-12)/(n-1||1))))),dt=new Date(2026,9,17-(n-1-i)),xx=X(i),yy=Y(d[i].c);
+  g.style.opacity=1;$('#kbV').setAttribute('x1',xx);$('#kbV').setAttribute('x2',xx);$('#kbH').setAttribute('y1',yy);$('#kbH').setAttribute('y2',yy);$('#kbC').setAttribute('cx',xx);$('#kbC').setAttribute('cy',yy);
+  const bx=Math.max(0,Math.min(W-104,xx-52));$('#kbR').setAttribute('x',bx);$('#kbR').setAttribute('y',-6);$('#kbR').setAttribute('width',104);
+  const t1=$('#kbT1'),t2=$('#kbT2');t1.setAttribute('x',bx+10);t1.setAttribute('y',9);t1.textContent=fmtV(d[i].c);t2.setAttribute('x',bx+10);t2.setAttribute('y',22);t2.textContent=`${dt.getDate()}/${dt.getMonth()+1} · ${d[i].v} ${kM==='jual'?'transaksi':'item'}`};
+ s.onpointerleave=()=>g.style.opacity=0}
+function grup(id,key,cb){$$(id+' button').forEach(b=>b.onclick=()=>{$$(id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b));cb(b.dataset[key]);kripto()})}
+grup('#metrik','m',v=>kM=v);grup('#gaya','g',v=>kG=v);grup('#tf','n',v=>kNn=+v);
+
+function semua(){fokus();papan();mini();kripto()}
+semua();
+</script>
+</body>
+</html>

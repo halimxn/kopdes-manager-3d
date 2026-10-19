@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prototipe Rapi</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Prototipe statis mengikuti gambar rujukan pemilik: abu terang, kartu putih membulat, rel ikon. Data contoh. */
+:root{--bg:#EEF0F3;--bingkai:#F7F8FA;--card:#FFFFFF;--ink:#1F2430;--mut:#8C93A1;--line:#ECEEF2;
+--biru:#5B8DEF;--biru-l:#E7EEFD;--kuning:#F6C15B;--hijau:#9CC94B;--hijau-t:#3E9A5B;--ungu:#A77BF0;--merah:#E58A6E;--r:22px}
+*{box-sizing:border-box;margin:0}[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 Outfit,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+button,input{font:inherit;color:inherit;border:0;background:none}button{cursor:pointer}
+:focus-visible{outline:2px solid var(--biru);outline-offset:2px;border-radius:12px}
+svg{display:block}
+.bingkai{max-width:1320px;margin:0 auto;padding:12px}
+.rel{display:none}
+.isi{min-width:0}
+.top{display:flex;align-items:center;gap:10px;padding:6px 4px 14px}
+.top h1{font-size:20px;font-weight:500;flex:1}
+.cari{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:99px;padding:0 6px 0 14px;height:46px;flex:1;max-width:340px}
+.cari input{flex:1;min-width:0;outline:0;font-size:14px}
+.cari .tb{height:34px;padding:0 12px;border-radius:99px;background:var(--biru);color:#fff;font-size:12px;font-weight:500;white-space:nowrap}
+.bulat{width:46px;height:46px;border-radius:50%;background:var(--card);display:grid;place-items:center;flex:none;position:relative}
+.bulat .titik{position:absolute;top:11px;right:12px;width:7px;height:7px;border-radius:50%;background:var(--merah)}
+.ava{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#F7B486,#EE8F6A);color:#fff;display:grid;place-items:center;font-weight:600;flex:none}
+.grid{display:grid;gap:12px}.grid>*{min-width:0}
+@media(max-width:600px){.top{flex-wrap:wrap}.cari{order:3;max-width:none;flex-basis:100%}}
+.k{background:var(--card);border-radius:var(--r);padding:18px;position:relative;animation:naik .45s both}
+.kh{display:flex;align-items:center;justify-content:space-between;font-weight:500;font-size:15px}
+.titik3{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:var(--ink);font-weight:700;letter-spacing:1px}
+.titik3:hover{background:var(--bingkai)}
+.mut{color:var(--mut)}
+/* profil */
+.profil{display:flex;flex-direction:column;min-height:220px;overflow:hidden}
+.profil h2{font-size:22px;font-weight:500}
+.profil .ilus{position:absolute;right:-10px;bottom:-30px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,var(--biru-l) 40%,#CFDDFB 100%)}
+.profil .ilus span{position:absolute;inset:0;display:grid;place-items:center;font-size:64px;font-weight:300;color:var(--biru)}
+.profil .umur{margin-top:auto;font-size:16px;font-weight:500;position:relative}
+.pil{display:inline-flex;gap:4px;align-items:center;background:var(--bingkai);border-radius:99px;padding:5px 12px;font-size:12px;color:var(--mut);margin:6px 6px 0 0;position:relative}
+.pil b{color:var(--ink);font-weight:500}
+/* penjualan */
+.metrik{display:flex;gap:28px;margin-top:16px;align-items:flex-end;flex-wrap:wrap}
+.metrik small{display:block;color:var(--mut);font-size:12px}.metrik b{font-weight:400;font-size:15px}
+.angka-besar{margin-left:auto;font-size:56px;font-weight:300;line-height:.9;letter-spacing:-.03em}.angka-besar sub{font-size:13px;color:var(--mut);letter-spacing:0;vertical-align:baseline;margin-left:4px}
+.ekg{position:relative;margin-top:16px}
+.tip{position:absolute;transform:translate(-50%,-120%);background:var(--ink);color:#fff;font-size:11px;padding:4px 9px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}
+/* daftar wajib isi */
+.w{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.w:first-child{border-top:0;margin-top:8px}
+.w .ik{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none;font-size:15px}
+.w .tx{flex:1;min-width:0}.w b{font-weight:500;display:block}.w small{font-size:12px;color:var(--mut)}
+.w .aksi-w{min-height:36px;padding:0 14px;border-radius:99px;background:var(--biru);color:#fff;font-size:12px;font-weight:500;white-space:nowrap}
+.w.beres .aksi-w{background:#E3F6EA;color:#22A55B}
+/* kartu kecil bermakna */
+.mini-bar{display:flex;gap:5px;align-items:flex-end;height:38px;margin-top:12px}
+.mini-bar i{flex:1;border-radius:99px;background:#E7EEFD;transform-origin:bottom;animation:tumbuh .6s both}
+.mini-bar i.ini{background:var(--biru)}
+@keyframes tumbuh{from{transform:scaleY(0)}}
+.titik-r{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;margin-top:14px}
+.titik-r i{height:24px;border-radius:7px;background:var(--line);cursor:pointer;transition:background .2s}
+.titik-r i.ok{background:var(--kuning)}
+.kas{display:grid;gap:7px;margin-top:12px;font-size:12px}
+.kas div{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center}
+.kas .tr{height:7px;border-radius:99px;background:var(--line);overflow:hidden}.kas .tr i{display:block;height:100%;border-radius:99px;animation:geser .8s both}
+.kc .nil{margin-top:12px}
+.kc{cursor:pointer}
+/* kesiapan laporan */
+.siap{width:100%;text-align:left;margin-top:14px}
+.siap div{display:flex;gap:10px;align-items:center;font-size:13px;padding:6px 0}
+.siap i{width:18px;height:18px;border-radius:50%;flex:none;display:grid;place-items:center;font-style:normal;font-size:10px;color:#fff}
+.btn1:disabled{opacity:.45;cursor:not-allowed}
+.sekarang-l{position:absolute;top:0;font-size:10px;color:#fff;background:var(--merah);border-radius:99px;padding:1px 7px;transform:translateX(-50%)}
+.jw{cursor:copy}
+.st-ik{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:600}
+.btn-in{min-height:38px;padding:0 14px;border-radius:99px;background:var(--biru-l);color:#3767C9;font-size:13px;font-weight:500;white-space:nowrap}
+.btn-in.sudah{background:var(--bingkai);color:var(--mut)}
+.rp{display:flex;align-items:center;gap:8px;background:var(--bingkai);border:1.5px solid var(--line);border-radius:16px;padding:0 16px}
+.rp:focus-within{border-color:var(--biru);background:#fff}
+.rp span{font-size:20px;color:var(--mut)}
+.rp input{flex:1;min-width:0;min-height:64px;outline:0;font-size:30px;font-weight:500;letter-spacing:-.02em}
+.banding{font-size:12px;color:var(--mut);margin-top:6px;min-height:18px}
+/* kartu kecil */
+.kecil4{grid-template-columns:1fr 1fr}
+.kc .nil{display:flex;align-items:baseline;gap:6px;margin-top:20px;font-size:20px}
+.kc .nil small{font-size:11px}
+.trek{height:8px;border-radius:99px;background:var(--line);margin-top:10px;position:relative;overflow:hidden}
+.trek i{position:absolute;top:0;bottom:0;border-radius:99px;animation:geser 1s cubic-bezier(.2,.8,.2,1) both}
+.naik-t{color:var(--hijau-t)}.turun-t{color:#D9822B}
+.ukur{display:grid;place-items:center;margin-top:4px;position:relative}
+.ukur div{position:absolute;bottom:4px;font-size:20px}.ukur div small{font-size:11px;color:var(--mut)}
+/* jadwal kegiatan */
+.jadwal{overflow-x:auto;margin:14px -18px 0;padding:0 18px 4px;scrollbar-width:thin}
+.jw{position:relative;min-width:720px;height:250px}
+.jam{position:absolute;top:0;font-size:11px;color:var(--mut);transform:translateX(-50%)}
+.garis-jam{position:absolute;top:22px;bottom:0;border-left:1.5px dashed #C9D3EA}
+.garis-jam.sekarang{border-left:1.5px solid var(--merah)}
+.kg{position:absolute;display:flex;align-items:center;gap:10px;background:var(--card);border-radius:99px;padding:7px 12px 7px 7px;box-shadow:0 4px 16px -6px rgb(30 40 70/.18),0 0 0 1px var(--line);cursor:pointer;transition:transform .15s;white-space:nowrap}
+.kg:hover{transform:translateY(-2px)}
+.kg .ik{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:14px}
+.kg b{font-weight:500;font-size:13px;display:block;line-height:1.2}.kg small{font-size:11px;color:var(--mut)}
+.kg .cek{width:18px;height:18px;border-radius:50%;border:1.5px solid #B5BCC9;margin-left:6px;display:grid;place-items:center}
+.kg.ok .cek{background:#22C55E;border-color:#22C55E}.kg.ok .cek::after{content:"";width:7px;height:4px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translateY(-1px)}
+/* laporan */
+.lap{display:flex;flex-direction:column;align-items:center;text-align:center}
+.dok{margin:18px 0 12px;position:relative;width:110px;height:100px}
+.dok .kertas{position:absolute;left:28px;top:0;width:56px;height:70px;border-radius:8px;background:linear-gradient(160deg,#9FA8F7,#7C86EE);color:#fff;font-size:11px;font-weight:600;padding:8px}
+.dok .map{position:absolute;left:8px;right:8px;bottom:0;height:56px;border-radius:12px;background:linear-gradient(180deg,#F5F6F9,#E6E9EF);box-shadow:inset 0 1px 0 #fff}
+.dok .unduh{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:38px;height:38px;border-radius:50%;background:#7C86EE;color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px #fff}
+.lap h3{font-size:15px;font-weight:500}
+.aksi{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:auto;padding-top:16px}
+.aksi button{min-height:46px;border-radius:14px;font-weight:500;display:flex;gap:8px;align-items:center;justify-content:center}
+.btn2{background:var(--bingkai);border:1px solid var(--line)}.btn1{background:var(--biru);color:#fff}
+/* lembar catat */
+.tirai{position:fixed;inset:0;background:rgb(20 25 40/.35);opacity:0;pointer-events:none;transition:.25s;z-index:20}
+.lembar{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:var(--card);border-radius:26px 26px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.9,.2,1);z-index:21}
+.buka .tirai{opacity:1;pointer-events:auto}body.buka:not(.buka-jual) #lembar,.buka-jual #lJual{transform:none}
+.lembar h3{font-size:18px;font-weight:500;margin-bottom:14px}
+.fld{width:100%;min-height:50px;border-radius:14px;background:var(--bingkai);border:1.5px solid var(--line);padding:0 14px;outline:0;font-size:15px}
+.fld:focus{border-color:var(--biru);background:#fff}
+.lbl{font-size:13px;color:var(--mut);margin:14px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{min-height:38px;padding:0 14px;border-radius:99px;background:var(--bingkai);border:1.5px solid var(--line);font-size:13px}
+.chips button[aria-pressed=true]{background:var(--biru-l);border-color:var(--biru);color:#3767C9}
+.dua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.simpan{width:100%;min-height:52px;border-radius:16px;background:var(--biru);color:#fff;font-weight:500;font-size:15px;margin-top:18px}
+/* nav bawah HP */
+nav.bawah{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));background:var(--card);border-radius:24px;box-shadow:0 10px 30px -10px rgb(20 30 60/.25);display:flex;justify-content:space-around;padding:8px;z-index:10}
+nav.bawah button{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:var(--mut)}
+nav.bawah button[aria-current=page]{background:var(--ink);color:#fff}
+nav.bawah .plus{background:var(--biru);color:#fff}
+.toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,14px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;opacity:0;transition:.25s;z-index:30}.toast.ada{opacity:1;transform:translate(-50%,0)}
+@keyframes naik{from{opacity:0;transform:translateY(10px)}}@keyframes geser{from{transform:scaleX(0);transform-origin:left}}
+/* tata letak lebar */
+@media(min-width:768px){.kecil4{grid-template-columns:repeat(4,1fr)}.baris1{grid-template-columns:1fr 1.45fr}.baris3{grid-template-columns:1.85fr 1fr}}
+@media(min-width:1024px){
+ body{padding:24px 0;padding-bottom:24px}nav.bawah{display:none}
+ .bingkai{display:grid;grid-template-columns:76px 1fr;gap:14px;background:var(--bingkai);border-radius:34px;padding:16px;box-shadow:0 30px 60px -30px rgb(20 30 60/.2)}
+ .rel{display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--card);border-radius:28px;padding:14px 0;position:sticky;top:24px;height:calc(100vh - 80px);max-height:820px}
+ .rel .logo{width:52px;height:52px;border-radius:50%;background:var(--biru);color:#fff;display:grid;place-items:center;font-weight:600;font-size:18px;margin-bottom:auto}
+ .rel button{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);transition:.15s}
+ .rel button:hover{background:var(--bingkai)}
+ .rel button[aria-current=page]{background:var(--ink);color:#fff;border-color:var(--ink)}
+ .rel .bwh{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+ .k{box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bingkai">
+ <nav class="rel" aria-label="Menu utama">
+  <div class="logo">K</div>
+  <button aria-label="Ringkasan" data-x><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></button>
+  <button aria-label="Hari ini" aria-current="page"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg></button>
+  <button aria-label="Jadwal" data-x><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></button>
+  <button aria-label="Catatan" data-x><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3h7l4 4v14H7z M10 12h5M10 16h5"/></svg></button>
+  <button aria-label="Usaha" data-x><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 9l2-5h12l2 5M4 9v11h16V9M4 9h16"/></svg></button>
+  <div class="bwh"><button aria-label="Pengaturan" data-x><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></svg></button></div>
+ </nav>
+
+ <div class="isi">
+  <header class="top">
+   <h1>Hari ini</h1>
+   <form class="cari" id="cepat"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--mut)"><path d="M12 5v14M5 12h14"/></svg><input placeholder="Catat cepat, lalu Enter" aria-label="Catat cepat"><button class="tb" type="button" id="lengkap">Lengkap</button></form>
+   <button class="bulat" aria-label="Pemberitahuan"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15z M10 21h4"/></svg><span class="titik"></span></button>
+   <div class="ava" aria-hidden="true">PM</div>
+  </header>
+
+  <div class="grid">
+   <div class="grid baris1">
+    <section class="k wajib">
+     <div class="kh"><span>Selamat siang, Pak Manajer<br><small class="mut" style="font-size:12px;font-weight:400">Sabtu, 17 Oktober · yang perlu diisi hari ini</small></span>
+      <svg viewBox="0 0 44 44" width="44" class="cincin-w" aria-hidden="true"><circle cx="22" cy="22" r="18" fill="none" stroke="#ECEEF2" stroke-width="5"/><circle id="wCin" cx="22" cy="22" r="18" fill="none" stroke="#5B8DEF" stroke-width="5" stroke-linecap="round" transform="rotate(-90 22 22)" style="transition:stroke-dasharray .5s"/><text id="wTeks" x="22" y="26" text-anchor="middle" font-size="11" fill="#1F2430"></text></svg></div>
+     <div id="wajib"></div>
+    </section>
+
+    <section class="k">
+     <div class="kh"><span style="display:flex;gap:10px;align-items:center"><span id="jStIk" class="st-ik"></span><span>Penjualan gerai<br><small class="mut" style="font-size:11px" id="jSt"></small></span></span><button class="btn-in" id="jBtn">+ Input hari ini</button></div>
+     <div class="metrik">
+      <div><small>Rata-rata 14 hari</small><b id="jRata"></b></div>
+      <div><small>Tertinggi</small><b id="jMax"></b></div>
+      <div><small>Hari tercatat</small><b id="jHari"></b></div>
+      <div class="angka-besar" id="jBesar"></div>
+     </div>
+     <div class="ekg"><svg viewBox="0 0 440 104" id="ekg" style="width:100%;overflow:visible"></svg><div class="tip" id="tip"></div></div>
+    </section>
+   </div>
+
+   <div class="grid kecil4" id="kecil"></div>
+
+   <div class="grid baris3">
+    <section class="k">
+     <div class="kh">Jadwal kegiatan <button class="titik3" aria-label="Menu">···</button></div>
+     <div class="jadwal"><div class="jw" id="jw"></div></div>
+    </section>
+
+    <section class="k lap">
+     <div class="kh" style="width:100%">Laporan harian <button class="titik3" aria-label="Menu">···</button></div>
+     <div class="dok" aria-hidden="true"><div class="kertas">PDF</div><div class="map"></div><div class="unduh">↓</div></div>
+     <h3>Laporan Penutupan Gerai</h3>
+     <div class="mut" style="font-size:12px">17 Okt 2026 · disusun otomatis dari catatan hari ini</div>
+     <div class="siap" id="siap"></div>
+     <div class="aksi"><button class="btn2" id="lLihat">◉ Pratinjau</button><button class="btn1" id="lUnduh">↓ Unduh</button></div>
+    </section>
+   </div>
+  </div>
+ </div>
+</div>
+
+<nav class="bawah" aria-label="Menu utama">
+ <button aria-label="Ringkasan" data-x><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></button>
+ <button aria-label="Hari ini" aria-current="page"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg></button>
+ <button class="plus" aria-label="Catat" id="plus"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></button>
+ <button aria-label="Jadwal" data-x><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></button>
+ <button aria-label="Catatan" data-x><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 3h7l4 4v14H7z M10 12h5M10 16h5"/></svg></button>
+</nav>
+
+<div class="tirai" data-tutup></div>
+<form class="lembar" id="lembar" role="dialog" aria-modal="true" aria-labelledby="lj">
+ <h3 id="lj">Catat kegiatan</h3>
+ <input class="fld" id="lJudul" placeholder="Apa yang dikerjakan?" aria-label="Nama kegiatan" required>
+ <div class="lbl">Jenis</div><div class="chips" id="lJenis"></div>
+ <div class="dua"><div><div class="lbl">Mulai</div><input class="fld" type="time" id="lMulai" value="13.00" aria-label="Jam mulai"></div><div><div class="lbl">Selesai</div><input class="fld" type="time" id="lSelesai" aria-label="Jam selesai"></div></div>
+ <button class="simpan">Simpan</button>
+</form>
+<form class="lembar" id="lJual" role="dialog" aria-modal="true" aria-labelledby="ljj">
+ <h3 id="ljj">Penjualan hari ini</h3>
+ <div class="lbl" style="margin-top:0">Total uang masuk gerai (tunai + non-tunai)</div>
+ <label class="rp"><span>Rp</span><input id="jNom" inputmode="numeric" placeholder="0" aria-label="Total penjualan hari ini" autocomplete="off"></label>
+ <div class="banding" id="jBand"></div>
+ <div class="chips" style="margin-top:8px" id="jCepat"></div>
+ <div class="dua"><div><div class="lbl">Jumlah struk <span style="opacity:.7">(boleh kosong)</span></div><input class="fld" id="jStruk" inputmode="numeric" placeholder="Misal 180"></div>
+ <div><div class="lbl">Tanggal</div><input class="fld" type="date" id="jTgl" value="2026-10-17"></div></div>
+ <button class="simpan">Simpan penjualan</button>
+</form>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('ada');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('ada'),1800)}
+$$('[data-x]').forEach(b=>b.onclick=()=>toast('Halaman contoh'));
+
+/* penjualan diinput manual sekali sehari: satu anak tangga = satu hari, hari ini kosong sampai diisi */
+const NH=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+const JUAL=[2.12,1.98,2.35,2.21,2.64,2.05,1.86,2.27,2.18,2.52,2.31,2.88,2.16,null]; // 4–17 Okt, juta rupiah
+const tglKe=i=>new Date(2026,9,17-(JUAL.length-1-i));
+const rp=v=>'Rp '+v.toFixed(2).replace('.',',')+' jt';
+function penjualan(){const s=$('#ekg'),W=440,H=84,n=JUAL.length,bw=W/n,isi=JUAL.filter(v=>v!=null),mx=Math.max(...isi)*1.08,Y=v=>H-v/mx*(H-4),hariIni=JUAL[n-1];
+ let d='';JUAL.forEach((v,i)=>{if(v==null)return;d+=`${d?' L':'M'}${i*bw},${Y(v)} L${(i+1)*bw},${Y(v)}`});
+ const akhir=JUAL.findLastIndex(v=>v!=null),rata=isi.reduce((a,b)=>a+b,0)/isi.length;
+ s.innerHTML=`<defs><linearGradient id="eg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5B8DEF" stop-opacity=".22"/><stop offset="1" stop-color="#5B8DEF" stop-opacity=".02"/></linearGradient></defs>
+ <path d="M0,${H} L${d.slice(1)} L${(akhir+1)*bw},${H}Z" fill="url(#eg)"/><path d="${d}" fill="none" stroke="#7FA6F2" stroke-width="1.3" stroke-linejoin="round"/>
+ <line x1="0" x2="${W}" y1="${Y(rata)}" y2="${Y(rata)}" stroke="#8C93A1" stroke-opacity=".5" stroke-dasharray="3 4"/><text x="${W}" y="${Y(rata)-4}" text-anchor="end" font-size="10" fill="#8C93A1">rata-rata</text>
+ ${hariIni==null?`<rect x="${(n-1)*bw+3}" y="${H-46}" width="${bw-6}" height="46" rx="6" fill="none" stroke="#5B8DEF" stroke-dasharray="3 3" stroke-opacity=".7"/><text x="${(n-.5)*bw}" y="${H-18}" text-anchor="middle" font-size="16" fill="#5B8DEF">+</text>`:''}
+ ${JUAL.map((v,i)=>{const t=tglKe(i);return`<text x="${(i+.5)*bw}" y="${H+16}" text-anchor="middle" font-size="9.5" fill="${i===n-1?'#1F2430':'#8C93A1'}">${i===n-1?'Hari ini':t.getDate()}</text>`}).join('')}
+ <rect id="sorot" y="0" width="${bw}" height="${H}" fill="#5B8DEF" fill-opacity="0" rx="4"/>`;
+ $('#jRata').textContent=rp(rata);$('#jMax').textContent=rp(Math.max(...isi));$('#jHari').textContent=`${isi.length} dari ${n}`;
+ const sudah=hariIni!=null;
+ $('#jStIk').style.cssText=sudah?'background:#E3F6EA;color:#22A55B':'background:#FDF1D9;color:#C48A1D';$('#jStIk').textContent=sudah?'✓':'!';
+ $('#jSt').textContent=sudah?'Hari ini sudah diinput':'Hari ini belum diinput';
+ $('#jBtn').textContent=sudah?'Ubah hari ini':'+ Input hari ini';$('#jBtn').classList.toggle('sudah',sudah);
+ const v=sudah?hariIni:JUAL[n-2];$('#jBesar').innerHTML=`${v.toFixed(1).replace('.',',')}<sub>jt ${sudah?'hari ini':'kemarin'}</sub>`;
+ const g=$('#ukurIsi');if(g){g.setAttribute('stroke-dasharray',`${Math.PI*66*Math.min(1,(hariIni||0)/4)} 999`);$('#ukurTeks').innerHTML=`${(hariIni||0).toFixed(1).replace('.',',')}<small>/4 jt</small>`}
+ const tip=$('#tip'),so=$('#sorot');
+ s.onpointermove=e=>{const r=s.getBoundingClientRect(),i=Math.max(0,Math.min(n-1,Math.floor((e.clientX-r.left)/r.width*n))),t=tglKe(i),x=JUAL[i];
+  so.setAttribute('x',i*bw);so.setAttribute('fill-opacity',.1);tip.textContent=`${NH[t.getDay()]} ${t.getDate()}/${t.getMonth()+1} · ${x==null?'belum diinput':rp(x)}`;tip.style.left=(i+.5)/n*r.width+'px';tip.style.top=(x==null?H-46:Y(x))/104*r.height+'px';tip.style.opacity=1};
+ s.onpointerleave=()=>{tip.style.opacity=0;so.setAttribute('fill-opacity',0)};
+ s.onclick=e=>{const r=s.getBoundingClientRect();if(Math.floor((e.clientX-r.left)/r.width*n)===n-1)bukaJual()}}
+
+/* lembar input penjualan: satu angka, langsung dibandingkan dengan kemarin dan rata-rata */
+const angka=s=>+String(s).replace(/\D/g,'')||0;
+function bandingkan(){const v=angka($('#jNom').value)/1e6,k=JUAL[JUAL.length-2];if(!v){$('#jBand').textContent='Isi total sekali saat tutup toko.';return}
+ const p=(v/k-1)*100;$('#jBand').innerHTML=`${rp(v)} · <span style="color:${p>=0?'#3E9A5B':'#D9822B'}">${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(1).replace('.',',')}%</span> dari kemarin`}
+$('#jNom').oninput=e=>{const n=angka(e.target.value);e.target.value=n?n.toLocaleString('id-ID'):'';bandingkan()};
+$('#jCepat').innerHTML=[['Sama seperti kemarin',JUAL[JUAL.length-2]],['Rata-rata',null]].map(([n])=>`<button type="button">${n}</button>`).join('');
+$$('#jCepat button').forEach((b,i)=>b.onclick=()=>{const isi=JUAL.filter(v=>v!=null),v=i?isi.reduce((a,c)=>a+c,0)/isi.length:JUAL[JUAL.length-2];$('#jNom').value=Math.round(v*1e6).toLocaleString('id-ID');bandingkan()});
+function bukaJual(){const h=JUAL[JUAL.length-1];$('#jNom').value=h?Math.round(h*1e6).toLocaleString('id-ID'):'';bandingkan();document.body.classList.add('buka','buka-jual');setTimeout(()=>$('#jNom').focus(),300)}
+$('#jBtn').onclick=bukaJual;
+$('#lJual').onsubmit=e=>{e.preventDefault();const v=angka($('#jNom').value);if(!v)return $('#jNom').focus();JUAL[JUAL.length-1]=v/1e6;segarkan();document.body.classList.remove('buka','buka-jual');toast('Penjualan hari ini tersimpan')};
+
+/* kartu kecil: angka yang benar-benar diisi manajer, bukan dari mesin */
+const RUTIN=[1,1,1,1,0,0,0,0,0,0,0];
+const KAS={masuk:2.65,keluar:.42};
+const GAUGE=`<section class="k kc"><div class="kh">Target penjualan<button class="titik3" aria-label="Menu">···</button></div><div class="ukur"><svg viewBox="0 0 160 92" style="width:100%;max-width:190px"><defs><linearGradient id="ug" x1="0" x2="1"><stop offset="0" stop-color="#B08CF4"/><stop offset="1" stop-color="#8F67EA"/></linearGradient></defs>
+ <path d="M14,84 A66,66 0 0 1 146,84" fill="none" stroke="#ECEEF2" stroke-width="20"/><path id="ukurIsi" d="M14,84 A66,66 0 0 1 146,84" fill="none" stroke="url(#ug)" stroke-width="20" stroke-dasharray="0 999" style="transition:stroke-dasharray 1s"/></svg><div id="ukurTeks"></div></div></section>`;
+function kecil(){const sel=KG.filter(k=>k[5]).length,mg=[3,5,2,6,4,4,sel],r=RUTIN.filter(Boolean).length;
+ $('#kecil').innerHTML=
+ `<section class="k kc"><div class="kh">Kegiatan selesai<button class="titik3" aria-label="Menu">···</button></div><div class="nil">${sel} <small class="mut">dari ${KG.length} hari ini</small></div><div class="mini-bar" title="7 hari terakhir">${mg.map((v,i)=>`<i class="${i===6?'ini':''}" style="height:${Math.max(10,v/6*100)}%;animation-delay:${i*.04}s"></i>`).join('')}</div></section>`+
+ `<section class="k kc"><div class="kh">Rutin gerai<button class="titik3" aria-label="Menu">···</button></div><div class="nil">${r} <small class="mut">dari 11 · ketuk kotak</small></div><div class="titik-r">${RUTIN.map((v,i)=>`<i class="${v?'ok':''}" data-r="${i}" role="button" aria-label="Rutin ${i+1}"></i>`).join('')}</div></section>`+
+ `<section class="k kc"><div class="kh">Kas hari ini<button class="titik3" aria-label="Menu">···</button></div><div class="nil">+${rp(KAS.masuk-KAS.keluar)}</div><div class="kas"><div><span>Masuk</span><span class="tr"><i style="width:100%;background:var(--hijau)"></i></span><span>${rp(KAS.masuk)}</span></div><div><span>Keluar</span><span class="tr"><i style="width:${KAS.keluar/KAS.masuk*100}%;background:var(--merah)"></i></span><span>${rp(KAS.keluar)}</span></div></div></section>`+GAUGE;
+ $$('.titik-r i').forEach(t=>t.onclick=()=>{RUTIN[+t.dataset.r]^=1;segarkan()});
+ penjualan()}
+
+/* daftar wajib isi: hal yang harus tercatat sebelum tutup toko */
+function wajib(){const jual=JUAL[JUAL.length-1],r=RUTIN.filter(Boolean).length;
+ const W=[['₨','#E7EEFD','#5B8DEF','Penjualan harian',jual!=null?rp(jual)+' tercatat':'Belum diinput',jual!=null,jual!=null?'Ubah':'Isi',bukaJual],
+  ['☰','#FDF1D9','#C48A1D','Rutin gerai',`${r} dari 11 selesai`,r===11,r===11?'Beres':'Centang',()=>{const i=RUTIN.indexOf(0);if(i>=0){RUTIN[i]=1;segarkan();toast('Rutin ke-'+(i+1)+' dicentang')}}],
+  ['⇅','#E3F4E8','#3E9A5B','Kas masuk & keluar','Masuk '+rp(KAS.masuk)+' · keluar '+rp(KAS.keluar),true,'Ubah',()=>toast('Form kas (contoh)')],
+  ['◎','#EFE7FD','#8F67EA','Kegiatan hari ini',`${KG.filter(k=>k[5]).length} dari ${KG.length} selesai`,KG.every(k=>k[5]),'Catat',buka]];
+ $('#wajib').innerHTML=W.map((w,i)=>`<div class="w ${w[5]?'beres':''}"><span class="ik" style="background:${w[1]};color:${w[2]}">${w[0]}</span><span class="tx"><b>${w[3]}</b><small>${w[4]}</small></span><button class="aksi-w" data-w="${i}">${w[6]==='Beres'?'✓ Beres':w[6]}</button></div>`).join('');
+ $$('[data-w]').forEach(b=>b.onclick=()=>W[+b.dataset.w][7]());
+ const d=W.filter(w=>w[5]).length,k=2*Math.PI*18;$('#wCin').setAttribute('stroke-dasharray',`${k*d/4} ${k}`);$('#wTeks').textContent=`${d}/4`;
+ laporan(W)}
+
+/* laporan penutupan bisa diunduh bila penjualan, rutin, dan kas sudah tercatat */
+function laporan(W){const s=W.slice(0,3),siap=s.every(w=>w[5]);
+ $('#siap').innerHTML=s.map(w=>`<div><i style="background:${w[5]?'#22C55E':'#D5D9E2'}">${w[5]?'✓':''}</i>${w[3]}<span class="mut" style="margin-left:auto;font-size:12px">${w[5]?'lengkap':'belum'}</span></div>`).join('');
+ $('#lUnduh').disabled=!siap;$('#lUnduh').title=siap?'':'Lengkapi dulu yang belum';
+ $('#lLihat').onclick=()=>toast('Pratinjau laporan (contoh)');$('#lUnduh').onclick=()=>toast('Laporan diunduh (contoh)')}
+
+/* jadwal kegiatan: garis jam putus-putus; ketuk ruang kosong untuk menambah di jam itu */
+const JAM=['07','09','11','13','15','17','19'];
+let KG=[['Briefing pagi','07.30–07.45','#E7EEFD','#5B8DEF','☀',1],['Buka toko','07.45–08.05','#FDF1D9','#C48A1D','⌂',1],['Pindah barang ke rak','08.30–09.00','#E3F4E8','#3E9A5B','▤',0],['Rapat pengurus','10.00–11.10','#EFE7FD','#8F67EA','◎',0],['Setor uang ke bank','16.30–16.45','#FDE9E2','#C76E52','₨',0],['Cek target EBITDA','17.00–17.20','#E7EEFD','#5B8DEF','↗',0]];
+const LJ=720,posX=j=>{const[h,m]=j.split('.').map(Number);return 40+((h+m/60)-7)/12*(LJ-80)};
+function jadwal(){const w=$('#jw');
+ w.innerHTML=JAM.map(j=>`<span class="jam" style="left:${posX(j+'.00')}px">${j}.00</span><span class="garis-jam" style="left:${posX(j+'.00')}px"></span>`).join('')+`<span class="garis-jam sekarang" style="left:${posX('13.20')}px"></span><span class="sekarang-l" style="left:${posX('13.20')}px;top:228px">Sekarang</span>`+
+ KG.map((k,i)=>`<div class="kg ${k[5]?'ok':''}" data-i="${i}" role="button" tabindex="0" style="left:${Math.min(LJ-240,posX(k[1].slice(0,5))-17)}px;top:${30+(i%4)*48}px"><span class="ik" style="background:${k[2]};color:${k[3]}">${k[4]}</span><span><b>${k[0]}</b><small>${k[1]}</small></span><span class="cek"></span></div>`).join('');
+ $$('.kg').forEach(e=>e.onclick=ev=>{ev.stopPropagation();const k=KG[+e.dataset.i];k[5]^=1;segarkan();toast(k[5]?'Ditandai selesai':'Dibuka lagi')});
+ w.onclick=e=>{if(e.target.closest('.kg'))return;const r=w.getBoundingClientRect(),jam=7+(e.clientX-r.left-40)/(LJ-80)*12,h=Math.max(7,Math.min(19,Math.floor(jam))),m=jam%1<.5?'00':'30';buka();$('#lMulai').value=String(h).padStart(2,'0')+':'+m}}
+function segarkan(){jadwal();kecil();wajib()}
+
+/* catat cepat dan lembar lengkap */
+const JN=[['Rapat','#EFE7FD','#8F67EA','◎'],['Gerai','#FDE9E2','#C76E52','⌂'],['Gudang','#E3F4E8','#3E9A5B','▤'],['Admin','#E7EEFD','#5B8DEF','✎']];let jp=0;
+const chips=()=>{$('#lJenis').innerHTML=JN.map((j,i)=>`<button type="button" aria-pressed="${i===jp}">${j[0]}</button>`).join('');$$('#lJenis button').forEach((b,i)=>b.onclick=()=>{jp=i;chips()})};chips();
+const sekarang=()=>new Date().toTimeString().slice(0,5);
+function tambah(n,m,s){const j=JN[jp];KG.push([n,`${m.replace(':','.')}–${(s||m).replace(':','.')}`,j[1],j[2],j[3],0]);segarkan();toast('Kegiatan ditambahkan ke jadwal')}
+$('#cepat').onsubmit=e=>{e.preventDefault();const i=e.target.querySelector('input');if(i.value.trim()){tambah(i.value.trim(),'13:30');i.value=''}};
+const buka=()=>{document.body.classList.add('buka');$('#lMulai').value=sekarang();setTimeout(()=>$('#lJudul').focus(),300)},tutup=()=>document.body.classList.remove("buka","buka-jual");
+$('#lengkap').onclick=buka;$('#plus').onclick=buka;$$('[data-tutup]').forEach(b=>b.onclick=tutup);addEventListener('keydown',e=>e.key==='Escape'&&tutup());
+$('#lembar').onsubmit=e=>{e.preventDefault();tambah($('#lJudul').value.trim(),$('#lMulai').value,$('#lSelesai').value);e.target.reset();tutup()};
+segarkan();
+</script>
+</body>
+</html>
