@@ -20,7 +20,7 @@ Seluruh data kerja hidup di **Dunia Koperasi**: diorama kantor 3D yang membaca c
 
 ## Operating Context
 
-- Rutinitas: buka Beranda/Hari ini di pagi hari, perbarui status tugas, catat transaksi kas dan mutasi stok setelah kejadian, siapkan rapat dan notulen, simpan snapshot laporan berkala.
+- Rutinitas: buka Beranda di pagi hari (centang rutin harian, lihat agenda dan yang perlu tindakan, tambah tugas dalam satu kalimat, salin laporan harian ke grup WhatsApp pengurus), perbarui status tugas, catat transaksi kas dan mutasi stok setelah kejadian, siapkan rapat dan notulen, simpan snapshot laporan berkala.
 - Ruang kantor di dunia 3D memetakan domain web: Ruang kerja (tugas, sprint), Ruang manajer (dokumen, risiko, mitra), Rapat, Gym & kegiatan, Stok & barang, Kas & anggota, Karyawan gerai, Ngopi & istirahat; plus Gerai, Gudang, Cold storage, Pulau.
 - Bahasa Indonesia sederhana, zona waktu Asia/Jakarta. Data disimpan di Supabase (satu tabel JSONB per domain); mode demo lokal untuk percobaan.
 
@@ -34,7 +34,7 @@ Seluruh data kerja hidup di **Dunia Koperasi**: diorama kantor 3D yang membaca c
 ## Brand Commitments
 
 - Nama produk: Kopdes Manager 3D; di dalam aplikasi: "Dunia Koperasi" untuk diorama.
-- Web memakai gaya "Taskflow": latar abu terang, kartu putih sudut 16 px, aksen tunggal biru `#546FFF`, sidebar enam hub dengan tab di bawah judul, huruf Plus Jakarta Sans yang ramah di ponsel (keputusan pemilik 16 Oktober 2026 dari referensi Figma Taskflow; menggantikan Cerah; Senja, Kebun, dan Teal ditolak). Warna-warni tapi tidak memusingkan: aksen jenuh hanya pada grafik, status, dan tombol utama. Ikon dua nada biru (`Ikon3D`).
+- Web memakai gaya "Merah Putih Lekuk" (keputusan pemilik 19 Oktober 2026; menggantikan Taskflow biru, sebelumnya Cerah; Senja, Kebun, dan Teal ditolak): latar putih susu hangat, kartu putih datar bersudut besar dengan takik di pojok kanan atas berisi satu tombol aksi, pil dan tombol bulat, aksen tunggal merah delima lembut `#A04656` dengan pastel pendamping (jambu, kunyit, pandan, talas), tinta cokelat gelap, huruf Plus Jakarta Sans yang ramah di ponsel; mode gelap bernada hangat. Merah putih dibawa halus, bukan warna bendera atau templat. Warna jenuh hanya pada grafik, status, tombol utama, menu aktif, dan kartu Rutin harian. Ikon dua nada delima (`Ikon3D`). Sistem lengkap di `DESIGN.md`.
 - Tampilan seimbang di semua perangkat: grid modul dengan tinggi rata; setiap data yang tampil harus bisa ditindaklanjuti; tidak ada tombol aksi ganda.
 - Bahasa UI langsung, ringkas, tanpa slogan motivasi.
 

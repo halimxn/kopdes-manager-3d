@@ -40,7 +40,7 @@ import { cashSummary, csvCell, rupiah, stockDifference } from './ledger';
 import { formatDate, today } from '@/lib/date';
 import { Select } from '@/components/ui/Select';
 
-/** Ikon garis lama → ikon biru kilap yang senada (buku pencatatan, metrik, catatan terbaru). */
+/** Ikon garis lama → ikon dua nada yang senada (buku pencatatan, metrik, catatan terbaru). */
 const IKON_OP = new Map<unknown, Ikon3DKind>([
   [Users, 'kartu'],
   [UserCheck, 'tim'],

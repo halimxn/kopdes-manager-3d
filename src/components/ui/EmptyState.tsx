@@ -17,7 +17,7 @@ export function EmptyState({
   className = '',
 }: {
   icon?: ReactNode;
-  /** Ikon biru kilap; diutamakan daripada `icon`. */
+  /** Ikon dua nada (Ikon3D); diutamakan daripada `icon`. */
   ikon?: Ikon3DKind;
   title: string;
   description?: string;

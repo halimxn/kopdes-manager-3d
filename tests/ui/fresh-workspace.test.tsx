@@ -1,5 +1,5 @@
 import { beforeEach, afterEach, expect, it } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { PinnedRecords, parsePins } from '@/features/follow-ups/PinnedRecords';
 import { getFollowUps } from '@/features/workspace/workspace-navigation';
 import type { Item } from '@/features/records/schemas';
@@ -55,7 +55,7 @@ it('rejects malformed pins and deduplicates the same reference', () => {
   ).toHaveLength(1);
 });
 
-it('keeps dashboard details closed and lists focus tasks as compact rows', () => {
+it('lists overdue tasks as compact rows under Perlu tindakan beside the daily routine', () => {
   const data = {
     'work-items': Array.from({ length: 5 }, (_, index) =>
       row(
@@ -64,12 +64,13 @@ it('keeps dashboard details closed and lists focus tasks as compact rows', () =>
       ),
     ),
   };
-  const view = render(<Dashboard data={data} />);
-  // Agenda dan status tugas selalu tampil; fokus berisi tugas terlambat sebagai baris ringkas.
-  expect(view.container.querySelector('.dashboard-routines')).toBeTruthy();
-  expect(view.container.querySelector('.beranda-status')).toBeTruthy();
-  expect(view.container.querySelectorAll('.beranda-fokus .fokus-daftar li')).toHaveLength(5);
-  expect(screen.getByRole('link', { name: /Semua tugas/ }).getAttribute('href')).toBe('/tugas');
+  render(<Dashboard data={data} />);
+  // Rutin dan agenda selalu tampil; Perlu tindakan berisi tugas terlambat sebagai baris ringkas.
+  expect(screen.getByRole('region', { name: 'Rutin harian' })).toBeTruthy();
+  expect(screen.getByRole('region', { name: 'Agenda hari ini' })).toBeTruthy();
+  const tindakan = screen.getByRole('region', { name: 'Perlu tindakan' });
+  expect(within(tindakan).getAllByRole('listitem')).toHaveLength(5);
+  expect(within(tindakan).getByRole('link', { name: 'Buka semua tugas' }).getAttribute('href')).toBe('/tugas');
 });
 
 it('reminds about active meetings through seven days without reviving past or closed meetings', () => {

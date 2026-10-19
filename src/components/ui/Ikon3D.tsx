@@ -285,7 +285,7 @@ export function Ikon3D({
 }) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const Icon = SIMBOL[kind];
-  // Tanpa ubin latar: simbol dua nada (garis gradasi biru, isian biru sangat muda) berbayang halus.
+  // Tanpa ubin latar: simbol dua nada (garis gradasi token --ikon-garis-*, isian --ikon-isi) berbayang halus.
   return (
     <svg
       viewBox={rapat ? '5 5 38 38' : '2 2 44 44'}
@@ -298,8 +298,8 @@ export function Ikon3D({
       <defs>
         {/* Koordinat simbol lucide (0–24): garis lurus tetap terwarnai, tidak hilang. */}
         <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1="2" y1="2" x2="22" y2="22">
-          <stop stopColor="#6d92ff" />
-          <stop offset="1" stopColor="#2448c7" />
+          <stop style={{ stopColor: 'var(--ikon-garis-a)' }} />
+          <stop offset="1" style={{ stopColor: 'var(--ikon-garis-b)' }} />
         </linearGradient>
       </defs>
       <Icon
@@ -310,7 +310,7 @@ export function Ikon3D({
         strokeWidth="2.1"
         className="ikon3d-simbol"
         // Gaya inline: aturan lama `svg { stroke/fill }` di CSS tidak boleh menimpa warna ikon.
-        style={{ stroke: `url(#${id}-g)`, fill: 'var(--ikon-isi, #dfe8ff)', color: 'var(--brand)' }}
+        style={{ stroke: `url(#${id}-g)`, fill: 'var(--ikon-isi)', color: 'var(--brand)' }}
       />
     </svg>
   );

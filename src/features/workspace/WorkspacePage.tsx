@@ -129,7 +129,7 @@ export function WorkspacePage({ slug }: { slug: string }) {
         id: '',
         created_at: '',
         updated_at: '',
-        data: schemas['work-items'].parse({ title: 'Tugas baru', ...detail, due_date: today() }),
+        data: schemas['work-items'].parse({ title: 'Tugas baru', due_date: today(), ...detail }),
       });
     };
     window.addEventListener('hub-task', callback);

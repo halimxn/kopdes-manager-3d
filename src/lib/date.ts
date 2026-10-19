@@ -22,6 +22,12 @@ export function monthRange(value: string, geser = 0, sampai = value): { start: s
   const label = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(awal);
   return { start, end: end > sampai ? sampai : end, label };
 }
+/** Tujuh tanggal Senin–Minggu dari pekan yang memuat `value` (pekan Indonesia dimulai Senin). */
+export function hariSeminggu(value: string): string[] {
+  const hari = new Date(value + 'T12:00:00Z').getUTCDay();
+  const senin = addDays(value, -((hari + 6) % 7));
+  return Array.from({ length: 7 }, (_, i) => addDays(senin, i));
+}
 export function daysBetween(start: string, end: string): number {
   return Math.round((Date.parse(end + 'T12:00:00Z') - Date.parse(start + 'T12:00:00Z')) / 86400000);
 }

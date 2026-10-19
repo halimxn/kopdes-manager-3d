@@ -38,7 +38,7 @@ const keadaan = [
   ...['rapat', 'gerai', 'mitra', 'dokumen'].map((r) => ({ nama: `laci-${r}`, rute: r, aksi: [klikTeks('.record .ui-btn', 'Buka catatan')] })),
   { nama: 'dialog-periode', rute: 'tugas', aksi: [`(() => { const d = document.querySelector('.view-extra-actions'); if (d) d.open = true; return !!d; })()`, klik('.btn-sprint-trigger')] },
   { nama: 'dialog-csv', rute: 'tugas', aksi: [`(() => { const d = document.querySelector('.view-extra-actions'); if (d) d.open = true; return !!d; })()`, klik('.btn-csv-trigger')] },
-  { nama: 'dialog-rutinitas', rute: 'beranda', aksi: [`(() => { const d = document.querySelector('.dashboard-routines'); if (d) d.open = true; return !!d; })()`, klik('.btn-routine-config')] },
+  { nama: 'dialog-rutinitas', rute: 'beranda', aksi: [klik('.beranda-rutin .takik-aksi')] },
   { nama: 'dialog-jadwal-berkala', rute: 'tugas', aksi: [klik('.ui-btn.task-title-btn'), klik('.btn-drawer-action[title="Atur Jadwal Berkala"]')] },
   { nama: 'dialog-milestone', rute: 'roadmap', aksi: [klik('.btn-add-milestone')] },
   { nama: 'gantt-penuh', rute: 'tugas?view=gantt', aksi: [klik('.timeline-fullscreen-launch-btn')] },

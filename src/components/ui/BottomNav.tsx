@@ -1,27 +1,46 @@
 import Link from 'next/link';
 import { Menu, Plus } from 'lucide-react';
 import { IkonHalaman } from './IkonHalaman';
-import { Button } from './Button';
-import { hubUntuk, type HubId } from '@/components/layout/navigasi';
+import { hubUntuk } from '@/components/layout/navigasi';
 
+/**
+ * Nav ponsel "pil mengembang" (pilihan pemilik 19 Okt 2026): menu aktif melebar dengan label,
+ * tombol tambah gelap terpisah di kanan. Hanya tampil di bawah 768 px (kerangka.css).
+ */
 export function BottomNav({ path, menu, onAction, onMenu }: {
   path: string; menu: boolean; onAction: () => void; onMenu: () => void;
 }) {
-  const items: { label: string; href?: string; hub?: HubId; action?: () => void; Icon?: typeof Plus }[] = [
-    { label: 'Beranda', href: '/beranda', hub: 'beranda' },
-    { label: 'Pekerjaan', href: '/hari-ini', hub: 'pekerjaan' },
-    { label: 'Tambah', action: onAction, Icon: Plus },
-    { label: 'Dunia', href: '/dunia-koperasi', hub: 'dunia' },
-    { label: 'Menu', action: onMenu, Icon: Menu },
+  const hub = hubUntuk(path)?.id;
+  const items = [
+    { label: 'Beranda', href: '/beranda', aktif: hub === 'beranda' },
+    { label: 'Tugas', href: '/tugas', aktif: hub === 'pekerjaan' },
+    { label: 'Rapat', href: '/rapat', aktif: path.split(/[?#]/)[0] === '/rapat' },
   ];
-  const hubAktif = hubUntuk(path)?.id;
-  return <nav className="ui-bottom-nav" aria-label="Navigasi cepat">
-    {items.map(({ label, href, hub, Icon, action }) => {
-      const content = <><span className="ui-bottom-icon">{href ? <IkonHalaman href={href === '/hari-ini' ? '/tugas' : href} size={24} /> : Icon && <Icon />}</span><span>{label}</span></>;
-      const aktif = hub !== undefined && hub === hubAktif;
-      return href
-        ? <Link key={label} href={href} className="ui-bottom-item" aria-label={label} aria-current={aktif ? 'page' : undefined}>{content}</Link>
-        : <Button key={label} type="button" className="ui-bottom-item" onClick={action} data-action={label === 'Tambah'} aria-label={label === 'Tambah' ? 'Tambah catatan' : 'Semua halaman'} aria-expanded={label === 'Menu' ? menu : undefined}>{content}</Button>;
-    })}
-  </nav>;
+  const lainnyaAktif = !items.some((item) => item.aktif);
+  return (
+    <nav className="ui-bottom-nav" aria-label="Navigasi cepat">
+      <div className="nav-pil">
+        {items.map(({ label, href, aktif }) => (
+          <Link key={href} href={href} className="nav-pil-item" aria-label={label} aria-current={aktif ? 'page' : undefined}>
+            <IkonHalaman href={href} size={22} />
+            <span className="nav-pil-label">{label}</span>
+          </Link>
+        ))}
+        <button
+          type="button"
+          className="nav-pil-item"
+          onClick={onMenu}
+          aria-label="Semua halaman"
+          aria-expanded={menu}
+          data-aktif={lainnyaAktif && !menu ? 'true' : undefined}
+        >
+          <Menu size={22} aria-hidden="true" />
+          <span className="nav-pil-label">Lainnya</span>
+        </button>
+      </div>
+      <button type="button" className="nav-tambah" onClick={onAction} aria-label="Tambah catatan">
+        <Plus size={26} aria-hidden="true" />
+      </button>
+    </nav>
+  );
 }

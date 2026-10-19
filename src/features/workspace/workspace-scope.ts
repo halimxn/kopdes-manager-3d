@@ -49,6 +49,8 @@ export function pageEntities(slug: string): Entity[] {
       'milestones',
       'cash-entries',
       'journal',
+      // Nama Tim untuk @nama di tambah cepat.
+      'staff',
     ],
     'tindak-lanjut': [
       'work-items',

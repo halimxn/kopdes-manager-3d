@@ -1,5 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { Button } from '@/components/ui/Button';
 import { DateInput } from '@/components/ui/DateField';
 import { BottomNav } from '@/components/ui/BottomNav';
@@ -24,12 +24,13 @@ it('tanggal memakai satu pemicu dan mempertahankan validasi form native', () => 
   expect(screen.getByRole('group', { name: 'Kalender Tanggal' })).toBeTruthy();
   expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Pilih tanggal' }));
 });
-it('dock memiliki lima item dan aksi/menu dapat dioperasikan', () => {
+it('dok pil berisi Beranda, Tugas, Rapat, Lainnya, dan tombol tambah yang dapat dioperasikan', () => {
   const action = vi.fn(), menu = vi.fn();
   render(<BottomNav path="/tugas" menu={true} onAction={action} onMenu={menu} />);
-  expect(screen.getByRole('navigation').children).toHaveLength(5);
-  expect(screen.getByRole('link', { name: 'Pekerjaan' }).getAttribute('aria-current')).toBe('page');
-  expect(screen.getByRole('link', { name: 'Dunia' }).getAttribute('href')).toBe('/dunia-koperasi');
+  const dok = screen.getByRole('navigation');
+  expect(within(dok).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['/beranda', '/tugas', '/rapat']);
+  expect(screen.getByRole('link', { name: 'Tugas' }).getAttribute('aria-current')).toBe('page');
+  expect(screen.getByRole('button', { name: 'Semua halaman' }).getAttribute('aria-expanded')).toBe('true');
   fireEvent.click(screen.getByRole('button', { name: 'Tambah catatan' }));
   fireEvent.click(screen.getByRole('button', { name: 'Semua halaman' }));
   expect(action).toHaveBeenCalledOnce();

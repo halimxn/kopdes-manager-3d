@@ -1,6 +1,7 @@
 /*
-  Kerangka aplikasi gaya Taskflow: sidebar putih enam hub, kepala halaman (judul, cari, lonceng,
-  Tambah, profil), tab hub di bawah judul, rel ikon di tablet, dok + lembar menu di ponsel,
+  Kerangka aplikasi gaya Merah Putih Lekuk: sidebar di atas kanvas dengan kelompok menu berupa kartu
+  putih (Kerja, Ruang lain) dan kartu Tim bertakik, kepala halaman (judul, cari, lonceng, Tambah,
+  profil), tab hub di bawah judul, rel ikon di tablet, nav pil + lembar menu di ponsel,
   pencarian, dan pusat aksi.
 */
 
@@ -25,19 +26,18 @@
 }
 .manager-shell.sidebar-collapsed { --kolom-samping: var(--rail-w); }
 
-/* ---------- Sidebar: enam hub, hub aktif biru muda ---------- */
+/* ---------- Sidebar: kelompok Kerja dan Ruang lain sebagai kartu putih, item aktif merah delima ---------- */
 .shell-sidebar {
   position: fixed;
   z-index: 40;
   inset: 0 auto 0 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 14px;
   width: var(--kolom-samping);
-  padding: 24px 16px 16px;
+  padding: 20px 14px 16px;
   overflow-y: auto;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
+  background: var(--canvas);
 }
 .shell-merek {
   display: flex;
@@ -50,28 +50,39 @@
 }
 .shell-merek:hover { text-decoration: none; }
 .shell-merek strong { overflow: hidden; font-size: 16px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-.shell-hub,
-.shell-kaki { display: grid; gap: 4px; }
-.shell-kaki { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); }
+.shell-hub { display: grid; gap: 12px; }
+.shell-kelompok {
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  border: 1px solid var(--kartu-garis);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+}
+.shell-kelompok-judul { padding: 4px 10px 6px; color: var(--ink-subtle); font-size: 12px; font-weight: 600; }
+.shell-kaki { display: grid; gap: 2px; margin-top: auto; }
 .shell-hub a,
 .shell-kaki a {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-height: 48px;
-  padding: 0 12px;
-  border-radius: var(--r-md);
+  min-height: var(--touch);
+  padding: 0 10px;
+  border-radius: 14px;
   color: var(--ink-muted);
   font-weight: 600;
   text-decoration: none;
   transition: background var(--dur-fast), color var(--dur-fast);
 }
-.shell-kaki a { min-height: var(--touch); font-size: 13px; }
+.shell-kaki a { font-size: 13px; }
 .shell-hub a:hover,
-.shell-kaki a:hover { background: var(--surface-2); color: var(--ink-heading); text-decoration: none; }
-.shell-hub a[aria-current='page'],
-.shell-kaki a[aria-current='page'] { background: var(--brand-soft); color: var(--brand-ink); }
+.shell-kaki a:hover { background: var(--surface-3); color: var(--ink-heading); text-decoration: none; }
+.shell-hub a[aria-current='page'] { background: var(--brand-isi); color: var(--on-brand); }
+.shell-kaki a[aria-current='page'] { background: var(--surface); color: var(--brand-ink); }
 .shell-hub-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shell-tim { display: grid; gap: 4px; padding: 14px 16px; border-radius: var(--r-xl); background: var(--surface); }
+.shell-tim strong { color: var(--ink-heading); font-size: 14px; }
+.shell-tim p { padding-right: 34px; color: var(--ink-muted); font-size: 12.5px; line-height: 1.4; }
 
 /* Sidebar diciutkan (Ctrl+B) dan tablet: hanya ikon */
 .sidebar-collapsed .shell-sidebar { padding-inline: 10px; }
@@ -84,6 +95,9 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+.sidebar-collapsed .shell-kelompok-judul,
+.sidebar-collapsed .shell-tim { display: none; }
+.sidebar-collapsed .shell-kelompok { padding: 6px; }
 .sidebar-collapsed .shell-merek,
 .sidebar-collapsed .shell-hub a,
 .sidebar-collapsed .shell-kaki a { justify-content: center; padding: 0; }
@@ -123,8 +137,8 @@
   width: auto;
   gap: 6px;
   padding: 0 18px 0 14px;
-  border-color: var(--brand);
-  border-radius: var(--r-md);
+  border-color: var(--brand-isi);
+  border-radius: var(--r-full);
   background: var(--brand-isi);
   color: var(--on-brand);
   font-weight: 600;
@@ -138,7 +152,7 @@
   min-height: var(--touch);
   padding: 0 12px 0 14px;
   border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-full);
   background: var(--surface);
   color: var(--ink-subtle);
   font: inherit;
@@ -229,10 +243,8 @@
 /* Wadah bergulir memotong outline di luar tepi; cincin fokus digambar di dalam tautan */
 .tab-hub a:focus-visible { outline-offset: -2px; }
 
-/* Panel kanan (Beranda): kolom ketiga di layar lebar, turun ke bawah isi di layar sempit */
 /* Di dalam halaman, jarak tab hub ke isi diatur oleh gap grid halaman */
 .workspace-page > .tab-hub { margin-bottom: 0; }
-.panel-kanan { display: grid; align-content: start; gap: 20px; min-width: 0; }
 
 /* ---------- Pencarian ---------- */
 dialog.command-dialog {
@@ -379,6 +391,9 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
     clip-path: inset(50%);
     white-space: nowrap;
   }
+  .shell-kelompok-judul,
+  .shell-tim { display: none; }
+  .shell-kelompok { padding: 6px; }
   .shell-merek,
   .shell-hub a,
   .shell-kaki a { justify-content: center; padding: 0; }
@@ -458,58 +473,80 @@ dialog.manager-action-dialog { width: min(720px, calc(100vw - 32px)); padding: 0
   .tab-hub { gap: 20px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scrollbar-width: none; }
   .tab-hub::-webkit-scrollbar { display: none; }
 
+  /* Nav pil mengembang: menu aktif melebar dengan label, tombol tambah gelap terpisah */
   .ui-bottom-nav {
     position: fixed;
     z-index: 45;
     left: 10px;
     right: 10px;
-    bottom: calc(10px + env(safe-area-inset-bottom));
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    display: flex;
     align-items: center;
-    height: var(--dock-h);
-    padding: 6px;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: color-mix(in srgb, var(--surface) 94%, transparent);
-    box-shadow: var(--shadow-dock);
-    backdrop-filter: saturate(1.4) blur(12px);
+    gap: 8px;
   }
-  .ui-bottom-item,
-  .ui-btn.ui-bottom-item {
-    display: grid;
-    justify-items: center;
-    align-content: center;
-    gap: 2px;
-    height: 100%;
-    min-height: 0;
-    padding: 0;
+  .nav-pil {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    min-width: 0;
+    height: 62px;
+    padding: 6px;
+    border: 1px solid var(--kartu-garis);
+    border-radius: var(--r-full);
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    box-shadow: var(--shadow-dock);
+    backdrop-filter: saturate(1.3) blur(14px);
+  }
+  .nav-pil-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 46px;
+    height: 50px;
+    padding: 0 10px;
     border: 0;
-    border-radius: 14px;
+    border-radius: var(--r-full);
     background: transparent;
     color: var(--ink-muted);
-    font-size: 11px;
-    font-weight: 600;
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
     text-decoration: none;
-    box-shadow: none;
+    cursor: pointer;
+    transition: background 300ms var(--ease-out), color 300ms var(--ease-out), padding 300ms var(--ease-out), transform var(--dur-fast);
   }
-  .ui-bottom-item:hover { text-decoration: none; }
-  .ui-bottom-item[aria-current='page'] { background: var(--brand-soft); color: var(--brand-ink); }
-  .ui-bottom-icon { display: grid; place-items: center; height: 26px; }
-  .ui-btn.ui-bottom-item[data-action='true'] .ui-bottom-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: var(--brand-isi);
-    color: var(--on-brand);
+  .nav-pil-item:hover { text-decoration: none; }
+  .nav-pil-item:active { transform: scale(0.94); }
+  .nav-pil-label { max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 350ms var(--ease-out); }
+  .nav-pil-item[aria-current='page'],
+  .nav-pil-item[data-aktif='true'] { padding: 0 14px; background: var(--brand-isi); color: var(--on-brand); }
+  .nav-pil-item[aria-current='page'] .nav-pil-label,
+  .nav-pil-item[data-aktif='true'] .nav-pil-label { max-width: 84px; }
+  .nav-tambah {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--ink-heading);
+    color: var(--surface);
+    box-shadow: var(--shadow-dock);
+    cursor: pointer;
+    transition: transform 300ms var(--ease-pegas);
   }
-  .ui-btn.ui-bottom-item[data-action='true'] { color: var(--ink); }
+  .nav-tambah:active { transform: scale(0.92); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mobile-app-sheet,
   .mobile-app-sheet.is-open,
-  .mobile-sheet-backdrop { transition: none; }
+  .mobile-sheet-backdrop,
+  .nav-pil-item,
+  .nav-pil-label,
+  .nav-tambah { transition: none; }
 }
 
 /* Halaman tanpa kerangka (PIN, galat) memakai kanvas yang sama */

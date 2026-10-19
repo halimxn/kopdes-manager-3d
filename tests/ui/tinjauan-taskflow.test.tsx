@@ -48,7 +48,7 @@ it('tab hub tetap ada saat halaman masih memuat (tidak bergeser setelah data dat
   expect(screen.getByRole('navigation', { name: 'Bagian Koperasi' })).toBeTruthy();
 });
 
-it('dok ponsel menandai Pekerjaan pada tampilan kalender tugas', () => {
+it('dok ponsel menandai Tugas pada tampilan kalender tugas', () => {
   keadaan.query = 'view=kalender';
   render(
     <AppShell>
@@ -56,7 +56,7 @@ it('dok ponsel menandai Pekerjaan pada tampilan kalender tugas', () => {
     </AppShell>,
   );
   const dok = screen.getByRole('navigation', { name: 'Navigasi cepat' });
-  expect(within(dok).getByRole('link', { name: 'Pekerjaan' }).getAttribute('aria-current')).toBe('page');
+  expect(within(dok).getByRole('link', { name: 'Tugas' }).getAttribute('aria-current')).toBe('page');
 });
 
 it('cincin fokus tab hub dan kartu pekerjaan tidak terpotong oleh wadah bergulir', () => {

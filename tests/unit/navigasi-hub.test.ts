@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { HUBS, KAKI_SIDEBAR, hubUntuk, labelHalaman } from '@/components/layout/navigasi';
+import { HUBS, KAKI_SIDEBAR, MENU_KERJA, RUANG_LAIN, hubUntuk, labelHalaman } from '@/components/layout/navigasi';
 import { navigation } from '@/features/records/catalog';
 
 it('setiap halaman katalog berada tepat di satu hub atau kaki sidebar', () => {
@@ -10,6 +10,11 @@ it('setiap halaman katalog berada tepat di satu hub atau kaki sidebar', () => {
 
 it('enam hub dengan urutan sidebar yang disepakati', () => {
   expect(HUBS.map((hub) => hub.id)).toEqual(['beranda', 'pekerjaan', 'catatan', 'usaha', 'koperasi', 'dunia']);
+});
+
+it('menu kerja membuka Beranda dan halaman Pekerjaan langsung; hub lain menjadi Ruang lain', () => {
+  expect(MENU_KERJA).toEqual(['/beranda', '/hari-ini', '/tugas', '/proyek', '/roadmap']);
+  expect(RUANG_LAIN.map((hub) => hub.id)).toEqual(['catatan', 'usaha', 'koperasi', 'dunia']);
 });
 
 it('hub dikenali walau URL membawa query atau hash', () => {

@@ -5,7 +5,7 @@ import { TaskCalendar } from '@/features/tasks/TaskCalendar';
 import { schemas } from '@/features/records/schemas';
 import { today, formatDate } from '@/lib/date';
 afterEach(cleanup);
-it('beranda memakai jumlah selesai nyata dan tenggat terlambat', () => {
+it('beranda menampilkan tenggat terlambat nyata dan tidak menampilkan tugas selesai', () => {
   const item = (id: string, title: string, status: string, due: string, completed = '') => ({
     id,
     created_at: '',
@@ -22,11 +22,10 @@ it('beranda memakai jumlah selesai nyata dan tenggat terlambat', () => {
       }}
     />,
   );
-  const fokus = within(screen.getByRole('region', { name: 'Fokus hari ini' }));
-  expect(fokus.getByRole('link', { name: /Terlambat nyata/ }).getAttribute('href')).toBe('/tugas?task=two');
-  expect(fokus.queryByRole('link', { name: /Selesai nyata/ })).toBeNull();
-  expect(screen.getByRole('img', { name: '50% selesai: 0 rencana, 1 dikerjakan, 1 selesai' })).toBeTruthy();
-  expect(screen.queryByText('60%')).toBeNull();
+  const tindakan = within(screen.getByRole('region', { name: 'Perlu tindakan' }));
+  expect(tindakan.getByRole('link', { name: /Terlambat nyata/ }).getAttribute('href')).toBe('/tugas?task=two');
+  expect(tindakan.queryByRole('link', { name: /Selesai nyata/ })).toBeNull();
+  expect(screen.getByRole('link', { name: '1 terlambat' }).getAttribute('href')).toBe('/tugas?status=terlambat');
 }, 15000);
 it('kalender mingguan melintasi tahun dan tambah tugas memakai tanggal terpilih', () => {
   const create = vi.fn();
@@ -98,10 +97,12 @@ it('filter proyek menyaring fokus dan status tugas tanpa status ganda', () => {
   fireEvent.change(screen.getByLabelText('Proyek'), {
     target: { value: '11111111-1111-4111-8111-111111111111' },
   });
-  const fokus = within(screen.getByRole('region', { name: 'Fokus hari ini' }));
-  expect(fokus.getByRole('link', { name: /Aktif gerai/ })).toBeTruthy();
-  expect(fokus.queryByRole('link', { name: /Aktif administrasi/ })).toBeNull();
-  expect(fokus.queryByRole('link', { name: /Selesai gerai/ })).toBeNull();
-  expect(screen.getByRole('img', { name: '50% selesai: 0 rencana, 1 dikerjakan, 1 selesai' })).toBeTruthy();
+  const tindakan = within(screen.getByRole('region', { name: 'Perlu tindakan' }));
+  expect(tindakan.getByRole('link', { name: /Aktif gerai/ })).toBeTruthy();
+  expect(tindakan.queryByRole('link', { name: /Aktif administrasi/ })).toBeNull();
+  expect(tindakan.queryByRole('link', { name: /Selesai gerai/ })).toBeNull();
+  const berjalan = within(screen.getByRole('region', { name: 'Pekerjaan berjalan' }));
+  expect(berjalan.getByRole('link', { name: /Gerai/ })).toBeTruthy();
+  expect(berjalan.queryByRole('link', { name: /Administrasi/ })).toBeNull();
   expect(screen.queryByText('Dibatalkan')).toBeNull();
 });

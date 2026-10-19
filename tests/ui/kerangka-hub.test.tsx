@@ -54,7 +54,7 @@ it('TabHub tidak dirender untuk hub satu tab atau halaman tanpa hub', () => {
   expect(container.innerHTML).toBe('');
 });
 
-it('sidebar berisi enam hub dan hub aktif mengikuti tab yang dibuka', () => {
+it('sidebar mendahulukan halaman kerja harian; hub lain di Ruang lain mengikuti tab yang dibuka', () => {
   nav.path = '/stok-opname';
   render(
     <AppShell>
@@ -65,7 +65,10 @@ it('sidebar berisi enam hub dan hub aktif mengikuti tab yang dibuka', () => {
   const tautan = within(sidebar).getAllByRole('link');
   expect(tautan.map((a) => a.getAttribute('aria-label'))).toEqual([
     'Beranda',
-    'Pekerjaan',
+    'Hari ini',
+    'Tugas',
+    'Proyek',
+    'Linimasa',
     'Catatan',
     'Usaha',
     'Koperasi',

@@ -6,7 +6,7 @@ const HALAMAN = [
   { href: '/dev/ruang-kerja', judul: 'Ruang kerja senada dunia 3D', isi: 'Menu web, kartu, tulisan, form, dan mode gelap dengan contoh lokal.' },
   { href: '/dev/dunia-3d', judul: 'Dunia 3D kosong', isi: 'Tanpa data: memeriksa keadaan kosong dan galat.' },
   { href: '/dev/dunia-3d?contoh=1', judul: 'Monitoring kantor 3D', isi: 'Kantor bersekat, ringkasan tugas, tim, rapat, dokumen, dan operasional dengan data contoh.' },
-  { href: '/dev/ikon', judul: 'Ikon biru kilap', isi: 'Semua ikon 3D dan thumbnail barang.' },
+  { href: '/dev/ikon', judul: 'Ikon dua nada', isi: 'Semua ikon 3D dan thumbnail barang.' },
   { href: '/dev/komponen', judul: 'Komponen UI', isi: 'Tombol, form, kartu, dan kontrol halaman operasional.' },
   { href: '/dev/popup', judul: 'Popup dan modal', isi: 'Semua dialog dengan data contoh.' },
 ];

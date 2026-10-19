@@ -28,7 +28,7 @@ import { IkonHalaman } from '@/components/ui/IkonHalaman';
 import { ManagerActionModal } from './ManagerActionModal';
 import { Modal } from '@/components/ui/Modal';
 import { Notifikasi } from '@/features/notifikasi/Notifikasi';
-import { HUBS, KAKI_SIDEBAR, hubUntuk, labelHalaman } from './navigasi';
+import { HUBS, KAKI_SIDEBAR, MENU_KERJA, RUANG_LAIN, hubUntuk, labelHalaman } from './navigasi';
 
 function getCoopShortName(title?: string): string {
   if (!title?.trim()) return 'Koperasi';
@@ -154,26 +154,52 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
       <a className="skip" href="#main">
         Lewati navigasi
       </a>
-      {/* Sidebar ala Taskflow: hanya enam hub; halaman lama tampil sebagai tab di bawah judul. */}
+      {/* Sidebar Lekuk: kerja harian dibuka langsung, hub lain di "Ruang lain" dengan tab di halamannya. */}
       <aside className="shell-sidebar" aria-label="Navigasi samping">
         <Link href="/beranda" className="shell-merek" title={coop} aria-label={`${coop}, buka Beranda`}>
           <Ikon3D kind="kantor" size={32} />
           <strong>{coop}</strong>
         </Link>
         <nav className="shell-hub" aria-label="Menu utama">
-          {HUBS.map((hub) => (
-            <Link
-              key={hub.id}
-              href={hub.tabs[0]}
-              aria-label={hub.label}
-              title={hub.label}
-              aria-current={hubAktif?.id === hub.id ? 'page' : undefined}
-            >
-              <IkonHalaman href={hub.ikon} size={22} />
-              <span className="shell-hub-label">{hub.label}</span>
-            </Link>
-          ))}
+          <div className="shell-kelompok">
+            <p className="shell-kelompok-judul">Kerja</p>
+            {MENU_KERJA.map((href) => (
+              <Link
+                key={href}
+                href={href}
+                aria-label={labelHalaman(href)}
+                title={labelHalaman(href)}
+                aria-current={path === href ? 'page' : undefined}
+              >
+                <IkonHalaman href={href} size={22} />
+                <span className="shell-hub-label">{labelHalaman(href)}</span>
+              </Link>
+            ))}
+          </div>
+          <div className="shell-kelompok">
+            <p className="shell-kelompok-judul">Ruang lain</p>
+            {RUANG_LAIN.map((hub) => (
+              <Link
+                key={hub.id}
+                href={hub.tabs[0]}
+                aria-label={hub.label}
+                title={hub.label}
+                aria-current={hubAktif?.id === hub.id ? 'page' : undefined}
+              >
+                <IkonHalaman href={hub.ikon} size={22} />
+                <span className="shell-hub-label">{hub.label}</span>
+              </Link>
+            ))}
+          </div>
         </nav>
+        {/* Tim adalah sumber daftar penanggung jawab tugas; satu klik ke halaman Tim. */}
+        <section className="shell-tim bertakik" aria-labelledby="shell-tim-judul">
+          <strong id="shell-tim-judul">Tim</strong>
+          <p>Daftar staf untuk penanggung jawab tugas.</p>
+          <Link href="/tim" className="takik-aksi" aria-label="Kelola tim" title="Kelola tim">
+            <ArrowUpRight size={18} aria-hidden="true" />
+          </Link>
+        </section>
         <nav className="shell-kaki" aria-label="Pengaturan dan bantuan">
           {KAKI_SIDEBAR.map((href) => (
             <Link

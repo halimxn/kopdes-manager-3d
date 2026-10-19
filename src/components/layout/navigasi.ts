@@ -20,6 +20,12 @@ export const HUBS: readonly Hub[] = [
 
 export const KAKI_SIDEBAR: readonly string[] = ['/pengaturan', '/panduan'];
 
+// Sidebar mendahulukan kerja harian (keputusan pemilik 19 Okt 2026): Beranda dan halaman hub
+// Pekerjaan dibuka langsung; hub lain tetap satu klik di "Ruang lain" dengan tab di halamannya.
+const HUB_KERJA = ['beranda', 'pekerjaan'];
+export const MENU_KERJA: readonly string[] = HUBS.filter((hub) => HUB_KERJA.includes(hub.id)).flatMap((hub) => hub.tabs);
+export const RUANG_LAIN: readonly Hub[] = HUBS.filter((hub) => !HUB_KERJA.includes(hub.id));
+
 export function hubUntuk(path: string): Hub | undefined {
   const bersih = path.split(/[?#]/)[0];
   return HUBS.find((hub) => hub.tabs.includes(bersih));

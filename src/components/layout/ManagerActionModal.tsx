@@ -17,7 +17,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
-/** Ikon biru kilap tiap aksi, senada dengan ikon halaman tujuannya. */
+/** Ikon dua nada tiap aksi, senada dengan ikon halaman tujuannya. */
 const IKON_AKSI: Record<string, Ikon3DKind> = {
   'cash-in': 'dompet',
   'cash-out': 'dompet',

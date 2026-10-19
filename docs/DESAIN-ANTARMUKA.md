@@ -1,4 +1,4 @@
-# Acuan desain antarmuka — 15 Oktober 2026
+# Acuan desain antarmuka — 19 Oktober 2026
 
 ## Prioritas dan lingkup
 
@@ -7,9 +7,9 @@ Arahan 10 Oktober 2026: dunia meniru panel logistik referensi, dan **seluruh web
 | Permukaan | Gaya dan sumber |
 |---|---|
 | Dunia Koperasi `/dunia-koperasi` | Diorama lembut, kartu mengambang, menu lokasi/cuaca. `src/features/dunia-3d/monitoring.css`. |
-| Halaman operasional | Gaya Taskflow: latar abu terang #F5F5F7, kartu putih sudut 16 px, aksen tunggal biru #546FFF, tinta #141522, sidebar enam hub + tab hub di bawah judul, Plus Jakarta Sans; terang/gelap. Sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
+| Halaman operasional | Gaya Merah Putih Lekuk: latar putih susu #F7F1EC, kartu putih datar sudut 22–24 px dengan takik berisi satu tombol aksi, pil dan tombol bulat, aksen tunggal delima #A04656, tinta cokelat gelap #24191D, sidebar Kerja + Ruang lain + kartu Tim, tab hub di bawah judul, Plus Jakarta Sans; terang/gelap hangat. Token dan komponen di [DESIGN](../DESIGN.md); sistem gaya `src/styles/` (`token.css` → `dasar.css` → `komponen.css` → `kerangka.css` → `halaman/*.css`). |
 
-Pilihan palet lama tidak dipakai lagi: semua palet tersimpan tampil dengan tema biru yang sama, dan Pengaturan hanya memilih terang/gelap/sistem. Status tetap memakai warna semantik (hijau aman, kuning peringatan, merah terlambat) plus teks.
+Pilihan palet lama tidak dipakai lagi: semua palet tersimpan tampil dengan tema Merah Putih yang sama, dan Pengaturan hanya memilih terang/gelap/sistem. Status tetap memakai warna semantik (hijau aman, kuning peringatan, merah terlambat) plus teks.
 
 ## Dunia Koperasi
 
@@ -17,7 +17,8 @@ Seluruh palet, komposisi kartu, scene, karakter, waktu, kendaraan dan rencana up
 
 ## Halaman operasional
 
-- **Gaya Taskflow (16 Oktober 2026, menggantikan Cerah)**, mengikuti referensi Figma Taskflow dan Free Task Management Dashboard: sidebar putih enam hub (Beranda, Pekerjaan, Catatan, Usaha, Koperasi, Dunia; `src/components/layout/navigasi.ts`), halaman lama menjadi tab hub (`TabHub`) dengan URL tetap, kepala halaman memuat satu-satunya `h1` + cari + lonceng + Tambah + profil, kartu bersampul warna hub (`--sampul-*`) dan ikon tanpa foto, progres bertulis persen, avatar inisial, Beranda dengan panel kanan (kalender mini + agenda) pada ≥ 1440 px. Tablet memakai sidebar ikon 72 px; ponsel memakai dok lima item (Beranda, Pekerjaan, Tambah, Dunia, Menu) dan lembar menu berisi semua hub. Spec: `docs/superpowers/specs/2026-10-16-desain-taskflow-design.md`.
+- **Gaya Merah Putih Lekuk (19 Oktober 2026, menggantikan Taskflow)**, dipilih pemilik setelah banyak putaran prototipe (arsip di `docs/desain/`): merah putih yang halus (delima lembut, putih susu, pastel jambu/kunyit/pandan/talas), kartu datar bertakik, pil, tombol bulat, mode gelap hangat. Sidebar desktop mendahulukan kerja harian: kelompok Kerja (Beranda, Hari ini, Tugas, Proyek, Linimasa), lalu Ruang lain (Catatan, Usaha, Koperasi, Dunia) dan kartu Tim; rel ikon di tablet; ponsel memakai dok pil Beranda/Tugas/Rapat/Lainnya (label hanya pada yang aktif) + tombol tambah bulat. URL dan tab hub tidak berubah. Rincian token dan komponen di [DESIGN](../DESIGN.md).
+- **Gaya Taskflow (16 Oktober 2026, diganti 19 Oktober)**, mengikuti referensi Figma Taskflow dan Free Task Management Dashboard: sidebar putih enam hub (Beranda, Pekerjaan, Catatan, Usaha, Koperasi, Dunia; `src/components/layout/navigasi.ts`), halaman lama menjadi tab hub (`TabHub`) dengan URL tetap, kepala halaman memuat satu-satunya `h1` + cari + lonceng + Tambah + profil, kartu bersampul warna hub (`--sampul-*`) dan ikon tanpa foto, progres bertulis persen, avatar inisial, Beranda dengan panel kanan (kalender mini + agenda) pada ≥ 1440 px. Tablet memakai sidebar ikon 72 px; ponsel memakai dok lima item (Beranda, Pekerjaan, Tambah, Dunia, Menu) dan lembar menu berisi semua hub. Spec: `docs/superpowers/specs/2026-10-16-desain-taskflow-design.md`.
 - **Gaya Cerah (16 Oktober 2026, diganti)**, dipilih pemilik lewat mockup kanvas dari referensi M.project (kerangka), Ckdulz (kalender), Seonizer (tabel/gauge), Selles Lab (grafik pembanding); menggantikan Senja:
   - Latar `#F4F5FA`, kartu putih tanpa garis (`--kartu-garis` transparan; garis hanya di mode gelap) dengan bayangan tipis, teks biru tua `#171A3A`/`#2E3250`; mode gelap biru malam.
   - Bersih dan tenang: warna jenuh hanya untuk grafik, status, dan tombol utama (± 10% layar). Ringkasan kepala halaman berupa satu baris teks, bukan deretan chip. Tanpa ubin ikon di judul kartu, tanpa kartu promosi di menu.
@@ -27,16 +28,16 @@ Seluruh palet, komposisi kartu, scene, karakter, waktu, kendaraan dan rencana up
   - Ubin ikon semi-3D (`.ubin` + `ubin-biru/ungu/oranye/teal/pink`, `ubin-kecil` untuk judul kartu) dan avatar berwarna tetap per orang (`.avatar-warna`), keduanya di `komponen.css`.
   - Menu samping putih, halaman aktif biru muda. Ruang kerja dan Kegiatan terbuka; Buku koperasi, Gerai & laporan, Koordinasi & berkas, Pengaturan dilipat dengan jumlah halaman; kelompok berisi halaman aktif selalu terbuka. Favorit kosong secara bawaan.
   - Grafik lembut (`components/charts/GrafikLembut.tsx`): SVG tanpa pustaka, garis 2–2,5 px melengkung, isi gradien memudar ke bawah, garis bantu samar, ujung bulat, muncul pelan (diam bila gerak dikurangi). Pembanding periode lalu berupa garis putus-putus dengan tooltip.
-- **Beranda** (grid 12 kolom; tablet 2 kolom; ponsel 1 kolom dengan Kehadiran dan Status berdampingan): sapaan sesuai jam + tanggal + satu baris ringkasan; susunan mengikuti M.project: kartu proyek berwarna (ubin, tumpukan avatar, progres bergaris, sisa hari ke milestone) + Progres keseluruhan (donat); grafik performa kas + Agenda + Perlu perhatian; Tim hari ini + Fokus hari ini (butir berbingkai) + Penjualan gerai (batang pil). Ponsel: kartu proyek berupa carousel geser; Fokus hari ini (Terlambat, Hari ini, atau Berikutnya) + Agenda (rutinitas dan rapat dalam satu rel jam); Uang masuk/keluar kumulatif bulan ini vs bulan lalu (memuat kas dua bulan sendiri) + Penjualan gerai 7 hari; Kehadiran (gauge), Status tugas (donat), Proyek berjalan (batang ungu bergaris). Kegiatan terbaru ada di halaman Kegiatan; Grafik pekerjaan digantikan donat status.
+- **Beranda** (19 Oktober 2026): sapaan sesuai jam WIB + tanggal + satu baris ringkasan (terlambat, jatuh tempo), pilihan proyek, tombol "Salin laporan hari ini" (teks polos untuk grup WhatsApp pengurus; dialog cadangan bila clipboard ditolak); tambah cepat satu kalimat (`@nama` dari Tim, `#proyek`, `!prioritas`, besok/lusa/nama hari/tgl-bln) yang membuka form tugas terisi, tidak menyimpan sendiri; grid dua kolom: Rutin harian (kartu delima, centang, berikutnya, konfeti saat beres) | Agenda hari ini (hitung mundur, linimasa, garis sekarang, Gabung, Catat hasil ke jurnal), Perlu tindakan (tugas terlambat/hari ini + pengingat dokumen, isu, risiko, stok) | Minggu ini (pita Senin–Minggu, pilih hari); lalu Pekerjaan berjalan (kartu proyek bergulir) dan usaha harian (kas, penjualan, kehadiran). Satu kolom bila area halaman < 860 px.
 
-- **Pola tata letak (11 Oktober 2026)**: tabel = judul teks rata kiri dengan ikon/avatar di kiri, kolom selebar isi, aksi satu baris (ikon bila lebih dari dua); kartu daftar = tinggi rata per baris, aksi di dasar kartu dipisah garis tipis, informasi tidak diulang antara cip dan badan kartu; tabel Tugas/Kegiatan tampil sebagai kartu bila area halaman < 900 px (container query, bukan lebar layar, karena sidebar), dan Buku koperasi memakai tampilan kartu di layar < 1280 px. Warna hanya untuk status (lencana lembut), bukan garis aksen kartu. Satu set warna: biru tema untuk aksen dan kategori; token `--pastel-emerald/rose/amber-*` hanya untuk status selesai/terlambat/perlu perhatian; abu untuk netral. Judul halaman = ikon halaman + 22 px tebal; kode dan jam memakai angka rata (`tabular-nums`).
+- **Pola tata letak (11 Oktober 2026)**: tabel = judul teks rata kiri dengan ikon/avatar di kiri, kolom selebar isi, aksi satu baris (ikon bila lebih dari dua); kartu daftar = tinggi rata per baris, aksi di dasar kartu dipisah garis tipis, informasi tidak diulang antara cip dan badan kartu; tabel Tugas/Kegiatan tampil sebagai kartu bila area halaman < 900 px (container query, bukan lebar layar, karena sidebar), dan Buku koperasi memakai tampilan kartu di layar < 1280 px. Warna hanya untuk status (lencana lembut), bukan garis aksen kartu. Satu set warna: delima tema untuk aksen, pastel untuk kategori; token `--pastel-emerald/rose/amber-*` hanya untuk status selesai/terlambat/perlu perhatian; abu untuk netral. Judul halaman = ikon halaman + 22 px tebal; kode dan jam memakai angka rata (`tabular-nums`).
 
 - **Laci detail** (`records/RecordDrawer.tsx`) untuk semua catatan selain tugas: Detail · Terkait · Riwayat, tombol Ubah dan Lihat di dunia, saran langkah berikut. Desktop panel kanan, ponsel lembar bawah. `?record=` membuka laci, `?ubah=1` langsung form. Laci tugas memuat bagian Terkait yang sama.
 - **Kepala daftar**: ikon halaman, judul, ringkasan angka per status. **Kartu catatan**: cip info kunci per jenis (`ringkasan()`), avatar staf, pil status, aksi kecil berjajar.
 - **Saran** hanya membuka form terisi (`?baru=1&isi.<kolom>=…`); tidak ada penulisan otomatis.
-- Menu: Perlu perhatian menjadi bagian Beranda (`#perhatian`); Ringkasan buku tetap tab Buku koperasi, tidak di menu samping.
+- Menu: Perlu tindakan (dulu Perlu perhatian) menjadi bagian Beranda (`#perhatian`); Ringkasan buku tetap tab Buku koperasi, tidak di menu samping.
 
-- Ikon halaman biru kilap dalam ubin biru muda (`IkonHalaman`) di menu samping, rel, menu ponsel, dock; halaman aktif bercincin biru. Kartu statistik, keadaan kosong dan pusat aksi memakai ikon yang sama; barang memakai thumbnail berwarna.
+- Ikon halaman dua nada delima (`IkonHalaman`, `Ikon3D`, token `--ikon-*`) di menu samping, rel, menu ponsel, dok; menu aktif berisi delima. Kartu statistik, keadaan kosong dan pusat aksi memakai ikon yang sama; barang memakai thumbnail berwarna.
 - Dialog muat di layar dan bergulir di dalam; di ponsel menjadi lembar bawah selebar layar. Catatan unit, staf, barang, pengiriman, tugas dan rapat punya tombol "Lihat di dunia".
 - Menu memakai bahasa Indonesia langsung dan kapitalisasi kalimat; judul/deskripsi panjang membungkus. Dunia tersedia di bilah atas dan dock ponsel; Tambah membuka pilihan pencatatan yang sama di semua ukuran.
 - Ikon 3D adalah SVG dari kode, tanpa memuat WebGL.
@@ -46,7 +47,7 @@ Seluruh palet, komposisi kartu, scene, karakter, waktu, kendaraan dan rencana up
 - Judul lebih utama dari kode; metadata dan aksi terpisah, label panjang membungkus. Tidak ada capaian tiruan, slogan atau tim palsu.
 - DateInput/DateField dan Select bersama; kalender ke bawah dalam batas panel, menu dapat menggulir. Form ponsel satu kolom.
 - Status berupa teks selain warna. Memuat/kosong/galat harus berbeda; galat tidak menjadi angka nol.
-- Perlu Perhatian memakai permukaan netral dan rincian bertautan sumber.
+- Perlu tindakan memakai permukaan netral dan rincian bertautan sumber.
 
 ## Akses dan bukti
 

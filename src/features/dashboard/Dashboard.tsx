@@ -3,37 +3,37 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { EmptyState } from '@/components/ui/EmptyState';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import { z } from 'zod';
 import { usePreference } from '@/lib/usePreference';
 import { Modal } from '@/components/ui/Modal';
+import { Toast } from '@/components/ui/Toast';
 import {
-  Bell,
+  ArrowUpRight,
   CalendarDays,
   Check,
+  ClipboardCopy,
   Clock,
-  ListChecks,
-  Video,
-  SlidersHorizontal,
   Plus,
-  Trash2,
   RotateCcw,
+  SlidersHorizontal,
+  Trash2,
+  Video,
   X,
 } from 'lucide-react';
 import { getFollowUps, recordHref } from '../workspace/workspace-navigation';
 import type { Workspace } from '../workspace/useWorkspace';
 import { schemas } from '../records/schemas';
 import { isOverdue, scopeProgress } from '@/lib/progress';
-import { today, formatDate, daysBetween } from '@/lib/date';
+import { today, formatDate, daysBetween, hariSeminggu } from '@/lib/date';
 import { meetingJoinUrl } from '../meetings/meeting';
-import { Donat } from '@/components/charts/GrafikLembut';
 import { ModulUsahaHarian } from './ModulUsahaHarian';
 import { KasBanding, useKasDuaBulan } from './KasBanding';
 import { Select } from '@/components/ui/Select';
 import { KartuPekerjaan } from './KartuPekerjaan';
-import { KalenderMini } from './KalenderMini';
+import { bacaTambahCepat, selisihMenit, susunLaporanHarian, tambahMenit, teksSisaWaktu } from './beranda-bantu';
 
-const WARNA_AVATAR = ['biru', 'ungu', 'oranye', 'teal', 'pink'] as const;
+const WARNA_AVATAR = ['delima', 'ungu', 'oranye', 'teal', 'pink'] as const;
 /** Warna avatar tetap per nama agar orang yang sama selalu berwarna sama. */
 function warnaAvatar(nama: string) {
   let h = 0;
@@ -47,6 +47,18 @@ const inisial = (nama: string) =>
     .slice(0, 2)
     .map((kata) => kata[0].toUpperCase())
     .join('') || '?';
+const jamTitik = (jam: string) => jam.replace(':', '.');
+const hariPendek = new Intl.DateTimeFormat('id-ID', { weekday: 'short', timeZone: 'UTC' });
+const hariPanjang = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+const tanggalUtc = (iso: string) => new Date(iso + 'T12:00:00Z');
+
+// Konfeti perayaan rutin beres: posisi tetap (bukan acak) agar render tetap murni.
+const KONFETI = Array.from({ length: 18 }, (_, i) => ({
+  x: Math.round(Math.cos((i / 18) * Math.PI * 2) * (70 + (i % 3) * 34)),
+  y: -36 - ((i * 23) % 80),
+  r: (i * 47) % 360,
+  warna: ['var(--on-brand)', 'var(--pastel-mentega)', 'var(--pastel-mint)', 'var(--pastel-pink)'][i % 4],
+}));
 
 const routineSchema = z.array(z.object({ id: z.string(), time: z.string(), title: z.string() }));
 function parseRoutinePreference<T>(text: string, schema: z.ZodType<T>, fallback: T): T {
@@ -73,7 +85,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     (project) => project.data.status !== 'diarsipkan' && (!projectId || project.id === projectId),
   );
 
-  // Rutinitas harian manajer gerai; daftar bawaan bisa diubah lewat Atur
+  // Rutinitas harian manajer gerai; daftar bawaan (standar KDMP) bisa diubah lewat Atur
   const ROUTINE_CONFIG_KEY = 'kdmp_manager_routine_config';
   const ROUTINE_KEY = `kdmp_manager_routine_${now}`;
   const DEFAULT_ROUTINES = [
@@ -98,6 +110,22 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
   const [showRoutineModal, setShowRoutineModal] = useState(false);
   const [newRoutineTime, setNewRoutineTime] = useState('08:00');
   const [newRoutineTitle, setNewRoutineTitle] = useState('');
+  const [pesan, setPesan] = useState('');
+  const [rayakan, setRayakan] = useState(0);
+  const [laporanManual, setLaporanManual] = useState('');
+  const [tambahTeks, setTambahTeks] = useState('');
+  const [hariPilih, setHariPilih] = useState(now);
+
+  useEffect(() => {
+    if (!pesan) return;
+    const timer = window.setTimeout(() => setPesan(''), 4000);
+    return () => window.clearTimeout(timer);
+  }, [pesan]);
+  useEffect(() => {
+    if (!rayakan) return;
+    const timer = window.setTimeout(() => setRayakan(0), 1400);
+    return () => window.clearTimeout(timer);
+  }, [rayakan]);
 
   function saveRoutines(items: typeof DEFAULT_ROUTINES) {
     setRoutineText(JSON.stringify(items));
@@ -149,6 +177,11 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
       ? completedRoutines.filter((item) => item !== id)
       : [...completedRoutines, id];
     setCompletedText(JSON.stringify(next));
+    // Perayaan hanya saat centang terakhir membuat semua rutin beres, bukan saat membuka ulang.
+    if (!semuaRutinSelesai && routines.length > 0 && routines.every((r) => next.includes(r.id))) {
+      setRayakan((kali) => kali + 1);
+      setPesan('Rutin hari ini beres semua.');
+    }
   }
 
   // Fokus hari ini: tenggat terlewat dan jatuh tempo hari ini; bila kosong, tenggat terdekat.
@@ -162,9 +195,13 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
   const namaProyek = (id: string) => String(projects.find((p) => p.id === id)?.data.title || '');
   const overdueCount = fokusTerlambat.length;
   const dueTodayCount = fokusHariIni.length;
-  const perhatian = getFollowUps(data, now);
+  // Tugas dan rapat sudah tampil di Perlu tindakan dan Agenda; pengingat lain (dokumen, stok, risiko) menyusul.
+  const perhatianLain = getFollowUps(data, now).filter(
+    (item) => !item.id.startsWith('work-items:') && !item.id.startsWith('meetings:'),
+  );
   const kas = useKasDuaBulan(now);
   const namaManajer = String(data.organization?.[0]?.data.manager || '').split(' ')[0];
+  const namaKoperasi = String(data.organization?.[0]?.data.title || '');
   const jam = Number(jamSekarang.slice(0, 2));
   const sapaan = !jamSekarang ? 'Halo' : jam < 11 ? 'Selamat pagi' : jam < 15 ? 'Selamat siang' : jam < 18 ? 'Selamat sore' : 'Selamat malam';
 
@@ -175,26 +212,25 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     timeZone: 'Asia/Jakarta',
   }).format(new Date(now + 'T12:00:00Z'));
 
-  // Status tugas untuk donat; Dibatalkan hanya tampil bila ada.
-  const jumlahStatus = (status: string) => tasks.filter((t) => t.status === status).length;
-  const statusTugas = [
-    { label: 'Rencana', nilai: jumlahStatus('rencana'), warna: 'var(--grafik-biru)' },
-    { label: 'Dikerjakan', nilai: jumlahStatus('proses'), warna: 'var(--grafik-oranye)' },
-    { label: 'Selesai', nilai: jumlahStatus('selesai'), warna: 'var(--grafik-teal)' },
-    { label: 'Dibatalkan', nilai: jumlahStatus('dibatalkan'), warna: 'var(--ink-subtle)' },
-  ].filter((b) => b.label !== 'Dibatalkan' || b.nilai > 0);
-
-  // Agenda hari ini: rapat hari ini dan rutinitas dalam satu urutan jam.
-  const rapatHariIni = (data.meetings || [])
-    .filter((m) => String(m.data.date) === now && m.data.status !== 'dibatalkan')
-    .sort((a, b) => String(a.data.time || '99').localeCompare(String(b.data.time || '99')));
-  const rapatBerikutnya = rapatHariIni.find(
-    (m) => m.data.status !== 'selesai' && (!jamSekarang || String(m.data.time || '') >= jamSekarang),
-  );
-  const agenda = [
-    ...routines.map((r) => ({ jenis: 'rutin' as const, jam: r.time, rutin: r, rapat: undefined })),
-    ...rapatHariIni.map((m) => ({ jenis: 'rapat' as const, jam: String(m.data.time || ''), rutin: undefined, rapat: m })),
-  ].sort((a, b) => (a.jam || '99').localeCompare(b.jam || '99'));
+  // Agenda hari ini memakai jam mulai + durasi untuk menandai lewat/berlangsung/nanti.
+  const urutJam = (a: { data: Record<string, unknown> }, b: { data: Record<string, unknown> }) =>
+    String(a.data.time || '99').localeCompare(String(b.data.time || '99'));
+  // Skema rapat kini tanpa status, tetapi data lama bisa membawanya; rapat yang dibatalkan tidak ditampilkan.
+  const rapatAktif = (data.meetings || []).filter((m) => m.data.status !== 'dibatalkan');
+  const rapatHariIni = rapatAktif.filter((m) => String(m.data.date) === now).sort(urutJam);
+  const keadaanRapat = (m: (typeof rapatHariIni)[number]) => {
+    const mulai = String(m.data.time || '');
+    if (!mulai || !jamSekarang) return 'nanti';
+    if (tambahMenit(mulai, Number(m.data.duration) || 60) <= jamSekarang) return 'lewat';
+    return mulai <= jamSekarang ? 'kini' : 'nanti';
+  };
+  const rapatBerikutnya = rapatHariIni.find((m) => keadaanRapat(m) !== 'lewat');
+  // Garis "sekarang" dipasang tepat sebelum rapat pertama yang belum mulai.
+  const idRapatSetelahKini = jamSekarang ? rapatHariIni.find((m) => keadaanRapat(m) === 'nanti')?.id : undefined;
+  const menitKeRapat =
+    rapatBerikutnya && jamSekarang && keadaanRapat(rapatBerikutnya) === 'nanti'
+      ? selisihMenit(jamSekarang, String(rapatBerikutnya.data.time))
+      : null;
 
   // Proyek: progres dan milestone terdekat yang belum tercapai.
   const milestoneBerikut = (projectId_: string) =>
@@ -202,62 +238,402 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
       .filter((m) => m.data.workstream_id === projectId_ && !m.data.actual_date)
       .sort((a, b) => String(a.data.due_date).localeCompare(String(b.data.due_date)))[0];
 
-  const warnaProyek = (i: number) => WARNA_AVATAR[(i + 1) % WARNA_AVATAR.length];
-  const indeksProyek = (id: string) => Math.max(0, projects.findIndex((p) => p.id === id));
-  const persenSelesai = tasks.length ? Math.round((jumlahStatus('selesai') / tasks.length) * 100) : 0;
   const fokus = [
     ...fokusTerlambat.map((t) => ({ t, jenis: 'telat' as const })),
     ...fokusHariIni.map((t) => ({ t, jenis: 'hari-ini' as const })),
     ...fokusBerikut.map((t) => ({ t, jenis: 'nanti' as const })),
   ].slice(0, 6);
 
-  // Kalender mini menandai tanggal tenggat tugas aktif dan rapat yang belum dibatalkan.
-  const tanggalBerkegiatan = [
-    ...open.map((t) => t.due_date).filter(Boolean),
-    ...(data.meetings || []).filter((m) => m.data.status !== 'dibatalkan').map((m) => String(m.data.date || '')),
-  ];
+  // Minggu ini: pita Senin–Minggu; hari yang dipilih menampilkan rapat dan tugas terbukanya.
+  const minggu = hariSeminggu(now);
+  const isiHari = (tanggal: string) => ({
+    tugas: open.filter((t) => t.due_date === tanggal),
+    rapat: rapatAktif.filter((m) => String(m.data.date) === tanggal).sort(urutJam),
+  });
+  const pilihan = isiHari(hariPilih);
+
+  function kirimTambahCepat(event: FormEvent) {
+    event.preventDefault();
+    if (!tambahTeks.trim()) return;
+    const isian = bacaTambahCepat(tambahTeks, {
+      hariIni: now,
+      staf: (data.staff || []).map((s) => String(s.data.title)).filter(Boolean),
+      proyek: projects.map((p) => ({ id: p.id, title: String(p.data.title) })),
+    });
+    // Form tugas yang sama dengan tombol Tambah: manajer memeriksa isian sebelum menyimpan.
+    window.dispatchEvent(new CustomEvent('hub-task', { detail: isian }));
+    setTambahTeks('');
+  }
+
+  async function salinLaporan() {
+    const teks = susunLaporanHarian({
+      tanggal: now,
+      koperasi: namaKoperasi || undefined,
+      rutin: routines.map((r) => ({ judul: r.title, jam: r.time, selesai: completedRoutines.includes(r.id) })),
+      tugas: allTasks.map((t) => ({
+        judul: t.title,
+        status: t.status,
+        tenggat: t.due_date,
+        selesaiPada: t.completed_at || undefined,
+        pic: t.assignee || undefined,
+      })),
+      rapat: data.meetings ? rapatHariIni.map((m) => ({ judul: String(m.data.title), jam: String(m.data.time || '') || undefined })) : undefined,
+      kegiatan: data.journal
+        ? data.journal.filter((j) => String(j.data.date) === now).map((j) => ({ judul: String(j.data.title) }))
+        : undefined,
+    });
+    try {
+      await navigator.clipboard.writeText(teks);
+      setPesan('Laporan hari ini disalin. Tempel di grup WhatsApp pengurus.');
+    } catch {
+      setLaporanManual(teks);
+    }
+  }
+
+  const catatHasil = (m: (typeof rapatHariIni)[number]) =>
+    `/jurnal?${new URLSearchParams({ baru: '1', 'isi.meeting_id': m.id, 'isi.title': `Hasil: ${String(m.data.title)}`, 'isi.date': now })}`;
+  const persenRutin = routines.length ? Math.round((routineCompletedCount / routines.length) * 100) : 0;
 
   return (
     <div className="manager-home beranda">
-      <div className="beranda-utama">
-      <header className="modul beranda-kepala">
-        <div>
-          <p className="beranda-sapaan">
+      <header className="beranda-kepala">
+        <div className="beranda-sapa">
+          <h2>
             {sapaan}
             {namaManajer ? `, ${namaManajer}` : ''}
-          </p>
-          <h2>{tanggalPanjang}</h2>
+          </h2>
           <p className="beranda-ringkas">
+            {tanggalPanjang}
+            {' · '}
             <Link href="/tugas?status=terlambat" className={overdueCount ? 'is-telat' : undefined}>
               {overdueCount} terlambat
             </Link>
             {' · '}
             <Link href="/hari-ini">{dueTodayCount} jatuh tempo hari ini</Link>
-            {rapatBerikutnya && (
-              <>
-                {' · '}
-                <Link href={recordHref('meetings', rapatBerikutnya)}>
-                  rapat {String(rapatBerikutnya.data.time || 'hari ini')}
-                </Link>
-              </>
-            )}
           </p>
         </div>
-        <label className="beranda-proyek">
-          <span className="sr-only">Proyek</span>
-          <Select
-            value={projectId}
-            onChange={setProjectId}
-            options={[
-              { value: '', label: 'Semua proyek' },
-              ...projects.map((project) => ({ value: project.id, label: String(project.data.title) })),
-            ]}
-            ariaLabel="Proyek"
-          />
-        </label>
+        <div className="beranda-kepala-aksi">
+          <label className="beranda-proyek">
+            <span className="sr-only">Proyek</span>
+            <Select
+              value={projectId}
+              onChange={setProjectId}
+              options={[
+                { value: '', label: 'Semua proyek' },
+                ...projects.map((project) => ({ value: project.id, label: String(project.data.title) })),
+              ]}
+              ariaLabel="Proyek"
+            />
+          </label>
+          <Button type="button" className="beranda-salin" onClick={() => void salinLaporan()}>
+            <ClipboardCopy size={16} aria-hidden="true" />
+            <span>
+              Salin laporan<span className="beranda-salin-ekor"> hari ini</span>
+            </span>
+          </Button>
+        </div>
       </header>
 
-      {/* Baris kartu proyek bersampul warna hub, bergulir mendatar (pola Taskflow) */}
+      <form className="beranda-tambah" onSubmit={kirimTambahCepat}>
+        <label htmlFor="beranda-tambah-isi">Tambah tugas</label>
+        <Input
+          id="beranda-tambah-isi"
+          value={tambahTeks}
+          onChange={(e) => setTambahTeks(e.target.value)}
+          placeholder="Cek stok gula @Budi #gerai besok !tinggi"
+          autoComplete="off"
+          aria-describedby="beranda-tambah-petunjuk"
+        />
+        <Button type="submit" primary>
+          <Plus size={16} aria-hidden="true" />
+          <span>Buat</span>
+        </Button>
+        <p id="beranda-tambah-petunjuk">
+          <b>@nama</b> penanggung jawab · <b>#proyek</b> · <b>!tinggi</b> atau <b>!mendesak</b> · <b>besok</b>, <b>lusa</b>, nama hari, atau tgl/bln
+        </p>
+      </form>
+
+      <div className="beranda-grid">
+        <section className="modul bertakik beranda-rutin" aria-labelledby="judul-rutin">
+          <div className="modul-kepala">
+            <h2 id="judul-rutin">Rutin harian</h2>
+            <span className={`beranda-jumlah${semuaRutinSelesai ? ' is-selesai' : ''}`}>
+              {routineCompletedCount}/{routines.length}
+            </span>
+          </div>
+          <button
+            type="button"
+            className="takik-aksi"
+            onClick={() => setShowRoutineModal(true)}
+            aria-label="Atur rutinitas"
+            title="Atur rutinitas"
+          >
+            <SlidersHorizontal size={18} aria-hidden="true" />
+          </button>
+          <div
+            className="rutin-progres"
+            role="progressbar"
+            aria-label="Rutin selesai"
+            aria-valuemin={0}
+            aria-valuemax={routines.length}
+            aria-valuenow={routineCompletedCount}
+          >
+            <i style={{ '--isi': `${persenRutin}%` } as CSSProperties} />
+          </div>
+          {routines.length ? (
+            <ol className="rutin-daftar">
+              {routines.map((item) => {
+                const isChecked = completedRoutines.includes(item.id);
+                const berikutnya = item.id === routineBerikutnya;
+                const terlewat = !isChecked && Boolean(jamSekarang) && item.time < jamSekarang;
+                const keadaan = isChecked ? 'is-selesai' : berikutnya ? 'is-berikutnya' : terlewat ? 'is-terlewat' : '';
+                return (
+                  <li key={item.id} className={`rutin-butir ${keadaan}`}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        className="rutin-centang"
+                        checked={isChecked}
+                        onChange={() => toggleRoutine(item.id)}
+                      />
+                      <span className="rutin-simpul" aria-hidden="true">
+                        <Check size={14} strokeWidth={3} />
+                      </span>
+                      <span className="rutin-jam">{jamTitik(item.time)}</span>
+                      <span className="rutin-isi">
+                        <span className="rutin-judul">{item.title}</span>
+                        {berikutnya && <small className="rutin-label">Berikutnya</small>}
+                        {terlewat && <span className="sr-only">Jam sudah lewat</span>}
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <div className="rutin-kosong">
+              <p>Belum ada rutinitas. Mulai dari daftar standar KDMP, lalu ubah sesuai kebutuhan.</p>
+              <Button type="button" onClick={handleResetRoutines}>
+                Pakai rutinitas standar
+              </Button>
+            </div>
+          )}
+          {rayakan > 0 && (
+            <div key={rayakan} className="konfeti" aria-hidden="true">
+              {KONFETI.map((k, i) => (
+                <i
+                  key={i}
+                  style={{ '--x': `${k.x}px`, '--y': `${k.y}px`, '--r': `${k.r}deg`, background: k.warna } as CSSProperties}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="modul bertakik beranda-agenda" aria-labelledby="judul-agenda">
+          <div className="modul-kepala">
+            <h2 id="judul-agenda">Agenda hari ini</h2>
+            <span className="beranda-jumlah">{rapatHariIni.length} rapat</span>
+          </div>
+          <Link
+            href={`/rapat?${new URLSearchParams({ baru: '1', 'isi.date': now })}`}
+            className="takik-aksi"
+            aria-label="Jadwalkan rapat"
+            title="Jadwalkan rapat"
+          >
+            <Plus size={18} aria-hidden="true" />
+          </Link>
+          {rapatBerikutnya && menitKeRapat !== null && (
+            <p className="agenda-hitung">
+              <span className="agenda-denyut" aria-hidden="true" />
+              <span className="agenda-hitung-judul">
+                Berikutnya <strong>{String(rapatBerikutnya.data.title)}</strong>
+              </span>
+              <span className="agenda-sisa">{teksSisaWaktu(menitKeRapat)}</span>
+            </p>
+          )}
+          {rapatHariIni.length ? (
+            <ol className="agenda-linimasa">
+              {rapatHariIni.map((m) => {
+                const keadaan = keadaanRapat(m);
+                const mulai = String(m.data.time || '');
+                const selesai = mulai ? tambahMenit(mulai, Number(m.data.duration) || 60) : '';
+                const url = meetingJoinUrl(m);
+                const tandaiKini = m.id === idRapatSetelahKini;
+                return (
+                  <li
+                    key={m.id}
+                    className={`agenda-butir is-${keadaan}`}
+                    data-kini={tandaiKini ? `${jamTitik(jamSekarang)} sekarang` : undefined}
+                  >
+                    <span className="agenda-jam">
+                      <b>{mulai ? jamTitik(mulai) : '—'}</b>
+                      {selesai && <small>{jamTitik(selesai)}</small>}
+                    </span>
+                    <div className="agenda-isi">
+                      <Link href={recordHref('meetings', m)} className="agenda-judul">
+                        {String(m.data.title)}
+                      </Link>
+                      <small className="agenda-tempat">
+                        {String(m.data.mode || 'tatap muka') === 'online'
+                          ? 'Rapat online'
+                          : String(m.data.location || 'Tatap muka')}
+                        {keadaan === 'kini' ? ' · sedang berlangsung' : keadaan === 'lewat' ? ' · selesai' : ''}
+                      </small>
+                      {((url && keadaan !== 'lewat') || keadaan === 'lewat') && (
+                        <span className="agenda-aksi">
+                          {url && keadaan !== 'lewat' && (
+                            <a href={url} target="_blank" rel="noreferrer" className="agenda-tombol is-utama">
+                              <Video size={14} aria-hidden="true" /> Gabung
+                            </a>
+                          )}
+                          {keadaan === 'lewat' && (
+                            <Link href={catatHasil(m)} className="agenda-tombol">
+                              Catat hasil
+                            </Link>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <EmptyState
+              compact
+              ikon="kalender"
+              title="Tidak ada rapat hari ini"
+              description="Rapat, kunjungan, atau rapat online yang dijadwalkan untuk hari ini akan tampil di sini."
+            />
+          )}
+        </section>
+
+        <section id="perhatian" className="modul bertakik beranda-tindakan" aria-labelledby="judul-tindakan">
+          <div className="modul-kepala">
+            <h2 id="judul-tindakan">Perlu tindakan</h2>
+            <span className="beranda-jumlah">{fokusTerlambat.length + fokusHariIni.length + perhatianLain.length}</span>
+          </div>
+          <Link href="/tugas" className="takik-aksi" aria-label="Buka semua tugas" title="Buka semua tugas">
+            <ArrowUpRight size={18} aria-hidden="true" />
+          </Link>
+          {fokus.length || perhatianLain.length ? (
+            <ul className="beranda-baris">
+              {fokus.map(({ t, jenis }) => (
+                <li key={t.id}>
+                  <Link href={`/tugas?task=${encodeURIComponent(t.id)}`}>
+                    <span className={`beranda-tanggal is-${jenis}`}>
+                      {jenis === 'hari-ini' ? 'Hari ini' : jenis === 'telat' ? `Lewat ${daysBetween(t.due_date, now)} hari` : formatDate(t.due_date)}
+                    </span>
+                    <span className="beranda-baris-teks">
+                      <strong>{t.title}</strong>
+                      <small>
+                        {[namaProyek(t.workstream_id), t.subtasks.length ? `${t.subtasks.filter((st) => st.done).length}/${t.subtasks.length} subtugas` : '']
+                          .filter(Boolean)
+                          .join(' · ') || 'Tanpa proyek'}
+                      </small>
+                    </span>
+                    <span className={`avatar-warna is-${warnaAvatar(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
+                      {inisial(t.assignee || '?')}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+              {perhatianLain.slice(0, 4).map((item) => (
+                <li key={item.id}>
+                  <Link href={item.href}>
+                    {/* Kata pertama jenis catatan ("Dokumen", "Barang") agar lebar cip seragam dan judul sejajar */}
+                    <span className={`beranda-tanggal is-${item.urgent ? 'telat' : 'nanti'}`} title={item.kind}>
+                      {item.kind.split(' ')[0]}
+                    </span>
+                    <span className="beranda-baris-teks">
+                      <strong>{item.title}</strong>
+                      <small>{item.reason}</small>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <EmptyState
+              compact
+              ikon="kalender"
+              title="Tidak ada yang mendesak"
+              description="Tugas terlambat, tenggat hari ini, dan pengingat dokumen atau stok akan tampil di sini."
+            />
+          )}
+        </section>
+
+        <section className="modul bertakik beranda-minggu" aria-labelledby="judul-minggu">
+          <div className="modul-kepala">
+            <h2 id="judul-minggu">Minggu ini</h2>
+          </div>
+          <Link href="/tugas?view=kalender" className="takik-aksi" aria-label="Buka kalender tugas" title="Buka kalender tugas">
+            <CalendarDays size={18} aria-hidden="true" />
+          </Link>
+          <p className="pita-ringkas">
+            {hariPilih === now ? 'Hari ini' : hariPanjang.format(tanggalUtc(hariPilih))}: {pilihan.tugas.length} tugas · {pilihan.rapat.length} rapat
+          </p>
+          <div className="pita-minggu" role="group" aria-label="Pilih hari">
+            {minggu.map((tanggal) => {
+              const isi = isiHari(tanggal);
+              return (
+                <button
+                  key={tanggal}
+                  type="button"
+                  className="pita-hari"
+                  aria-pressed={tanggal === hariPilih}
+                  data-hari-ini={tanggal === now ? 'true' : undefined}
+                  aria-label={`${hariPanjang.format(tanggalUtc(tanggal))}: ${isi.tugas.length} tugas, ${isi.rapat.length} rapat`}
+                  onClick={() => setHariPilih(tanggal)}
+                >
+                  <small>{hariPendek.format(tanggalUtc(tanggal))}</small>
+                  <b>{Number(tanggal.slice(8))}</b>
+                  <span className="pita-titik" aria-hidden="true">
+                    {isi.rapat.length > 0 && <i className="is-rapat" />}
+                    {isi.tugas.length > 0 && <i className="is-tugas" />}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {pilihan.tugas.length || pilihan.rapat.length ? (
+            <ul className="beranda-baris">
+              {pilihan.rapat.slice(0, 3).map((m) => (
+                <li key={m.id}>
+                  <Link href={recordHref('meetings', m)}>
+                    <span className="beranda-tanggal is-rapat">
+                      <Clock size={13} aria-hidden="true" /> {m.data.time ? jamTitik(String(m.data.time)) : 'Rapat'}
+                    </span>
+                    <span className="beranda-baris-teks">
+                      <strong>{String(m.data.title)}</strong>
+                      <small>Rapat</small>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+              {pilihan.tugas.slice(0, 4).map((t) => (
+                <li key={t.id}>
+                  <Link href={`/tugas?task=${encodeURIComponent(t.id)}`}>
+                    <span className={`beranda-tanggal is-${isOverdue(t, now) ? 'telat' : 'nanti'}`}>Tugas</span>
+                    <span className="beranda-baris-teks">
+                      <strong>{t.title}</strong>
+                      <small>{namaProyek(t.workstream_id) || 'Tanpa proyek'}</small>
+                    </span>
+                    <span className={`avatar-warna is-${warnaAvatar(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
+                      {inisial(t.assignee || '?')}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="beranda-kosong">Tidak ada tugas terbuka atau rapat pada hari ini.</p>
+          )}
+        </section>
+      </div>
+
+      {/* Baris kartu proyek bersampul pastel, bergulir mendatar */}
       <section className="beranda-berjalan" aria-label="Pekerjaan berjalan">
         <div className="modul-kepala">
           <h2>Pekerjaan berjalan</h2>
@@ -303,201 +679,28 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
         )}
       </section>
 
-      <div className="beranda-modul">
-        <section className="modul beranda-status" aria-label="Progres keseluruhan">
-          <div className="modul-kepala">
-            <h2>Progres keseluruhan</h2>
-            <Link href="/tugas" className="modul-tautan">
-              Semua
-            </Link>
-          </div>
-          <div className="beranda-status-isi">
-            <ul className="beranda-legenda-daftar">
-              {statusTugas.map((b) => (
-                <li key={b.label}>
-                  <i style={{ background: b.warna }} aria-hidden="true" />
-                  <b>{b.nilai}</b>
-                  {b.label.toLowerCase()}
-                </li>
-              ))}
-              <li>
-                <i className="is-proyek" aria-hidden="true" />
-                <b>{visibleProjects.length}</b>proyek berjalan
-              </li>
-            </ul>
-            <Donat bagian={statusTugas} tengah={`${persenSelesai}%`} keterangan="selesai" />
-          </div>
-        </section>
-
+      <div className="beranda-usaha">
         <KasBanding keadaan={kas} />
-
-        <section id="perhatian" className="modul beranda-perhatian" aria-label="Perlu perhatian">
-          <div className="modul-kepala">
-            <span className="ubin ubin-kecil ubin-oranye" aria-hidden="true">
-              <Bell size={17} />
-            </span>
-            <h2>Perlu perhatian</h2>
-            <span className="beranda-jumlah">{perhatian.length}</span>
-          </div>
-          {perhatian.length ? (
-            <ul className="beranda-baris">
-              {perhatian.slice(0, 5).map((item) => (
-                <li key={item.id}>
-                  <Link href={item.href}>
-                    <span className={`avatar-warna is-${item.urgent ? 'pink' : 'oranye'}`} aria-hidden="true">
-                      {item.kind.slice(0, 1)}
-                    </span>
-                    <span className="beranda-baris-teks">
-                      <strong>{item.title}</strong>
-                      <small>
-                        {item.kind} · {item.reason}
-                      </small>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="beranda-kosong">Tidak ada pengingat pada catatan yang dimuat.</p>
-          )}
-        </section>
         <ModulUsahaHarian />
-
-        <section className="modul beranda-fokus" aria-label="Fokus hari ini">
-          <div className="modul-kepala">
-            <span className="ubin ubin-kecil ubin-biru" aria-hidden="true">
-              <ListChecks size={17} />
-            </span>
-            <h2>Fokus hari ini</h2>
-            <span className="beranda-jumlah">{open.length} aktif</span>
-            <Link href="/tugas" className="modul-tautan">
-              Semua tugas
-            </Link>
-          </div>
-          {fokus.length ? (
-            <ul className="fokus-daftar">
-              {fokus.map(({ t, jenis }) => (
-                <li key={t.id}>
-                  <Link href={`/tugas?task=${encodeURIComponent(t.id)}`}>
-                    <span className={`ubin ubin-kecil ubin-${t.workstream_id ? warnaProyek(indeksProyek(t.workstream_id)) : 'biru'}`} aria-hidden="true">
-                      <ListChecks size={16} />
-                    </span>
-                    <span className="beranda-baris-teks">
-                      <strong>{t.title}</strong>
-                      <small>
-                        {[namaProyek(t.workstream_id), t.subtasks.length ? `${t.subtasks.filter((st) => st.done).length}/${t.subtasks.length} subtugas` : '']
-                          .filter(Boolean)
-                          .join(' · ') || 'Tanpa proyek'}
-                      </small>
-                    </span>
-                    <span className={`beranda-tanggal is-${jenis}`}>{jenis === 'hari-ini' ? 'Hari ini' : formatDate(t.due_date)}</span>
-                    <span className={`avatar-warna is-${warnaAvatar(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
-                      {inisial(t.assignee || '?')}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <EmptyState
-              compact
-              ikon="kalender"
-              title="Tidak ada tugas aktif"
-              description="Tambahkan tugas dan pilih tanggal pengerjaannya."
-              action={{ label: 'Tambah tugas', href: '/tugas?baru=1' }}
-            />
-          )}
-        </section>
-      </div>
       </div>
 
-      {/* Panel kanan (pola Taskflow): kalender bulan ini dan agenda hari ini */}
-      <aside className="panel-kanan" aria-label="Kalender dan agenda">
-        <section className="modul beranda-kalender" aria-label="Kalender">
-          <KalenderMini tanggal={now} tandai={tanggalBerkegiatan} />
-        </section>
-        <section className="modul beranda-agenda dashboard-routines" aria-label="Agenda hari ini">
-          <div className="modul-kepala">
-            <span className="ubin ubin-kecil ubin-pink" aria-hidden="true">
-              <CalendarDays size={17} />
-            </span>
-            <h2>Agenda</h2>
-            <span className={`beranda-jumlah${semuaRutinSelesai ? ' is-selesai' : ''}`}>
-              {routineCompletedCount}/{routines.length}
-            </span>
-            <Link href="/rapat" className="modul-tautan">
-              Rapat
-            </Link>
-          </div>
-          <ol className="rutin-rel">
-            {agenda.map((butir) => {
-              if (butir.rapat) {
-                const m = butir.rapat;
-                const url = meetingJoinUrl(m);
-                return (
-                  <li key={'rapat-' + m.id} className={`rutin-butir is-rapat${m === rapatBerikutnya ? ' is-berikutnya' : ''}`}>
-                    <Link href={recordHref('meetings', m)}>
-                      <span className="rutin-jam">{butir.jam || '—'}</span>
-                      <span className="rutin-simpul" aria-hidden="true"><Video size={13} /></span>
-                      <span className="rutin-isi">
-                        <span className="rutin-judul">{String(m.data.title)}</span>
-                        <small className="rutin-ket">Rapat · {String(m.data.mode || 'tatap muka')}</small>
-                      </span>
-                    </Link>
-                    {url && (
-                      <a href={url} target="_blank" rel="noreferrer" className="rutin-gabung">
-                        <Video size={14} aria-hidden="true" /> Gabung
-                      </a>
-                    )}
-                  </li>
-                );
-              }
-              const item = butir.rutin!;
-              const isChecked = completedRoutines.includes(item.id);
-              const berikutnya = item.id === routineBerikutnya;
-              const terlewat = !isChecked && Boolean(jamSekarang) && item.time < jamSekarang;
-              const keadaan = isChecked ? 'is-selesai' : berikutnya ? 'is-berikutnya' : terlewat ? 'is-terlewat' : '';
-              return (
-                <li key={item.id} className={`rutin-butir ${keadaan}`}>
-                  <label>
-                    <span className="rutin-jam">{item.time}</span>
-                    <span className="rutin-simpul" aria-hidden="true">
-                      <Check size={13} strokeWidth={3} />
-                    </span>
-                    <input
-                      type="checkbox"
-                      className="rutin-centang"
-                      checked={isChecked}
-                      onChange={() => toggleRoutine(item.id)}
-                    />
-                    <span className="rutin-isi">
-                      <span className="rutin-judul">{item.title}</span>
-                      {berikutnya && <small className="rutin-label">Berikutnya</small>}
-                      {terlewat && <span className="sr-only">Jam sudah lewat</span>}
-                    </span>
-                  </label>
-                </li>
-              );
-            })}
-          </ol>
-          {agenda.length === 0 && (
-            <EmptyState
-              compact
-              ikon="jam"
-              title="Agenda hari ini kosong"
-              description="Tambahkan rutinitas harian atau jadwalkan rapat."
-              action={{ label: 'Atur rutinitas', onClick: () => setShowRoutineModal(true) }}
-            />
-          )}
-          <div className="modul-kaki">
-            <Button type="button" className="btn-routine-config" onClick={() => setShowRoutineModal(true)} aria-label="Atur rutinitas">
-              <SlidersHorizontal size={14} />
-              <span>Atur rutinitas</span>
+      {pesan && <Toast message={pesan} />}
+
+      {laporanManual && (
+        <Modal className="laporan-salin-dialog" aria-labelledby="laporan-salin-judul" onDismiss={() => setLaporanManual('')}>
+          <h2 id="laporan-salin-judul">Salin laporan hari ini</h2>
+          <p className="laporan-salin-ket">Peramban menolak menyalin otomatis. Pilih semua teks di bawah lalu salin.</p>
+          <label className="sr-only" htmlFor="laporan-salin-isi">
+            Isi laporan
+          </label>
+          <textarea id="laporan-salin-isi" readOnly rows={14} value={laporanManual} onFocus={(e) => e.currentTarget.select()} />
+          <div className="form-actions">
+            <Button type="button" onClick={() => setLaporanManual('')}>
+              Tutup
             </Button>
           </div>
-        </section>
-
-      </aside>
+        </Modal>
+      )}
 
       {/* ── Modal Atur Rutinitas Manajer ─────────────────── */}
       {showRoutineModal && (
@@ -512,10 +715,8 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                   <Clock size={20} />
                 </div>
                 <div>
-                  <h2 id="routine-config-title">Atur Rutinitas Harian</h2>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-muted)' }}>
-                    Checklist operasional harian gerai
-                  </p>
+                  <h2 id="routine-config-title">Atur rutinitas harian</h2>
+                  <p className="routine-config-ket">Checklist operasional harian gerai</p>
                 </div>
               </div>
               <Button
@@ -545,7 +746,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                   <label>Rutinitas
                   <Input
                     type="text"
-                    placeholder="Tambah rutinitas baru (misal: Cek suhu showcase)..."
+                    placeholder="Cek suhu showcase"
                     value={newRoutineTitle}
                     onChange={(e) => setNewRoutineTitle(e.target.value)}
                     className="routine-title-input"
@@ -564,7 +765,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
               <div className="routine-config-list">
                 {routines.map((item) => (
                   <div key={item.id} className="routine-config-item">
-                    <span className="routine-time-badge">{item.time}</span>
+                    <span className="routine-time-badge">{jamTitik(item.time)}</span>
                     <span className="routine-config-title">{item.title}</span>
                     <Button
                       type="button"
@@ -591,7 +792,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                 title="Kembalikan ke rutinitas standar KDMP"
               >
                 <RotateCcw size={13} />
-                <span>Kembalikan Bawaan</span>
+                <span>Kembalikan bawaan</span>
               </Button>
               <Button
                 type="button"

@@ -17,14 +17,15 @@ const kontras = (a: string, b: string) => {
   return (x + 0.05) / (y + 0.05);
 };
 
-it('aksen dan tinta mengikuti spec Taskflow', () => {
+it('aksen dan tinta mengikuti palet Merah Putih halus', () => {
   const terang = blok(':root');
-  expect(nilai(terang, '--brand')).toBe('#546fff');
-  expect(nilai(terang, '--brand-hover')).toBe('#3d58f0');
-  expect(nilai(terang, '--brand-soft')).toBe('#eef1ff');
-  expect(nilai(terang, '--ink-heading')).toBe('#141522');
-  expect(nilai(terang, '--ink-muted')).toBe('#54577a');
-  expect(terang).toMatch(/--r-card:\s*16px/);
+  expect(nilai(terang, '--brand')).toBe('#a04656');
+  expect(nilai(terang, '--brand-hover')).toBe('#8e3b4a');
+  expect(nilai(terang, '--brand-soft')).toBe('#f7e6e8');
+  expect(nilai(terang, '--canvas')).toBe('#f7f1ec');
+  expect(nilai(terang, '--ink-heading')).toBe('#24191d');
+  expect(nilai(terang, '--ink-muted')).toBe('#6e6064');
+  expect(terang).toMatch(/--r-card:\s*22px/);
 });
 
 it('teks utama terbaca di kedua tema', () => {
@@ -36,7 +37,7 @@ it('teks utama terbaca di kedua tema', () => {
   }
 });
 
-it('teks redup dan teks putih di atas isian biru tetap terbaca di kedua tema', () => {
+it('teks redup dan teks putih di atas isian delima tetap terbaca di kedua tema', () => {
   const terang = blok(':root');
   for (const pemilih of [':root', ':root.dark']) {
     const isi = blok(pemilih);
@@ -48,6 +49,18 @@ it('teks redup dan teks putih di atas isian biru tetap terbaca di kedua tema', (
     const penuh = putih.length === 4 ? '#' + [...putih.slice(1)].map((c) => c + c).join('') : putih;
     expect(kontras(penuh, t('--brand-isi'))).toBeGreaterThanOrEqual(4.5);
     expect(kontras(penuh, t('--brand-isi-hover'))).toBeGreaterThanOrEqual(4.5);
+  }
+});
+
+it('teks putih di sumur baris kartu Rutin (delima + --sumur-delima) tetap terbaca di kedua tema', () => {
+  const terang = blok(':root');
+  const [r, g, b, a] = terang.match(/--sumur-delima:\s*rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/)!.slice(1).map(Number);
+  for (const pemilih of [':root', ':root.dark']) {
+    const isi = nilai(blok(pemilih), '--brand-isi') ?? nilai(terang, '--brand-isi')!;
+    const campur = [1, 3, 5]
+      .map((i, n) => Math.round(parseInt(isi.slice(i, i + 2), 16) * (1 - a) + [r, g, b][n] * a))
+      .map((c) => c.toString(16).padStart(2, '0'));
+    expect(kontras('#ffffff', '#' + campur.join(''))).toBeGreaterThanOrEqual(4.5);
   }
 });
 
