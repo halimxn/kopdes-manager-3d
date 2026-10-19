@@ -1235,15 +1235,6 @@ body[data-kulit="lekuk"] .kartu-statistik.pasar, .kartu-statistik.pasar { displa
 @media (max-width: 767px) { .ps-harga b { font-size: 30px; } .ps-statistik > div { padding: 0 8px; } }
 
 /* ---------- Task manager: daftar dahulu, ubin ringkas, grafik kemajuan di kanan ---------- */
-body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
-body[data-kulit="lekuk"] .ubin { --n: 40px; --r: 14px; min-height: 0; padding: 8px 14px 10px; border-radius: 22px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0 8px; }
-body[data-kulit="lekuk"] .ubin .ikon-u { width: 34px; height: 34px; border-radius: 12px; }
-body[data-kulit="lekuk"] .ubin .ikon-u svg { width: 15px; height: 15px; }
-body[data-kulit="lekuk"] .ubin .atas-u { padding-left: 36px; min-height: 28px; }
-body[data-kulit="lekuk"] .ubin .lbl-u { font-size: 13px; font-weight: 600; padding: 2px 4px; }
-body[data-kulit="lekuk"] .ubin .angka-u { margin: 0; font-size: 22px; font-weight: 700; line-height: 1; }
-body[data-kulit="lekuk"] .ubin .angka-u small { display: none; }
-body[data-kulit="lekuk"] .ubin::before { border-bottom-right-radius: 14px; }
 .ps-kepala { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-right: 40px; }
 .ps-kepala b { font-size: 15px; font-weight: 700; }
 .ps-kepala .pilih.kendali { height: 32px; padding: 0 10px 0 12px; background: #f6f2fd; max-width: 150px; }
@@ -1260,13 +1251,23 @@ body[data-kulit="lekuk"] .ubin::before { border-bottom-right-radius: 14px; }
 .ps-statistik b small { font-size: 11px; font-weight: 500; color: var(--redup); }
 .ps-cta { width: 100%; border: 0; }
 body[data-kulit="lekuk"] .kolom-kanan { gap: 12px; }
-@media (max-width: 1279px) { body[data-kulit="lekuk"] .isi-grid { grid-template-columns: minmax(0, 1fr) 280px; } }
-@media (max-width: 1023px) { body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 767px) {
-  body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .judul-baris .contoh { display: none; }
   body[data-kulit="lekuk"] .isi-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---------- Grafik kemajuan versi tenang ---------- */
+.pasar .grafik-k .kisi { stroke: #f1ecfd; stroke-dasharray: 3 4; }
+.ps-ubah { font-size: 13px; font-weight: 500; }
+.ps-ubah.naik { color: var(--redup); } .ps-ubah.turun { color: var(--redup); }
+.ps-ubah em { font-weight: 600; }
+.ps-rentang button { border-width: 0; background: #f6f2fd; }
+.ps-rentang button[aria-pressed="true"] { background: var(--aksen); color: #fff; }
+.ps-statistik { border: 0; background: #f8f5fe; }
+.ps-statistik > div + div { border-left-color: #ebe4fb; }
+.ps-tautan { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; margin-top: 8px; padding: 0 4px; font-size: 13px; font-weight: 600; color: var(--aksen); }
+.ps-tautan svg { width: 14px; height: 14px; }
+.ps-tautan:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -1581,17 +1582,17 @@ function grafikStatistik() {
   const { terbuka, selesai, masuk } = riwayatTerbuka(r.n, akhir, 23 + r.n + (pr ? pr.charCodeAt(0) : 0));
   const ubah = akhir - terbuka[0];
   const baik = ubah <= 0;
-  const warna = baik ? '#16a34a' : '#e11d48';
+  const warna = baik ? '#8f78f0' : '#ff8b6a';
   const totalSelesai = selesai.reduce((a, b) => a + b, 0);
   const totalMasuk = masuk.reduce((a, b) => a + b, 0);
-  const W = 300, H = 150, L = 4, R = 26, T = 10, B = 4, VOL = 26;
+  const W = 300, H = 140, L = 4, R = 26, T = 10, B = 6, VOL = 0;
   const maks = Math.max(4, ...terbuka) * 1.15;
   const maksVol = Math.max(3, ...selesai);
   const X = (i) => L + (r.n === 1 ? 0 : i * ((W - L - R) / (r.n - 1)));
   const Y = (v) => T + (H - T - B - VOL - 6) * (1 - v / maks);
   const lebarBatang = Math.max(2, ((W - L - R) / r.n) * 0.55);
   GRAFIK.stat = { W, L, R, n: r.n, X, Y, seri: [{ k: 'terbuka', label: 'Terbuka', w: warna, data: terbuka }], label: (i) => labelHariKe(r.n, i), info: (i) => `<span style="--w:#c4b5fd">Selesai<em>${selesai[i]}</em></span><span style="--w:#fbbf24">Masuk<em>${masuk[i]}</em></span>` };
-  const garis = terbuka.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  const garis = garisHalus(terbuka.map((v, i) => [X(i), Y(v)]));
   const dasar = Y(0);
   const kisi = [maks / 3, (2 * maks) / 3].map((v) => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="kisi"/><text x="${W - R + 6}" y="${Y(v) + 3}">${Math.round(v)}</text>`).join('');
   const batang = selesai.map((v, i) => `<rect x="${(X(i) - lebarBatang / 2).toFixed(1)}" y="${(H - B - (v / maksVol) * VOL).toFixed(1)}" width="${lebarBatang.toFixed(1)}" height="${((v / maksVol) * VOL).toFixed(1)}" rx="1.5" class="volume"/>`).join('');
@@ -1600,22 +1601,21 @@ function grafikStatistik() {
   return `<section class="kartu-statistik pasar bertakik" aria-labelledby="judul-stat">
     <button class="takik-btn" type="button" aria-label="Opsi grafik"><svg><use href="#lainnya"/></svg></button>
     <div class="ps-kepala"><b id="judul-stat">Kemajuan tugas</b>${kendali('pilih-proyek-grafik', { jenis: 'pilih', nilai: pr, label: 'Proyek grafik', kelas: 'pilih', opsi: opsiProyek, onPilih: (v) => { S.proyekGrafik = v; render(); } })}</div>
-    <div class="ps-harga"><b>${akhir} <small>tugas terbuka</small></b><span class="ps-ubah ${baik ? 'naik' : 'turun'}">${ubah === 0 ? 'Tetap' : `${ubah < 0 ? '−' : '+'}${Math.abs(ubah)}`} sejak ${r.label} lalu${nLewat ? ` · <em>${nLewat} terlambat</em>` : ''}</span></div>
+    <div class="ps-harga"><b>${akhir} <small>tugas terbuka</small></b><span class="ps-ubah ${baik ? 'naik' : 'turun'}">${ubah === 0 ? 'Sama seperti' : `${ubah < 0 ? 'Berkurang' : 'Bertambah'} ${Math.abs(ubah)} dibanding`} ${r.label} lalu${nLewat ? ` · <em>${nLewat} terlambat</em>` : ''}</span></div>
     <div class="grafik-bungkus" data-grafik="stat">
       <svg class="grafik-k" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tugas terbuka ${r.label} terakhir: dari ${terbuka[0]} menjadi ${akhir}. Selesai per hari: ${selesai.join(', ')}.">
         <defs><linearGradient id="gs-pasar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warna}" stop-opacity=".22"/><stop offset="1" stop-color="${warna}" stop-opacity="0"/></linearGradient></defs>
-        ${kisi}${batang}
+        ${kisi}
         <path d="${garis} L${X(r.n - 1)},${dasar} L${X(0)},${dasar} Z" fill="url(#gs-pasar)"/>
         <path d="${garis}" fill="none" stroke="${warna}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-        <circle cx="${X(r.n - 1)}" cy="${Y(akhir)}" r="4" fill="${warna}" class="denyut"/>
+        <circle cx="${X(r.n - 1)}" cy="${Y(akhir)}" r="4" fill="#fff" stroke="${warna}" stroke-width="2.5"/>
         <g class="silang" style="display:none"><line class="silang-garis" y1="${T}" y2="${H}"/><circle r="5" fill="${warna}" stroke="#fff" stroke-width="2.5" data-titik="terbuka"/></g>
       </svg>
       <div class="tooltip-k" hidden></div>
     </div>
-    <div class="ps-legenda"><span style="--w:${warna}">Tugas terbuka</span><span class="vol">Selesai per hari</span></div>
     <div class="ps-rentang" role="group" aria-label="Rentang waktu">${Object.entries(RENTANG).map(([k, x]) => `<button type="button" data-rentang="${k}" aria-pressed="${S.rentang === k}" title="${x.label}">${k}</button>`).join('')}</div>
     <div class="ps-statistik"><div><small>Selesai</small><b>${totalSelesai}</b></div><div><small>Masuk</small><b>${totalMasuk}</b></div><div><small>Rata-rata</small><b>${rataRata} <small>hari</small></b></div></div>
-    <button class="ps-cta" type="button" ${pr ? `data-tampil="proyek" data-proyek="${pr}"` : 'data-ke-daftar'}>Lihat tugas tersisa</button>
+    <button class="ps-tautan" type="button" ${pr ? `data-tampil="proyek" data-proyek="${pr}"` : 'data-ke-daftar'}>Lihat tugas tersisa <svg><use href="#keluar"/></svg></button>
   </section>`;
 }
 function geserSilang(bungkus, clientX) {
@@ -1664,8 +1664,7 @@ function panelKanan() {
     const terbuka = isi.length - n;
     return `<button class="proyek-baris" type="button" data-tampil="proyek" data-proyek="${pr.id}"><span class="kp" style="background:${pr.w}"></span><span><b>${pr.nama}</b><small>${terbuka} terbuka · ${Math.round((terbuka / totalBuka) * 100)}% beban</small></span><span class="pct">${pct}%<i style="--p:${pct};--w:${pr.w}"></i></span></button>`;
   }).join('');
-  return `<aside class="kolom-kanan" aria-label="Kemajuan, beban tim, dan progres proyek">
-    ${grafikStatistik()}
+  return `<aside class="kolom-kanan" aria-label="Beban tim dan progres proyek">
     <section class="kartu-kanan bertakik"><h2>Beban per PIC</h2><p>Tugas terbuka · perubahan sejak kemarin · klik untuk menyaring</p><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a>${beban}</section>
     <section class="kartu-kanan bertakik"><h2>Progres proyek</h2><p>Persen tugas selesai · klik untuk membuka</p><button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>
       ${proyekHtml}</section>
@@ -2181,7 +2180,7 @@ function renderDaftar() {
     ${kh.halo}${kh.hero}${kh.ikon}
     <div class="judul-baris"><h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1><button class="bulat-aksi utama" type="button" data-baru="" aria-label="Tugas baru"><svg><use href="#plus"/></svg></button><button class="bulat-aksi" type="button" aria-label="Opsi halaman"><svg><use href="#lainnya"/></svg></button></div>
     <p class="ringkas">${ringkasan(daftar)}</p>
-    ${kh.sapa}${kh.ubin}
+    ${kh.sapa}<div class="ringkas-atas">${kh.ubin}${grafikStatistik()}</div>
     <div class="isi-grid ${S.tab !== 'daftar' ? 'penuh' : ''}"><div class="kolom-utama">
     <div class="alat">
       <div class="tabs" role="tablist" aria-label="Tampilan">
