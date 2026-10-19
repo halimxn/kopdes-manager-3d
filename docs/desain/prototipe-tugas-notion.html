@@ -1189,6 +1189,23 @@ body[data-kulit="lekuk"] .app:not(.peek-buka) .peek { margin: 0; }
   .pantau { grid-template-columns: 30px minmax(0, 1fr) 58px auto; }
 }
 @media (prefers-reduced-motion: reduce) { .denyut, .modal, .modal-latar, .pop { animation: none; } .donat circle, .pilih-ikon { transition: none; } }
+
+/* ---------- Grafik terang (menggantikan kartu gelap) ---------- */
+body[data-kulit="lekuk"] .kartu-statistik.kripto, .kartu-statistik.kripto { background: #fff; color: var(--tinta); }
+.kripto .ks-atas small { color: var(--redup); }
+.kripto .delta.naik { color: #16a34a; } .kripto .delta.turun { color: #e11d48; }
+.segmen { background: #f3eefd; }
+.segmen button { color: var(--redup); }
+.segmen button[aria-pressed="true"] { background: var(--aksen); color: #fff; }
+.grafik-k text { fill: var(--pudar); }
+.grafik-k .kisi { stroke: #eee8fb; }
+.silang-garis { stroke: #c9bff2; }
+.tooltip-k { background: #1d1b26; color: #fff; }
+.ks-seri button { background: #f6f2fd; color: var(--tinta); }
+.ks-seri button::before { box-shadow: none; }
+body[data-kulit="lekuk"] .kartu-statistik.kripto .takik-btn { background: #fff; }
+.pantau { grid-template-columns: 30px minmax(0, 1fr) auto; }
+@media (max-width: 767px) { .pantau { grid-template-columns: 30px minmax(0, 1fr) auto; } }
 </style>
 </head>
 <body>
@@ -1485,8 +1502,8 @@ function dataStatistik() {
   const r = RENTANG[S.rentang];
   const skala = S.rentang === '3B' ? 5 : 1;
   return [
-    { k: 'selesai', label: 'Selesai', w: '#4ade80', data: deret(r.n, 2 * skala, 7 * skala, 3 * skala, 7 + r.n), lalu: deret(r.n, 2 * skala, 5 * skala, 3 * skala, 31 + r.n) },
-    { k: 'baru', label: 'Tugas baru', w: '#a78bfa', data: deret(r.n, 4 * skala, 5 * skala, 4 * skala, 13 + r.n) },
+    { k: 'selesai', label: 'Selesai', w: '#8f78f0', data: deret(r.n, 2 * skala, 7 * skala, 3 * skala, 7 + r.n), lalu: deret(r.n, 2 * skala, 5 * skala, 3 * skala, 31 + r.n) },
+    { k: 'baru', label: 'Tugas baru', w: '#f2b630', data: deret(r.n, 4 * skala, 5 * skala, 4 * skala, 13 + r.n) },
     { k: 'lewat', label: 'Terlambat', w: '#fb7185', data: deret(r.n, 2 * skala, 3 * skala, 2 * skala, 3 + r.n) },
   ];
 }
@@ -1523,7 +1540,7 @@ function grafikStatistik() {
       <svg class="grafik-k" viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik ${r.label}: ${aktif.map((x) => `${x.label} ${x.data.join(', ')}`).join('. ')}">
         <defs>${grad}<filter id="pendar" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
         ${kisi}${lapisan}${sumbuX}
-        <g class="silang" style="display:none"><line class="silang-garis" y1="${T}" y2="${H - B}"/>${aktif.map((x) => `<circle r="5" fill="${x.w}" stroke="#1d1b26" stroke-width="2" data-titik="${x.k}"/>`).join('')}</g>
+        <g class="silang" style="display:none"><line class="silang-garis" y1="${T}" y2="${H - B}"/>${aktif.map((x) => `<circle r="5" fill="${x.w}" stroke="#fff" stroke-width="2.5" data-titik="${x.k}"/>`).join('')}</g>
       </svg>
       <div class="tooltip-k" hidden></div>
     </div>
@@ -1566,19 +1583,9 @@ function panelKanan() {
     tren[6] = milik.length;
     const ubah = tren[6] - tren[5];
     const kelas = ubah > 0 ? 'turun' : ubah < 0 ? 'naik' : 'datar';
-    const warna = ubah > 0 ? '#fb7185' : ubah < 0 ? '#22c55e' : '#a897f5';
-    return `<button class="pantau" type="button" data-saring-pic="${k}" aria-pressed="${S.pic === k}">${av(k)}<span class="pantau-nama"><b>${ORANG[k].lengkap}</b><small>${ORANG[k].jabatan}</small></span>${spark(tren, 58, 26, warna, false)}<span class="pantau-nilai"><b>${milik.length}</b><span class="delta ${kelas}">${ubah > 0 ? '▲' : ubah < 0 ? '▼' : '•'} ${Math.abs(ubah)}</span></span></button>`;
+    return `<button class="pantau" type="button" data-saring-pic="${k}" aria-pressed="${S.pic === k}">${av(k)}<span class="pantau-nama"><b>${ORANG[k].lengkap}</b><small>${ORANG[k].jabatan}</small></span><span class="pantau-nilai"><b>${milik.length}</b><span class="delta ${kelas}">${ubah > 0 ? '▲' : ubah < 0 ? '▼' : '•'} ${Math.abs(ubah)}</span></span></button>`;
   }).join('');
   const totalBuka = buka.filter((t) => !t.rutin).length || 1;
-  let sudut = 0;
-  const kel = 2 * Math.PI * 38;
-  const potong = PROYEK.map((pr) => {
-    const n = buka.filter((t) => t.p === pr.id && !t.rutin).length;
-    const panjang = (n / totalBuka) * kel;
-    const seg = `<circle r="38" cx="50" cy="50" fill="none" stroke="${pr.w}" stroke-width="13" stroke-linecap="round" stroke-dasharray="${Math.max(0, panjang - 4)} ${kel}" stroke-dashoffset="${-sudut}" transform="rotate(-90 50 50)"/>`;
-    sudut += panjang;
-    return seg;
-  }).join('');
   const proyekHtml = PROYEK.map((pr) => {
     const isi = TUGAS.filter((t) => t.p === pr.id && !t.rutin);
     const n = isi.filter((t) => t.st === 'selesai').length;
@@ -1587,9 +1594,8 @@ function panelKanan() {
     return `<button class="proyek-baris" type="button" data-tampil="proyek" data-proyek="${pr.id}"><span class="kp" style="background:${pr.w}"></span><span><b>${pr.nama}</b><small>${terbuka} terbuka · ${Math.round((terbuka / totalBuka) * 100)}% beban</small></span><span class="pct">${pct}%<i style="--p:${pct};--w:${pr.w}"></i></span></button>`;
   }).join('');
   return `<aside class="kolom-kanan" aria-label="Beban tim dan progres proyek">
-    <section class="kartu-kanan bertakik"><h2>Beban per PIC</h2><p>Tugas terbuka · tren 7 hari · klik untuk menyaring</p><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a>${beban}</section>
-    <section class="kartu-kanan bertakik"><h2>Sebaran proyek</h2><p>Porsi tugas terbuka dan progres selesai</p><button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>
-      <div class="donat"><svg viewBox="0 0 100 100" aria-hidden="true"><circle r="38" cx="50" cy="50" fill="none" stroke="#f1ecfd" stroke-width="13"/>${potong}</svg><span><b>${totalBuka}</b><small>terbuka</small></span></div>
+    <section class="kartu-kanan bertakik"><h2>Beban per PIC</h2><p>Tugas terbuka · perubahan sejak kemarin · klik untuk menyaring</p><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a>${beban}</section>
+    <section class="kartu-kanan bertakik"><h2>Progres proyek</h2><p>Persen tugas selesai · klik untuk membuka</p><button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>
       ${proyekHtml}</section>
   </aside>`;
 }
@@ -1683,7 +1689,6 @@ function renderBeranda() {
         <p>${nRutin} dari ${rutin.length} selesai hari ini${berikut ? ` · berikutnya ${jam(berikut.jam)}` : ' · semua beres'}</p>
         <button class="takik-btn" type="button" data-baru-rutin aria-label="Tambah tugas rutin"><svg><use href="#plus"/></svg></button>
         <div class="rutin-progres" role="progressbar" aria-valuemin="0" aria-valuemax="${rutin.length}" aria-valuenow="${nRutin}" aria-label="Progres rutin"><i style="width:${rutin.length ? (nRutin / rutin.length) * 100 : 0}%"></i></div>
-        <div class="rutin-tren"><span>Kepatuhan 7 hari <small>contoh</small></span>${spark([80, 100, 60, 100, 80, 100, Math.round((nRutin / (rutin.length || 1)) * 100)], 84, 26, '#ffffff')}<b>${Math.round(([80, 100, 60, 100, 80, 100].reduce((a, b) => a + b, 0) + (nRutin / (rutin.length || 1)) * 100) / 7)}%</b></div>
         <ul class="rutin-daftar">${rutin.map((t) => `<li class="${t.st === 'selesai' ? 'ok' : ''} ${berikut === t ? 'berikut' : ''} ${S.dipilih === t.kode ? 'pilih-ini' : ''}" data-buka="${t.kode}">
           <button class="cek" type="button" role="checkbox" aria-checked="${t.st === 'selesai'}" data-cek="${t.kode}" aria-label="Tandai ${esc(t.judul)} selesai"></button>
           <span class="rutin-jam">${jam(t.jam)}</span>
@@ -2016,11 +2021,7 @@ function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
       ['proses', 'Proses', 'jam', cakupan.filter((t) => t.st === 'proses' && !lewat(t)).length],
       ['lewat', 'Terlambat', 'seru', cakupan.filter(lewat).length],
       ['selesai', 'Selesai', 'cekbulat', cakupan.filter((t) => t.st === 'selesai').length],
-    ].map(([k, l, i, n], idx) => {
-      const tren = deret(7, n + (idx === 3 ? -3 : 2), n, 2, 5 + idx * 9); tren[6] = n;
-      const ubah = n - tren[0];
-      return `<button class="ubin u-${k}" type="button" data-saring-status="${k}" aria-pressed="${S.status === k}"><span class="atas-u"><span class="ikon-u"><svg><use href="#${i}"/></svg></span><span class="lbl-u">${l}</span></span><span class="bawah-u"><span class="angka-u">${n} <small>tugas</small></span>${spark(tren, 70, 30, 'currentColor')}</span><span class="delta-u">${ubah > 0 ? '▲' : ubah < 0 ? '▼' : '•'} ${Math.abs(ubah)} vs pekan lalu</span></button>`;
-    }).join('')}</div>`,
+    ].map(([k, l, i, n]) => `<button class="ubin u-${k}" type="button" data-saring-status="${k}" aria-pressed="${S.status === k}"><span class="atas-u"><span class="ikon-u"><svg><use href="#${i}"/></svg></span><span class="lbl-u">${l}</span></span><span class="angka-u">${n} <small>tugas</small></span></button>`).join('')}</div>`,
     sapa: `<div class="sapa"><span class="cincin-besar" style="--p:${pct}" aria-hidden="true"></span><div><b>Selamat pagi</b><span>${n} dari ${tot} ${label} selesai</span></div><span class="persen">${pct}%</span></div>`,
   };
 }
