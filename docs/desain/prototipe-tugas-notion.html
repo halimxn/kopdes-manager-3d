@@ -703,6 +703,84 @@ body[data-kulit="lekuk"] .app.peek-buka .kolom-kanan { display: none; }
   body[data-kulit="lekuk"] .bulat-aksi { width: 44px; height: 44px; }
   .chip-saring, .hapus-semua { height: 40px; }
 }
+
+/* ---------- Lebih dekat ke referensi: ringkasan atas, kartu ⋯, formulir panel ---------- */
+.titik-menu, .kartu-statistik { display: none; }
+.ringkas-atas { display: block; }
+body[data-kulit="lekuk"] .ringkas-atas { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 18px; align-items: start; margin-bottom: 22px; }
+body[data-kulit="lekuk"] .ringkas-atas .ubin-status { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding-bottom: 22px; gap: 12px; }
+body[data-kulit="lekuk"] .ringkas-atas .ubin:nth-child(even) { top: 22px; }
+body[data-kulit="lekuk"] .ringkas-atas .ubin { min-height: 112px; }
+body[data-kulit="lekuk"] .ubin .angka-u { font-size: 24px; font-weight: 700; }
+body[data-kulit="lekuk"] .kartu-statistik { display: block; position: relative; background: #fff; border-radius: 26px; padding: 16px 16px 12px; }
+.kartu-statistik h2 { margin: 0; font-size: 16px; font-weight: 700; }
+.kartu-statistik > p { margin: 2px 44px 6px 0; font-size: 12px; color: var(--redup); }
+.grafik-s { width: 100%; height: auto; display: block; }
+.grafik-s text { font-size: 9px; fill: var(--pudar); font-family: inherit; }
+.legenda-s { display: flex; justify-content: center; gap: 16px; font-size: 12px; color: var(--redup); }
+.legenda-s span::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 3px; background: var(--w); vertical-align: -1px; }
+
+/* Kartu: takik berisi ⋯, menu cepat, tag prioritas selalu tampil. */
+body[data-kulit="lekuk"] .baris > .cek { display: none; }
+body[data-kulit="lekuk"] .baris > .titik-menu { display: grid; place-items: center; position: absolute; right: 0; top: 0; z-index: 1; width: 44px; height: 44px; border-radius: 16px; background: #fff; color: var(--tinta); }
+body[data-kulit="lekuk"] .baris > .titik-menu:hover, body[data-kulit="lekuk"] .baris > .titik-menu[aria-expanded="true"] { background: var(--aksen); color: #fff; }
+.titik-menu svg { width: 18px; height: 18px; }
+.menu-kartu { position: absolute; right: 0; top: 50px; z-index: 6; min-width: 210px; padding: 6px; border-radius: 18px; background: #fff; color: var(--tinta); box-shadow: 0 20px 40px -16px rgb(29 27 38 / .35), 0 0 0 1px var(--garis); }
+.menu-kartu button { display: block; width: 100%; min-height: 44px; padding: 0 14px; border-radius: 12px; text-align: left; font-size: 13.5px; font-weight: 500; }
+.menu-kartu button:hover, .menu-kartu button:focus-visible { background: var(--aksen-muda); }
+body[data-kulit="lekuk"] .baris > .judul { font-size: 16.5px; font-weight: 700; padding-right: 44px; }
+body[data-kulit="lekuk"] .tag.normal { background: #a897f5; color: #fff; }
+body[data-kulit="lekuk"] .tag.rendah { background: #ece6fd; color: #6c4fd8; }
+body[data-kulit="lekuk"] .tag.rencana { background: #fff; color: var(--tinta); box-shadow: inset 0 0 0 1px var(--garis); }
+body[data-kulit="lekuk"] .baris.pilih-ini .tag.normal, body[data-kulit="lekuk"] .baris.pilih-ini .tag.tinggi { background: #fff; color: var(--aksen); }
+.kaki-kartu .tumpuk { display: flex; }
+.kaki-kartu .tumpuk .av + .av { margin-left: -9px; }
+.kaki-kartu .tumpuk .av.lebih { background: var(--aksen); color: #fff; font-size: 10px; }
+
+/* Panel detail sebagai formulir. */
+body[data-kulit="lekuk"] .pk-atas { height: 64px; gap: 6px; padding: 0 16px; }
+body[data-kulit="lekuk"] .pk-atas .ikon-t { width: 44px; height: 44px; background: #fff; border-radius: 50%; color: var(--tinta); }
+body[data-kulit="lekuk"] .pk-isi { padding: 4px 22px 0; }
+.pk-kode { font-size: 12px; color: var(--pudar); font-weight: 600; }
+.f-label { display: block; margin: 16px 0 8px; font-size: 13.5px; font-weight: 600; color: var(--tinta); }
+.f-label span { margin-left: 4px; font-size: 12px; font-weight: 500; color: var(--pudar); }
+.f-isian { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 16px; border-radius: 18px; background: #fff; font-size: 14px; border: 1.5px solid transparent; position: relative; }
+.f-isian:focus-within { border-color: var(--aksen); }
+.f-isian > svg { width: 18px; height: 18px; flex: none; color: var(--redup); }
+.f-isian select, .f-isian input { flex: 1; min-width: 0; height: 50px; border: 0; outline: 0; background: none; font-size: 14px; -webkit-appearance: none; appearance: none; cursor: pointer; }
+.f-isian .pilih-ikon { width: 14px; height: 14px; color: var(--pudar); pointer-events: none; }
+.f-isian .kp { margin: 0; width: 10px; height: 10px; }
+.f-judul { display: block; padding: 14px 16px; font-size: 16px; font-weight: 600; line-height: 1.4; outline: 0; }
+.f-catatan { display: block; min-height: 76px; padding: 14px 16px; color: var(--redup); line-height: 1.5; outline: 0; }
+.f-catatan:empty::before { content: "Tambahkan deskripsi…"; color: var(--pudar); }
+.f-dua { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.f-tim { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.f-av { padding: 2px; border-radius: 50%; border: 2.5px solid transparent; }
+.f-av .av { width: 44px; height: 44px; font-size: 13px; }
+.f-av[aria-pressed="true"] { border-color: var(--aksen); }
+.f-tambah { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: var(--aksen); color: #fff; font-size: 24px; text-decoration: none; }
+.f-ket { display: block; margin-top: 8px; font-size: 12px; color: var(--redup); }
+.f-ket b { color: var(--tinta); font-weight: 600; }
+.f-tautan { justify-content: space-between; padding-right: 8px; color: var(--tinta); text-decoration: none; }
+.f-tautan > span:first-child { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.f-tautan > span:first-child svg { width: 18px; height: 18px; color: var(--redup); flex: none; }
+.f-tautan .panah { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--aksen); flex: none; }
+.f-tautan .panah svg { width: 16px; height: 16px; color: #fff; }
+.f-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px; margin-top: 16px; padding: 0 10px 0 16px; border-radius: 18px; background: #fff; font-size: 14px; text-align: left; }
+.saklar { position: relative; width: 52px; height: 30px; border-radius: 999px; background: #ddd5f7; transition: background .15s; }
+.saklar::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / .2); transition: transform .15s; }
+.f-toggle[aria-checked="true"] .saklar { background: var(--aksen); }
+.f-toggle[aria-checked="true"] .saklar::after { transform: translateX(22px); }
+.f-simpan { position: sticky; bottom: 0; display: block; width: 100%; height: 56px; margin: 22px 0 0; border-radius: 999px; background: var(--aksen); color: #fff; font-size: 15px; font-weight: 600; box-shadow: 0 -16px 18px -4px #f7f2fe; }
+.f-simpan.lagi { background: #fff; color: var(--tinta); }
+body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
+
+@media (max-width: 1279px) { body[data-kulit="lekuk"] .ringkas-atas { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .ringkas-atas { grid-template-columns: minmax(0, 1fr); }
+  .f-dua { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .saklar, .saklar::after { transition: none; } }
 </style>
 </head>
 <body>
@@ -736,6 +814,7 @@ body[data-kulit="lekuk"] .app.peek-buka .kolom-kanan { display: none; }
   <symbol id="seru" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
   <symbol id="lonceng" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
   <symbol id="keluar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16 16 8M9 8h7v7"/></symbol>
+  <symbol id="kembali" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
   <symbol id="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
 
@@ -777,7 +856,7 @@ body[data-kulit="lekuk"] .app.peek-buka .kolom-kanan { display: none; }
 
   <aside class="peek" id="peek" aria-label="Detail tugas" aria-hidden="true">
     <div class="pk-atas">
-      <button class="ikon-t" type="button" data-tutup aria-label="Tutup panel (Esc)"><svg class="i"><use href="#tutup"/></svg></button>
+      <button class="ikon-t" type="button" data-tutup aria-label="Tutup panel (Esc)"><svg class="i"><use href="#kembali"/></svg></button>
       <button class="ikon-t" type="button" data-geser="-1" aria-label="Tugas sebelumnya (↑)"><svg class="i"><use href="#atas-p"/></svg></button>
       <button class="ikon-t" type="button" data-geser="1" aria-label="Tugas berikutnya (↓)"><svg class="i"><use href="#bawah-p"/></svg></button>
       <span class="posisi" id="posisi"></span>
@@ -807,11 +886,11 @@ const STATUS = ['rencana', 'proses', 'selesai', 'dibatalkan'];
 const PRIO = ['rendah', 'normal', 'tinggi', 'mendesak'];
 const sub = (s) => s.map(([t, ok]) => ({ t, ok }));
 let TUGAS = [
-  { kode: 'GRS-014', sumber: 'Rapat persiapan gerai · 10 Okt', lokasi: 'Gerai sembako', judul: 'Pasang rak display dan label harga', p: 'G', ms: 'Renovasi ruang', pic: 'AR', tgl: '2026-10-15', st: 'proses', pr: 'mendesak', catatan: 'Tinggi rak maksimal 180 cm agar lampu tidak tertutup.', sub: sub([['Ukur dinding sisi timur', 1], ['Pesan 4 rak besi', 1], ['Pasang rak dan jangkar dinding', 0], ['Cetak label harga', 0]]), akt: [['AR', 'Rak tiba, 1 rak penyok, minta tukar ke pemasok.', '17 Okt'], ['MA', 'mengubah status ke <b>Proses</b>', '14 Okt'], ['MA', 'membuat tugas dari rapat persiapan gerai', '10 Okt']] },
+  { kode: 'GRS-014', ikut: ['MA', 'BD'], sumber: 'Rapat persiapan gerai · 10 Okt', lokasi: 'Gerai sembako', judul: 'Pasang rak display dan label harga', p: 'G', ms: 'Renovasi ruang', pic: 'AR', tgl: '2026-10-15', st: 'proses', pr: 'mendesak', catatan: 'Tinggi rak maksimal 180 cm agar lampu tidak tertutup.', sub: sub([['Ukur dinding sisi timur', 1], ['Pesan 4 rak besi', 1], ['Pasang rak dan jangkar dinding', 0], ['Cetak label harga', 0]]), akt: [['AR', 'Rak tiba, 1 rak penyok, minta tukar ke pemasok.', '17 Okt'], ['MA', 'mengubah status ke <b>Proses</b>', '14 Okt'], ['MA', 'membuat tugas dari rapat persiapan gerai', '10 Okt']] },
   { kode: 'GRS-015', judul: 'Uji coba timbangan digital', p: 'G', ms: 'Stok awal', pic: 'BD', tgl: '2026-10-19', st: 'rencana', pr: 'tinggi', sub: sub([['Kalibrasi dengan anak timbang 1 kg', 0], ['Catat selisih di berita acara', 0]]), akt: [['MA', 'membuat tugas', '15 Okt']] },
-  { kode: 'GRS-016', judul: 'Daftar harga beli 20 barang pokok', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'proses', pr: 'tinggi', sub: sub([['Survei 3 pemasok', 1], ['Bandingkan harga', 0], ['Kirim ke ketua', 0]]), akt: [] },
+  { kode: 'GRS-016', ikut: ['AR'], ulang: 'mingguan', judul: 'Daftar harga beli 20 barang pokok', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'proses', pr: 'tinggi', sub: sub([['Survei 3 pemasok', 1], ['Bandingkan harga', 0], ['Kirim ke ketua', 0]]), akt: [] },
   { kode: 'GRS-011', judul: 'Pengecatan ulang dinding depan', p: 'G', ms: 'Renovasi ruang', pic: 'MA', tgl: '2026-10-12', st: 'selesai', pr: 'normal', sub: sub([['Beli cat', 1], ['Cat lapis 1', 1], ['Cat lapis 2', 1]]), akt: [['MA', 'menandai selesai', '12 Okt']] },
-  { kode: 'RAT-003', sumber: 'Rapat pengurus · 7 Okt', judul: 'Kirim undangan RAT ke 214 anggota', p: 'R', ms: 'Undangan', pic: 'SN', tgl: '2026-10-14', st: 'proses', pr: 'mendesak', sub: sub([['Cetak undangan', 1], ['Bagikan lewat ketua RT', 1], ['Rekap tanda terima', 0]]), akt: [['SN', '180 undangan sudah dibagikan.', '16 Okt']] },
+  { kode: 'RAT-003', ikut: ['MA', 'RH', 'AR', 'BD'], sumber: 'Rapat pengurus · 7 Okt', judul: 'Kirim undangan RAT ke 214 anggota', p: 'R', ms: 'Undangan', pic: 'SN', tgl: '2026-10-14', st: 'proses', pr: 'mendesak', sub: sub([['Cetak undangan', 1], ['Bagikan lewat ketua RT', 1], ['Rekap tanda terima', 0]]), akt: [['SN', '180 undangan sudah dibagikan.', '16 Okt']] },
   { kode: 'RAT-004', judul: 'Susun draf laporan pertanggungjawaban', p: 'R', ms: 'Laporan', pic: 'MA', tgl: '2026-10-25', st: 'proses', pr: 'tinggi', catatan: 'Menunggu angka buku kas Oktober.', sub: sub([['Kerangka laporan', 1], ['Bagian usaha', 0], ['Bagian keuangan', 0], ['Bagian keanggotaan', 0], ['Tinjau ketua', 0]]), akt: [] },
   { kode: 'RAT-005', judul: 'Pesan tenda dan kursi untuk 250 orang', p: 'R', ms: 'Undangan', pic: 'BD', tgl: '2026-10-18', st: 'rencana', pr: 'normal', sub: [], akt: [] },
   { kode: 'CLD-002', lokasi: 'Cold storage', judul: 'Bandingkan 3 penawaran unit pendingin', p: 'C', ms: 'Pengadaan', pic: 'AR', tgl: '2026-10-12', st: 'rencana', pr: 'normal', catatan: 'Satu penawaran belum masuk.', sub: sub([['Penawaran A', 1], ['Penawaran B', 0], ['Penawaran C', 0]]), akt: [] },
@@ -820,7 +899,7 @@ let TUGAS = [
 ];
 
 // ---------- Keadaan ----------
-const S = { status: '', tampil: 'semua', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
+const S = { menu: '', status: '', tampil: 'semua', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
 
 // ---------- Utilitas ----------
 const $ = (s, el = document) => el.querySelector(s);
@@ -893,6 +972,15 @@ function isoKoperasi() {
   </svg>`;
 }
 
+// ---------- Menu cepat kartu ----------
+function menuKartu(t) {
+  return `<div class="menu-kartu" role="menu">
+    <button type="button" role="menuitem" data-cek="${t.kode}">${t.st === 'selesai' ? 'Buka lagi' : 'Tandai selesai'}</button>
+    <button type="button" role="menuitem" data-buka-detail="${t.kode}">Buka detail</button>
+    ${t.tgl !== HARI_INI && !tutupStatus(t) ? `<button type="button" role="menuitem" data-ke-hari="${t.kode}">Jadwalkan hari ini</button>` : ''}
+  </div>`;
+}
+
 // ---------- Pemilih PIC ----------
 function pemilihPic(t) {
   const beban = (k) => TUGAS.filter((x) => x.pic === k && !tutupStatus(x)).length;
@@ -901,6 +989,33 @@ function pemilihPic(t) {
     ${Object.keys(ORANG).map((k) => { const n = beban(k); return `<button class="pic-op" type="button" role="option" aria-selected="${t.pic === k}" data-pilih-pic="${k}">${av(k)}<b>${ORANG[k].lengkap}</b><small>${ORANG[k].jabatan}</small><span class="beban ${n >= 4 ? 'berat' : ''}">${n} terbuka</span></button>`; }).join('')}
     <a class="pic-kelola" href="#">Kelola daftar di Tim →</a>
   </div>`;
+}
+
+// ---------- Statistik tugas: garis lengkung seperti referensi ----------
+function garisHalus(titik) {
+  let d = `M${titik[0][0].toFixed(1)},${titik[0][1].toFixed(1)}`;
+  for (let i = 0; i < titik.length - 1; i++) {
+    const [x0, y0] = titik[i - 1] || titik[i];
+    const [x1, y1] = titik[i];
+    const [x2, y2] = titik[i + 1];
+    const [x3, y3] = titik[i + 2] || titik[i + 1];
+    d += ` C${(x1 + (x2 - x0) / 6).toFixed(1)},${(y1 + (y2 - y0) / 6).toFixed(1)} ${(x2 - (x3 - x1) / 6).toFixed(1)},${(y2 - (y3 - y1) / 6).toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`;
+  }
+  return d;
+}
+// Angka contoh; di aplikasi dihitung dari completed_at dan riwayat status.
+function grafikStatistik() {
+  const hari = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+  const seri = [['Proses', '#f2c230', [2, 4, 3, 5, 4, 6, 4]], ['Terlambat', '#df86e0', [1, 1, 2, 2, 3, 2, 3]], ['Selesai', '#45bf63', [1, 2, 4, 3, 5, 6, 7]]];
+  const W = 320, H = 150, L = 22, B = 22, T = 8, maks = 8;
+  const x = (i) => L + i * ((W - L - 10) / 6);
+  const y = (v) => T + (H - T - B) * (1 - v / maks);
+  const kisi = [0, 2, 4, 6, 8].map((v) => `<line x1="${L}" x2="${W - 4}" y1="${y(v)}" y2="${y(v)}" stroke="#eee8fb"/><text x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v}</text>`).join('');
+  const sumbuX = hari.map((h, i) => `<text x="${x(i)}" y="${H - 4}" text-anchor="middle">${h}</text>`).join('');
+  const garis = seri.map(([, w, d]) => `<path d="${garisHalus(d.map((v, i) => [x(i), y(v)]))}" fill="none" stroke="${w}" stroke-width="2.6" stroke-linecap="round"/>`).join('');
+  return `<section class="kartu-statistik bertakik"><h2>Statistik tugas</h2><p>7 hari terakhir · contoh</p><button class="takik-btn" type="button" aria-label="Opsi grafik"><svg><use href="#lainnya"/></svg></button>
+    <svg class="grafik-s" viewBox="0 0 ${W} ${H}" role="img" aria-label="Statistik tugas 7 hari terakhir. ${seri.map(([l, , d]) => `${l}: ${d.join(', ')}`).join('. ')}.">${kisi}${garis}${sumbuX}</svg>
+    <div class="legenda-s">${seri.map(([l, w]) => `<span style="--w:${w}">${l}</span>`).join('')}</div></section>`;
 }
 
 // ---------- Panel kanan: beban PIC dan progres proyek ----------
@@ -988,8 +1103,9 @@ function renderBaris(t) {
     <span class="sel">${orang(t.pic)}</span>
     <span class="sel tgl ${tg.kls}">${tg.teks}</span>
     <span class="meta-hp">${st(t.st)}<span class="tgl ${tg.kls}">${tg.teks}</span>${av(t.pic)}</span>
-    <span class="tag-kartu">${t.pr === 'mendesak' || t.pr === 'tinggi' ? `<span class="tag ${t.pr}">${besar(t.pr)}</span>` : ''}<span class="tag ${t.st}">${besar(t.st)}</span></span>
-    <span class="kaki-kartu"><span class="${tg.kls === 'lewat' ? 'lewat' : ''}"><svg><use href="#hari"/></svg>${tg.teks}</span>${t.sub.length ? `<span><svg><use href="#semua"/></svg>${t.sub.filter((x) => x.ok).length}/${t.sub.length}</span>` : ''}<span class="proyek-k">${kp(t.p)}${proyek(t.p).nama}</span><span class="tumpuk">${av(t.pic)}</span></span>
+    <span class="tag-kartu"><span class="tag ${t.pr}">${besar(t.pr)}</span><span class="tag ${t.st}">${besar(t.st)}</span></span>
+    <span class="kaki-kartu"><span class="${tg.kls === 'lewat' ? 'lewat' : ''}"><svg><use href="#hari"/></svg>${tg.teks}</span>${t.sub.length ? `<span><svg><use href="#semua"/></svg>${t.sub.filter((x) => x.ok).length}/${t.sub.length}</span>` : ''}<span><svg><use href="#komen"/></svg>${t.akt.length}</span><span class="tumpuk">${[t.pic, ...(t.ikut || [])].slice(0, 3).map(av).join('')}${(t.ikut || []).length > 2 ? `<span class="av lebih">+${t.ikut.length - 2}</span>` : ''}</span></span>
+    <button class="titik-menu" type="button" data-menu="${t.kode}" aria-haspopup="menu" aria-expanded="${S.menu === t.kode}" aria-label="Menu ${esc(t.judul)}"><svg><use href="#lainnya"/></svg></button>${S.menu === t.kode ? menuKartu(t) : ''}
   </div>`;
 }
 
@@ -1032,7 +1148,7 @@ function renderDaftar() {
     ${kh.halo}${kh.hero}${kh.ikon}
     <div class="judul-baris"><h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1><button class="bulat-aksi utama" type="button" data-baru="" aria-label="Tugas baru"><svg><use href="#plus"/></svg></button><button class="bulat-aksi" type="button" aria-label="Opsi halaman"><svg><use href="#lainnya"/></svg></button></div>
     <p class="ringkas">${ringkasan(daftar)}</p>
-    ${kh.sapa}${kh.ubin}
+    ${kh.sapa}<div class="ringkas-atas">${kh.ubin}${grafikStatistik()}</div>
     <div class="isi-grid"><div class="kolom-utama">
     <div class="alat">
       <div class="tabs" role="tablist" aria-label="Tampilan">
@@ -1088,30 +1204,40 @@ function renderPeek() {
   if (!t) return;
   const i = urutanAktif.indexOf(t.kode);
   $('#posisi').textContent = i >= 0 ? `${i + 1} dari ${urutanAktif.length}` : '';
-  const tg = labelTgl(t, true);
   const p = proyek(t.p);
-  const n = t.sub.filter((s) => s.ok).length;
-  const pilihan = (nama, nilai, opsi, tampil) => `<select class="prop-ubah" data-prop="${nama}" aria-label="${besar(nama)}">${opsi.map(([v, l]) => `<option value="${v}" ${v === nilai ? 'selected' : ''}>${l}</option>`).join('')}</select><span class="prop-tampil">${tampil}</span>`;
+  const n = t.sub.filter((x) => x.ok).length;
+  const opsi = (daftar, nilai) => daftar.map(([v, l]) => `<option value="${v}" ${v === nilai ? 'selected' : ''}>${l}</option>`).join('');
+  const bebanPic = TUGAS.filter((x) => x.pic === t.pic && !tutupStatus(x)).length;
+  const ulang = t.ulang === 'mingguan';
   $('#pk-isi').innerHTML = `
-    <div class="pk-kode">${t.kode}</div>
-    <h2 class="pk-judul" contenteditable="true" spellcheck="false" data-judul aria-label="Judul tugas">${esc(t.judul)}</h2>
-    <dl class="props">
-      <dt><svg><use href="#status"/></svg>Status</dt><dd>${pilihan('st', t.st, STATUS.map((s) => [s, besar(s)]), st(t.st))}</dd>
-      <dt><svg><use href="#saya"/></svg>PIC</dt><dd><button class="pic-btn" type="button" data-pic-buka aria-haspopup="listbox" aria-expanded="${!!S.picBuka}">${orang(t.pic)}<svg><use href="#bawah-p"/></svg></button>${S.picBuka ? pemilihPic(t) : ''}</dd>
-      <dt><svg><use href="#hari"/></svg>Tenggat</dt><dd><input class="prop-ubah" type="date" data-prop="tgl" value="${t.tgl}" aria-label="Tenggat"><span class="prop-tampil tgl ${tg.kls}">${tg.teks}</span></dd>
-      <dt><svg><use href="#bendera"/></svg>Prioritas</dt><dd>${pilihan('pr', t.pr, PRIO.map((s) => [s, besar(s)]), pr(t.pr))}</dd>
-      <dt><svg><use href="#map"/></svg>Proyek</dt><dd>${pilihan('p', t.p, PROYEK.map((x) => [x.id, x.nama]), `<span class="orang">${kp(t.p)}${p.nama}</span>`)}</dd>
-      <dt><svg><use href="#milestone"/></svg>Milestone</dt><dd>${pilihan('ms', t.ms, p.milestone.map((m) => [m, m]), esc(t.ms || '—'))}</dd>
-      ${t.sumber ? `<dt><svg><use href="#catat"/></svg>Sumber</dt><dd><a class="tautan-sistem" href="#catatan" title="Buka catatan rapat">${esc(t.sumber)}<svg><use href="#keluar"/></svg></a></dd>` : ''}
-      ${t.lokasi ? `<dt><svg><use href="#kubus"/></svg>Lokasi</dt><dd><a class="tautan-sistem" href="#dunia" title="Lihat di Dunia Koperasi">${esc(t.lokasi)} · Dunia<svg><use href="#keluar"/></svg></a></dd>` : ''}
-    </dl>
-    ${t.catatan ? `<p class="pk-catatan">${esc(t.catatan)}</p>` : ''}
-    <h3>Subtugas <span>${t.sub.length ? `${n}/${t.sub.length}` : ''}</span></h3>
-    <ul class="sublist">${t.sub.map((s, j) => `<li class="${s.ok ? 'ok' : ''}"><button class="cek" type="button" role="checkbox" aria-checked="${!!s.ok}" data-sub="${j}" aria-label="${esc(s.t)}"></button><span>${esc(s.t)}</span></li>`).join('')}</ul>
+    <div class="pk-kode">${t.kode} · ${p.nama}</div>
+    <label class="f-label" for="f-judul">Judul</label>
+    <div class="f-isian f-judul" id="f-judul" contenteditable="true" spellcheck="false" data-judul role="textbox" aria-label="Judul tugas">${esc(t.judul)}</div>
+    <label class="f-label" for="f-catatan">Deskripsi</label>
+    <div class="f-isian f-catatan" id="f-catatan" contenteditable="true" spellcheck="false" data-catatan role="textbox" aria-multiline="true" aria-label="Deskripsi tugas">${esc(t.catatan || '')}</div>
+    <div class="f-label">Penanggung jawab <span>dari daftar Tim</span></div>
+    <div class="f-tim" role="group" aria-label="Pilih penanggung jawab">${Object.keys(ORANG).map((k) => `<button class="f-av" type="button" data-pilih-pic="${k}" aria-pressed="${t.pic === k}" title="${ORANG[k].lengkap} · ${ORANG[k].jabatan}">${av(k)}<span class="sr">${ORANG[k].lengkap}</span></button>`).join('')}<a class="f-tambah" href="#tim" aria-label="Tambah staf di Tim">+</a></div>
+    <small class="f-ket"><b>${ORANG[t.pic].lengkap}</b> · ${ORANG[t.pic].jabatan} · ${bebanPic} tugas terbuka</small>
+    <div class="f-dua">
+      <div><label class="f-label" for="f-tgl">Tenggat</label><div class="f-isian"><svg><use href="#hari"/></svg><input id="f-tgl" type="date" data-prop="tgl" value="${t.tgl}"></div></div>
+      <div><label class="f-label" for="f-pr">Prioritas</label><div class="f-isian"><svg><use href="#bendera"/></svg><select id="f-pr" data-prop="pr">${opsi(PRIO.map((x) => [x, besar(x)]), t.pr)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div></div>
+    </div>
+    <div class="f-dua">
+      <div><label class="f-label" for="f-st">Status</label><div class="f-isian"><svg><use href="#status"/></svg><select id="f-st" data-prop="st">${opsi(STATUS.map((x) => [x, besar(x)]), t.st)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div></div>
+      <div><label class="f-label" for="f-ms">Milestone</label><div class="f-isian"><svg><use href="#milestone"/></svg><select id="f-ms" data-prop="ms">${opsi(p.milestone.map((m) => [m, m]), t.ms)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div></div>
+    </div>
+    <label class="f-label" for="f-p">Proyek</label>
+    <div class="f-isian"><span class="kp" style="background:${p.w}"></span><select id="f-p" data-prop="p">${opsi(PROYEK.map((x) => [x.id, x.nama]), t.p)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div>
+    <button class="f-toggle" type="button" role="switch" aria-checked="${ulang}" data-ulang><span>Ulangi tiap minggu</span><span class="saklar" aria-hidden="true"></span></button>
+    ${t.sumber ? `<div class="f-label">Sumber</div><a class="f-isian f-tautan" href="#catatan"><span><svg><use href="#catat"/></svg>${esc(t.sumber)}</span><span class="panah"><svg><use href="#keluar"/></svg></span></a>` : ''}
+    ${t.lokasi ? `<div class="f-label">Lokasi</div><a class="f-isian f-tautan" href="#dunia"><span><svg><use href="#kubus"/></svg>${esc(t.lokasi)} · Dunia Koperasi</span><span class="panah"><svg><use href="#keluar"/></svg></span></a>` : ''}
+    <div class="f-label">Subtugas <span>${t.sub.length ? `${n}/${t.sub.length}` : ''}</span></div>
+    <ul class="sublist">${t.sub.map((x, j) => `<li class="${x.ok ? 'ok' : ''}"><button class="cek" type="button" role="checkbox" aria-checked="${!!x.ok}" data-sub="${j}" aria-label="${esc(x.t)}"></button><span>${esc(x.t)}</span></li>`).join('')}</ul>
     <form class="sub-tambah" id="form-sub"><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg><label class="sr" for="sub-baru">Subtugas baru</label><input id="sub-baru" placeholder="Tambah subtugas"></form>
-    <h3>Aktivitas <span>${t.akt.length || ''}</span></h3>
+    <div class="f-label">Aktivitas <span>${t.akt.length || ''}</span></div>
     <ul class="akt">${t.akt.map(([k, teks, w]) => `<li>${av(k)}<div><b>${ORANG[k].nama}</b> ${teks}<time>${w}</time></div></li>`).join('') || '<li style="grid-template-columns:1fr;color:var(--pudar)">Belum ada aktivitas.</li>'}</ul>
-    <form class="komentar" id="form-komentar">${av('MA')}<label class="sr" for="komentar">Komentar</label><input id="komentar" placeholder="Tulis komentar…" autocomplete="off"><button type="submit">Kirim</button></form>`;
+    <form class="komentar" id="form-komentar">${av('MA')}<label class="sr" for="komentar">Komentar</label><input id="komentar" placeholder="Tulis komentar…" autocomplete="off"><button type="submit">Kirim</button></form>
+    <button class="f-simpan ${t.st === 'selesai' ? 'lagi' : ''}" type="button" data-cek="${t.kode}">${t.st === 'selesai' ? 'Buka lagi tugas ini' : 'Tandai selesai'}</button>`;
 }
 
 function render() {
@@ -1149,12 +1275,21 @@ function bacaCepat(teks) {
 
 document.addEventListener('click', (e) => {
   const el = e.target;
+  const menu = el.closest('[data-menu]');
+  if (menu) { S.menu = S.menu === menu.dataset.menu ? '' : menu.dataset.menu; render(); return; }
+  const bd = el.closest('[data-buka-detail]');
+  if (bd) { S.menu = ''; buka(bd.dataset.bukaDetail); return; }
+  const kh = el.closest('[data-ke-hari]');
+  if (kh) { const t = TUGAS.find((x) => x.kode === kh.dataset.keHari); t.tgl = HARI_INI; S.menu = ''; catat(t, 'memindahkan tenggat ke <b>hari ini</b>'); render(); return; }
+  if (S.menu && !el.closest('.menu-kartu')) { S.menu = ''; if (!el.closest('[data-buka]')) { render(); return; } }
+  const ul = el.closest('[data-ulang]');
+  if (ul) { const t = TUGAS.find((x) => x.kode === S.dipilih); t.ulang = t.ulang === 'mingguan' ? 'tidak' : 'mingguan'; catat(t, t.ulang === 'mingguan' ? 'mengaktifkan <b>ulang tiap minggu</b>' : 'mematikan pengulangan'); render(); return; }
   const pilihPic = el.closest('[data-pilih-pic]');
   if (pilihPic) { const t = TUGAS.find((x) => x.kode === S.dipilih); t.pic = pilihPic.dataset.pilihPic; S.picBuka = false; catat(t, `mengubah PIC ke <b>${ORANG[t.pic].nama}</b>`); render(); $('[data-pic-buka]')?.focus(); return; }
   if (el.closest('[data-pic-buka]')) { S.picBuka = !S.picBuka; render(); if (S.picBuka) $('.pic-op[aria-selected="true"]')?.focus(); return; }
   if (S.picBuka && !el.closest('.pic-pop')) { S.picBuka = false; renderPeek(); }
   const c = el.closest('[data-cek]');
-  if (c) { const t = TUGAS.find((x) => x.kode === c.dataset.cek); t.st = t.st === 'selesai' ? 'proses' : 'selesai'; catat(t, `mengubah status ke <b>${besar(t.st)}</b>`); render(); return; }
+  if (c) { S.menu = ''; const t = TUGAS.find((x) => x.kode === c.dataset.cek); t.st = t.st === 'selesai' ? 'proses' : 'selesai'; catat(t, `mengubah status ke <b>${besar(t.st)}</b>`); render(); return; }
   const sb = el.closest('[data-sub]');
   if (sb) { const t = TUGAS.find((x) => x.kode === S.dipilih); const s = t.sub[+sb.dataset.sub]; s.ok = !s.ok; render(); return; }
   const sp = el.closest('[data-saring-pic]');
@@ -1211,6 +1346,7 @@ document.addEventListener('input', (e) => {
   if (e.target.id === 'cari') { S.cari = e.target.value; if (S.tampil === 'hari') { S.tampil = 'semua'; renderSidebar(); } renderDaftar(); renderPeek(); }
 });
 document.addEventListener('focusout', (e) => {
+  if (e.target.matches?.('[data-catatan]')) { const t = TUGAS.find((x) => x.kode === S.dipilih); const v = e.target.textContent.trim(); if (t && v !== (t.catatan || '')) { t.catatan = v; catat(t, 'memperbarui deskripsi'); render(); } return; }
   if (e.target.matches?.('[data-judul]')) { const t = TUGAS.find((x) => x.kode === S.dipilih); const v = e.target.textContent.trim(); if (t && v && v !== t.judul) { t.judul = v; render(); } }
 });
 document.addEventListener('submit', (e) => {
