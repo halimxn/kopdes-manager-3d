@@ -1304,6 +1304,64 @@ body[data-kulit="lekuk"] .kolom-kanan { gap: 12px; }
 @media (prefers-reduced-motion: reduce) {
   body[data-kulit="lekuk"] .nav-dok .nav-indikator, .nav-dok button, .nav-ikon svg, body[data-kulit="lekuk"] .dok-fab, body[data-kulit="lekuk"] .lembar-baru:not(:empty), .lembar-baru .menu-baru button { transition: none; animation: none; }
 }
+
+/* ---------- Nav varian B: pil mengembang ---------- */
+.nav-pil2 { display: none; }
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .nav-dok { display: none; }
+  body[data-kulit="lekuk"] .nav-pil2 { display: flex; align-items: center; gap: 6px; position: fixed; left: 10px; right: 10px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 20; }
+  body[data-kulit="lekuk"] .app.peek-buka ~ .nav-pil2 { display: none; }
+  .pil2 { flex: 1; min-width: 0; display: flex; justify-content: space-between; height: 62px; padding: 6px; border-radius: 999px; background: rgb(255 255 255 / .9); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); box-shadow: 0 16px 30px -16px rgb(60 40 140 / .55), inset 0 1px 0 #fff; }
+  .pil2 button { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 46px; height: 50px; padding: 0 10px; border-radius: 999px; color: var(--redup); font-size: 12.5px; font-weight: 700; transition: background .3s, color .3s, padding .3s, transform .12s; }
+  .pil2 button:active { transform: scale(.94); }
+  .pil2 .nav-ikon { position: relative; display: grid; place-items: center; width: auto; height: auto; }
+  .pil2 .nav-ikon svg { width: 22px; height: 22px; }
+  .pil2 .nav-label { max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .35s ease; }
+  .pil2 button[aria-current="page"] { background: var(--aksen); color: #fff; padding: 0 14px; box-shadow: 0 8px 16px -8px rgb(143 120 240 / .9); }
+  .pil2 button[aria-current="page"] .nav-label { max-width: 70px; }
+  .pil2 .lencana-nav { top: -6px; right: -9px; }
+  .pil2 button[aria-current="page"] .lencana-nav { box-shadow: 0 0 0 2px var(--aksen); }
+  .tambah2 { flex: none; width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; background: #1d1b26; color: #fff; box-shadow: 0 14px 24px -12px rgb(29 27 38 / .85); transition: transform .3s cubic-bezier(.3, 1.4, .5, 1), background .2s; }
+  .tambah2 svg { width: 26px; height: 26px; }
+  .tambah2:active { transform: scale(.92); }
+  .tambah2[aria-expanded="true"] { transform: rotate(135deg); background: var(--aksen); }
+  body[data-kulit="lekuk"] .lembar-baru:not(:empty) { bottom: calc(86px + env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(88px + env(safe-area-inset-bottom)); }
+}
+
+/* ---------- Interaksi hidup ---------- */
+@media (hover: hover) {
+  .ubin, .baris, .kartu-b, .kartu-kanan, .kartu-papan, .agenda-isi { --mx: -999px; --my: -999px; }
+  body[data-kulit="lekuk"] .ubin:hover, .kartu-rutin:hover, body[data-kulit="lekuk"] .baris.pilih-ini:hover { background-image: radial-gradient(220px circle at var(--mx) var(--my), rgb(255 255 255 / .38), transparent 65%); }
+  body[data-kulit="lekuk"] .baris:not(.pilih-ini):hover, .kartu-b:not(.kartu-rutin):hover, .kartu-kanan:hover, .kartu-papan:hover, .agenda-isi:hover { background-image: radial-gradient(260px circle at var(--mx) var(--my), rgb(143 120 240 / .09), transparent 65%); }
+}
+.baris, .rutin-daftar li { touch-action: pan-y; }
+.digeser { position: relative; z-index: 2; cursor: grabbing; user-select: none; }
+.lapis-geser { position: fixed; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 14px; font-weight: 700; color: #fff; background: #5cc76e; pointer-events: none; transition: background .15s; }
+.lapis-geser[data-arah="kiri"] { background: #f9b93c; }
+.lapis-geser .kanan, .lapis-geser .kiri { opacity: .55; transform: scale(.9); transition: opacity .15s, transform .15s; }
+.lapis-geser[data-arah="kanan"] .kiri, .lapis-geser[data-arah="kiri"] .kanan { visibility: hidden; }
+.lapis-geser.siap .kanan, .lapis-geser.siap .kiri { opacity: 1; transform: scale(1.08); }
+.petunjuk-geser { display: none; margin: 0 0 6px; font-size: 12px; color: var(--redup); }
+.petunjuk-geser span { display: inline-block; color: var(--aksen); font-weight: 700; animation: colek 1.6s ease-in-out infinite; }
+@keyframes colek { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+@media (hover: none), (max-width: 767px) { .petunjuk-geser { display: block; } }
+@keyframes isi-bilah { from { width: 0; } }
+.masuk .rutin-progres i { animation: isi-bilah .9s cubic-bezier(.2, .8, .3, 1) both; }
+.hitung-mundur { display: flex; align-items: center; gap: 10px; margin: -6px 4px 14px; padding: 10px 12px; border-radius: 16px; background: color-mix(in srgb, var(--w) 20%, #fff); font-size: 12.5px; }
+.hitung-mundur i { width: 9px; height: 9px; flex: none; border-radius: 50%; background: var(--w); box-shadow: 0 0 0 0 var(--w); animation: denyut-titik 1.6s ease-out infinite; }
+@keyframes denyut-titik { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--w) 70%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
+.hitung-mundur span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.hitung-mundur b { font-weight: 600; }
+.hitung-mundur time { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.daftar-pintasan { list-style: none; margin: 0 0 18px; padding: 0; text-align: left; }
+.daftar-pintasan li { display: flex; justify-content: space-between; align-items: center; min-height: 40px; border-bottom: 1px solid var(--garis); font-size: 14px; }
+.daftar-pintasan kbd { font: 600 12px "Plus Jakarta Sans"; padding: 3px 9px; border-radius: 8px; background: #f3eefd; color: var(--aksen); }
+.modal-aksi.satu { grid-template-columns: 1fr; }
+@media (prefers-reduced-motion: reduce) {
+  .petunjuk-geser span, .hitung-mundur i, .masuk .rutin-progres i { animation: none; }
+  .pil2 button, .pil2 .nav-label, .tambah2, .lapis-geser, .lapis-geser .kanan, .lapis-geser .kiri { transition: none; }
+}
 </style>
 </head>
 <body>
@@ -1371,7 +1429,7 @@ body[data-kulit="lekuk"] .kolom-kanan { gap: 12px; }
     <a class="sb-i" href="#"><svg class="i"><use href="#grup"/></svg>Koperasi</a>
     <a class="sb-i" href="#"><svg class="i"><use href="#kubus"/></svg>Dunia Koperasi</a>
     </div>
-    <div class="sb-bawah"><a class="sb-i" href="#"><svg class="i"><use href="#atur"/></svg>Pengaturan</a></div>
+    <div class="sb-bawah"><button class="sb-i" type="button" data-pintasan><svg class="i"><use href="#lainnya"/></svg>Pintasan keyboard<kbd>?</kbd></button><a class="sb-i" href="#"><svg class="i"><use href="#atur"/></svg>Pengaturan</a></div>
   </nav>
   <div class="selubung" id="selubung"></div>
 
@@ -1396,15 +1454,15 @@ body[data-kulit="lekuk"] .kolom-kanan { gap: 12px; }
   </aside>
 </div>
 <button class="fab" type="button" id="fab" aria-label="Tugas baru">+</button>
-<nav class="nav-dok" aria-label="Navigasi utama">
-  <span class="nav-indikator" aria-hidden="true"></span>
-  <button type="button" data-tampil="hari"><span class="nav-ikon"><svg><use href="#hari"/></svg><i class="lencana-nav" data-lencana="rutin" hidden></i></span><span class="nav-label">Hari ini</span></button>
-  <button type="button" data-tampil="semua"><span class="nav-ikon"><svg><use href="#semua"/></svg></span><span class="nav-label">Tugas</span></button>
-  <span class="nav-celah" aria-hidden="true"></span>
-  <button type="button" data-tampil="agenda"><span class="nav-ikon"><svg><use href="#waktu"/></svg><i class="lencana-nav" data-lencana="agenda" hidden></i></span><span class="nav-label">Agenda</span></button>
-  <button type="button" data-buka-laci><span class="nav-ikon"><svg><use href="#menu"/></svg></span><span class="nav-label">Lainnya</span></button>
+<nav class="nav-pil2" aria-label="Navigasi utama">
+  <div class="pil2">
+    <button type="button" data-tampil="hari"><span class="nav-ikon"><svg><use href="#hari"/></svg><i class="lencana-nav" data-lencana="rutin" hidden></i></span><span class="nav-label">Hari ini</span></button>
+    <button type="button" data-tampil="semua"><span class="nav-ikon"><svg><use href="#semua"/></svg></span><span class="nav-label">Tugas</span></button>
+    <button type="button" data-tampil="agenda"><span class="nav-ikon"><svg><use href="#waktu"/></svg><i class="lencana-nav" data-lencana="agenda" hidden></i></span><span class="nav-label">Agenda</span></button>
+    <button type="button" data-buka-laci><span class="nav-ikon"><svg><use href="#menu"/></svg></span><span class="nav-label">Lainnya</span></button>
+  </div>
+  <button class="tambah2" id="dok-fab" type="button" data-fab aria-haspopup="menu" aria-expanded="false" aria-label="Tambah tugas, agenda, atau kegiatan"><svg><use href="#plus"/></svg></button>
 </nav>
-<button class="dok-fab" id="dok-fab" type="button" data-fab aria-haspopup="menu" aria-expanded="false" aria-label="Tambah tugas, agenda, atau kegiatan"><svg><use href="#plus"/></svg></button>
 <div class="lembar-baru" id="lembar-baru"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="palet-latar" id="palet" hidden></div>
@@ -1638,7 +1696,7 @@ function grafikStatistik() {
   return `<section class="kartu-statistik pasar bertakik" aria-labelledby="judul-stat">
     <button class="takik-btn" type="button" aria-label="Opsi grafik"><svg><use href="#lainnya"/></svg></button>
     <div class="ps-kepala"><b id="judul-stat">Kemajuan tugas</b>${kendali('pilih-proyek-grafik', { jenis: 'pilih', nilai: pr, label: 'Proyek grafik', kelas: 'pilih', opsi: opsiProyek, onPilih: (v) => { S.proyekGrafik = v; render(); } })}</div>
-    <div class="ps-harga"><b>${akhir} <small>tugas terbuka</small></b><span class="ps-ubah ${baik ? 'naik' : 'turun'}">${ubah === 0 ? 'Sama seperti' : `${ubah < 0 ? 'Berkurang' : 'Bertambah'} ${Math.abs(ubah)} dibanding`} ${r.label} lalu${nLewat ? ` · <em>${nLewat} terlambat</em>` : ''}</span></div>
+    <div class="ps-harga"><b><span data-hitung-naik="${akhir}">${akhir}</span> <small>tugas terbuka</small></b><span class="ps-ubah ${baik ? 'naik' : 'turun'}">${ubah === 0 ? 'Sama seperti' : `${ubah < 0 ? 'Berkurang' : 'Bertambah'} ${Math.abs(ubah)} dibanding`} ${r.label} lalu${nLewat ? ` · <em>${nLewat} terlambat</em>` : ''}</span></div>
     <div class="grafik-bungkus" data-grafik="stat">
       <svg class="grafik-k" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tugas terbuka ${r.label} terakhir: dari ${terbuka[0]} menjadi ${akhir}. Selesai per hari: ${selesai.join(', ')}.">
         <defs><linearGradient id="gs-pasar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warna}" stop-opacity=".22"/><stop offset="1" stop-color="${warna}" stop-opacity="0"/></linearGradient></defs>
@@ -1805,6 +1863,7 @@ function renderBeranda() {
       <section class="kartu-b bertakik" aria-labelledby="judul-agenda-b">
         <h2 id="judul-agenda-b">Agenda hari ini</h2>
         <p>${agendaHari.length} agenda · rapat, online, kunjungan, kegiatan</p>
+        ${(() => { const b = agendaHari.find((a) => a.mulai > JAM_KINI); return b ? `<div class="hitung-mundur" style="--w:${JENIS[b.jenis].w}"><i aria-hidden="true"></i><span>Berikutnya <b>${esc(b.judul)}</b></span><time data-mundur="${b.mulai}">--:--</time></div>` : ''; })()}
         <button class="takik-btn" type="button" data-agenda-baru aria-label="Tambah agenda"><svg><use href="#plus"/></svg></button>
         ${linimasa(agendaHari, HARI_INI)}
       </section>
@@ -2114,6 +2173,114 @@ function konfirmasi({ judul, isi, ya, bahaya, onYa }) {
 }
 function tutupModal() { const asal = S.modal?.asal; S.modal = null; const el = $('#modal'); el.hidden = true; el.innerHTML = ''; asal?.focus?.(); }
 
+// ---------- Interaksi hidup ----------
+function hitungNaik() {
+  document.querySelectorAll('[data-hitung-naik]').forEach((el) => {
+    const target = +el.dataset.hitungNaik;
+    if (!target) return;
+    const mulai = performance.now();
+    const langkah = (t) => {
+      const p = Math.min(1, (t - mulai) / 650);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(langkah);
+    };
+    requestAnimationFrame(langkah);
+  });
+}
+// Jam simulasi: berjalan dari JAM_KINI sejak halaman dibuka.
+const dibuka = Date.now();
+function perbaruiMundur() {
+  const [h, m] = JAM_KINI.split(':').map(Number);
+  const kini = h * 3600 + m * 60 + (Date.now() - dibuka) / 1000;
+  document.querySelectorAll('[data-mundur]').forEach((el) => {
+    const [th, tm] = el.dataset.mundur.split(':').map(Number);
+    const sisa = Math.max(0, Math.round(th * 3600 + tm * 60 - kini));
+    const jj = Math.floor(sisa / 3600), mm = Math.floor((sisa % 3600) / 60), dd = sisa % 60;
+    el.textContent = sisa ? `${jj ? jj + ' j ' : ''}${String(mm).padStart(2, '0')}:${String(dd).padStart(2, '0')}` : 'Mulai';
+    el.setAttribute('aria-label', `Mulai dalam ${jj ? jj + ' jam ' : ''}${mm} menit`);
+  });
+}
+setInterval(perbaruiMundur, 1000);
+
+// Sorotan cahaya mengikuti kursor (hanya mouse).
+document.addEventListener('pointermove', (e) => {
+  if (e.pointerType !== 'mouse') return;
+  const k = e.target.closest?.('.ubin, .baris, .kartu-b, .kartu-kanan, .kartu-papan, .agenda-isi');
+  if (!k) return;
+  const r = k.getBoundingClientRect();
+  k.style.setProperty('--mx', `${e.clientX - r.left}px`);
+  k.style.setProperty('--my', `${e.clientY - r.top}px`);
+});
+
+// Geser kartu: kanan = selesai, kiri = pindah ke besok (khusus daftar).
+let gestur = null;
+document.addEventListener('pointerdown', (e) => {
+  const k = e.target.closest?.('.baris, .rutin-daftar li');
+  if (!k || e.button !== 0 || e.target.closest('button, a, [data-menu]')) return;
+  gestur = { k, x: e.clientX, y: e.clientY, dx: 0, aktif: false, id: e.pointerId };
+});
+document.addEventListener('pointermove', (e) => {
+  if (!gestur || e.pointerId !== gestur.id) return;
+  const dx = e.clientX - gestur.x, dy = e.clientY - gestur.y;
+  if (!gestur.aktif) {
+    if (Math.abs(dx) < 10) return;
+    if (Math.abs(dy) > Math.abs(dx)) { gestur = null; return; }
+    gestur.aktif = true;
+    const r = gestur.k.getBoundingClientRect();
+    const lapis = document.createElement('div');
+    lapis.className = 'lapis-gestur';
+    lapis.style.cssText = `top:${r.top}px;left:${r.left}px;width:${r.width}px;height:${r.height}px;border-radius:${getComputedStyle(gestur.k).borderRadius}`;
+    lapis.innerHTML = '<span class="kanan">✓ Selesai</span><span class="kiri">Besok →</span>';
+    document.body.appendChild(lapis);
+    gestur.lapis = lapis;
+    gestur.k.classList.add('digeser');
+  }
+  const rutin = gestur.k.matches('.rutin-daftar li');
+  gestur.dx = rutin ? Math.max(0, dx) : dx;
+  gestur.k.style.transform = `translateX(${gestur.dx}px) rotate(${gestur.dx / 60}deg)`;
+  gestur.lapis.dataset.arah = gestur.dx > 0 ? 'kanan' : 'kiri';
+  gestur.lapis.classList.toggle('siap', Math.abs(gestur.dx) > 90);
+});
+function selesaiGeser(e) {
+  if (!gestur || (e && e.pointerId !== gestur.id)) return;
+  const { k, dx, aktif, lapis } = gestur;
+  gestur = null;
+  if (!aktif) return;
+  S.abaikanKlik = true;
+  setTimeout(() => { S.abaikanKlik = false; }, 0);
+  const kode = k.dataset.buka;
+  k.style.transition = 'transform .25s ease';
+  if (Math.abs(dx) > 90) {
+    k.style.transform = `translateX(${dx > 0 ? 120 : -120}%)`;
+    setTimeout(() => {
+      lapis.remove();
+      const t = TUGAS.find((x) => x.kode === kode);
+      if (dx > 0) { const cek = k.querySelector('[data-cek]'); if (cek) cek.click(); else { t.st = 'selesai'; render(); } }
+      else { const lama = t.tgl; t.tgl = tambahHari(1); catat(t, 'memindahkan tenggat ke <b>besok</b>'); render(); toast(`Dipindah ke besok: ${esc(t.judul)}`, () => { t.tgl = lama; render(); }); }
+    }, 200);
+  } else {
+    k.style.transform = '';
+    setTimeout(() => { k.style.transition = ''; k.classList.remove('digeser'); lapis.remove(); }, 260);
+  }
+}
+document.addEventListener('pointerup', selesaiGeser);
+document.addEventListener('pointercancel', () => { if (gestur?.aktif) { gestur.k.style.transform = ''; gestur.k.classList.remove('digeser'); gestur.lapis.remove(); } gestur = null; });
+
+// Panduan pintasan keyboard.
+function bukaPintasan() {
+  S.modal = { onYa: () => {}, asal: document.activeElement };
+  const el = $('#modal');
+  el.hidden = false;
+  const daftar = [['Ctrl K', 'Cari dan perintah'], ['/', 'Cari'], ['C', 'Tugas baru'], ['↑ ↓', 'Pindah tugas di panel'], ['Esc', 'Tutup panel atau menu'], ['?', 'Panduan ini']];
+  el.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-judul">
+    <span class="modal-ikon"><svg><use href="#lainnya"/></svg></span>
+    <h2 id="modal-judul">Pintasan keyboard</h2>
+    <ul class="daftar-pintasan">${daftar.map(([k, l]) => `<li><span>${l}</span><kbd>${k}</kbd></li>`).join('')}</ul>
+    <div class="modal-aksi satu"><button type="button" class="m-ya" data-modal="ya">Mengerti</button></div>
+  </div>`;
+  el.querySelector('[data-modal="ya"]').focus();
+}
+
 // ---------- Render ----------
 function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   const tot = daftar.length;
@@ -2129,7 +2296,7 @@ function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
       ['proses', 'Proses', 'jam', cakupan.filter((t) => t.st === 'proses' && !lewat(t)).length],
       ['lewat', 'Terlambat', 'seru', cakupan.filter(lewat).length],
       ['selesai', 'Selesai', 'cekbulat', cakupan.filter((t) => t.st === 'selesai').length],
-    ].map(([k, l, i, n]) => `<button class="ubin u-${k}" type="button" data-saring-status="${k}" aria-pressed="${S.status === k}"><span class="atas-u"><span class="ikon-u"><svg><use href="#${i}"/></svg></span><span class="lbl-u">${l}</span></span><span class="angka-u">${n} <small>tugas</small></span></button>`).join('')}</div>`,
+    ].map(([k, l, i, n]) => `<button class="ubin u-${k}" type="button" data-saring-status="${k}" aria-pressed="${S.status === k}"><span class="atas-u"><span class="ikon-u"><svg><use href="#${i}"/></svg></span><span class="lbl-u">${l}</span></span><span class="angka-u"><span data-hitung-naik="${n}">${n}</span> <small>tugas</small></span></button>`).join('')}</div>`,
     sapa: `<div class="sapa"><span class="cincin-besar" style="--p:${pct}" aria-hidden="true"></span><div><b>Selamat pagi</b><span>${n} dari ${tot} ${label} selesai</span></div><span class="persen">${pct}%</span></div>`,
   };
 }
@@ -2140,7 +2307,7 @@ function renderSidebar() {
   $('#sb-proyek').innerHTML = PROYEK.map((p) => `
     <button class="sb-i" type="button" data-tampil="proyek" data-proyek="${p.id}">${kp(p.id)}${p.nama}</button>
     ${S.tampil === 'proyek' && S.proyek === p.id ? `<div class="sb-anak">${p.milestone.map((m) => `<a class="sb-i" href="#">${m}</a>`).join('')}</div>` : ''}`).join('');
-  document.querySelectorAll('.sb [data-tampil], .nav-pil [data-tampil], .nav-dok [data-tampil]').forEach((b) => {
+  document.querySelectorAll('.sb [data-tampil], .nav-pil [data-tampil], .nav-pil2 [data-tampil]').forEach((b) => {
     const aktif = b.dataset.tampil === S.tampil && (S.tampil !== 'proyek' || b.dataset.proyek === S.proyek);
     aktif ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current');
   });
@@ -2209,6 +2376,7 @@ function renderDaftar() {
   }).join('');
   const isiTab = S.tab === 'daftar'
     ? `<div class="kolom" aria-hidden="true"><span></span><span>Tugas</span><span>Status</span><span>PIC</span><span>Tenggat</span></div>
+       <p class="petunjuk-geser"><span>→</span> Geser kartu ke kanan untuk selesai, ke kiri untuk pindah ke besok.</p>
        ${isiGrup || `<p class="kosong">Tidak ada tugas yang cocok. Ubah saringan atau buat tugas baru.</p>`}`
     : S.tab === 'papan' ? renderPapan(daftar)
     : S.tab === 'kalender' ? renderKalender(daftar)
@@ -2332,7 +2500,8 @@ function render() {
   renderPop();
   // Animasi masuk hanya ketika tampilan berganti, bukan setiap klik.
   const kunci = [S.tampil, S.proyek, S.tab, S.hariAgenda].join('|');
-  if (kunci !== kunciTampilLalu && gerakBoleh()) $('#gulir > .dalam')?.classList.add('masuk');
+  if (kunci !== kunciTampilLalu && gerakBoleh()) { $('#gulir > .dalam')?.classList.add('masuk'); hitungNaik(); }
+  perbaruiMundur();
   kunciTampilLalu = kunci;
   posisiIndikator();
 }
@@ -2375,6 +2544,8 @@ function bacaCepat(teks) {
 
 document.addEventListener('click', (e) => {
   const el = e.target;
+  if (S.abaikanKlik) { S.abaikanKlik = false; e.preventDefault(); return; }
+  if (el.closest('[data-pintasan]')) { bukaPintasan(); return; }
   if (el.closest('a.aksi-kecil')) return;
   if (S.modal) {
     const m = el.closest('[data-modal]');
@@ -2600,6 +2771,7 @@ document.addEventListener('keydown', (e) => {
   if (mengetik) return;
   if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); S.dipilih ? geser(1) : urutanAktif[0] && buka(urutanAktif[0]); }
   if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); geser(-1); }
+  if (e.key === '?') { e.preventDefault(); bukaPintasan(); return; }
   if (e.key === '/') { e.preventDefault(); bukaPalet(); }
   if (e.key === 'c' || e.key === 'C') { e.preventDefault(); $('[data-baru]')?.click(); }
 });
