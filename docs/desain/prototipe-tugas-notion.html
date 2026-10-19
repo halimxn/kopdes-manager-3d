@@ -781,6 +781,152 @@ body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
   .f-dua { grid-template-columns: minmax(0, 1fr); gap: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .saklar, .saklar::after { transition: none; } }
+
+/* ---------- Beranda: rutin diutamakan, agenda tervisualisasi ---------- */
+.nav-dok, .dok-fab, .lembar-baru, .mode-form [data-geser] { display: none; }
+.beranda-kepala { display: flex; align-items: center; gap: 12px; margin: 4px 0 18px; }
+.sapa-b { display: flex; align-items: center; gap: 12px; margin-right: auto; }
+.sapa-b .av { width: 48px; height: 48px; font-size: 14px; }
+.sapa-b small { display: block; font-size: 13px; color: var(--redup); }
+.sapa-b b { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.baru-wrap { position: relative; }
+.menu-baru { position: absolute; right: 0; top: 56px; z-index: 8; width: 290px; padding: 6px; border-radius: 22px; background: #fff; color: var(--tinta); box-shadow: 0 24px 48px -18px rgb(29 27 38 / .4), 0 0 0 1px var(--garis); }
+.menu-baru button { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: center; width: 100%; min-height: 56px; padding: 6px 10px; border-radius: 16px; text-align: left; }
+.menu-baru button:hover, .menu-baru button:focus-visible { background: var(--aksen-muda); }
+.menu-baru b { display: block; font-size: 14px; font-weight: 600; }
+.menu-baru small { font-size: 12px; color: var(--redup); }
+.mb-ikon { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: color-mix(in srgb, var(--w) 35%, #fff); color: var(--tinta); }
+.mb-ikon svg { width: 18px; height: 18px; }
+.beranda-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 18px; align-items: start; margin-bottom: 18px; }
+.beranda-grid.dua { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kartu-b { position: relative; background: #fff; border-radius: 26px; padding: 18px 16px 16px; }
+.kartu-b h2 { margin: 0 44px 0 4px; font-size: 17px; font-weight: 700; }
+.kartu-b > p { margin: 2px 44px 14px 4px; font-size: 12.5px; color: var(--redup); }
+.kartu-b > p .m { color: var(--late); font-weight: 600; }
+.kartu-b .kosong { padding: 16px 4px; text-align: left; }
+
+/* Rutin harian: kartu ungu penuh agar menjadi pusat perhatian. */
+.kartu-rutin { background: #9d89f2; color: #fff; }
+.kartu-rutin > p { color: rgb(255 255 255 / .88); }
+.rutin-progres { height: 8px; margin: 0 4px 14px; border-radius: 999px; background: rgb(255 255 255 / .28); overflow: hidden; }
+.rutin-progres i { display: block; height: 100%; border-radius: 999px; background: #fff; transition: width .2s; }
+.rutin-daftar { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.rutin-daftar li { display: grid; grid-template-columns: 28px 46px minmax(0, 1fr) auto; gap: 10px; align-items: center; min-height: 54px; padding: 6px 10px; border-radius: 18px; background: rgb(255 255 255 / .16); cursor: pointer; }
+.rutin-daftar li:hover { background: rgb(255 255 255 / .24); }
+.rutin-daftar li.berikut, .rutin-daftar li.pilih-ini { background: #fff; color: var(--tinta); }
+.rutin-daftar li.ok .rutin-judul { text-decoration: line-through; opacity: .75; }
+.rutin-jam { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.rutin-judul { font-size: 14px; font-weight: 500; min-width: 0; }
+.rutin-judul small { display: block; font-size: 11px; font-weight: 700; color: var(--aksen); letter-spacing: .02em; }
+.kartu-rutin .cek { width: 26px; height: 26px; border: 2px solid rgb(255 255 255 / .85); background: transparent; }
+.kartu-rutin li.berikut .cek, .kartu-rutin li.pilih-ini .cek { border-color: var(--aksen-garis); }
+.kartu-rutin .cek[aria-checked="true"] { background: #fff; border-color: #fff; }
+.kartu-rutin .cek[aria-checked="true"]::after { border-color: var(--aksen); }
+.kartu-rutin .av { box-shadow: 0 0 0 2px rgb(255 255 255 / .6); }
+
+/* Linimasa agenda. */
+.linimasa { display: grid; gap: 10px; }
+.agenda { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 10px; }
+.agenda-jam { padding-top: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.agenda-jam b { display: block; font-size: 14px; font-weight: 700; }
+.agenda-jam span { font-size: 11.5px; color: var(--pudar); }
+.agenda-isi { position: relative; display: grid; gap: 3px; padding: 12px 14px 12px 18px; border-radius: 20px; background: color-mix(in srgb, var(--w) 24%, #fff); cursor: pointer; }
+.agenda-isi::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 5px; border-radius: 0 5px 5px 0; background: var(--w); }
+.agenda-isi:hover { background: color-mix(in srgb, var(--w) 34%, #fff); }
+.agenda.lalu .agenda-isi { background: #f6f3fc; }
+.agenda.lalu .agenda-judul, .agenda.lalu .agenda-jam b { color: var(--redup); }
+.agenda.kini .agenda-isi { box-shadow: 0 0 0 2px var(--w); }
+.agenda-jenis { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; }
+.agenda-jenis svg { width: 14px; height: 14px; }
+.agenda-judul { font-size: 14.5px; font-weight: 700; }
+.agenda-tempat { font-size: 12.5px; color: var(--redup); }
+.agenda-kaki { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; min-height: 32px; }
+.agenda-kaki .tumpuk { display: flex; }
+.agenda-kaki .av { width: 26px; height: 26px; font-size: 9.5px; box-shadow: 0 0 0 2px #fff; }
+.agenda-kaki .av + .av { margin-left: -8px; }
+.agenda-kaki .av.lebih { background: var(--tinta); color: #fff; }
+.aksi-kecil { display: inline-flex; align-items: center; height: 34px; padding: 0 16px; border-radius: 999px; background: #fff; color: var(--tinta); font-size: 12.5px; font-weight: 600; text-decoration: none; }
+.aksi-kecil.gelap { background: var(--tinta); color: #fff; }
+.lencana-ok { font-size: 12px; font-weight: 600; color: var(--ok); }
+.garis-kini { display: flex; align-items: center; gap: 8px; padding-left: 14px; font-size: 11.5px; font-weight: 700; color: var(--late); }
+.garis-kini::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--late); }
+.garis-kini::after { content: ""; flex: 1; height: 2px; border-radius: 2px; background: var(--late); opacity: .5; }
+
+/* Ringkasan tindakan dan pita minggu. */
+.daftar-ringkas { display: grid; gap: 4px; }
+.ringkas-baris { display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; min-height: 50px; padding: 6px 8px; border-radius: 16px; text-align: left; }
+.ringkas-baris:hover { background: var(--aksen-muda); }
+.tgl-chip { padding: 5px 0; border-radius: 999px; background: #f3eefd; font-size: 12px; font-weight: 600; text-align: center; white-space: nowrap; }
+.tgl-chip.lewat { background: #ffe4dc; color: var(--late); }
+.tgl-chip.dekat { background: #fff1c9; }
+.ringkas-judul { font-size: 13.5px; font-weight: 500; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jenis-ikon { width: 30px; height: 30px; border-radius: 10px; display: inline-grid; place-items: center; background: color-mix(in srgb, var(--w, #9d89f2) 35%, #fff); flex: none; }
+.jenis-ikon svg { width: 15px; height: 15px; }
+.pita { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin: 0 0 12px; }
+.hari-pita { display: grid; justify-items: center; gap: 2px; min-height: 68px; padding: 8px 0; border-radius: 18px; background: #f6f2fd; }
+.hari-pita small { font-size: 11px; color: var(--redup); }
+.hari-pita b { font-size: 17px; font-weight: 700; }
+.hari-pita.ini b { color: var(--aksen); }
+.hari-pita.on { background: var(--aksen); color: #fff; }
+.hari-pita.on small, .hari-pita.on.ini b { color: #fff; }
+.titik-titik { display: flex; gap: 3px; height: 7px; }
+.titik-titik i { width: 7px; height: 7px; border-radius: 50%; background: var(--w); }
+.hari-pita.on .titik-titik i { box-shadow: 0 0 0 1.5px #fff; }
+
+/* Halaman Agenda. */
+.agenda-hal .pita { margin-bottom: 14px; }
+.agenda-hal .hari-pita { background: #fff; min-height: 76px; }
+.agenda-hal .hari-pita.on { background: var(--aksen); }
+.saring-jenis { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.saring-jenis button { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px; background: #fff; font-size: 13px; font-weight: 500; }
+.saring-jenis button::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--w); }
+.saring-jenis button[aria-pressed="true"] { background: var(--tinta); color: #fff; }
+.agenda-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.jurnal-item { display: grid; gap: 6px; padding: 14px; margin-bottom: 8px; border-radius: 18px; background: #f7f3fe; }
+.jurnal-item p { margin: 0; font-size: 13.5px; }
+.jurnal-item small { font-size: 12px; color: var(--redup); }
+.jurnal-item .tautan-sistem { justify-self: start; padding: 0; min-height: 28px; }
+
+/* Formulir agenda/jurnal. */
+.f-jenis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.f-jenis button { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 14px; border-radius: 16px; background: #fff; font-size: 13.5px; font-weight: 600; }
+.f-jenis button svg { width: 18px; height: 18px; }
+.f-jenis button[aria-checked="true"] { background: var(--w); }
+.f-area { align-items: flex-start; }
+.f-area textarea { flex: 1; min-width: 0; min-height: 84px; padding: 14px 0; border: 0; outline: 0; resize: vertical; background: none; font: inherit; font-size: 14px; }
+.f-isian input::placeholder, .f-area textarea::placeholder { color: var(--pudar); }
+.f-isian .jenis-ikon { background: color-mix(in srgb, var(--w) 35%, #fff); }
+.f-galat { margin: 12px 0 0; font-size: 13px; font-weight: 500; color: var(--late); }
+.f-galat:empty { display: none; }
+.f-hapus { display: block; width: 100%; height: 48px; margin: 8px 0 16px; border-radius: 999px; color: var(--late); font-weight: 600; }
+
+@media (max-width: 1023px) {
+  .beranda-grid, .beranda-grid.dua, .agenda-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  .beranda-kepala .contoh { display: none; }
+  body[data-kulit="lekuk"] .beranda-kepala .baru-wrap { display: none; }
+  .sapa-b b { font-size: 17px; }
+  .kartu-b { padding: 16px 12px 14px; border-radius: 24px; }
+  .pita { gap: 4px; }
+  .hari-pita { min-height: 62px; border-radius: 14px; }
+  .menu-baru { position: static; width: auto; }
+  body[data-kulit="lekuk"] .nav-pil { display: none; }
+  /* Bilah bawah menempel dengan cekungan lengkung di tengah untuk tombol tambah. */
+  body[data-kulit="lekuk"] .nav-dok { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; height: calc(70px + env(safe-area-inset-bottom)); padding: 0 6px env(safe-area-inset-bottom); background: #fff; border-radius: 26px 26px 0 0; box-shadow: 0 -12px 30px -20px rgb(29 27 38 / .45);
+    -webkit-mask: radial-gradient(circle 38px at 50% 2px, transparent 97%, #000 100%); mask: radial-gradient(circle 38px at 50% 2px, transparent 97%, #000 100%); }
+  .nav-dok button { display: grid; justify-items: center; align-content: center; gap: 3px; height: 70px; color: var(--redup); font-size: 11px; font-weight: 500; }
+  .nav-dok button svg { width: 22px; height: 22px; }
+  .nav-dok button[aria-current="page"] { color: var(--aksen); font-weight: 700; }
+  .nav-dok button[aria-current="page"]::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--aksen); }
+  body[data-kulit="lekuk"] .dok-fab { display: grid; place-items: center; position: fixed; left: 50%; bottom: calc(36px + env(safe-area-inset-bottom)); z-index: 21; width: 62px; height: 62px; margin-left: -31px; border-radius: 50%; background: var(--aksen); color: #fff; box-shadow: 0 14px 24px -10px rgb(143 120 240 / .9); transition: transform .15s; }
+  .dok-fab svg { width: 26px; height: 26px; }
+  .dok-fab[aria-expanded="true"] { transform: rotate(45deg); }
+  body[data-kulit="lekuk"] .lembar-baru:not(:empty) { display: block; position: fixed; left: 12px; right: 12px; bottom: calc(108px + env(safe-area-inset-bottom)); z-index: 22; padding: 6px; border-radius: 24px; background: #fff; box-shadow: 0 24px 48px -16px rgb(29 27 38 / .45); }
+  body[data-kulit="lekuk"] .app.peek-buka ~ .nav-dok, body[data-kulit="lekuk"] .app.peek-buka ~ .dok-fab { display: none; }
+  .agenda { grid-template-columns: 44px minmax(0, 1fr); gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .dok-fab, .rutin-progres i { transition: none; } }
 </style>
 </head>
 <body>
@@ -815,6 +961,11 @@ body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
   <symbol id="lonceng" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
   <symbol id="keluar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16 16 8M9 8h7v7"/></symbol>
   <symbol id="kembali" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10.5 5-3v9l-5-3z"/></symbol>
+  <symbol id="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="bintang" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></symbol>
+  <symbol id="waktu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="ulang" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></symbol>
   <symbol id="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
 
@@ -825,6 +976,8 @@ body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
     <div class="sb-kartu">
     <button class="sb-i" type="button" data-fokus-cari><svg class="i"><use href="#cari"/></svg>Cari</button>
     <button class="sb-i" type="button" data-tampil="hari"><svg class="i"><use href="#hari"/></svg>Hari ini<span class="n" data-hitung="hari"></span></button>
+    <button class="sb-i" type="button" data-tampil="rutin"><svg class="i"><use href="#ulang"/></svg>Rutin harian<span class="n" data-hitung="rutin"></span></button>
+    <button class="sb-i" type="button" data-tampil="agenda"><svg class="i"><use href="#waktu"/></svg>Agenda<span class="n" data-hitung="agenda"></span></button>
     <button class="sb-i" type="button" data-tampil="saya"><svg class="i"><use href="#saya"/></svg>Tugas saya<span class="n" data-hitung="saya"></span></button>
     <button class="sb-i" type="button" data-tampil="semua"><svg class="i"><use href="#semua"/></svg>Semua tugas<span class="n" data-hitung="semua"></span></button>
     </div>
@@ -865,6 +1018,15 @@ body[data-kulit="lekuk"] .akt { margin-bottom: 4px; }
   </aside>
 </div>
 <button class="fab" type="button" id="fab" aria-label="Tugas baru">+</button>
+<nav class="nav-dok" aria-label="Navigasi utama">
+  <button type="button" data-tampil="hari"><svg><use href="#hari"/></svg><span>Hari ini</span></button>
+  <button type="button" data-tampil="semua"><svg><use href="#semua"/></svg><span>Tugas</span></button>
+  <span aria-hidden="true"></span>
+  <button type="button" data-tampil="agenda"><svg><use href="#waktu"/></svg><span>Agenda</span></button>
+  <button type="button" data-buka-laci><svg><use href="#menu"/></svg><span>Menu</span></button>
+</nav>
+<button class="dok-fab" id="dok-fab" type="button" data-fab aria-haspopup="menu" aria-expanded="false" aria-label="Tambah tugas, agenda, atau kegiatan"><svg><use href="#plus"/></svg></button>
+<div class="lembar-baru" id="lembar-baru"></div>
 <nav class="nav-pil" aria-label="Navigasi cepat">
   <button type="button" data-tampil="hari" aria-label="Hari ini"><svg><use href="#hari"/></svg></button>
   <button type="button" data-tampil="semua" aria-label="Semua tugas"><svg><use href="#semua"/></svg></button>
@@ -894,12 +1056,39 @@ let TUGAS = [
   { kode: 'RAT-004', judul: 'Susun draf laporan pertanggungjawaban', p: 'R', ms: 'Laporan', pic: 'MA', tgl: '2026-10-25', st: 'proses', pr: 'tinggi', catatan: 'Menunggu angka buku kas Oktober.', sub: sub([['Kerangka laporan', 1], ['Bagian usaha', 0], ['Bagian keuangan', 0], ['Bagian keanggotaan', 0], ['Tinjau ketua', 0]]), akt: [] },
   { kode: 'RAT-005', judul: 'Pesan tenda dan kursi untuk 250 orang', p: 'R', ms: 'Undangan', pic: 'BD', tgl: '2026-10-18', st: 'rencana', pr: 'normal', sub: [], akt: [] },
   { kode: 'CLD-002', lokasi: 'Cold storage', judul: 'Bandingkan 3 penawaran unit pendingin', p: 'C', ms: 'Pengadaan', pic: 'AR', tgl: '2026-10-12', st: 'rencana', pr: 'normal', catatan: 'Satu penawaran belum masuk.', sub: sub([['Penawaran A', 1], ['Penawaran B', 0], ['Penawaran C', 0]]), akt: [] },
-  { kode: 'GRS-017', judul: 'Setor kas harian ke bank', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'selesai', pr: 'normal', sub: [], akt: [['MA', 'menandai selesai', '18 Okt']] },
+  // Tugas rutin = work-items dengan recurrence harian dan recurrence_time (jam).
+  { kode: 'RUT-001', rutin: true, ulang: 'harian', jam: '07:30', judul: 'Buka gerai dan hitung kas awal', p: 'G', ms: 'Stok awal', pic: 'AR', tgl: '2026-10-18', st: 'selesai', pr: 'normal', sub: [], akt: [['AR', 'menandai selesai', '07.41']] },
+  { kode: 'RUT-002', rutin: true, ulang: 'harian', jam: '08:00', judul: 'Absensi staf pagi', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'selesai', pr: 'normal', sub: [], akt: [['MA', 'menandai selesai', '08.05']] },
+  { kode: 'RUT-003', rutin: true, ulang: 'harian', jam: '10:00', judul: 'Cek stok barang cepat habis', p: 'G', ms: 'Stok awal', pic: 'BD', tgl: '2026-10-18', st: 'rencana', pr: 'normal', sub: [], akt: [] },
+  { kode: 'RUT-004', rutin: true, ulang: 'harian', jam: '15:00', judul: 'Setor kas harian ke bank', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'rencana', pr: 'tinggi', sub: [], akt: [] },
+  { kode: 'RUT-005', rutin: true, ulang: 'harian', jam: '16:30', judul: 'Rekap penjualan harian', p: 'G', ms: 'Stok awal', pic: 'AR', tgl: '2026-10-18', st: 'rencana', pr: 'normal', sub: [], akt: [] },
   { kode: 'CLD-003', judul: 'Cek daya listrik gudang (kVA)', p: 'C', ms: 'Pengadaan', pic: 'MA', tgl: '2026-10-22', st: 'rencana', pr: 'rendah', sub: [], akt: [] },
 ];
 
 // ---------- Keadaan ----------
-const S = { menu: '', status: '', tampil: 'semua', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
+// Agenda = jadwal (entitas meetings: mode, lokasi, tautan, durasi). Jenis kunjungan/kegiatan perlu kolom jenis baru.
+const JAM_KINI = '09:12';
+const JENIS = {
+  rapat: { label: 'Rapat', w: '#9d89f2', ikon: 'grup' },
+  online: { label: 'Online', w: '#e9a6ec', ikon: 'video' },
+  kunjungan: { label: 'Kunjungan', w: '#f9cd52', ikon: 'pin' },
+  kegiatan: { label: 'Kegiatan', w: '#5cc76e', ikon: 'bintang' },
+};
+let AGENDA = [
+  { id: 'A1', jenis: 'rapat', judul: 'Briefing pagi staf gerai', tgl: '2026-10-18', mulai: '08:00', selesai: '08:30', lokasi: 'Gerai sembako', peserta: ['MA', 'AR', 'BD'] },
+  { id: 'A2', jenis: 'online', judul: 'Zoom dinas koperasi: laporan triwulan', tgl: '2026-10-18', mulai: '10:00', selesai: '11:00', tautan: 'https://zoom.us/j/contoh', peserta: ['MA', 'SN'] },
+  { id: 'A3', jenis: 'kunjungan', judul: 'Kunjungan sales distributor beras', tgl: '2026-10-18', mulai: '13:00', selesai: '14:00', lokasi: 'Gudang koperasi', peserta: ['MA', 'BD'] },
+  { id: 'A4', jenis: 'kegiatan', judul: 'Pendampingan kelompok tani', tgl: '2026-10-18', mulai: '15:30', selesai: '17:00', lokasi: 'Balai desa', peserta: ['MA', 'SN', 'RH', 'AR'] },
+  { id: 'A5', jenis: 'rapat', judul: 'Rapat pengurus persiapan RAT', tgl: '2026-10-19', mulai: '09:00', selesai: '11:00', lokasi: 'Kantor koperasi', peserta: ['MA', 'SN', 'RH'] },
+  { id: 'A6', jenis: 'kunjungan', judul: 'Survei lokasi cold storage', tgl: '2026-10-16', mulai: '09:00', selesai: '11:00', lokasi: 'Dusun Krajan', peserta: ['MA', 'AR'] },
+  { id: 'A7', jenis: 'online', judul: 'Meet pemasok kemasan', tgl: '2026-10-14', mulai: '14:00', selesai: '14:45', tautan: 'https://meet.google.com/contoh', peserta: ['MA'] },
+  { id: 'A8', jenis: 'kegiatan', judul: 'Bazar sembako murah', tgl: '2026-10-13', mulai: '07:00', selesai: '12:00', lokasi: 'Lapangan desa', peserta: ['MA', 'AR', 'BD', 'SN'] },
+];
+// Kegiatan (journal) = yang sudah terjadi; tidak punya status tugas.
+let JURNAL = [
+  { id: 'J1', tgl: '2026-10-16', uraian: 'Lokasi cold storage cocok, perlu cek daya listrik gudang.', agenda: 'A6', tugas: 'CLD-003' },
+];
+const S = { hariAgenda: '', jenis: '', agendaForm: false, jurnalForm: null, draft: null, pilihBaru: '', menu: '', status: '', tampil: 'hari', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
 
 // ---------- Utilitas ----------
 const $ = (s, el = document) => el.querySelector(s);
@@ -934,6 +1123,7 @@ const cek = (t) => `<button class="cek" type="button" role="checkbox" aria-check
 // ---------- Pemilihan tugas yang terlihat ----------
 function tugasTerlihat(abaikanStatus) {
   return TUGAS.filter((t) => {
+    if (S.tampil === 'rutin' ? !t.rutin : t.rutin) return false;
     if (S.tampil === 'saya' && t.pic !== 'MA') return false;
     if (S.tampil === 'proyek' && t.p !== S.proyek) return false;
     if (S.pic && t.pic !== S.pic) return false;
@@ -1050,6 +1240,180 @@ function barisSaringan() {
   return `<div class="saringan">Menyaring ${c.map(([k, l]) => `<button type="button" class="chip-saring" data-hapus-saring="${k}">${l}<span aria-hidden="true">✕</span><span class="sr">, hapus saringan</span></button>`).join('')}${c.length > 1 ? '<button type="button" class="hapus-semua" data-hapus-saring="semua">Hapus semua</button>' : ''}</div>`;
 }
 
+// ---------- Beranda dan Agenda ----------
+const HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const jam = (j) => j.replace(':', '.');
+const namaHari = (tgl) => HARI[new Date(tgl + 'T00:00').getDay()];
+const tglPanjang = (tgl) => { const [, m, h] = tgl.split('-'); return `${namaHari(tgl)}, ${+h} ${['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][+m - 1]}`; };
+const urutAgenda = (a, b) => (a.tgl + a.mulai).localeCompare(b.tgl + b.mulai);
+
+function menuBaru() {
+  return `<div class="menu-baru" role="menu">
+    <button type="button" role="menuitem" data-baru=""><span class="mb-ikon" style="--w:#9d89f2"><svg><use href="#semua"/></svg></span><span><b>Tugas baru</b><small>Ada PIC, tenggat, status</small></span></button>
+    <button type="button" role="menuitem" data-agenda-baru><span class="mb-ikon" style="--w:#e9a6ec"><svg><use href="#waktu"/></svg></span><span><b>Agenda</b><small>Rapat, online, kunjungan, kegiatan</small></span></button>
+    <button type="button" role="menuitem" data-jurnal-baru><span class="mb-ikon" style="--w:#5cc76e"><svg><use href="#catat"/></svg></span><span><b>Catat kegiatan</b><small>Hasil yang sudah terjadi</small></span></button>
+  </div>`;
+}
+
+function kartuAgenda(a) {
+  const j = JENIS[a.jenis];
+  const lalu = a.tgl < HARI_INI || (a.tgl === HARI_INI && a.selesai <= JAM_KINI);
+  const kini = a.tgl === HARI_INI && a.mulai <= JAM_KINI && a.selesai > JAM_KINI;
+  const tercatat = JURNAL.some((x) => x.agenda === a.id);
+  const aksi = lalu
+    ? (tercatat ? '<span class="lencana-ok">Hasil tercatat</span>' : `<button class="aksi-kecil" type="button" data-catat-hasil="${a.id}">Catat hasil</button>`)
+    : a.jenis === 'online' && a.tautan ? `<a class="aksi-kecil gelap" href="${esc(a.tautan)}" target="_blank" rel="noopener">Gabung</a>` : '';
+  const tempat = a.jenis === 'online' ? 'Rapat online · tautan tersimpan' : esc(a.lokasi || '');
+  return `<article class="agenda ${lalu ? 'lalu' : ''} ${kini ? 'kini' : ''}" style="--w:${j.w}">
+    <div class="agenda-jam"><b>${jam(a.mulai)}</b><span>${jam(a.selesai)}</span></div>
+    <div class="agenda-isi" data-agenda="${a.id}" tabindex="0" role="button" aria-label="${j.label}: ${esc(a.judul)}, ${jam(a.mulai)} sampai ${jam(a.selesai)}">
+      <span class="agenda-jenis"><svg><use href="#${j.ikon}"/></svg>${j.label}${kini ? ' · sedang berlangsung' : ''}</span>
+      <b class="agenda-judul">${esc(a.judul)}</b>
+      <span class="agenda-tempat">${tempat}</span>
+      <span class="agenda-kaki"><span class="tumpuk">${a.peserta.slice(0, 3).map(av).join('')}${a.peserta.length > 3 ? `<span class="av lebih">+${a.peserta.length - 3}</span>` : ''}</span>${aksi}</span>
+    </div>
+  </article>`;
+}
+
+function linimasa(daftar, tgl) {
+  if (!daftar.length) return '<p class="kosong">Belum ada agenda. Tambahkan rapat, rapat online, kunjungan, atau kegiatan.</p>';
+  let kiniDipasang = tgl !== HARI_INI;
+  const garisKini = `<div class="garis-kini" aria-label="Sekarang ${jam(JAM_KINI)}"><span>${jam(JAM_KINI)}</span></div>`;
+  const isi = daftar.map((a) => {
+    let awal = '';
+    if (!kiniDipasang && a.mulai > JAM_KINI) { awal = garisKini; kiniDipasang = true; }
+    return awal + kartuAgenda(a);
+  }).join('');
+  return `<div class="linimasa">${isi}${kiniDipasang ? '' : garisKini}</div>`;
+}
+
+function pitaMinggu(pilih) {
+  const awal = new Date(HARI_INI + 'T00:00');
+  awal.setDate(awal.getDate() - ((awal.getDay() + 6) % 7));
+  return `<div class="pita" role="group" aria-label="Pilih hari">${Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(awal); d.setDate(awal.getDate() + i);
+    const tgl = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const isi = AGENDA.filter((a) => a.tgl === tgl).sort(urutAgenda);
+    return `<button class="hari-pita ${tgl === pilih ? 'on' : ''} ${tgl === HARI_INI ? 'ini' : ''}" type="button" data-hari-agenda="${tgl}" aria-pressed="${tgl === pilih}" aria-label="${tglPanjang(tgl)}, ${isi.length} agenda"><small>${HARI[d.getDay()].slice(0, 3)}</small><b>${d.getDate()}</b><span class="titik-titik">${isi.slice(0, 4).map((a) => `<i style="--w:${JENIS[a.jenis].w}"></i>`).join('')}</span></button>`;
+  }).join('')}</div>`;
+}
+
+function renderBeranda() {
+  $('#jejak').innerHTML = 'Beranda <span>/</span> <b>Hari ini</b>';
+  const rutin = TUGAS.filter((t) => t.rutin).sort((a, b) => a.jam.localeCompare(b.jam));
+  const nRutin = rutin.filter((t) => t.st === 'selesai').length;
+  const berikut = rutin.find((t) => t.st !== 'selesai');
+  const agendaHari = AGENDA.filter((a) => a.tgl === HARI_INI).sort(urutAgenda);
+  const tindakan = TUGAS.filter((t) => !t.rutin && !tutupStatus(t) && t.tgl <= HARI_INI).sort(urut);
+  const nLewat = tindakan.filter(lewat).length;
+  const mendatang = AGENDA.filter((a) => a.tgl > HARI_INI).sort(urutAgenda).slice(0, 3);
+  urutanAktif = [...rutin, ...tindakan].map((t) => t.kode);
+  $('#gulir').innerHTML = `<div class="dalam beranda">
+    <div class="beranda-kepala">
+      <div class="sapa-b">${av('MA')}<div><small>Hai, Manajer</small><b>${tglPanjang(HARI_INI)}</b></div></div>
+      <span class="contoh">CONTOH</span>
+      <div class="baru-wrap"><button class="bulat-aksi utama" type="button" data-pilih-baru aria-haspopup="menu" aria-expanded="${S.pilihBaru === 'atas'}" aria-label="Tambah"><svg><use href="#plus"/></svg></button>${S.pilihBaru === 'atas' ? menuBaru() : ''}</div>
+    </div>
+    <div class="beranda-grid">
+      <section class="kartu-b kartu-rutin bertakik" aria-labelledby="judul-rutin">
+        <h2 id="judul-rutin">Rutin harian</h2>
+        <p>${nRutin} dari ${rutin.length} selesai hari ini${berikut ? ` · berikutnya ${jam(berikut.jam)}` : ' · semua beres'}</p>
+        <button class="takik-btn" type="button" data-baru-rutin aria-label="Tambah tugas rutin"><svg><use href="#plus"/></svg></button>
+        <div class="rutin-progres" role="progressbar" aria-valuemin="0" aria-valuemax="${rutin.length}" aria-valuenow="${nRutin}" aria-label="Progres rutin"><i style="width:${rutin.length ? (nRutin / rutin.length) * 100 : 0}%"></i></div>
+        <ul class="rutin-daftar">${rutin.map((t) => `<li class="${t.st === 'selesai' ? 'ok' : ''} ${berikut === t ? 'berikut' : ''} ${S.dipilih === t.kode ? 'pilih-ini' : ''}" data-buka="${t.kode}">
+          <button class="cek" type="button" role="checkbox" aria-checked="${t.st === 'selesai'}" data-cek="${t.kode}" aria-label="Tandai ${esc(t.judul)} selesai"></button>
+          <span class="rutin-jam">${jam(t.jam)}</span>
+          <span class="rutin-judul">${esc(t.judul)}${berikut === t ? '<small>Berikutnya</small>' : ''}</span>${av(t.pic)}</li>`).join('')}</ul>
+      </section>
+      <section class="kartu-b bertakik" aria-labelledby="judul-agenda-b">
+        <h2 id="judul-agenda-b">Agenda hari ini</h2>
+        <p>${agendaHari.length} agenda · rapat, online, kunjungan, kegiatan</p>
+        <button class="takik-btn" type="button" data-agenda-baru aria-label="Tambah agenda"><svg><use href="#plus"/></svg></button>
+        ${linimasa(agendaHari, HARI_INI)}
+      </section>
+    </div>
+    <div class="beranda-grid dua">
+      <section class="kartu-b bertakik" aria-labelledby="judul-tindakan">
+        <h2 id="judul-tindakan">Perlu tindakan</h2>
+        <p>${nLewat ? `<span class="m">${nLewat} terlambat</span> · ` : ''}${tindakan.length - nLewat} jatuh tempo hari ini</p>
+        <button class="takik-btn" type="button" data-tampil="semua" aria-label="Lihat semua tugas"><svg><use href="#keluar"/></svg></button>
+        <div class="daftar-ringkas">${tindakan.slice(0, 5).map((t) => { const tg = labelTgl(t); return `<button class="ringkas-baris" type="button" data-buka="${t.kode}"><span class="tgl-chip ${tg.kls}">${tg.teks}</span><span class="ringkas-judul">${esc(t.judul)}</span>${av(t.pic)}</button>`; }).join('') || '<p class="kosong">Tidak ada yang mendesak.</p>'}</div>
+      </section>
+      <section class="kartu-b bertakik" aria-labelledby="judul-minggu">
+        <h2 id="judul-minggu">Minggu ini</h2>
+        <p>Pilih hari untuk membuka agenda</p>
+        <button class="takik-btn" type="button" data-tampil="agenda" aria-label="Buka Agenda"><svg><use href="#keluar"/></svg></button>
+        ${pitaMinggu(HARI_INI)}
+        <div class="daftar-ringkas">${mendatang.map((a) => `<button class="ringkas-baris" type="button" data-agenda="${a.id}"><span class="tgl-chip" style="background:color-mix(in srgb, ${JENIS[a.jenis].w} 30%, #fff)">${namaHari(a.tgl).slice(0, 3)} ${jam(a.mulai)}</span><span class="ringkas-judul">${esc(a.judul)}</span><span class="jenis-ikon" style="--w:${JENIS[a.jenis].w}" title="${JENIS[a.jenis].label}"><svg><use href="#${JENIS[a.jenis].ikon}"/></svg></span></button>`).join('')}</div>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderAgenda() {
+  const hari = S.hariAgenda || HARI_INI;
+  $('#jejak').innerHTML = 'Pekerjaan <span>/</span> <b>Agenda</b>';
+  const isi = AGENDA.filter((a) => a.tgl === hari && (!S.jenis || a.jenis === S.jenis)).sort(urutAgenda);
+  const jurnal = JURNAL.filter((x) => x.tgl === hari);
+  urutanAktif = [];
+  $('#gulir').innerHTML = `<div class="dalam agenda-hal">
+    <div class="judul-baris"><h1 class="judul-hal">Agenda <span class="contoh">CONTOH</span></h1><button class="bulat-aksi utama" type="button" data-agenda-baru aria-label="Agenda baru"><svg><use href="#plus"/></svg></button><button class="bulat-aksi" type="button" data-jurnal-baru aria-label="Catat kegiatan"><svg><use href="#catat"/></svg></button></div>
+    ${pitaMinggu(hari)}
+    <div class="saring-jenis" role="group" aria-label="Saring jenis">${[['', 'Semua', '#1d1b26'], ...Object.entries(JENIS).map(([k, j]) => [k, j.label, j.w])].map(([k, l, w]) => `<button type="button" data-jenis-saring="${k}" aria-pressed="${S.jenis === k}" style="--w:${w}">${l}</button>`).join('')}</div>
+    <div class="agenda-grid">
+      <section class="kartu-b bertakik"><h2>${tglPanjang(hari)}</h2><p>${isi.length} agenda</p><button class="takik-btn" type="button" data-agenda-baru aria-label="Tambah agenda di hari ini"><svg><use href="#plus"/></svg></button>${linimasa(isi, hari)}</section>
+      <section class="kartu-b bertakik"><h2>Kegiatan tercatat</h2><p>Hasil yang sudah terjadi pada hari ini</p><button class="takik-btn" type="button" data-jurnal-baru aria-label="Catat kegiatan"><svg><use href="#catat"/></svg></button>
+        ${jurnal.map((x) => { const a = AGENDA.find((y) => y.id === x.agenda); const t = TUGAS.find((y) => y.kode === x.tugas); return `<article class="jurnal-item"><p>${esc(x.uraian)}</p>${a ? `<small>Dari agenda: ${esc(a.judul)}</small>` : ''}${t ? `<button class="tautan-sistem" type="button" data-buka="${t.kode}">Tindak lanjut: ${esc(t.judul)}</button>` : ''}</article>`; }).join('') || '<p class="kosong">Belum ada kegiatan tercatat. Setelah agenda selesai, pilih "Catat hasil".</p>'}
+      </section>
+    </div>
+  </div>`;
+}
+
+function formAgenda() {
+  const d = S.draft;
+  const contoh = { rapat: 'Rapat pengurus bulanan', online: 'Zoom dengan dinas koperasi', kunjungan: 'Kunjungan sales distributor', kegiatan: 'Bazar sembako murah' }[d.jenis];
+  return `<form id="form-agenda" novalidate>
+    <div class="pk-kode">${d.id ? 'Ubah agenda' : 'Agenda baru'}</div>
+    <div class="f-label" id="lbl-jenis">Jenis</div>
+    <div class="f-jenis" role="radiogroup" aria-labelledby="lbl-jenis">${Object.entries(JENIS).map(([k, j]) => `<button type="button" role="radio" aria-checked="${d.jenis === k}" data-jenis="${k}" style="--w:${j.w}"><svg><use href="#${j.ikon}"/></svg>${j.label}</button>`).join('')}</div>
+    <label class="f-label" for="a-judul">Judul</label>
+    <div class="f-isian"><input id="a-judul" data-d="judul" value="${esc(d.judul)}" placeholder="Mis. ${contoh}" autocomplete="off"></div>
+    <label class="f-label" for="a-tgl">Tanggal</label>
+    <div class="f-isian"><svg><use href="#hari"/></svg><input id="a-tgl" type="date" data-d="tgl" value="${d.tgl}"></div>
+    <div class="f-dua">
+      <div><label class="f-label" for="a-mulai">Mulai</label><div class="f-isian"><svg><use href="#waktu"/></svg><input id="a-mulai" type="time" data-d="mulai" value="${d.mulai}"></div></div>
+      <div><label class="f-label" for="a-selesai">Selesai</label><div class="f-isian"><svg><use href="#waktu"/></svg><input id="a-selesai" type="time" data-d="selesai" value="${d.selesai}"></div></div>
+    </div>
+    ${d.jenis === 'online'
+      ? `<label class="f-label" for="a-tautan">Tautan rapat</label><div class="f-isian f-tautan"><input id="a-tautan" type="url" data-d="tautan" value="${esc(d.tautan || '')}" placeholder="https://zoom.us/… atau https://meet.google.com/…"><span class="panah"><svg><use href="#keluar"/></svg></span></div>`
+      : `<label class="f-label" for="a-lokasi">Lokasi</label><div class="f-isian"><svg><use href="#pin"/></svg><input id="a-lokasi" data-d="lokasi" value="${esc(d.lokasi || '')}" placeholder="Mis. Kantor koperasi, gudang, rumah mitra"></div>`}
+    <div class="f-label">Peserta <span>dari daftar Tim</span></div>
+    <div class="f-tim" role="group" aria-label="Pilih peserta">${Object.keys(ORANG).map((k) => `<button class="f-av" type="button" data-peserta="${k}" aria-pressed="${d.peserta.includes(k)}" title="${ORANG[k].lengkap}">${av(k)}<span class="sr">${ORANG[k].lengkap}</span></button>`).join('')}<a class="f-tambah" href="#tim" aria-label="Tambah staf di Tim">+</a></div>
+    <label class="f-label" for="a-catatan">Catatan</label>
+    <div class="f-isian f-area"><textarea id="a-catatan" data-d="catatan" rows="3" placeholder="Agenda pembahasan, barang yang dibawa, kontak sales">${esc(d.catatan || '')}</textarea></div>
+    <p class="f-galat" id="galat-agenda" role="alert"></p>
+    <button class="f-simpan" type="submit">Simpan agenda</button>
+    ${d.id ? `<button class="f-hapus" type="button" data-hapus-agenda="${d.id}">Hapus agenda</button>` : ''}
+  </form>`;
+}
+
+function formJurnal() {
+  const a = AGENDA.find((x) => x.id === S.jurnalForm.agenda);
+  return `<form id="form-jurnal" novalidate>
+    <div class="pk-kode">Catat kegiatan</div>
+    <p class="f-ket">Kegiatan mencatat yang sudah terjadi. Bila ada pekerjaan lanjutan, isi tindak lanjut agar menjadi tugas.</p>
+    ${a ? `<div class="f-label">Dari agenda</div><div class="f-isian" style="--w:${JENIS[a.jenis].w}"><span class="jenis-ikon"><svg><use href="#${JENIS[a.jenis].ikon}"/></svg></span>${esc(a.judul)} · ${jam(a.mulai)}</div>` : ''}
+    <label class="f-label" for="j-tgl">Tanggal</label>
+    <div class="f-isian"><svg><use href="#hari"/></svg><input id="j-tgl" type="date" value="${a ? a.tgl : HARI_INI}"></div>
+    <label class="f-label" for="j-uraian">Apa yang terjadi?</label>
+    <div class="f-isian f-area"><textarea id="j-uraian" rows="4" placeholder="Mis. Sales menawarkan beras premium Rp12.500/kg, minimal 1 ton."></textarea></div>
+    <label class="f-label" for="j-lanjut">Tindak lanjut <span>opsional, menjadi tugas</span></label>
+    <div class="f-isian"><svg><use href="#semua"/></svg><input id="j-lanjut" placeholder="Mis. Bandingkan harga dengan pemasok lain" autocomplete="off"></div>
+    <p class="f-galat" id="galat-jurnal" role="alert"></p>
+    <button class="f-simpan" type="submit">Simpan kegiatan</button>
+  </form>`;
+}
+
 // ---------- Render ----------
 function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   const tot = daftar.length;
@@ -1076,14 +1440,17 @@ function renderSidebar() {
   $('#sb-proyek').innerHTML = PROYEK.map((p) => `
     <button class="sb-i" type="button" data-tampil="proyek" data-proyek="${p.id}">${kp(p.id)}${p.nama}</button>
     ${S.tampil === 'proyek' && S.proyek === p.id ? `<div class="sb-anak">${p.milestone.map((m) => `<a class="sb-i" href="#">${m}</a>`).join('')}</div>` : ''}`).join('');
-  document.querySelectorAll('.sb [data-tampil], .nav-pil [data-tampil]').forEach((b) => {
+  document.querySelectorAll('.sb [data-tampil], .nav-pil [data-tampil], .nav-dok [data-tampil]').forEach((b) => {
     const aktif = b.dataset.tampil === S.tampil && (S.tampil !== 'proyek' || b.dataset.proyek === S.proyek);
     aktif ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current');
   });
   const buka = TUGAS.filter((t) => !tutupStatus(t));
   $('[data-hitung="hari"]').textContent = buka.filter((t) => t.tgl <= HARI_INI).length || '';
   $('[data-hitung="saya"]').textContent = buka.filter((t) => t.pic === 'MA').length || '';
-  $('[data-hitung="semua"]').textContent = buka.length || '';
+  $('[data-hitung="semua"]').textContent = buka.filter((t) => !t.rutin).length || '';
+  const rutin = TUGAS.filter((t) => t.rutin);
+  $('[data-hitung="rutin"]').textContent = `${rutin.filter((t) => t.st === 'selesai').length}/${rutin.length}`;
+  $('[data-hitung="agenda"]').textContent = AGENDA.filter((a) => a.tgl === HARI_INI).length || '';
 }
 
 function ringkasan(daftar) {
@@ -1125,7 +1492,7 @@ function kelompokkan(daftar) {
 
 function renderDaftar() {
   const daftar = tugasTerlihat();
-  const judul = S.tampil === 'saya' ? 'Tugas saya' : S.tampil === 'proyek' ? proyek(S.proyek).nama : 'Semua tugas';
+  const judul = S.tampil === 'saya' ? 'Tugas saya' : S.tampil === 'rutin' ? 'Rutin harian' : S.tampil === 'proyek' ? proyek(S.proyek).nama : 'Semua tugas';
   $('#jejak').innerHTML = `Pekerjaan <span>/</span> <b>${esc(judul)}</b>`;
   const grup = kelompokkan(daftar).filter((g) => g.isi.length);
   urutanAktif = [];
@@ -1198,6 +1565,14 @@ function renderHariIni() {
 
 function renderPeek() {
   const app = $('#app');
+  $('#peek').classList.toggle('mode-form', !!(S.agendaForm || S.jurnalForm));
+  if (S.agendaForm || S.jurnalForm) {
+    app.classList.add('peek-buka');
+    $('#peek').setAttribute('aria-hidden', 'false');
+    $('#posisi').textContent = '';
+    $('#pk-isi').innerHTML = S.agendaForm ? formAgenda() : formJurnal();
+    return;
+  }
   const t = TUGAS.find((x) => x.kode === S.dipilih);
   app.classList.toggle('peek-buka', !!t);
   $('#peek').setAttribute('aria-hidden', !t);
@@ -1228,7 +1603,7 @@ function renderPeek() {
     </div>
     <label class="f-label" for="f-p">Proyek</label>
     <div class="f-isian"><span class="kp" style="background:${p.w}"></span><select id="f-p" data-prop="p">${opsi(PROYEK.map((x) => [x.id, x.nama]), t.p)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div>
-    <button class="f-toggle" type="button" role="switch" aria-checked="${ulang}" data-ulang><span>Ulangi tiap minggu</span><span class="saklar" aria-hidden="true"></span></button>
+    <button class="f-toggle" type="button" role="switch" aria-checked="${t.rutin ? true : ulang}" data-ulang><span>${t.rutin ? `Rutin tiap hari · ${jam(t.jam)}` : 'Ulangi tiap minggu'}</span><span class="saklar" aria-hidden="true"></span></button>
     ${t.sumber ? `<div class="f-label">Sumber</div><a class="f-isian f-tautan" href="#catatan"><span><svg><use href="#catat"/></svg>${esc(t.sumber)}</span><span class="panah"><svg><use href="#keluar"/></svg></span></a>` : ''}
     ${t.lokasi ? `<div class="f-label">Lokasi</div><a class="f-isian f-tautan" href="#dunia"><span><svg><use href="#kubus"/></svg>${esc(t.lokasi)} · Dunia Koperasi</span><span class="panah"><svg><use href="#keluar"/></svg></span></a>` : ''}
     <div class="f-label">Subtugas <span>${t.sub.length ? `${n}/${t.sub.length}` : ''}</span></div>
@@ -1242,14 +1617,18 @@ function renderPeek() {
 
 function render() {
   renderSidebar();
-  S.tampil === 'hari' ? renderHariIni() : renderDaftar();
+  if (S.tampil === 'hari') renderBeranda();
+  else if (S.tampil === 'agenda') renderAgenda();
+  else renderDaftar();
+  $('#lembar-baru').innerHTML = S.pilihBaru === 'fab' ? menuBaru() : '';
+  $('#dok-fab')?.setAttribute('aria-expanded', S.pilihBaru === 'fab');
   renderPeek();
 }
 
 // ---------- Aksi ----------
 function catat(t, teks) { t.akt.unshift(['MA', teks, '18 Okt']); }
-function buka(kode) { S.dipilih = kode; S.picBuka = false; render(); }
-function tutup() { S.dipilih = null; render(); }
+function buka(kode) { S.dipilih = kode; S.picBuka = false; S.agendaForm = false; S.jurnalForm = null; render(); }
+function tutup() { S.dipilih = null; S.agendaForm = false; S.jurnalForm = null; render(); }
 function geser(arah) {
   if (!S.dipilih) return;
   const i = urutanAktif.indexOf(S.dipilih);
@@ -1275,6 +1654,41 @@ function bacaCepat(teks) {
 
 document.addEventListener('click', (e) => {
   const el = e.target;
+  if (el.closest('a.aksi-kecil')) return;
+  if (S.pilihBaru && !el.closest('.menu-baru') && !el.closest('[data-pilih-baru]') && !el.closest('[data-fab]')) { S.pilihBaru = ''; render(); }
+  if (el.closest('.menu-baru')) S.pilihBaru = '';
+  const pb = el.closest('[data-pilih-baru]');
+  if (pb) { S.pilihBaru = S.pilihBaru === 'atas' ? '' : 'atas'; render(); return; }
+  if (el.closest('[data-fab]')) { S.pilihBaru = S.pilihBaru === 'fab' ? '' : 'fab'; render(); return; }
+  if (el.closest('[data-buka-laci]')) { document.body.classList.add('laci-buka'); return; }
+  const ab = el.closest('[data-agenda-baru]');
+  if (ab) {
+    S.draft = { jenis: 'rapat', judul: '', tgl: S.tampil === 'agenda' && S.hariAgenda ? S.hariAgenda : HARI_INI, mulai: '09:00', selesai: '10:00', lokasi: '', tautan: '', peserta: ['MA'], catatan: '' };
+    S.dipilih = null; S.jurnalForm = null; S.agendaForm = true; render(); $('#a-judul')?.focus(); return;
+  }
+  const ag = el.closest('[data-agenda]');
+  if (ag && !el.closest('[data-catat-hasil]')) {
+    const a = AGENDA.find((x) => x.id === ag.dataset.agenda);
+    S.draft = { ...a, peserta: [...a.peserta] }; S.dipilih = null; S.jurnalForm = null; S.agendaForm = true; render(); return;
+  }
+  const jn = el.closest('[data-jenis]');
+  if (jn) { S.draft.jenis = jn.dataset.jenis; renderPeek(); return; }
+  const ps = el.closest('[data-peserta]');
+  if (ps) { const k = ps.dataset.peserta; const d = S.draft; d.peserta = d.peserta.includes(k) ? d.peserta.filter((x) => x !== k) : [...d.peserta, k]; renderPeek(); return; }
+  const ha = el.closest('[data-hapus-agenda]');
+  if (ha) { AGENDA = AGENDA.filter((x) => x.id !== ha.dataset.hapusAgenda); tutup(); return; }
+  const ch = el.closest('[data-catat-hasil]');
+  if (ch) { S.dipilih = null; S.agendaForm = false; S.jurnalForm = { agenda: ch.dataset.catatHasil }; render(); $('#j-uraian')?.focus(); return; }
+  if (el.closest('[data-jurnal-baru]')) { S.dipilih = null; S.agendaForm = false; S.jurnalForm = {}; render(); $('#j-uraian')?.focus(); return; }
+  const hp = el.closest('[data-hari-agenda]');
+  if (hp) { S.hariAgenda = hp.dataset.hariAgenda; S.tampil = 'agenda'; render(); return; }
+  const js = el.closest('[data-jenis-saring]');
+  if (js) { S.jenis = js.dataset.jenisSaring; render(); return; }
+  if (el.closest('[data-baru-rutin]')) {
+    const t = tugasBaru({ judul: 'Tugas rutin baru' });
+    Object.assign(t, { rutin: true, ulang: 'harian', jam: '12:00' });
+    buka(t.kode); const j = $('[data-judul]'); j?.focus(); if (j) document.getSelection().selectAllChildren(j); return;
+  }
   const menu = el.closest('[data-menu]');
   if (menu) { S.menu = S.menu === menu.dataset.menu ? '' : menu.dataset.menu; render(); return; }
   const bd = el.closest('[data-buka-detail]');
@@ -1283,7 +1697,7 @@ document.addEventListener('click', (e) => {
   if (kh) { const t = TUGAS.find((x) => x.kode === kh.dataset.keHari); t.tgl = HARI_INI; S.menu = ''; catat(t, 'memindahkan tenggat ke <b>hari ini</b>'); render(); return; }
   if (S.menu && !el.closest('.menu-kartu')) { S.menu = ''; if (!el.closest('[data-buka]')) { render(); return; } }
   const ul = el.closest('[data-ulang]');
-  if (ul) { const t = TUGAS.find((x) => x.kode === S.dipilih); t.ulang = t.ulang === 'mingguan' ? 'tidak' : 'mingguan'; catat(t, t.ulang === 'mingguan' ? 'mengaktifkan <b>ulang tiap minggu</b>' : 'mematikan pengulangan'); render(); return; }
+  if (ul) { const t = TUGAS.find((x) => x.kode === S.dipilih); if (t.rutin) { t.rutin = false; t.ulang = 'tidak'; catat(t, 'mematikan rutin harian'); render(); return; } t.ulang = t.ulang === 'mingguan' ? 'tidak' : 'mingguan'; catat(t, t.ulang === 'mingguan' ? 'mengaktifkan <b>ulang tiap minggu</b>' : 'mematikan pengulangan'); render(); return; }
   const pilihPic = el.closest('[data-pilih-pic]');
   if (pilihPic) { const t = TUGAS.find((x) => x.kode === S.dipilih); t.pic = pilihPic.dataset.pilihPic; S.picBuka = false; catat(t, `mengubah PIC ke <b>${ORANG[t.pic].nama}</b>`); render(); $('[data-pic-buka]')?.focus(); return; }
   if (el.closest('[data-pic-buka]')) { S.picBuka = !S.picBuka; render(); if (S.picBuka) $('.pic-op[aria-selected="true"]')?.focus(); return; }
@@ -1312,7 +1726,7 @@ document.addEventListener('click', (e) => {
   if (tab) { S.tab = tab.dataset.tab; render(); return; }
   const baru = el.closest('[data-baru]');
   if (baru || el.closest('#fab')) {
-    if (S.tampil === 'hari') { $('#cepat').focus(); return; }
+    S.pilihBaru = '';
     const t = tugasBaru({ p: baru?.dataset.baru || undefined, judul: 'Tugas baru' });
     buka(t.kode);
     const j = $('[data-judul]'); j.focus(); document.getSelection().selectAllChildren(j);
@@ -1343,7 +1757,8 @@ document.addEventListener('change', (e) => {
   }
 });
 document.addEventListener('input', (e) => {
-  if (e.target.id === 'cari') { S.cari = e.target.value; if (S.tampil === 'hari') { S.tampil = 'semua'; renderSidebar(); } renderDaftar(); renderPeek(); }
+  if (e.target.id === 'cari') { S.cari = e.target.value; if (S.tampil === 'hari' || S.tampil === 'agenda') { S.tampil = 'semua'; renderSidebar(); } renderDaftar(); renderPeek(); }
+  if (e.target.dataset?.d && S.draft) S.draft[e.target.dataset.d] = e.target.value;
 });
 document.addEventListener('focusout', (e) => {
   if (e.target.matches?.('[data-catatan]')) { const t = TUGAS.find((x) => x.kode === S.dipilih); const v = e.target.textContent.trim(); if (t && v !== (t.catatan || '')) { t.catatan = v; catat(t, 'memperbarui deskripsi'); render(); } return; }
@@ -1352,12 +1767,37 @@ document.addEventListener('focusout', (e) => {
 document.addEventListener('submit', (e) => {
   e.preventDefault();
   const f = e.target;
+  if (f.id === 'form-agenda') {
+    const d = S.draft;
+    const galat = !d.judul.trim() ? 'Judul wajib diisi.' : d.selesai <= d.mulai ? 'Jam selesai harus setelah jam mulai.' : !d.peserta.length ? 'Pilih minimal satu peserta.' : d.jenis === 'online' && d.tautan && !/^https:\/\//.test(d.tautan) ? 'Tautan harus diawali https://.' : '';
+    if (galat) { $('#galat-agenda').textContent = galat; return; }
+    const data = { ...d, judul: d.judul.trim() };
+    if (d.id) AGENDA = AGENDA.map((x) => (x.id === d.id ? data : x));
+    else AGENDA.push({ ...data, id: 'A' + (AGENDA.length + 1) + Date.now().toString(36).slice(-3) });
+    S.hariAgenda = d.tgl; S.agendaForm = false; S.draft = null; render(); return;
+  }
+  if (f.id === 'form-jurnal') {
+    const uraian = $('#j-uraian').value.trim();
+    if (!uraian) { $('#galat-jurnal').textContent = 'Uraian kegiatan wajib diisi.'; return; }
+    const a = AGENDA.find((x) => x.id === S.jurnalForm.agenda);
+    const lanjut = $('#j-lanjut').value.trim();
+    const catatan = { id: 'J' + Date.now().toString(36), tgl: $('#j-tgl').value || HARI_INI, uraian, agenda: a?.id };
+    if (lanjut) {
+      const t = tugasBaru({ judul: lanjut, tgl: tambahHari(2) });
+      t.sumber = a ? `${JENIS[a.jenis].label}: ${a.judul}` : 'Catatan kegiatan';
+      catatan.tugas = t.kode;
+    }
+    JURNAL.push(catatan);
+    S.jurnalForm = null; S.hariAgenda = catatan.tgl; render(); return;
+  }
   if (f.id === 'form-cepat') { const v = $('#cepat').value.trim(); if (!v) return; const d = bacaCepat(v); if (!d.judul) return; tugasBaru(d); render(); $('#cepat').focus(); }
   if (f.id === 'form-sub') { const v = $('#sub-baru').value.trim(); if (!v) return; TUGAS.find((x) => x.kode === S.dipilih).sub.push({ t: v, ok: false }); render(); $('#sub-baru').focus(); }
   if (f.id === 'form-komentar') { const v = $('#komentar').value.trim(); if (!v) return; catat(TUGAS.find((x) => x.kode === S.dipilih), esc(v)); render(); }
 });
 document.addEventListener('keydown', (e) => {
   const mengetik = !!e.target.matches?.('input, select, textarea, [contenteditable="true"]');
+  if (e.key === 'Escape' && S.pilihBaru) { S.pilihBaru = ''; render(); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches?.('.agenda-isi')) { e.preventDefault(); e.target.click(); return; }
   if (e.key === 'Escape' && S.picBuka) { S.picBuka = false; renderPeek(); $('[data-pic-buka]')?.focus(); return; }
   if (e.key === 'Escape') { if (mengetik) { e.target.blur(); return; } if (document.body.classList.contains('laci-buka')) { document.body.classList.remove('laci-buka'); return; } tutup(); return; }
   if (e.key === 'Enter' && e.target.matches?.('[data-judul]')) { e.preventDefault(); e.target.blur(); return; }
@@ -1365,7 +1805,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); S.dipilih ? geser(1) : urutanAktif[0] && buka(urutanAktif[0]); }
   if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); geser(-1); }
   if (e.key === '/') { e.preventDefault(); if (S.tampil === 'hari') { S.tampil = 'semua'; render(); } $('#cari').focus(); }
-  if (e.key === 'c' || e.key === 'C') { e.preventDefault(); if (S.tampil === 'hari') $('#cepat').focus(); else $('[data-baru]').click(); }
+  if (e.key === 'c' || e.key === 'C') { e.preventDefault(); $('[data-baru]')?.click(); }
 });
 $('#tombol-laci').addEventListener('click', () => { document.body.classList.add('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'true'); });
 $('#selubung').addEventListener('click', () => { document.body.classList.remove('laci-buka'); $('#tombol-laci').setAttribute('aria-expanded', 'false'); });
