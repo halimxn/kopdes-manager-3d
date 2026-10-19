@@ -1041,6 +1041,154 @@ body[data-kulit="lekuk"] .isi-grid.penuh .kolom-kanan { display: none; }
   .toast, .masuk > *, .palet, .notif-panel, .kolom-papan, .kartu-papan, .hari-pita { transition: none; animation: none; }
   .hari-pita:hover, .kartu-papan:hover { transform: none; }
 }
+
+/* ---------- Grafik gaya crypto ---------- */
+body[data-kulit="lekuk"] .kartu-statistik.kripto, .kartu-statistik.kripto { background: #1d1b26; color: #fff; padding: 18px 18px 14px; display: block; }
+.kendali .pilih-ikon { width: 14px; height: 14px; flex: none; color: var(--pudar); }
+.kripto .ks-atas small { color: #a9a6bd; font-size: 12px; }
+.ks-baris { display: flex; align-items: baseline; gap: 10px; margin: 2px 0; }
+.ks-angka { font-size: 34px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.delta { display: inline-flex; align-items: center; gap: 3px; height: 24px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.delta.naik { background: rgb(34 197 94 / .16); color: #16a34a; }
+.delta.turun { background: rgb(251 113 133 / .16); color: #e11d48; }
+.delta.datar { background: #f1ecfd; color: var(--redup); }
+.kripto .delta.naik { color: #4ade80; } .kripto .delta.turun { color: #fb7185; }
+.ks-banding { display: block; }
+.segmen { display: inline-flex; gap: 2px; padding: 3px; margin: 12px 0 4px; border-radius: 999px; background: rgb(255 255 255 / .08); }
+.segmen button { height: 30px; padding: 0 14px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #a9a6bd; }
+.segmen button[aria-pressed="true"] { background: #fff; color: #1d1b26; }
+.grafik-bungkus { position: relative; margin: 4px -4px 0; touch-action: pan-y; cursor: crosshair; }
+.grafik-k { display: block; width: 100%; height: auto; overflow: visible; }
+.grafik-k text { font-size: 9px; fill: #8a87a0; font-family: inherit; }
+.grafik-k .kisi { stroke: rgb(255 255 255 / .07); stroke-dasharray: 3 4; }
+.silang-garis { stroke: rgb(255 255 255 / .35); stroke-dasharray: 3 3; }
+@keyframes denyut { 0%, 100% { r: 4; opacity: 1; } 50% { r: 7; opacity: .5; } }
+.denyut { animation: denyut 2s ease-in-out infinite; }
+.tooltip-k { position: absolute; top: -6px; transform: translateX(-50%); min-width: 130px; padding: 8px 10px; border-radius: 14px; background: #fff; color: #1d1b26; font-size: 12px; box-shadow: 0 12px 24px -10px rgb(0 0 0 / .5); pointer-events: none; }
+.tooltip-k b { display: block; margin-bottom: 4px; font-size: 12px; }
+.tooltip-k span { display: flex; align-items: center; gap: 6px; }
+.tooltip-k span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--w); }
+.tooltip-k em { margin-left: auto; font-style: normal; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ks-seri { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.ks-seri button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: rgb(255 255 255 / .08); color: #fff; font-size: 12px; font-weight: 500; }
+.ks-seri button::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--w); box-shadow: 0 0 8px var(--w); }
+.ks-seri button[aria-pressed="false"] { opacity: .45; }
+.ks-seri button[aria-pressed="false"]::before { box-shadow: none; }
+body[data-kulit="lekuk"] .kartu-statistik.kripto .takik-btn { background: #fff; }
+
+/* Ubin dengan sparkline. */
+body[data-kulit="lekuk"] .ubin { gap: 6px; }
+.bawah-u { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; margin-top: auto; }
+.bawah-u .spark { flex: 0 1 70px; min-width: 40px; height: auto; opacity: .9; }
+.bawah-u .angka-u { white-space: nowrap; }
+.delta-u { font-size: 11px; font-weight: 600; opacity: .8; }
+body[data-kulit="lekuk"] .ringkas-atas .ubin { min-height: 128px; }
+
+/* Watchlist PIC. */
+.pantau { display: grid; grid-template-columns: 30px minmax(0, 1fr) 58px auto; gap: 10px; align-items: center; width: 100%; min-height: 54px; padding: 6px 8px; border-radius: 16px; text-align: left; }
+.pantau:hover { background: var(--aksen-muda); }
+.pantau[aria-pressed="true"] { background: var(--aksen-muda); box-shadow: inset 0 0 0 2px var(--aksen); }
+.pantau .av { width: 30px; height: 30px; font-size: 10.5px; }
+.pantau-nama { min-width: 0; }
+.pantau-nama b { display: block; font-size: 13px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pantau-nama small { display: block; font-size: 11px; color: var(--redup); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.pantau-nilai { display: grid; justify-items: end; gap: 2px; }
+.pantau-nilai > b { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pantau .delta { height: 20px; padding: 0 7px; font-size: 11px; }
+
+/* Donat proyek. */
+.donat { position: relative; width: 150px; margin: 4px auto 10px; }
+.donat svg { display: block; width: 100%; height: auto; }
+.donat circle { transition: stroke-dasharray .4s ease; }
+.donat span { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+.donat b { font-size: 26px; font-weight: 700; }
+.donat small { font-size: 11.5px; color: var(--redup); }
+.proyek-baris { grid-template-columns: 12px minmax(0, 1fr) auto; }
+.proyek-baris .kp { width: 10px; height: 10px; margin: 0; }
+.proyek-baris .pct { display: grid; justify-items: end; gap: 4px; font-variant-numeric: tabular-nums; }
+.proyek-baris .pct i { display: block; width: 48px; height: 5px; border-radius: 999px; background: linear-gradient(90deg, var(--w) calc(var(--p) * 1%), #efeaf9 0); }
+
+/* Rutin: tren kepatuhan. */
+.rutin-tren { display: flex; align-items: center; gap: 10px; margin: -4px 4px 14px; font-size: 12px; color: rgb(255 255 255 / .9); }
+.rutin-tren small { opacity: .7; }
+.rutin-tren .spark { margin-left: auto; }
+.rutin-tren b { font-size: 14px; }
+
+/* ---------- Kontrol kustom ---------- */
+.kendali { width: 100%; cursor: pointer; text-align: left; color: var(--tinta); }
+.kendali .kendali-nilai { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; }
+.kendali[aria-expanded="true"] { border-color: var(--aksen); box-shadow: 0 0 0 4px var(--aksen-muda); }
+.kendali[aria-expanded="true"] .pilih-ikon { transform: rotate(180deg); }
+.pilih-ikon { transition: transform .15s; }
+.pilih.kendali { display: inline-flex; align-items: center; gap: 8px; width: auto; height: 38px; padding: 0 12px 0 14px; border-radius: 999px; background: #fff; font-size: 13px; }
+.pilih.kendali .kendali-nilai { font-size: 13px; }
+.op-titik { width: 10px; height: 10px; border-radius: 50%; background: var(--w); flex: none; }
+.pop { position: fixed; z-index: 80; max-width: calc(100vw - 16px); padding: 6px; border-radius: 20px; background: #fff; box-shadow: 0 24px 48px -16px rgb(29 27 38 / .4), 0 0 0 1px var(--garis); animation: naik .14s ease both; }
+.pop[hidden] { display: none; }
+.pop-daftar { list-style: none; margin: 0; padding: 0; max-height: 280px; overflow-y: auto; }
+.pop-daftar li { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 14px; font-size: 14px; cursor: pointer; }
+.pop-daftar li.aktif, .pop-daftar li:hover { background: var(--aksen-muda); }
+.pop-daftar li[aria-selected="true"] { font-weight: 600; }
+.pop-daftar li svg { width: 18px; height: 18px; margin-left: auto; color: var(--aksen); }
+.pop-kal { width: 300px; padding: 6px; }
+.pop-kal-kepala { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.pop-kal-kepala b { font-size: 14px; }
+.pop-kal-kepala button { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; background: #f6f2fd; }
+.pop-kal-kepala svg { width: 16px; height: 16px; }
+.pop-cepat { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.pop-cepat button { height: 30px; padding: 0 12px; border-radius: 999px; background: var(--aksen-muda); color: var(--aksen); font-size: 12px; font-weight: 600; }
+.pop-kal-hari, .pop-kal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.pop-kal-hari span { font-size: 11px; font-weight: 600; color: var(--pudar); padding-bottom: 4px; }
+.pop-kal-grid button { height: 38px; border-radius: 12px; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.pop-kal-grid button:hover { background: var(--aksen-muda); }
+.pop-kal-grid button.ini { box-shadow: inset 0 0 0 1.5px var(--aksen); color: var(--aksen); font-weight: 700; }
+.pop-kal-grid button.on { background: var(--aksen); color: #fff; box-shadow: none; }
+.pop-jam { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 280px; max-height: 240px; overflow-y: auto; padding: 4px; }
+.pop-jam button { height: 40px; border-radius: 12px; background: #f6f2fd; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pop-jam button:hover { background: var(--aksen-muda); }
+.pop-jam button.on { background: var(--aksen); color: #fff; }
+
+/* ---------- Modal ---------- */
+.modal-latar { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 16px; background: rgb(29 27 38 / .4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: naik .15s ease both; }
+.modal-latar[hidden] { display: none; }
+.modal { position: relative; width: min(400px, 100%); padding: 44px 24px 22px; border-radius: 30px; background: #fff; text-align: center; box-shadow: 0 40px 80px -30px rgb(29 27 38 / .6); animation: muncul .22s cubic-bezier(.2, .9, .3, 1.2) both; }
+@keyframes muncul { from { opacity: 0; transform: scale(.94) translateY(8px); } to { opacity: 1; transform: none; } }
+.modal-ikon { position: absolute; left: 50%; top: -30px; width: 64px; height: 64px; margin-left: -32px; display: grid; place-items: center; border-radius: 50%; background: var(--aksen); color: #fff; box-shadow: 0 0 0 8px #fff, 0 14px 24px -8px rgb(143 120 240 / .8); }
+.modal-ikon.bahaya { background: #ff8b6a; box-shadow: 0 0 0 8px #fff, 0 14px 24px -8px rgb(255 139 106 / .8); }
+.modal-ikon svg { width: 28px; height: 28px; }
+.modal h2 { margin: 0 0 6px; font-size: 19px; font-weight: 700; }
+.modal p { margin: 0 0 20px; font-size: 14px; color: var(--redup); line-height: 1.5; }
+.modal-aksi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.modal-aksi button { height: 50px; border-radius: 999px; font-size: 14px; font-weight: 600; }
+.m-batal { background: #f3eefd; color: var(--tinta); }
+.m-ya { background: var(--aksen); color: #fff; }
+.m-ya.bahaya { background: #ff8b6a; }
+
+/* Palet: kepala lavender dan pengelompokan hasil. */
+.palet { border-radius: 30px; }
+.palet-cari { margin: 10px; padding: 0 16px; border: 0; border-radius: 20px; background: #f3eefd; }
+.palet-cari input { height: 54px; }
+.palet-grup { padding: 10px 12px 4px; font-size: 11.5px; font-weight: 700; color: var(--pudar); text-transform: uppercase; letter-spacing: .06em; cursor: default; }
+#palet-hasil li.palet-grup { display: block; min-height: 0; }
+
+/* Panel: melayang di desktop, berlatar redup di tablet, lembar bawah di ponsel. */
+.latar-peek { display: none; }
+body[data-kulit="lekuk"] .peek { margin: 12px 12px 12px 0; border-radius: 28px; box-shadow: 0 30px 60px -30px rgb(29 27 38 / .5); }
+body[data-kulit="lekuk"] .app:not(.peek-buka) .peek { margin: 0; }
+@media (max-width: 1279px) {
+  body[data-kulit="lekuk"] .peek { top: 12px; right: 12px; bottom: 12px; margin: 0; height: auto; transform: translateX(calc(100% + 24px)); }
+  body[data-kulit="lekuk"] .app.peek-buka .peek { transform: none; }
+  body[data-kulit="lekuk"] .app.peek-buka .latar-peek { display: block; position: fixed; inset: 0; z-index: 25; background: rgb(29 27 38 / .3); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+}
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .peek { top: 5vh; left: 0; right: 0; bottom: 0; width: auto; border-radius: 28px 28px 0 0; transform: translateY(105%); }
+  body[data-kulit="lekuk"] .pk-atas { position: relative; padding-top: 10px; height: 72px; }
+  body[data-kulit="lekuk"] .pk-atas::before { content: ""; position: absolute; left: 50%; top: 8px; width: 44px; height: 5px; margin-left: -22px; border-radius: 999px; background: #d9d1f2; }
+  .modal-aksi { grid-template-columns: 1fr; }
+  .modal-aksi .m-ya { order: -1; }
+  .pantau { grid-template-columns: 30px minmax(0, 1fr) 58px auto; }
+}
+@media (prefers-reduced-motion: reduce) { .denyut, .modal, .modal-latar, .pop { animation: none; } .donat circle, .pilih-ikon { transition: none; } }
 </style>
 </head>
 <body>
@@ -1121,6 +1269,7 @@ body[data-kulit="lekuk"] .isi-grid.penuh .kolom-kanan { display: none; }
     <div class="gulir" id="gulir"></div>
   </main>
 
+  <div class="latar-peek" data-tutup aria-hidden="true"></div>
   <aside class="peek" id="peek" aria-label="Detail tugas" aria-hidden="true">
     <div class="pk-atas">
       <button class="ikon-t" type="button" data-tutup aria-label="Tutup panel (Esc)"><svg class="i"><use href="#kembali"/></svg></button>
@@ -1143,6 +1292,8 @@ body[data-kulit="lekuk"] .isi-grid.penuh .kolom-kanan { display: none; }
 <div class="lembar-baru" id="lembar-baru"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="palet-latar" id="palet" hidden></div>
+<div class="pop" id="pop" hidden></div>
+<div class="modal-latar" id="modal" hidden></div>
 <nav class="nav-pil" aria-label="Navigasi cepat">
   <button type="button" data-tampil="hari" aria-label="Hari ini"><svg><use href="#hari"/></svg></button>
   <button type="button" data-tampil="semua" aria-label="Semua tugas"><svg><use href="#semua"/></svg></button>
@@ -1204,7 +1355,7 @@ let AGENDA = [
 let JURNAL = [
   { id: 'J1', tgl: '2026-10-16', uraian: 'Lokasi cold storage cocok, perlu cek daya listrik gudang.', agenda: 'A6', tugas: 'CLD-003' },
 ];
-const S = { palet: false, paletQ: '', paletI: 0, notif: false, batal: null, seret: null, hariAgenda: '', jenis: '', agendaForm: false, jurnalForm: null, draft: null, pilihBaru: '', menu: '', status: '', tampil: 'hari', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
+const S = { rentang: '7H', seriMati: new Set(), pop: null, popI: 0, popBulan: '', modal: null, palet: false, paletQ: '', paletI: 0, notif: false, batal: null, seret: null, hariAgenda: '', jenis: '', agendaForm: false, jurnalForm: null, draft: null, pilihBaru: '', menu: '', status: '', tampil: 'hari', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
 
 // ---------- Utilitas ----------
 const $ = (s, el = document) => el.querySelector(s);
@@ -1309,41 +1460,137 @@ function garisHalus(titik) {
   }
   return d;
 }
-// Angka contoh; di aplikasi dihitung dari completed_at dan riwayat status.
-function grafikStatistik() {
-  const hari = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
-  const seri = [['Proses', '#f2c230', [2, 4, 3, 5, 4, 6, 4]], ['Terlambat', '#df86e0', [1, 1, 2, 2, 3, 2, 3]], ['Selesai', '#45bf63', [1, 2, 4, 3, 5, 6, 7]]];
-  const W = 320, H = 150, L = 22, B = 22, T = 8, maks = 8;
-  const x = (i) => L + i * ((W - L - 10) / 6);
-  const y = (v) => T + (H - T - B) * (1 - v / maks);
-  const kisi = [0, 2, 4, 6, 8].map((v) => `<line x1="${L}" x2="${W - 4}" y1="${y(v)}" y2="${y(v)}" stroke="#eee8fb"/><text x="${L - 6}" y="${y(v) + 3}" text-anchor="end">${v}</text>`).join('');
-  const sumbuX = hari.map((h, i) => `<text x="${x(i)}" y="${H - 4}" text-anchor="middle">${h}</text>`).join('');
-  const garis = seri.map(([, w, d]) => `<path d="${garisHalus(d.map((v, i) => [x(i), y(v)]))}" fill="none" stroke="${w}" stroke-width="2.6" stroke-linecap="round"/>`).join('');
-  return `<section class="kartu-statistik bertakik"><h2>Statistik tugas</h2><p>7 hari terakhir · contoh</p><button class="takik-btn" type="button" aria-label="Opsi grafik"><svg><use href="#lainnya"/></svg></button>
-    <svg class="grafik-s" viewBox="0 0 ${W} ${H}" role="img" aria-label="Statistik tugas 7 hari terakhir. ${seri.map(([l, , d]) => `${l}: ${d.join(', ')}`).join('. ')}.">${kisi}${garis}${sumbuX}</svg>
-    <div class="legenda-s">${seri.map(([l, w]) => `<span style="--w:${w}">${l}</span>`).join('')}</div></section>`;
+// ---------- Grafik gaya crypto ----------
+// Deret contoh deterministik; di aplikasi dihitung dari completed_at dan riwayat status.
+function acak(benih) { let x = benih; return () => (x = (x * 9301 + 49297) % 233280) / 233280; }
+function deret(n, awal, akhir, ayun, benih) {
+  const r = acak(benih);
+  return Array.from({ length: n }, (_, i) => Math.max(0, Math.round(awal + (akhir - awal) * (n === 1 ? 1 : i / (n - 1)) + (r() - 0.5) * ayun)));
 }
+let nomorGrad = 0;
+function spark(data, w, h, warna, isi = true) {
+  const id = 'sp' + ++nomorGrad;
+  const maks = Math.max(...data, 1), min = Math.min(...data, 0);
+  const pts = data.map((v, i) => [2 + i * ((w - 4) / (data.length - 1)), 3 + (h - 6) * (1 - (v - min) / (maks - min || 1))]);
+  const d = garisHalus(pts);
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warna}" stop-opacity=".35"/><stop offset="1" stop-color="${warna}" stop-opacity="0"/></linearGradient></defs>${isi ? `<path d="${d} L${pts.at(-1)[0]},${h} L${pts[0][0]},${h} Z" fill="url(#${id})"/>` : ''}<path d="${d}" fill="none" stroke="${warna}" stroke-width="2" stroke-linecap="round"/><circle cx="${pts.at(-1)[0]}" cy="${pts.at(-1)[1]}" r="2.6" fill="${warna}"/></svg>`;
+}
+const RENTANG = {
+  '7H': { n: 7, label: '7 hari', x: (i) => ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'][i] },
+  '30H': { n: 30, label: '30 hari', x: (i) => `${((i + 19) % 30) + 1} ${i < 11 ? 'Sep' : 'Okt'}` },
+  '3B': { n: 13, label: '3 bulan', x: (i) => `Mg ${i + 1}` },
+};
+const GRAFIK = {};
+function dataStatistik() {
+  const r = RENTANG[S.rentang];
+  const skala = S.rentang === '3B' ? 5 : 1;
+  return [
+    { k: 'selesai', label: 'Selesai', w: '#4ade80', data: deret(r.n, 2 * skala, 7 * skala, 3 * skala, 7 + r.n), lalu: deret(r.n, 2 * skala, 5 * skala, 3 * skala, 31 + r.n) },
+    { k: 'baru', label: 'Tugas baru', w: '#a78bfa', data: deret(r.n, 4 * skala, 5 * skala, 4 * skala, 13 + r.n) },
+    { k: 'lewat', label: 'Terlambat', w: '#fb7185', data: deret(r.n, 2 * skala, 3 * skala, 2 * skala, 3 + r.n) },
+  ];
+}
+function grafikStatistik() {
+  const r = RENTANG[S.rentang];
+  const seri = dataStatistik();
+  const aktif = seri.filter((x) => !S.seriMati.has(x.k));
+  const W = 360, H = 170, L = 8, R = 30, T = 12, B = 22;
+  const maks = Math.max(4, ...aktif.flatMap((x) => [...x.data, ...(x.lalu || [])])) * 1.15;
+  const X = (i) => L + i * ((W - L - R) / (r.n - 1));
+  const Y = (v) => T + (H - T - B) * (1 - v / maks);
+  GRAFIK.stat = { W, L, R, n: r.n, X, Y, seri: aktif, label: r.x };
+  const utama = seri[0];
+  const total = utama.data.reduce((a, b) => a + b, 0);
+  const lalu = utama.lalu.reduce((a, b) => a + b, 0);
+  const pct = lalu ? Math.round(((total - lalu) / lalu) * 1000) / 10 : 0;
+  const naik = pct >= 0;
+  const kisi = [0.25, 0.5, 0.75, 1].map((f) => { const v = Math.round(maks * f / 1.15); return `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="kisi"/><text x="${W - R + 6}" y="${Y(v) + 3}">${v}</text>`; }).join('');
+  const langkah = Math.ceil(r.n / 6);
+  const sumbuX = Array.from({ length: r.n }, (_, i) => i).filter((i) => i % langkah === 0 || i === r.n - 1).map((i) => `<text x="${X(i)}" y="${H - 5}" text-anchor="middle">${r.x(i)}</text>`).join('');
+  const lapisan = aktif.map((x, idx) => {
+    const pts = x.data.map((v, i) => [X(i), Y(v)]);
+    const d = garisHalus(pts);
+    const area = idx === 0 ? `<path d="${d} L${X(r.n - 1)},${H - B} L${X(0)},${H - B} Z" fill="url(#gs-${x.k})"/>` : '';
+    const banding = x.lalu ? `<path d="${garisHalus(x.lalu.map((v, i) => [X(i), Y(v)]))}" fill="none" stroke="${x.w}" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 5"/>` : '';
+    return `${banding}${area}<path d="${d}" fill="none" stroke="${x.w}" stroke-width="2.6" stroke-linecap="round" filter="url(#pendar)"/><circle cx="${pts.at(-1)[0]}" cy="${pts.at(-1)[1]}" r="4" fill="${x.w}" class="denyut"/>`;
+  }).join('');
+  const grad = seri.map((x) => `<linearGradient id="gs-${x.k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${x.w}" stop-opacity=".45"/><stop offset="1" stop-color="${x.w}" stop-opacity="0"/></linearGradient>`).join('');
+  return `<section class="kartu-statistik kripto bertakik" aria-labelledby="judul-stat">
+    <button class="takik-btn" type="button" aria-label="Opsi grafik"><svg><use href="#lainnya"/></svg></button>
+    <div class="ks-atas"><div><small id="judul-stat">Tugas selesai · ${r.label}</small><div class="ks-baris"><b class="ks-angka">${total}</b><span class="delta ${naik ? 'naik' : 'turun'}">${naik ? '▲' : '▼'} ${String(Math.abs(pct)).replace('.', ',')}%</span></div><small class="ks-banding">vs periode lalu (${lalu}) · contoh</small></div></div>
+    <div class="segmen" role="group" aria-label="Rentang waktu">${Object.keys(RENTANG).map((k) => `<button type="button" data-rentang="${k}" aria-pressed="${S.rentang === k}">${k}</button>`).join('')}</div>
+    <div class="grafik-bungkus" data-grafik="stat">
+      <svg class="grafik-k" viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik ${r.label}: ${aktif.map((x) => `${x.label} ${x.data.join(', ')}`).join('. ')}">
+        <defs>${grad}<filter id="pendar" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        ${kisi}${lapisan}${sumbuX}
+        <g class="silang" style="display:none"><line class="silang-garis" y1="${T}" y2="${H - B}"/>${aktif.map((x) => `<circle r="5" fill="${x.w}" stroke="#1d1b26" stroke-width="2" data-titik="${x.k}"/>`).join('')}</g>
+      </svg>
+      <div class="tooltip-k" hidden></div>
+    </div>
+    <div class="ks-seri" role="group" aria-label="Tampilkan seri">${seri.map((x) => `<button type="button" data-seri="${x.k}" aria-pressed="${!S.seriMati.has(x.k)}" style="--w:${x.w}">${x.label}</button>`).join('')}</div>
+  </section>`;
+}
+function geserSilang(bungkus, clientX) {
+  const gfx = GRAFIK[bungkus.dataset.grafik];
+  if (!gfx) return;
+  const svg = bungkus.querySelector('svg');
+  const kotak = svg.getBoundingClientRect();
+  const x = ((clientX - kotak.left) / kotak.width) * gfx.W;
+  const i = Math.max(0, Math.min(gfx.n - 1, Math.round((x - gfx.L) / ((gfx.W - gfx.L - gfx.R) / (gfx.n - 1)))));
+  const silang = svg.querySelector('.silang');
+  silang.style.display = '';
+  silang.querySelector('.silang-garis').setAttribute('x1', gfx.X(i));
+  silang.querySelector('.silang-garis').setAttribute('x2', gfx.X(i));
+  gfx.seri.forEach((sr) => { const c = silang.querySelector(`[data-titik="${sr.k}"]`); c.setAttribute('cx', gfx.X(i)); c.setAttribute('cy', gfx.Y(sr.data[i])); });
+  const tip = bungkus.querySelector('.tooltip-k');
+  tip.hidden = false;
+  tip.innerHTML = `<b>${gfx.label(i)}</b>${gfx.seri.map((sr) => `<span style="--w:${sr.w}">${sr.label}<em>${sr.data[i]}</em></span>`).join('')}`;
+  const px = (gfx.X(i) / gfx.W) * kotak.width;
+  tip.style.left = Math.min(Math.max(px, 70), kotak.width - 70) + 'px';
+}
+function lepasSilang(bungkus) {
+  bungkus.querySelector('.silang').style.display = 'none';
+  bungkus.querySelector('.tooltip-k').hidden = true;
+}
+document.addEventListener('pointermove', (e) => { const b = e.target.closest?.('[data-grafik]'); if (b) geserSilang(b, e.clientX); });
+document.addEventListener('pointerout', (e) => { const b = e.target.closest?.('[data-grafik]'); if (b && !b.contains(e.relatedTarget)) lepasSilang(b); });
 
 // ---------- Panel kanan: beban PIC dan progres proyek ----------
 function panelKanan() {
   const buka = TUGAS.filter((t) => !tutupStatus(t));
   const staf = Object.keys(ORANG);
-  const maks = Math.max(1, ...staf.map((k) => buka.filter((t) => t.pic === k).length));
-  const beban = staf.map((k) => {
+  // Watchlist ala crypto: beban terbuka 7 hari; naik = beban bertambah (merah), turun = berkurang (hijau).
+  const beban = staf.map((k, idx) => {
     const milik = buka.filter((t) => t.pic === k);
-    const nLewat = milik.filter(lewat).length;
-    return `<button class="beban-baris" type="button" data-saring-pic="${k}" aria-pressed="${S.pic === k}">${av(k)}<span class="nama">${ORANG[k].lengkap}</span><span class="angka">${milik.length}${nLewat ? ` · <b>${nLewat} terlambat</b>` : ''}</span><span class="jalur" aria-hidden="true"><i class="a" style="width:${((milik.length - nLewat) / maks) * 100}%"></i><i class="l" style="width:${(nLewat / maks) * 100}%"></i></span></button>`;
+    const tren = deret(7, Math.max(0, milik.length + (idx % 2 ? -2 : 2)), milik.length, 2, 11 + idx * 7);
+    tren[6] = milik.length;
+    const ubah = tren[6] - tren[5];
+    const kelas = ubah > 0 ? 'turun' : ubah < 0 ? 'naik' : 'datar';
+    const warna = ubah > 0 ? '#fb7185' : ubah < 0 ? '#22c55e' : '#a897f5';
+    return `<button class="pantau" type="button" data-saring-pic="${k}" aria-pressed="${S.pic === k}">${av(k)}<span class="pantau-nama"><b>${ORANG[k].lengkap}</b><small>${ORANG[k].jabatan}</small></span>${spark(tren, 58, 26, warna, false)}<span class="pantau-nilai"><b>${milik.length}</b><span class="delta ${kelas}">${ubah > 0 ? '▲' : ubah < 0 ? '▼' : '•'} ${Math.abs(ubah)}</span></span></button>`;
+  }).join('');
+  const totalBuka = buka.filter((t) => !t.rutin).length || 1;
+  let sudut = 0;
+  const kel = 2 * Math.PI * 38;
+  const potong = PROYEK.map((pr) => {
+    const n = buka.filter((t) => t.p === pr.id && !t.rutin).length;
+    const panjang = (n / totalBuka) * kel;
+    const seg = `<circle r="38" cx="50" cy="50" fill="none" stroke="${pr.w}" stroke-width="13" stroke-linecap="round" stroke-dasharray="${Math.max(0, panjang - 4)} ${kel}" stroke-dashoffset="${-sudut}" transform="rotate(-90 50 50)"/>`;
+    sudut += panjang;
+    return seg;
   }).join('');
   const proyekHtml = PROYEK.map((pr) => {
-    const isi = TUGAS.filter((t) => t.p === pr.id);
+    const isi = TUGAS.filter((t) => t.p === pr.id && !t.rutin);
     const n = isi.filter((t) => t.st === 'selesai').length;
     const pct = isi.length ? Math.round((n / isi.length) * 100) : 0;
-    const nLewat = isi.filter(lewat).length;
-    return `<button class="proyek-baris" type="button" data-tampil="proyek" data-proyek="${pr.id}"><span class="cincin-p" style="--p:${pct};--w:${pr.w}" aria-hidden="true"></span><span><b>${pr.nama}</b><small>${n}/${isi.length} selesai${nLewat ? ` · ${nLewat} terlambat` : ''}</small></span><span class="pct">${pct}%</span></button>`;
+    const terbuka = isi.length - n;
+    return `<button class="proyek-baris" type="button" data-tampil="proyek" data-proyek="${pr.id}"><span class="kp" style="background:${pr.w}"></span><span><b>${pr.nama}</b><small>${terbuka} terbuka · ${Math.round((terbuka / totalBuka) * 100)}% beban</small></span><span class="pct">${pct}%<i style="--p:${pct};--w:${pr.w}"></i></span></button>`;
   }).join('');
   return `<aside class="kolom-kanan" aria-label="Beban tim dan progres proyek">
-    <section class="kartu-kanan bertakik"><h2>Beban per PIC</h2><p>Tugas terbuka · klik untuk menyaring</p><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a>${beban}<div class="legenda-k"><span>Tepat waktu</span><span class="l">Terlambat</span></div></section>
-    <section class="kartu-kanan bertakik"><h2>Progres proyek</h2><p>Klik untuk membuka proyek</p><button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>${proyekHtml}</section>
+    <section class="kartu-kanan bertakik"><h2>Beban per PIC</h2><p>Tugas terbuka · tren 7 hari · klik untuk menyaring</p><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a>${beban}</section>
+    <section class="kartu-kanan bertakik"><h2>Sebaran proyek</h2><p>Porsi tugas terbuka dan progres selesai</p><button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>
+      <div class="donat"><svg viewBox="0 0 100 100" aria-hidden="true"><circle r="38" cx="50" cy="50" fill="none" stroke="#f1ecfd" stroke-width="13"/>${potong}</svg><span><b>${totalBuka}</b><small>terbuka</small></span></div>
+      ${proyekHtml}</section>
   </aside>`;
 }
 // Semua saringan berasal dari satu keadaan (S) agar ubin, grafik, sidebar, dan daftar selalu sepakat.
@@ -1436,6 +1683,7 @@ function renderBeranda() {
         <p>${nRutin} dari ${rutin.length} selesai hari ini${berikut ? ` · berikutnya ${jam(berikut.jam)}` : ' · semua beres'}</p>
         <button class="takik-btn" type="button" data-baru-rutin aria-label="Tambah tugas rutin"><svg><use href="#plus"/></svg></button>
         <div class="rutin-progres" role="progressbar" aria-valuemin="0" aria-valuemax="${rutin.length}" aria-valuenow="${nRutin}" aria-label="Progres rutin"><i style="width:${rutin.length ? (nRutin / rutin.length) * 100 : 0}%"></i></div>
+        <div class="rutin-tren"><span>Kepatuhan 7 hari <small>contoh</small></span>${spark([80, 100, 60, 100, 80, 100, Math.round((nRutin / (rutin.length || 1)) * 100)], 84, 26, '#ffffff')}<b>${Math.round(([80, 100, 60, 100, 80, 100].reduce((a, b) => a + b, 0) + (nRutin / (rutin.length || 1)) * 100) / 7)}%</b></div>
         <ul class="rutin-daftar">${rutin.map((t) => `<li class="${t.st === 'selesai' ? 'ok' : ''} ${berikut === t ? 'berikut' : ''} ${S.dipilih === t.kode ? 'pilih-ini' : ''}" data-buka="${t.kode}">
           <button class="cek" type="button" role="checkbox" aria-checked="${t.st === 'selesai'}" data-cek="${t.kode}" aria-label="Tandai ${esc(t.judul)} selesai"></button>
           <span class="rutin-jam">${jam(t.jam)}</span>
@@ -1495,10 +1743,10 @@ function formAgenda() {
     <label class="f-label" for="a-judul">Judul</label>
     <div class="f-isian"><input id="a-judul" data-d="judul" value="${esc(d.judul)}" placeholder="Mis. ${contoh}" autocomplete="off"></div>
     <label class="f-label" for="a-tgl">Tanggal</label>
-    <div class="f-isian"><svg><use href="#hari"/></svg><input id="a-tgl" type="date" data-d="tgl" value="${d.tgl}"></div>
+    ${kendali('a-tgl', { jenis: 'tanggal', nilai: d.tgl, label: 'Tanggal', ikon: '<svg><use href="#hari"/></svg>', onPilih: (v) => { S.draft.tgl = v; renderPeek(); } })}
     <div class="f-dua">
-      <div><label class="f-label" for="a-mulai">Mulai</label><div class="f-isian"><svg><use href="#waktu"/></svg><input id="a-mulai" type="time" data-d="mulai" value="${d.mulai}"></div></div>
-      <div><label class="f-label" for="a-selesai">Selesai</label><div class="f-isian"><svg><use href="#waktu"/></svg><input id="a-selesai" type="time" data-d="selesai" value="${d.selesai}"></div></div>
+      <div><label class="f-label" for="a-mulai">Mulai</label>${kendali('a-mulai', { jenis: 'jam', nilai: d.mulai, label: 'Mulai', ikon: '<svg><use href="#waktu"/></svg>', onPilih: (v) => { S.draft.mulai = v; if (S.draft.selesai <= v) S.draft.selesai = `${String(Math.min(23, +v.slice(0, 2) + 1)).padStart(2, '0')}:${v.slice(3)}`; renderPeek(); } })}</div>
+      <div><label class="f-label" for="a-selesai">Selesai</label>${kendali('a-selesai', { jenis: 'jam', nilai: d.selesai, label: 'Selesai', ikon: '<svg><use href="#waktu"/></svg>', onPilih: (v) => { S.draft.selesai = v; renderPeek(); } })}</div>
     </div>
     ${d.jenis === 'online'
       ? `<label class="f-label" for="a-tautan">Tautan rapat</label><div class="f-isian f-tautan"><input id="a-tautan" type="url" data-d="tautan" value="${esc(d.tautan || '')}" placeholder="https://zoom.us/… atau https://meet.google.com/…"><span class="panah"><svg><use href="#keluar"/></svg></span></div>`
@@ -1520,11 +1768,11 @@ function formJurnal() {
     <p class="f-ket">Kegiatan mencatat yang sudah terjadi. Bila ada pekerjaan lanjutan, isi tindak lanjut agar menjadi tugas.</p>
     ${a ? `<div class="f-label">Dari agenda</div><div class="f-isian" style="--w:${JENIS[a.jenis].w}"><span class="jenis-ikon"><svg><use href="#${JENIS[a.jenis].ikon}"/></svg></span>${esc(a.judul)} · ${jam(a.mulai)}</div>` : ''}
     <label class="f-label" for="j-tgl">Tanggal</label>
-    <div class="f-isian"><svg><use href="#hari"/></svg><input id="j-tgl" type="date" value="${a ? a.tgl : HARI_INI}"></div>
+    ${kendali('j-tgl', { jenis: 'tanggal', nilai: S.jurnalForm.tgl || (a ? a.tgl : HARI_INI), label: 'Tanggal', ikon: '<svg><use href="#hari"/></svg>', onPilih: (v) => { S.jurnalForm.tgl = v; renderPeek(); } })}
     <label class="f-label" for="j-uraian">Apa yang terjadi?</label>
-    <div class="f-isian f-area"><textarea id="j-uraian" rows="4" placeholder="Mis. Sales menawarkan beras premium Rp12.500/kg, minimal 1 ton."></textarea></div>
+    <div class="f-isian f-area"><textarea id="j-uraian" data-jd="uraian" rows="4" placeholder="Mis. Sales menawarkan beras premium Rp12.500/kg, minimal 1 ton.">${esc(S.jurnalForm.uraian || '')}</textarea></div>
     <label class="f-label" for="j-lanjut">Tindak lanjut <span>opsional, menjadi tugas</span></label>
-    <div class="f-isian"><svg><use href="#semua"/></svg><input id="j-lanjut" placeholder="Mis. Bandingkan harga dengan pemasok lain" autocomplete="off"></div>
+    <div class="f-isian"><svg><use href="#semua"/></svg><input id="j-lanjut" data-jd="lanjut" value="${esc(S.jurnalForm.lanjut || '')}" placeholder="Mis. Bandingkan harga dengan pemasok lain" autocomplete="off"></div>
     <p class="f-galat" id="galat-jurnal" role="alert"></p>
     <button class="f-simpan" type="submit">Simpan kegiatan</button>
   </form>`;
@@ -1620,7 +1868,8 @@ function hasilPalet(q) {
 function renderDaftarPalet() {
   const hasil = hasilPalet(S.paletQ || '');
   S.paletI = Math.min(S.paletI, hasil.length - 1);
-  $('#palet-hasil').innerHTML = hasil.map((h, i) => `<li id="palet-${i}" role="option" aria-selected="${i === S.paletI}" data-palet-i="${i}"><span class="palet-ikon"><svg><use href="#${h.ikon}"/></svg></span><span><b>${esc(h.label)}</b>${h.sub ? `<small>${esc(h.sub)}</small>` : ''}</span><em>${h.jenis}</em></li>`).join('') || '<li class="kosong">Tidak ada hasil.</li>';
+  const grupDari = (j) => (j === 'Tugas' || j === 'Rutin' ? 'Tugas' : j === 'Halaman' ? 'Pindah ke' : j === 'Buat' ? 'Buat baru' : 'Agenda');
+  $('#palet-hasil').innerHTML = hasil.map((h, i) => `${i === 0 || grupDari(hasil[i - 1].jenis) !== grupDari(h.jenis) ? `<li class="palet-grup" role="presentation">${grupDari(h.jenis)}</li>` : ''}<li id="palet-${i}" role="option" aria-selected="${i === S.paletI}" data-palet-i="${i}"><span class="palet-ikon"><svg><use href="#${h.ikon}"/></svg></span><span><b>${esc(h.label)}</b>${h.sub ? `<small>${esc(h.sub)}</small>` : ''}</span><em>${h.jenis}</em></li>`).join('') || '<li class="kosong">Tidak ada hasil.</li>';
   $('#palet-q').setAttribute('aria-activedescendant', `palet-${S.paletI}`);
   $('#palet-' + S.paletI)?.scrollIntoView({ block: 'nearest' });
 }
@@ -1663,6 +1912,95 @@ function panelNotif() {
   return `<div class="notif-panel" role="dialog" aria-label="Notifikasi"><div class="notif-judul">Notifikasi<span>${item.length} baru</span></div>${item.join('')}</div>`;
 }
 
+// ---------- Kontrol kustom: dropdown, tanggal, jam ----------
+const REG = {};
+const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const tglRingkas = (tgl) => { const [y, m, d] = tgl.split('-'); return `${namaHari(tgl).slice(0, 3)}, ${+d} ${BULAN[+m - 1]}${y === HARI_INI.slice(0, 4) ? '' : ' ' + y}`; };
+function kendali(id, { jenis, nilai, opsi = [], label, ikon = '', kelas = 'f-isian', onPilih }) {
+  REG[id] = { jenis, nilai, opsi, label, onPilih };
+  const pilihan = opsi.find((o) => o[0] === nilai);
+  const tampil = jenis === 'pilih' ? (pilihan?.[1] ?? 'Pilih') : jenis === 'tanggal' ? tglRingkas(nilai) : jam(nilai);
+  const titik = pilihan?.[2] ? `<span class="op-titik" style="--w:${pilihan[2]}"></span>` : '';
+  return `<button type="button" class="${kelas} kendali" id="${id}" data-kendali="${id}" aria-haspopup="${jenis === 'pilih' ? 'listbox' : 'dialog'}" aria-expanded="${S.pop === id}" aria-label="${label}: ${tampil}">${ikon}${titik}<span class="kendali-nilai">${tampil}</span><svg class="pilih-ikon"><use href="#bawah-p"/></svg></button>`;
+}
+function kalenderPop(nilai) {
+  const [y, m] = (S.popBulan || nilai.slice(0, 7)).split('-').map(Number);
+  const awal = new Date(y, m - 1, 1);
+  const offset = (awal.getDay() + 6) % 7;
+  const jml = new Date(y, m, 0).getDate();
+  const cepat = [['Hari ini', 0], ['Besok', 1], ['Lusa', 2], ['Pekan depan', 7]];
+  const sel = Array.from({ length: offset }, () => '<span></span>').concat(Array.from({ length: jml }, (_, i) => {
+    const t = ymd(new Date(y, m - 1, i + 1));
+    return `<button type="button" data-tgl-pilih="${t}" class="${t === nilai ? 'on' : ''} ${t === HARI_INI ? 'ini' : ''}" aria-label="${tglPanjang(t)}" aria-pressed="${t === nilai}">${i + 1}</button>`;
+  }));
+  return `<div class="pop-kal" role="dialog" aria-label="Pilih tanggal">
+    <div class="pop-kal-kepala"><button type="button" data-bulan-geser="-1" aria-label="Bulan sebelumnya"><svg><use href="#kembali"/></svg></button><b>${['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][m - 1]} ${y}</b><button type="button" data-bulan-geser="1" aria-label="Bulan berikutnya"><svg style="transform:rotate(180deg)"><use href="#kembali"/></svg></button></div>
+    <div class="pop-cepat">${cepat.map(([l, n]) => `<button type="button" data-tgl-pilih="${tambahHari(n)}">${l}</button>`).join('')}</div>
+    <div class="pop-kal-hari">${['Sn', 'Sl', 'Rb', 'Km', 'Jm', 'Sb', 'Mg'].map((h) => `<span>${h}</span>`).join('')}</div>
+    <div class="pop-kal-grid">${sel.join('')}</div>
+  </div>`;
+}
+function jamPop(nilai) {
+  const daftar = [];
+  for (let h = 6; h <= 21; h++) for (const mnt of ['00', '30']) daftar.push(`${String(h).padStart(2, '0')}:${mnt}`);
+  return `<div class="pop-jam" role="listbox" aria-label="Pilih jam">${daftar.map((j) => `<button type="button" role="option" data-jam-pilih="${j}" aria-selected="${j === nilai}" class="${j === nilai ? 'on' : ''}">${jam(j)}</button>`).join('')}</div>`;
+}
+function renderPop() {
+  const el = $('#pop');
+  const r = S.pop && REG[S.pop];
+  if (!r || !document.querySelector(`[data-kendali="${S.pop}"]`)) { S.pop = null; el.hidden = true; el.innerHTML = ''; return; }
+  el.hidden = false;
+  el.dataset.jenis = r.jenis;
+  el.innerHTML = r.jenis === 'pilih'
+    ? `<ul class="pop-daftar" role="listbox" aria-label="${r.label}">${r.opsi.map(([v, l, w], i) => `<li role="option" id="op-${i}" aria-selected="${v === r.nilai}" class="${i === S.popI ? 'aktif' : ''}" data-opsi="${i}">${w ? `<span class="op-titik" style="--w:${w}"></span>` : ''}<span>${l}</span>${v === r.nilai ? '<svg><use href="#cekbulat"/></svg>' : ''}</li>`).join('')}</ul>`
+    : r.jenis === 'tanggal' ? kalenderPop(r.nilai) : jamPop(r.nilai);
+  posisikanPop();
+  el.querySelector('.pop-jam .on')?.scrollIntoView({ block: 'center' });
+}
+function posisikanPop() {
+  const el = $('#pop');
+  const tombol = document.querySelector(`[data-kendali="${S.pop}"]`);
+  if (!tombol) return;
+  const r = tombol.getBoundingClientRect();
+  el.style.minWidth = Math.max(r.width, 200) + 'px';
+  let top = r.bottom + 6;
+  if (top + el.offsetHeight > innerHeight - 8) top = Math.max(8, r.top - el.offsetHeight - 6);
+  el.style.top = top + 'px';
+  el.style.left = Math.max(8, Math.min(r.left, innerWidth - el.offsetWidth - 8)) + 'px';
+}
+function pilihPop(v) {
+  const r = REG[S.pop];
+  const id = S.pop;
+  S.pop = null;
+  renderPop();
+  r.onPilih(v);
+  document.getElementById(id)?.focus();
+}
+function ubahProp(t, k, v) {
+  t[k] = v;
+  if (k === 'p') t.ms = proyek(t.p).milestone[0];
+  const label = { st: 'status', tgl: 'tenggat', pr: 'prioritas', p: 'proyek', ms: 'milestone' }[k];
+  const nilai = k === 'p' ? proyek(t.p).nama : k === 'tgl' ? labelTgl(t, true).teks : besar(String(t[k]));
+  catat(t, `mengubah ${label} ke <b>${esc(nilai)}</b>`);
+  render();
+}
+window.addEventListener('scroll', () => { if (S.pop) posisikanPop(); }, true);
+window.addEventListener('resize', () => { if (S.pop) posisikanPop(); });
+
+// ---------- Modal konfirmasi ----------
+function konfirmasi({ judul, isi, ya, bahaya, onYa }) {
+  S.modal = { onYa, asal: document.activeElement };
+  const el = $('#modal');
+  el.hidden = false;
+  el.innerHTML = `<div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="modal-judul" aria-describedby="modal-isi">
+    <span class="modal-ikon ${bahaya ? 'bahaya' : ''}"><svg><use href="#${bahaya ? 'seru' : 'cekbulat'}"/></svg></span>
+    <h2 id="modal-judul">${judul}</h2><p id="modal-isi">${isi}</p>
+    <div class="modal-aksi"><button type="button" class="m-batal" data-modal="batal">Batal</button><button type="button" class="m-ya ${bahaya ? 'bahaya' : ''}" data-modal="ya">${ya}</button></div>
+  </div>`;
+  el.querySelector('[data-modal="batal"]').focus();
+}
+function tutupModal() { const asal = S.modal?.asal; S.modal = null; const el = $('#modal'); el.hidden = true; el.innerHTML = ''; asal?.focus?.(); }
+
 // ---------- Render ----------
 function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   const tot = daftar.length;
@@ -1678,7 +2016,11 @@ function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
       ['proses', 'Proses', 'jam', cakupan.filter((t) => t.st === 'proses' && !lewat(t)).length],
       ['lewat', 'Terlambat', 'seru', cakupan.filter(lewat).length],
       ['selesai', 'Selesai', 'cekbulat', cakupan.filter((t) => t.st === 'selesai').length],
-    ].map(([k, l, i, n]) => `<button class="ubin u-${k}" type="button" data-saring-status="${k}" aria-pressed="${S.status === k}"><span class="atas-u"><span class="ikon-u"><svg><use href="#${i}"/></svg></span><span class="lbl-u">${l}</span></span><span class="angka-u">${n} <small>tugas</small></span></button>`).join('')}</div>`,
+    ].map(([k, l, i, n], idx) => {
+      const tren = deret(7, n + (idx === 3 ? -3 : 2), n, 2, 5 + idx * 9); tren[6] = n;
+      const ubah = n - tren[0];
+      return `<button class="ubin u-${k}" type="button" data-saring-status="${k}" aria-pressed="${S.status === k}"><span class="atas-u"><span class="ikon-u"><svg><use href="#${i}"/></svg></span><span class="lbl-u">${l}</span></span><span class="bawah-u"><span class="angka-u">${n} <small>tugas</small></span>${spark(tren, 70, 30, 'currentColor')}</span><span class="delta-u">${ubah > 0 ? '▲' : ubah < 0 ? '▼' : '•'} ${Math.abs(ubah)} vs pekan lalu</span></button>`;
+    }).join('')}</div>`,
     sapa: `<div class="sapa"><span class="cincin-besar" style="--p:${pct}" aria-hidden="true"></span><div><b>Selamat pagi</b><span>${n} dari ${tot} ${label} selesai</span></div><span class="persen">${pct}%</span></div>`,
   };
 }
@@ -1773,8 +2115,7 @@ function renderDaftar() {
         ${[['daftar', 'Daftar'], ['papan', 'Papan'], ['kalender', 'Kalender'], ['gantt', 'Gantt']].map(([id, l]) => `<button class="tab" role="tab" type="button" data-tab="${id}" aria-selected="${S.tab === id}"><svg><use href="#${id === 'kalender' ? 'hari' : id}"/></svg>${l}</button>`).join('')}
       </div>
       <div class="kanan">
-        <label class="sr" for="kelompok">Kelompokkan</label>
-        <select class="pilih" id="kelompok">${[['tenggat', 'Tenggat'], ['proyek', 'Proyek'], ['status', 'Status'], ['pic', 'PIC']].map(([v, l]) => `<option value="${v}" ${S.kelompok === v ? 'selected' : ''}>Per ${l.toLowerCase()}</option>`).join('')}</select>
+        ${kendali('kelompok', { jenis: 'pilih', nilai: S.kelompok, label: 'Kelompokkan', kelas: 'pilih', opsi: [['tenggat', 'Per tenggat'], ['proyek', 'Per proyek'], ['status', 'Per status'], ['pic', 'Per PIC']], onPilih: (v) => { S.kelompok = v; S.lipat = new Set(v === 'tenggat' ? ['selesai'] : []); render(); } })}
         <button class="baru" type="button" data-baru=""><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg>Baru</button>
       </div>
     </div>
@@ -1845,15 +2186,15 @@ function renderPeek() {
     <div class="f-tim" role="group" aria-label="Pilih penanggung jawab">${Object.keys(ORANG).map((k) => `<button class="f-av" type="button" data-pilih-pic="${k}" aria-pressed="${t.pic === k}" title="${ORANG[k].lengkap} · ${ORANG[k].jabatan}">${av(k)}<span class="sr">${ORANG[k].lengkap}</span></button>`).join('')}<a class="f-tambah" href="#tim" aria-label="Tambah staf di Tim">+</a></div>
     <small class="f-ket"><b>${ORANG[t.pic].lengkap}</b> · ${ORANG[t.pic].jabatan} · ${bebanPic} tugas terbuka</small>
     <div class="f-dua">
-      <div><label class="f-label" for="f-tgl">Tenggat</label><div class="f-isian"><svg><use href="#hari"/></svg><input id="f-tgl" type="date" data-prop="tgl" value="${t.tgl}"></div></div>
-      <div><label class="f-label" for="f-pr">Prioritas</label><div class="f-isian"><svg><use href="#bendera"/></svg><select id="f-pr" data-prop="pr">${opsi(PRIO.map((x) => [x, besar(x)]), t.pr)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div></div>
+      <div><label class="f-label" for="f-tgl">Tenggat</label>${kendali('f-tgl', { jenis: 'tanggal', nilai: t.tgl, label: 'Tenggat', ikon: '<svg><use href="#hari"/></svg>', onPilih: (v) => ubahProp(t, 'tgl', v) })}</div>
+      <div><label class="f-label" for="f-pr">Prioritas</label>${kendali('f-pr', { jenis: 'pilih', nilai: t.pr, label: 'Prioritas', opsi: PRIO.map((x) => [x, besar(x), { rendah: '#c9bff2', normal: '#a897f5', tinggi: '#fbd35f', mendesak: '#ff8b6a' }[x]]), onPilih: (v) => ubahProp(t, 'pr', v) })}</div>
     </div>
     <div class="f-dua">
-      <div><label class="f-label" for="f-st">Status</label><div class="f-isian"><svg><use href="#status"/></svg><select id="f-st" data-prop="st">${opsi(STATUS.map((x) => [x, besar(x)]), t.st)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div></div>
-      <div><label class="f-label" for="f-ms">Milestone</label><div class="f-isian"><svg><use href="#milestone"/></svg><select id="f-ms" data-prop="ms">${opsi(p.milestone.map((m) => [m, m]), t.ms)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div></div>
+      <div><label class="f-label" for="f-st">Status</label>${kendali('f-st', { jenis: 'pilih', nilai: t.st, label: 'Status', opsi: STATUS.map((x) => [x, besar(x), { rencana: '#c9cad4', proses: '#8f78f0', selesai: '#22c55e', dibatalkan: '#9a9cab' }[x]]), onPilih: (v) => ubahProp(t, 'st', v) })}</div>
+      <div><label class="f-label" for="f-ms">Milestone</label>${kendali('f-ms', { jenis: 'pilih', nilai: t.ms, label: 'Milestone', ikon: '<svg><use href="#milestone"/></svg>', opsi: p.milestone.map((m) => [m, m]), onPilih: (v) => ubahProp(t, 'ms', v) })}</div>
     </div>
     <label class="f-label" for="f-p">Proyek</label>
-    <div class="f-isian"><span class="kp" style="background:${p.w}"></span><select id="f-p" data-prop="p">${opsi(PROYEK.map((x) => [x.id, x.nama]), t.p)}</select><svg class="pilih-ikon"><use href="#bawah-p"/></svg></div>
+    ${kendali('f-p', { jenis: 'pilih', nilai: t.p, label: 'Proyek', opsi: PROYEK.map((x) => [x.id, x.nama, x.w]), onPilih: (v) => ubahProp(t, 'p', v) })}
     <button class="f-toggle" type="button" role="switch" aria-checked="${t.rutin ? true : ulang}" data-ulang><span>${t.rutin ? `Rutin tiap hari · ${jam(t.jam)}` : 'Ulangi tiap minggu'}</span><span class="saklar" aria-hidden="true"></span></button>
     ${t.sumber ? `<div class="f-label">Sumber</div><a class="f-isian f-tautan" href="#catatan"><span><svg><use href="#catat"/></svg>${esc(t.sumber)}</span><span class="panah"><svg><use href="#keluar"/></svg></span></a>` : ''}
     ${t.lokasi ? `<div class="f-label">Lokasi</div><a class="f-isian f-tautan" href="#dunia"><span><svg><use href="#kubus"/></svg>${esc(t.lokasi)} · Dunia Koperasi</span><span class="panah"><svg><use href="#keluar"/></svg></span></a>` : ''}
@@ -1877,6 +2218,7 @@ function render() {
   $('#lembar-baru').innerHTML = S.pilihBaru === 'fab' ? menuBaru() : '';
   $('#dok-fab')?.setAttribute('aria-expanded', S.pilihBaru === 'fab');
   renderPeek();
+  renderPop();
   // Animasi masuk hanya ketika tampilan berganti, bukan setiap klik.
   const kunci = [S.tampil, S.proyek, S.tab, S.hariAgenda].join('|');
   if (kunci !== kunciTampilLalu && gerakBoleh()) $('#gulir > .dalam')?.classList.add('masuk');
@@ -1913,6 +2255,34 @@ function bacaCepat(teks) {
 document.addEventListener('click', (e) => {
   const el = e.target;
   if (el.closest('a.aksi-kecil')) return;
+  if (S.modal) {
+    const m = el.closest('[data-modal]');
+    if (m) { const f = S.modal.onYa; tutupModal(); if (m.dataset.modal === 'ya') f(); return; }
+    if (!el.closest('.modal')) tutupModal();
+    return;
+  }
+  const kd = el.closest('[data-kendali]');
+  if (kd) {
+    const id = kd.dataset.kendali;
+    S.pop = S.pop === id ? null : id;
+    const r = REG[id];
+    S.popI = Math.max(0, r.opsi.findIndex((o) => o[0] === r.nilai));
+    S.popBulan = r.jenis === 'tanggal' ? r.nilai.slice(0, 7) : '';
+    renderPop(); kd.setAttribute('aria-expanded', !!S.pop); return;
+  }
+  if (S.pop) {
+    const op = el.closest('[data-opsi]'); if (op) { pilihPop(REG[S.pop].opsi[+op.dataset.opsi][0]); return; }
+    const tp = el.closest('[data-tgl-pilih]'); if (tp) { pilihPop(tp.dataset.tglPilih); return; }
+    const jp = el.closest('[data-jam-pilih]'); if (jp) { pilihPop(jp.dataset.jamPilih); return; }
+    const bg = el.closest('[data-bulan-geser]');
+    if (bg) { const [y, m] = S.popBulan.split('-').map(Number); S.popBulan = ymd(new Date(y, m - 1 + +bg.dataset.bulanGeser, 1)).slice(0, 7); renderPop(); return; }
+    if (!el.closest('#pop')) { S.pop = null; renderPop(); }
+    else return;
+  }
+  const rg = el.closest('[data-rentang]');
+  if (rg) { S.rentang = rg.dataset.rentang; render(); return; }
+  const sr = el.closest('[data-seri]');
+  if (sr) { const k = sr.dataset.seri; if (S.seriMati.has(k)) S.seriMati.delete(k); else if (S.seriMati.size < 2) S.seriMati.add(k); render(); return; }
   if (el.closest('[data-batal]')) { const b = S.batal; S.batal = null; $('#toast').classList.remove('tampil'); b?.(); return; }
   if (S.palet) { const li = el.closest('[data-palet-i]'); if (li) { jalankanPalet(+li.dataset.paletI); return; } if (!el.closest('.palet')) { tutupPalet(); return; } return; }
   if (el.closest('[data-notif]')) { S.notif = !S.notif; render(); return; }
@@ -1939,7 +2309,11 @@ document.addEventListener('click', (e) => {
   const ps = el.closest('[data-peserta]');
   if (ps) { const k = ps.dataset.peserta; const d = S.draft; d.peserta = d.peserta.includes(k) ? d.peserta.filter((x) => x !== k) : [...d.peserta, k]; renderPeek(); return; }
   const ha = el.closest('[data-hapus-agenda]');
-  if (ha) { const salinan = AGENDA; const x = AGENDA.find((y) => y.id === ha.dataset.hapusAgenda); AGENDA = AGENDA.filter((y) => y !== x); tutup(); toast(`Agenda dihapus: ${esc(x.judul)}`, () => { AGENDA = salinan; render(); }); return; }
+  if (ha) {
+    const x = AGENDA.find((y) => y.id === ha.dataset.hapusAgenda);
+    konfirmasi({ judul: 'Hapus agenda ini?', isi: `“${esc(x.judul)}” akan dihapus dari jadwal. Kegiatan yang sudah dicatat tetap tersimpan.`, ya: 'Hapus agenda', bahaya: true, onYa: () => { const salinan = AGENDA; AGENDA = AGENDA.filter((y) => y !== x); tutup(); toast(`Agenda dihapus: ${esc(x.judul)}`, () => { AGENDA = salinan; render(); }); } });
+    return;
+  }
   const ch = el.closest('[data-catat-hasil]');
   if (ch) { S.dipilih = null; S.agendaForm = false; S.jurnalForm = { agenda: ch.dataset.catatHasil }; render(); $('#j-uraian')?.focus(); return; }
   if (el.closest('[data-jurnal-baru]')) { S.dipilih = null; S.agendaForm = false; S.jurnalForm = {}; render(); $('#j-uraian')?.focus(); return; }
@@ -2034,6 +2408,7 @@ document.addEventListener('change', (e) => {
 document.addEventListener('input', (e) => {
   if (e.target.id === 'cari') { S.cari = e.target.value; if (S.tampil === 'hari' || S.tampil === 'agenda') { S.tampil = 'semua'; renderSidebar(); } renderDaftar(); renderPeek(); }
   if (e.target.dataset?.d && S.draft) S.draft[e.target.dataset.d] = e.target.value;
+  if (e.target.dataset?.jd && S.jurnalForm) S.jurnalForm[e.target.dataset.jd] = e.target.value;
   if (e.target.id === 'palet-q') { S.paletQ = e.target.value; S.paletI = 0; renderDaftarPalet(); }
 });
 document.addEventListener('focusout', (e) => {
@@ -2057,7 +2432,7 @@ document.addEventListener('submit', (e) => {
     if (!uraian) { $('#galat-jurnal').textContent = 'Uraian kegiatan wajib diisi.'; return; }
     const a = AGENDA.find((x) => x.id === S.jurnalForm.agenda);
     const lanjut = $('#j-lanjut').value.trim();
-    const catatan = { id: 'J' + Date.now().toString(36), tgl: $('#j-tgl').value || HARI_INI, uraian, agenda: a?.id };
+    const catatan = { id: 'J' + Date.now().toString(36), tgl: S.jurnalForm.tgl || a?.tgl || HARI_INI, uraian, agenda: a?.id };
     if (lanjut) {
       const t = tugasBaru({ judul: lanjut, tgl: tambahHari(2) });
       t.sumber = a ? `${JENIS[a.jenis].label}: ${a.judul}` : 'Catatan kegiatan';
@@ -2071,6 +2446,18 @@ document.addEventListener('submit', (e) => {
   if (f.id === 'form-komentar') { const v = $('#komentar').value.trim(); if (!v) return; catat(TUGAS.find((x) => x.kode === S.dipilih), esc(v)); render(); }
 });
 document.addEventListener('keydown', (e) => {
+  if (S.modal) {
+    if (e.key === 'Escape') { e.preventDefault(); tutupModal(); }
+    if (e.key === 'Tab') { const b = [...document.querySelectorAll('#modal button')]; const i = b.indexOf(document.activeElement); e.preventDefault(); b[(i + (e.shiftKey ? b.length - 1 : 1)) % b.length].focus(); }
+    return;
+  }
+  if (S.pop) {
+    const r = REG[S.pop];
+    if (e.key === 'Escape') { e.preventDefault(); const id = S.pop; S.pop = null; renderPop(); document.getElementById(id)?.focus(); return; }
+    if (r?.jenis === 'pilih' && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) { e.preventDefault(); S.popI = (S.popI + (e.key === 'ArrowDown' ? 1 : -1) + r.opsi.length) % r.opsi.length; renderPop(); return; }
+    if (r?.jenis === 'pilih' && e.key === 'Enter') { e.preventDefault(); pilihPop(r.opsi[S.popI][0]); return; }
+  }
+  if (e.key === 'ArrowDown' && e.target.matches?.('[data-kendali]')) { e.preventDefault(); e.target.click(); return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); S.palet ? tutupPalet() : bukaPalet(); return; }
   if (S.palet) {
     const n = hasilPalet(S.paletQ || '').length;
