@@ -613,6 +613,96 @@ body[data-kulit="lekuk"] .baris.pilih-ini .proyek-k { color: rgb(255 255 255 / .
   body[data-kulit="lekuk"] .ubin { min-height: 88px; }
   body[data-kulit="lekuk"] .kaki-kartu { gap: 10px; }
 }
+
+/* ---------- Kerangka bertakik + keterhubungan (Lekuk) ---------- */
+.sb-profil, .takik-btn, .kolom-kanan, .bulat-aksi { display: none; }
+#sb-tim { display: none; }
+.sb-kartu { display: contents; }
+.isi-grid { display: block; }
+.judul-baris { display: flex; align-items: center; gap: 10px; }
+.saringan { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 8px; font-size: 12.5px; color: var(--redup); }
+.chip-saring { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 999px; background: var(--tinta); color: #fff; font-size: 12.5px; font-weight: 500; }
+.hapus-semua { height: 32px; padding: 0 6px; font-size: 12.5px; font-weight: 600; color: var(--aksen); }
+.tautan-sistem { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 8px; border-radius: 8px; color: var(--aksen); font-weight: 500; text-decoration: none; }
+.tautan-sistem:hover { background: var(--aksen-muda); }
+.tautan-sistem svg { width: 13px; height: 13px; }
+
+body[data-kulit="lekuk"] .sb { padding: 14px 12px; gap: 12px; }
+body[data-kulit="lekuk"] .sb-ruang { display: none; }
+body[data-kulit="lekuk"] .sb-profil { display: flex; align-items: center; gap: 10px; padding: 2px; }
+.sb-profil .av { width: 42px; height: 42px; font-size: 13px; }
+.sb-profil b { display: block; font-size: 14px; font-weight: 600; }
+.sb-profil small { font-size: 12px; color: var(--redup); }
+.sb-lonceng { position: relative; margin-left: auto; width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; }
+.sb-lonceng svg { width: 18px; height: 18px; }
+.sb-lonceng i { position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--late); box-shadow: 0 0 0 2px #fff; }
+body[data-kulit="lekuk"] .sb-kartu, body[data-kulit="lekuk"] #sb-tim { display: block; position: relative; background: #fff; border-radius: 22px; padding: 8px; }
+body[data-kulit="lekuk"] .sb-kartu .sb-judul { padding: 6px 8px; font-size: 12.5px; color: var(--tinta); }
+body[data-kulit="lekuk"] .sb-i:hover { background: var(--aksen-muda); }
+body[data-kulit="lekuk"] .sb-i[aria-current="page"] { background: var(--aksen); color: #fff; }
+body[data-kulit="lekuk"] .sb-i[aria-current="page"] svg, body[data-kulit="lekuk"] .sb-i[aria-current="page"] .n { color: #fff; }
+body[data-kulit="lekuk"] .sb-bawah { margin-top: auto; padding-top: 0; }
+.tumpuk-tim { display: flex; padding: 4px 8px 2px; }
+.tumpuk-tim .av { width: 32px; height: 32px; font-size: 10.5px; margin-right: -8px; box-shadow: 0 0 0 2px #fff; }
+.sb-ket { display: block; padding: 6px 8px 4px; font-size: 11.5px; color: var(--redup); }
+
+/* Takik kanan atas umum untuk kartu sidebar dan kolom kanan. */
+body[data-kulit="lekuk"] .bertakik { --n: 44px; --r: 16px; }
+body[data-kulit="lekuk"] .bertakik::before { content: ""; position: absolute; right: 0; top: 0; width: var(--n); height: var(--n); background: var(--latar-l); border-bottom-left-radius: 18px; }
+body[data-kulit="lekuk"] .bertakik::after { content: ""; position: absolute; right: 0; top: 0; width: calc(var(--n) + var(--r)); height: calc(var(--n) + var(--r)); pointer-events: none;
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--r) - .5px), var(--latar-l) var(--r)) left top / var(--r) var(--r) no-repeat,
+              radial-gradient(circle at 0 100%, transparent calc(var(--r) - .5px), var(--latar-l) var(--r)) right bottom / var(--r) var(--r) no-repeat; }
+body[data-kulit="lekuk"] .takik-btn { display: grid; place-items: center; position: absolute; right: 0; top: 0; z-index: 1; width: 38px; height: 38px; border-radius: 14px; background: #fff; color: var(--tinta); }
+body[data-kulit="lekuk"] .takik-btn:hover { background: var(--aksen); color: #fff; }
+.takik-btn svg { width: 16px; height: 16px; }
+
+/* Judul dengan tombol bulat. */
+body[data-kulit="lekuk"] .judul-baris { margin: 0 0 14px; }
+body[data-kulit="lekuk"] .judul-baris > .judul-hal { margin: 0 auto 0 0; }
+body[data-kulit="lekuk"] .bulat-aksi { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #fff; color: var(--tinta); }
+body[data-kulit="lekuk"] .bulat-aksi.utama { background: var(--aksen); color: #fff; }
+.bulat-aksi svg { width: 20px; height: 20px; }
+body[data-kulit="lekuk"] .alat .baru { display: none; }
+
+/* Dua kolom: daftar + ringkasan tim/proyek. */
+body[data-kulit="lekuk"] .dalam { max-width: 1180px; }
+body[data-kulit="lekuk"] .isi-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+body[data-kulit="lekuk"] .kolom-kanan { display: grid; gap: 14px; position: sticky; top: 8px; }
+body[data-kulit="lekuk"] .app.peek-buka .isi-grid { grid-template-columns: minmax(0, 1fr); }
+body[data-kulit="lekuk"] .app.peek-buka .kolom-kanan { display: none; }
+.kartu-kanan { position: relative; background: #fff; border-radius: 24px; padding: 16px 12px 12px; }
+.kartu-kanan h2 { font-size: 15px; font-weight: 600; margin: 0 4px; }
+.kartu-kanan > p { margin: 2px 44px 10px 4px; font-size: 12px; color: var(--redup); }
+.beban-baris { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; grid-template-areas: "a n c" "a j j"; gap: 4px 10px; align-items: center; width: 100%; padding: 8px; border-radius: 16px; text-align: left; }
+.beban-baris:hover { background: var(--aksen-muda); }
+.beban-baris[aria-pressed="true"] { background: var(--aksen-muda); box-shadow: inset 0 0 0 2px var(--aksen); }
+.beban-baris .av { grid-area: a; width: 30px; height: 30px; font-size: 10.5px; }
+.beban-baris .nama { grid-area: n; font-size: 13px; font-weight: 500; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.beban-baris .angka { grid-area: c; font-size: 12px; color: var(--redup); white-space: nowrap; }
+.beban-baris .angka b { color: var(--late); font-weight: 600; }
+.beban-baris .jalur { grid-area: j; height: 8px; border-radius: 999px; background: #f1ecfd; display: flex; gap: 2px; overflow: hidden; }
+.beban-baris .jalur i { display: block; height: 100%; border-radius: 999px; }
+.beban-baris .jalur .a { background: var(--aksen); }
+.beban-baris .jalur .l { background: #ff8b6a; }
+.legenda-k { display: flex; gap: 14px; padding: 8px 8px 2px; font-size: 11.5px; color: var(--redup); }
+.legenda-k span::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--aksen); }
+.legenda-k .l::before { background: #ff8b6a; }
+.proyek-baris { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; padding: 8px; border-radius: 16px; text-align: left; }
+.proyek-baris:hover { background: var(--aksen-muda); }
+.proyek-baris b { display: block; font-size: 13px; font-weight: 600; }
+.proyek-baris small { font-size: 11.5px; color: var(--redup); }
+.proyek-baris .pct { font-size: 13px; font-weight: 600; }
+.cincin-p { width: 40px; height: 40px; border-radius: 50%; background: conic-gradient(var(--w) calc(var(--p) * 1%), #efeaf9 0); -webkit-mask: radial-gradient(circle 14px, transparent 98%, #000 100%); mask: radial-gradient(circle 14px, transparent 98%, #000 100%); }
+
+@media (max-width: 1279px) {
+  body[data-kulit="lekuk"] .isi-grid { grid-template-columns: minmax(0, 1fr) 260px; gap: 18px; }
+}
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .isi-grid { grid-template-columns: minmax(0, 1fr); }
+  body[data-kulit="lekuk"] .kolom-kanan { position: static; grid-template-columns: minmax(0, 1fr); }
+  body[data-kulit="lekuk"] .bulat-aksi { width: 44px; height: 44px; }
+  .chip-saring, .hapus-semua { height: 40px; }
+}
 </style>
 </head>
 <body>
@@ -644,23 +734,34 @@ body[data-kulit="lekuk"] .baris.pilih-ini .proyek-k { color: rgb(255 255 255 / .
   <symbol id="jam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9"/></symbol>
   <symbol id="cekbulat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
   <symbol id="seru" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
+  <symbol id="lonceng" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="keluar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16 16 8M9 8h7v7"/></symbol>
   <symbol id="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
 </svg>
 
 <div class="app" id="app">
   <nav class="sb" aria-label="Navigasi ruang kerja">
     <div class="sb-ruang"><span class="logo">K</span>KDMP Contoh</div>
+    <div class="sb-profil"><span class="av" style="--w:#1d1e2c">MA</span><div><b>Manajer</b><small>KDMP Contoh</small></div><button class="sb-lonceng" type="button" aria-label="Notifikasi, 2 baru"><svg><use href="#lonceng"/></svg><i></i></button></div>
+    <div class="sb-kartu">
     <button class="sb-i" type="button" data-fokus-cari><svg class="i"><use href="#cari"/></svg>Cari</button>
     <button class="sb-i" type="button" data-tampil="hari"><svg class="i"><use href="#hari"/></svg>Hari ini<span class="n" data-hitung="hari"></span></button>
     <button class="sb-i" type="button" data-tampil="saya"><svg class="i"><use href="#saya"/></svg>Tugas saya<span class="n" data-hitung="saya"></span></button>
     <button class="sb-i" type="button" data-tampil="semua"><svg class="i"><use href="#semua"/></svg>Semua tugas<span class="n" data-hitung="semua"></span></button>
-    <div class="sb-judul">Proyek <button type="button" aria-label="Tambah proyek"><svg class="i" style="width:14px;height:14px"><use href="#plus"/></svg></button></div>
+    </div>
+    <div class="sb-kartu bertakik">
+    <div class="sb-judul">Proyek</div>
+    <button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>
     <div id="sb-proyek"></div>
+    </div>
+    <div class="sb-kartu bertakik" id="sb-tim"></div>
+    <div class="sb-kartu">
     <div class="sb-judul">Ruang lain</div>
     <a class="sb-i" href="#"><svg class="i"><use href="#catat"/></svg>Catatan &amp; rapat</a>
     <a class="sb-i" href="#"><svg class="i"><use href="#toko"/></svg>Usaha &amp; gerai</a>
     <a class="sb-i" href="#"><svg class="i"><use href="#grup"/></svg>Koperasi</a>
     <a class="sb-i" href="#"><svg class="i"><use href="#kubus"/></svg>Dunia Koperasi</a>
+    </div>
     <div class="sb-bawah"><a class="sb-i" href="#"><svg class="i"><use href="#atur"/></svg>Pengaturan</a></div>
   </nav>
   <div class="selubung" id="selubung"></div>
@@ -706,14 +807,14 @@ const STATUS = ['rencana', 'proses', 'selesai', 'dibatalkan'];
 const PRIO = ['rendah', 'normal', 'tinggi', 'mendesak'];
 const sub = (s) => s.map(([t, ok]) => ({ t, ok }));
 let TUGAS = [
-  { kode: 'GRS-014', judul: 'Pasang rak display dan label harga', p: 'G', ms: 'Renovasi ruang', pic: 'AR', tgl: '2026-10-15', st: 'proses', pr: 'mendesak', catatan: 'Tinggi rak maksimal 180 cm agar lampu tidak tertutup.', sub: sub([['Ukur dinding sisi timur', 1], ['Pesan 4 rak besi', 1], ['Pasang rak dan jangkar dinding', 0], ['Cetak label harga', 0]]), akt: [['AR', 'Rak tiba, 1 rak penyok, minta tukar ke pemasok.', '17 Okt'], ['MA', 'mengubah status ke <b>Proses</b>', '14 Okt'], ['MA', 'membuat tugas dari rapat persiapan gerai', '10 Okt']] },
+  { kode: 'GRS-014', sumber: 'Rapat persiapan gerai · 10 Okt', lokasi: 'Gerai sembako', judul: 'Pasang rak display dan label harga', p: 'G', ms: 'Renovasi ruang', pic: 'AR', tgl: '2026-10-15', st: 'proses', pr: 'mendesak', catatan: 'Tinggi rak maksimal 180 cm agar lampu tidak tertutup.', sub: sub([['Ukur dinding sisi timur', 1], ['Pesan 4 rak besi', 1], ['Pasang rak dan jangkar dinding', 0], ['Cetak label harga', 0]]), akt: [['AR', 'Rak tiba, 1 rak penyok, minta tukar ke pemasok.', '17 Okt'], ['MA', 'mengubah status ke <b>Proses</b>', '14 Okt'], ['MA', 'membuat tugas dari rapat persiapan gerai', '10 Okt']] },
   { kode: 'GRS-015', judul: 'Uji coba timbangan digital', p: 'G', ms: 'Stok awal', pic: 'BD', tgl: '2026-10-19', st: 'rencana', pr: 'tinggi', sub: sub([['Kalibrasi dengan anak timbang 1 kg', 0], ['Catat selisih di berita acara', 0]]), akt: [['MA', 'membuat tugas', '15 Okt']] },
   { kode: 'GRS-016', judul: 'Daftar harga beli 20 barang pokok', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'proses', pr: 'tinggi', sub: sub([['Survei 3 pemasok', 1], ['Bandingkan harga', 0], ['Kirim ke ketua', 0]]), akt: [] },
   { kode: 'GRS-011', judul: 'Pengecatan ulang dinding depan', p: 'G', ms: 'Renovasi ruang', pic: 'MA', tgl: '2026-10-12', st: 'selesai', pr: 'normal', sub: sub([['Beli cat', 1], ['Cat lapis 1', 1], ['Cat lapis 2', 1]]), akt: [['MA', 'menandai selesai', '12 Okt']] },
-  { kode: 'RAT-003', judul: 'Kirim undangan RAT ke 214 anggota', p: 'R', ms: 'Undangan', pic: 'SN', tgl: '2026-10-14', st: 'proses', pr: 'mendesak', sub: sub([['Cetak undangan', 1], ['Bagikan lewat ketua RT', 1], ['Rekap tanda terima', 0]]), akt: [['SN', '180 undangan sudah dibagikan.', '16 Okt']] },
+  { kode: 'RAT-003', sumber: 'Rapat pengurus · 7 Okt', judul: 'Kirim undangan RAT ke 214 anggota', p: 'R', ms: 'Undangan', pic: 'SN', tgl: '2026-10-14', st: 'proses', pr: 'mendesak', sub: sub([['Cetak undangan', 1], ['Bagikan lewat ketua RT', 1], ['Rekap tanda terima', 0]]), akt: [['SN', '180 undangan sudah dibagikan.', '16 Okt']] },
   { kode: 'RAT-004', judul: 'Susun draf laporan pertanggungjawaban', p: 'R', ms: 'Laporan', pic: 'MA', tgl: '2026-10-25', st: 'proses', pr: 'tinggi', catatan: 'Menunggu angka buku kas Oktober.', sub: sub([['Kerangka laporan', 1], ['Bagian usaha', 0], ['Bagian keuangan', 0], ['Bagian keanggotaan', 0], ['Tinjau ketua', 0]]), akt: [] },
   { kode: 'RAT-005', judul: 'Pesan tenda dan kursi untuk 250 orang', p: 'R', ms: 'Undangan', pic: 'BD', tgl: '2026-10-18', st: 'rencana', pr: 'normal', sub: [], akt: [] },
-  { kode: 'CLD-002', judul: 'Bandingkan 3 penawaran unit pendingin', p: 'C', ms: 'Pengadaan', pic: 'AR', tgl: '2026-10-12', st: 'rencana', pr: 'normal', catatan: 'Satu penawaran belum masuk.', sub: sub([['Penawaran A', 1], ['Penawaran B', 0], ['Penawaran C', 0]]), akt: [] },
+  { kode: 'CLD-002', lokasi: 'Cold storage', judul: 'Bandingkan 3 penawaran unit pendingin', p: 'C', ms: 'Pengadaan', pic: 'AR', tgl: '2026-10-12', st: 'rencana', pr: 'normal', catatan: 'Satu penawaran belum masuk.', sub: sub([['Penawaran A', 1], ['Penawaran B', 0], ['Penawaran C', 0]]), akt: [] },
   { kode: 'GRS-017', judul: 'Setor kas harian ke bank', p: 'G', ms: 'Stok awal', pic: 'MA', tgl: '2026-10-18', st: 'selesai', pr: 'normal', sub: [], akt: [['MA', 'menandai selesai', '18 Okt']] },
   { kode: 'CLD-003', judul: 'Cek daya listrik gudang (kVA)', p: 'C', ms: 'Pengadaan', pic: 'MA', tgl: '2026-10-22', st: 'rencana', pr: 'rendah', sub: [], akt: [] },
 ];
@@ -802,6 +903,38 @@ function pemilihPic(t) {
   </div>`;
 }
 
+// ---------- Panel kanan: beban PIC dan progres proyek ----------
+function panelKanan() {
+  const buka = TUGAS.filter((t) => !tutupStatus(t));
+  const staf = Object.keys(ORANG);
+  const maks = Math.max(1, ...staf.map((k) => buka.filter((t) => t.pic === k).length));
+  const beban = staf.map((k) => {
+    const milik = buka.filter((t) => t.pic === k);
+    const nLewat = milik.filter(lewat).length;
+    return `<button class="beban-baris" type="button" data-saring-pic="${k}" aria-pressed="${S.pic === k}">${av(k)}<span class="nama">${ORANG[k].lengkap}</span><span class="angka">${milik.length}${nLewat ? ` · <b>${nLewat} terlambat</b>` : ''}</span><span class="jalur" aria-hidden="true"><i class="a" style="width:${((milik.length - nLewat) / maks) * 100}%"></i><i class="l" style="width:${(nLewat / maks) * 100}%"></i></span></button>`;
+  }).join('');
+  const proyekHtml = PROYEK.map((pr) => {
+    const isi = TUGAS.filter((t) => t.p === pr.id);
+    const n = isi.filter((t) => t.st === 'selesai').length;
+    const pct = isi.length ? Math.round((n / isi.length) * 100) : 0;
+    const nLewat = isi.filter(lewat).length;
+    return `<button class="proyek-baris" type="button" data-tampil="proyek" data-proyek="${pr.id}"><span class="cincin-p" style="--p:${pct};--w:${pr.w}" aria-hidden="true"></span><span><b>${pr.nama}</b><small>${n}/${isi.length} selesai${nLewat ? ` · ${nLewat} terlambat` : ''}</small></span><span class="pct">${pct}%</span></button>`;
+  }).join('');
+  return `<aside class="kolom-kanan" aria-label="Beban tim dan progres proyek">
+    <section class="kartu-kanan bertakik"><h2>Beban per PIC</h2><p>Tugas terbuka · klik untuk menyaring</p><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a>${beban}<div class="legenda-k"><span>Tepat waktu</span><span class="l">Terlambat</span></div></section>
+    <section class="kartu-kanan bertakik"><h2>Progres proyek</h2><p>Klik untuk membuka proyek</p><button class="takik-btn" type="button" aria-label="Tambah proyek"><svg><use href="#plus"/></svg></button>${proyekHtml}</section>
+  </aside>`;
+}
+// Semua saringan berasal dari satu keadaan (S) agar ubin, grafik, sidebar, dan daftar selalu sepakat.
+function barisSaringan() {
+  const c = [];
+  if (S.status) c.push(['status', { rencana: 'Rencana', proses: 'Proses', lewat: 'Terlambat', selesai: 'Selesai' }[S.status]]);
+  if (S.pic) c.push(['pic', `PIC: ${ORANG[S.pic].nama}`]);
+  if (S.cari) c.push(['cari', `Cari: “${esc(S.cari)}”`]);
+  if (!c.length) return '';
+  return `<div class="saringan">Menyaring ${c.map(([k, l]) => `<button type="button" class="chip-saring" data-hapus-saring="${k}">${l}<span aria-hidden="true">✕</span><span class="sr">, hapus saringan</span></button>`).join('')}${c.length > 1 ? '<button type="button" class="hapus-semua" data-hapus-saring="semua">Hapus semua</button>' : ''}</div>`;
+}
+
 // ---------- Render ----------
 function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   const tot = daftar.length;
@@ -822,6 +955,9 @@ function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   };
 }
 function renderSidebar() {
+  // Kartu Tim: sumber daftar PIC; tautan ke /tim untuk menambah atau mengubah staf.
+  const staf = Object.keys(ORANG);
+  $('#sb-tim').innerHTML = `<div class="sb-judul">Tim</div><a class="takik-btn" href="#tim" aria-label="Kelola Tim"><svg><use href="#keluar"/></svg></a><div class="tumpuk-tim">${staf.map(av).join('')}</div><small class="sb-ket">${staf.length} staf · daftar pilihan PIC tugas</small>`;
   $('#sb-proyek').innerHTML = PROYEK.map((p) => `
     <button class="sb-i" type="button" data-tampil="proyek" data-proyek="${p.id}">${kp(p.id)}${p.nama}</button>
     ${S.tampil === 'proyek' && S.proyek === p.id ? `<div class="sb-anak">${p.milestone.map((m) => `<a class="sb-i" href="#">${m}</a>`).join('')}</div>` : ''}`).join('');
@@ -894,9 +1030,10 @@ function renderDaftar() {
   const kh = kepalaHalaman(ikon, daftar, 'tugas', tugasTerlihat(true));
   $('#gulir').innerHTML = `${kh.sampul}<div class="dalam">
     ${kh.halo}${kh.hero}${kh.ikon}
-    <h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1>
+    <div class="judul-baris"><h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1><button class="bulat-aksi utama" type="button" data-baru="" aria-label="Tugas baru"><svg><use href="#plus"/></svg></button><button class="bulat-aksi" type="button" aria-label="Opsi halaman"><svg><use href="#lainnya"/></svg></button></div>
     <p class="ringkas">${ringkasan(daftar)}</p>
     ${kh.sapa}${kh.ubin}
+    <div class="isi-grid"><div class="kolom-utama">
     <div class="alat">
       <div class="tabs" role="tablist" aria-label="Tampilan">
         ${[['daftar', 'Daftar'], ['papan', 'Papan'], ['kalender', 'Kalender'], ['gantt', 'Gantt']].map(([id, l]) => `<button class="tab" role="tab" type="button" data-tab="${id}" aria-selected="${S.tab === id}"><svg><use href="#${id === 'kalender' ? 'hari' : id}"/></svg>${l}</button>`).join('')}
@@ -907,7 +1044,8 @@ function renderDaftar() {
         <button class="baru" type="button" data-baru=""><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg>Baru</button>
       </div>
     </div>
-    ${isiTab}
+    ${barisSaringan()}${isiTab}
+    </div>${panelKanan()}</div>
   </div>`;
 }
 
@@ -964,6 +1102,8 @@ function renderPeek() {
       <dt><svg><use href="#bendera"/></svg>Prioritas</dt><dd>${pilihan('pr', t.pr, PRIO.map((s) => [s, besar(s)]), pr(t.pr))}</dd>
       <dt><svg><use href="#map"/></svg>Proyek</dt><dd>${pilihan('p', t.p, PROYEK.map((x) => [x.id, x.nama]), `<span class="orang">${kp(t.p)}${p.nama}</span>`)}</dd>
       <dt><svg><use href="#milestone"/></svg>Milestone</dt><dd>${pilihan('ms', t.ms, p.milestone.map((m) => [m, m]), esc(t.ms || '—'))}</dd>
+      ${t.sumber ? `<dt><svg><use href="#catat"/></svg>Sumber</dt><dd><a class="tautan-sistem" href="#catatan" title="Buka catatan rapat">${esc(t.sumber)}<svg><use href="#keluar"/></svg></a></dd>` : ''}
+      ${t.lokasi ? `<dt><svg><use href="#kubus"/></svg>Lokasi</dt><dd><a class="tautan-sistem" href="#dunia" title="Lihat di Dunia Koperasi">${esc(t.lokasi)} · Dunia<svg><use href="#keluar"/></svg></a></dd>` : ''}
     </dl>
     ${t.catatan ? `<p class="pk-catatan">${esc(t.catatan)}</p>` : ''}
     <h3>Subtugas <span>${t.sub.length ? `${n}/${t.sub.length}` : ''}</span></h3>
@@ -1017,6 +1157,16 @@ document.addEventListener('click', (e) => {
   if (c) { const t = TUGAS.find((x) => x.kode === c.dataset.cek); t.st = t.st === 'selesai' ? 'proses' : 'selesai'; catat(t, `mengubah status ke <b>${besar(t.st)}</b>`); render(); return; }
   const sb = el.closest('[data-sub]');
   if (sb) { const t = TUGAS.find((x) => x.kode === S.dipilih); const s = t.sub[+sb.dataset.sub]; s.ok = !s.ok; render(); return; }
+  const sp = el.closest('[data-saring-pic]');
+  if (sp) { const k = sp.dataset.saringPic; S.pic = S.pic === k ? '' : k; if (S.tampil === 'hari') S.tampil = 'semua'; render(); return; }
+  const hs = el.closest('[data-hapus-saring]');
+  if (hs) {
+    const k = hs.dataset.hapusSaring;
+    if (k === 'status' || k === 'semua') S.status = '';
+    if (k === 'pic' || k === 'semua') S.pic = '';
+    if (k === 'cari' || k === 'semua') { S.cari = ''; const c = $('#cari'); if (c) c.value = ''; }
+    render(); return;
+  }
   const ubin = el.closest('[data-saring-status]');
   if (ubin) { const v = ubin.dataset.saringStatus; S.status = S.status === v ? '' : v; if (S.tampil === 'hari') S.tampil = 'semua'; render(); return; }
   const tampil = el.closest('[data-tampil]');
