@@ -270,6 +270,7 @@ input[type=date].prop-ubah::-webkit-calendar-picker-indicator { opacity: 0; posi
 @media (prefers-reduced-motion: reduce) { .app, .sb, .peek, .grup-k .panah { transition: none; } }
 
 /* ---------- Pengalih gaya (alat prototipe, bukan fitur) ---------- */
+.gaya[hidden] { display: none; }
 .gaya { display: flex; gap: 2px; padding: 3px; border-radius: 9px; background: var(--sisi); margin-right: 8px; }
 .gaya button { height: 26px; padding: 0 10px; border-radius: 7px; font-size: 12px; color: var(--redup); font-weight: 500; }
 .gaya button[aria-pressed="true"] { background: #fff; color: var(--tinta); box-shadow: 0 1px 2px rgb(29 30 44 / .12); }
@@ -499,6 +500,93 @@ body[data-kulit="clay"] .komentar button { background: linear-gradient(160deg, #
   body[data-kulit="clay"] .nav-pil button[aria-current="page"] { background: linear-gradient(160deg, #9b80ff, #6a4be6); box-shadow: inset 0 1px 0 rgb(255 255 255 / .4); }
 }
 @media (prefers-reduced-motion: reduce) { .hero svg { animation: none; } body[data-kulit="clay"] .baris:hover, body[data-kulit="clay"] .ubin:hover { transform: none; } }
+
+/* ---------- Kulit Lekuk: kartu bertakik ala referensi lavender (19 Okt 2026) ----------
+   Takikan dibuat dari blok warna latar + dua lengkung radial, jadi kartu harus di atas latar polos --latar-l. */
+body[data-kulit="lekuk"] { --latar-l: #f1eafc; --aksen: #8f78f0; --aksen-muda: #ece6fd; --aksen-garis: #d5cafb; --tinta: #1d1b26; --garis: #e6dcf8; background: var(--latar-l); }
+body[data-kulit="lekuk"] .app, body[data-kulit="lekuk"] .utama, body[data-kulit="lekuk"] .sb, body[data-kulit="lekuk"] .atas { background: var(--latar-l); }
+body[data-kulit="lekuk"] .sb-i[aria-current="page"] { background: #fff; color: var(--tinta); box-shadow: none; }
+body[data-kulit="lekuk"] .sb-i[aria-current="page"] svg { color: var(--aksen); }
+body[data-kulit="lekuk"] .logo { background: var(--tinta); border-radius: 50%; }
+body[data-kulit="lekuk"] .cari-atas, body[data-kulit="lekuk"] .pilih { background: #fff; box-shadow: none; }
+body[data-kulit="lekuk"] .judul-hal { font-size: 28px; }
+body[data-kulit="lekuk"] .halo .av { width: 48px; height: 48px; }
+
+/* Ubin status: takik kiri atas berisi ikon. */
+body[data-kulit="lekuk"] .ubin { --n: 46px; --r: 16px; position: relative; border-radius: 26px; padding: 10px 16px 16px; min-height: 124px; box-shadow: none; }
+body[data-kulit="lekuk"] .ubin:hover { transform: none; filter: brightness(1.03); box-shadow: none; }
+body[data-kulit="lekuk"] .ubin::before { content: ""; position: absolute; left: 0; top: 0; width: var(--n); height: var(--n); background: var(--latar-l); border-bottom-right-radius: 18px; }
+body[data-kulit="lekuk"] .ubin::after { content: ""; position: absolute; left: 0; top: 0; width: calc(var(--n) + var(--r)); height: calc(var(--n) + var(--r)); pointer-events: none;
+  background: radial-gradient(circle at 100% 100%, transparent calc(var(--r) - .5px), var(--latar-l) var(--r)) right top / var(--r) var(--r) no-repeat,
+              radial-gradient(circle at 100% 100%, transparent calc(var(--r) - .5px), var(--latar-l) var(--r)) left bottom / var(--r) var(--r) no-repeat; }
+body[data-kulit="lekuk"] .ubin .ikon-u { position: absolute; left: 0; top: 0; z-index: 1; width: 40px; height: 40px; border-radius: 14px; background: var(--warna-u); color: var(--tinta-u); box-shadow: none; }
+body[data-kulit="lekuk"] .ubin .atas-u { padding-left: 42px; min-height: 30px; }
+body[data-kulit="lekuk"] .ubin .lbl-u { background: transparent; box-shadow: none; padding: 4px 6px; font-size: 14px; }
+body[data-kulit="lekuk"] .ubin .angka-u { font-size: 26px; font-weight: 600; text-shadow: none; }
+body[data-kulit="lekuk"] .ubin.u-rencana { --warna-u: #a897f5; --tinta-u: #fff; background: #9d89f2; color: #fff; }
+body[data-kulit="lekuk"] .ubin.u-proses { --warna-u: #fde08a; --tinta-u: #4a3600; background: #fbd35f; color: #3a2a00; }
+body[data-kulit="lekuk"] .ubin.u-lewat { --warna-u: #f3c3f4; --tinta-u: #5c1f5a; background: #ecaeee; color: #4a1748; }
+body[data-kulit="lekuk"] .ubin.u-selesai { --warna-u: #7fd78f; --tinta-u: #0d3a18; background: #5cc76e; color: #0b3315; }
+body[data-kulit="lekuk"] .ubin[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--latar-l), 0 0 0 5px var(--tinta); }
+
+/* Tab dan tombol. */
+body[data-kulit="lekuk"] .tabs { background: #fff; box-shadow: none; }
+body[data-kulit="lekuk"] .tab[aria-selected="true"] { background: var(--aksen); box-shadow: none; }
+body[data-kulit="lekuk"] .baru { width: auto; background: var(--aksen); box-shadow: none; }
+
+/* Kartu tugas: takik kanan atas berisi tombol centang. */
+body[data-kulit="lekuk"] .baris { --n: 52px; --r: 18px; position: relative; grid-template-areas: "j" "tag" "kaki"; grid-template-columns: minmax(0, 1fr); background: #fff; border: 0; border-radius: 26px; padding: 18px 18px 16px 20px; box-shadow: none; transition: background .15s; }
+body[data-kulit="lekuk"] .app.peek-buka .baris { grid-template-areas: "j" "tag" "kaki"; grid-template-columns: minmax(0, 1fr); }
+body[data-kulit="lekuk"] .baris:hover { background: #fcfaff; transform: none; box-shadow: none; }
+body[data-kulit="lekuk"] .baris::before { content: ""; position: absolute; right: 0; top: 0; width: var(--n); height: var(--n); background: var(--latar-l); border-bottom-left-radius: 20px; }
+body[data-kulit="lekuk"] .baris::after { content: ""; position: absolute; right: 0; top: 0; width: calc(var(--n) + var(--r)); height: calc(var(--n) + var(--r)); pointer-events: none;
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--r) - .5px), var(--latar-l) var(--r)) left top / var(--r) var(--r) no-repeat,
+              radial-gradient(circle at 0 100%, transparent calc(var(--r) - .5px), var(--latar-l) var(--r)) right bottom / var(--r) var(--r) no-repeat; }
+body[data-kulit="lekuk"] .baris > .cek { position: absolute; right: 0; top: 0; z-index: 1; width: 44px; height: 44px; border-radius: 16px; border: 0; background: #fff; box-shadow: none; }
+body[data-kulit="lekuk"] .baris > .cek::before { inset: 0; }
+body[data-kulit="lekuk"] .baris > .cek::after { content: ""; width: 14px; height: 7px; border: solid #c9bff2; border-width: 0 0 2.5px 2.5px; transform: rotate(-45deg) translate(1px, -2px); }
+body[data-kulit="lekuk"] .baris > .cek[aria-checked="true"] { background: #5cc76e; }
+body[data-kulit="lekuk"] .baris > .cek[aria-checked="true"]::after { border-color: #fff; }
+body[data-kulit="lekuk"] .baris > .judul { padding-right: 40px; font-size: 16px; }
+body[data-kulit="lekuk"] .baris.pilih-ini { background: var(--aksen); color: #fff; box-shadow: none; }
+body[data-kulit="lekuk"] .baris.pilih-ini .cek { background: #fff; box-shadow: none; }
+body[data-kulit="lekuk"] .tag { height: 28px; padding: 0 14px; box-shadow: none; }
+body[data-kulit="lekuk"] .tag.mendesak { background: #ff8b6a; color: #fff; }
+body[data-kulit="lekuk"] .tag.tinggi { background: #a897f5; color: #fff; }
+body[data-kulit="lekuk"] .tag.proses { background: #ecaeee; color: #4a1748; }
+body[data-kulit="lekuk"] .baris.pilih-ini .tag { background: #fff; color: var(--tinta); }
+body[data-kulit="lekuk"] .baris.pilih-ini .tag.mendesak { background: #ff8b6a; color: #fff; }
+body[data-kulit="lekuk"] .kaki-kartu .tumpuk .av { width: 30px; height: 30px; }
+body[data-kulit="lekuk"] .baris.pilih-ini .av { box-shadow: 0 0 0 2px var(--aksen); }
+body[data-kulit="lekuk"] .tambah-cepat, body[data-kulit="lekuk"] .kartu { background: #fff; box-shadow: none; }
+body[data-kulit="lekuk"] .kartu.pilih-ini { background: var(--aksen); }
+
+/* Panel: kolom isian putih membulat di atas lavender muda, seperti formulir referensi. */
+body[data-kulit="lekuk"] .peek { background: #f7f2fe; margin: 0; border-radius: 0; border: 0; box-shadow: var(--bayang-panel); -webkit-backdrop-filter: none; backdrop-filter: none; }
+body[data-kulit="lekuk"] .pk-atas .ikon-t { background: #fff; border-radius: 50%; width: 36px; height: 36px; }
+body[data-kulit="lekuk"] .props dd .prop-ubah, body[data-kulit="lekuk"] .sublist li, body[data-kulit="lekuk"] .komentar, body[data-kulit="lekuk"] .pic-btn { background: #fff; border-radius: 16px; box-shadow: none; }
+body[data-kulit="lekuk"] .komentar button { background: var(--aksen); }
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .nav-pil { background: #1d1b26; box-shadow: 0 16px 30px -14px rgb(29 27 38 / .7); }
+  body[data-kulit="lekuk"] .nav-pil button[aria-current="page"] { background: var(--aksen); box-shadow: none; }
+  body[data-kulit="lekuk"] .ubin { min-height: 108px; }
+}
+
+/* ---------- Pemilih PIC dari daftar Tim ---------- */
+.pic-btn { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 34px; padding: 0 8px; border-radius: 6px; text-align: left; }
+.pic-btn:hover { background: var(--hover); }
+.pic-btn svg { width: 14px; height: 14px; margin-left: auto; color: var(--pudar); }
+.pic-pop { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 5; background: #fff; border-radius: 16px; padding: 6px; box-shadow: 0 18px 40px -16px rgb(29 27 38 / .35), 0 0 0 1px var(--garis); }
+.pic-pop .judul-pop { font-size: 11.5px; color: var(--pudar); font-weight: 600; padding: 6px 10px 4px; }
+.pic-op { display: grid; grid-template-columns: 30px 1fr auto; gap: 0 10px; align-items: center; width: 100%; min-height: 48px; padding: 6px 10px; border-radius: 12px; text-align: left; }
+.pic-op:hover, .pic-op:focus-visible { background: var(--aksen-muda); }
+.pic-op[aria-selected="true"] { background: var(--aksen-muda); }
+.pic-op .av { width: 30px; height: 30px; font-size: 10.5px; grid-row: 1 / 3; }
+.pic-op b { font-size: 13px; font-weight: 600; }
+.pic-op small { grid-column: 2; font-size: 11.5px; color: var(--redup); }
+.pic-op .beban { grid-row: 1 / 3; grid-column: 3; font-size: 11.5px; color: var(--redup); white-space: nowrap; }
+.pic-op .beban.berat { color: var(--late); font-weight: 600; }
+.pic-kelola { display: block; margin-top: 4px; padding: 10px; border-top: 1px solid var(--garis); font-size: 12.5px; font-weight: 600; color: var(--aksen); text-decoration: none; border-radius: 0 0 10px 10px; }
 </style>
 </head>
 <body>
@@ -555,7 +643,7 @@ body[data-kulit="clay"] .komentar button { background: linear-gradient(160deg, #
     <div class="atas">
       <button class="ikon-t tombol-menu" type="button" id="tombol-laci" aria-label="Buka navigasi" aria-expanded="false"><svg class="i"><use href="#menu"/></svg></button>
       <div class="jejak" id="jejak"></div>
-      <div class="kanan"><div class="gaya" role="group" aria-label="Gaya prototipe"><button type="button" data-gaya="clay">Clay</button><button type="button" data-gaya="ceria">Ceria</button><button type="button" data-gaya="sampul">Sampul</button><button type="button" data-gaya="tinta">Tinta</button><button type="button" data-gaya="pastel">Pastel</button></div><label class="cari-atas"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari tugas"><kbd>/</kbd></label></div>
+      <div class="kanan"><div class="gaya" role="group" aria-label="Gaya prototipe" hidden><button type="button" data-gaya="lekuk">Lekuk</button><button type="button" data-gaya="clay">Clay</button><button type="button" data-gaya="ceria">Ceria</button><button type="button" data-gaya="sampul">Sampul</button><button type="button" data-gaya="tinta">Tinta</button><button type="button" data-gaya="pastel">Pastel</button></div><label class="cari-atas"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari tugas"><kbd>/</kbd></label></div>
     </div>
     <div class="gulir" id="gulir"></div>
   </main>
@@ -581,7 +669,8 @@ body[data-kulit="clay"] .komentar button { background: linear-gradient(160deg, #
 <script>
 // ---------- Data contoh (fiktif) ----------
 const HARI_INI = '2026-10-18';
-const ORANG = { MA: { nama: 'Saya', w: '#1d1e2c' }, AR: { nama: 'Ayu R.', w: '#546fff' }, SN: { nama: 'Sinta N.', w: '#1f9d8b' }, BD: { nama: 'Budi D.', w: '#e0822e' } };
+// PIC dipilih dari daftar staf di halaman Tim (/tim); bukan teks bebas.
+const ORANG = { MA: { nama: 'Saya', lengkap: 'Manajer (Anda)', jabatan: 'Manajer', w: '#1d1e2c' }, AR: { nama: 'Ayu R.', lengkap: 'Ayu Rahma', jabatan: 'Karyawan gerai', w: '#546fff' }, SN: { nama: 'Sinta N.', lengkap: 'Sinta Nur', jabatan: 'Sekretaris · pengurus', w: '#1f9d8b' }, BD: { nama: 'Budi D.', lengkap: 'Budi Darma', jabatan: 'Karyawan gudang', w: '#e0822e' }, RH: { nama: 'Rina H.', lengkap: 'Rina Hapsari', jabatan: 'Bendahara · pengurus', w: '#c2418a' } };
 const PROYEK = [
   { id: 'G', nama: 'Gerai sembako', w: '#546fff', kode: 'GRS', milestone: ['Renovasi ruang', 'Stok awal'] },
   { id: 'R', nama: 'Rapat anggota tahunan', w: '#1f9d8b', kode: 'RAT', milestone: ['Undangan', 'Laporan'] },
@@ -675,6 +764,16 @@ function isoKoperasi() {
     <circle cx="${dx.toFixed(1)}" cy="${dy.toFixed(1)}" r="14" fill="url(#daun)"/>
     <circle cx="${(dx - 4).toFixed(1)}" cy="${(dy - 5).toFixed(1)}" r="4" fill="#fff" opacity=".45"/>
   </svg>`;
+}
+
+// ---------- Pemilih PIC ----------
+function pemilihPic(t) {
+  const beban = (k) => TUGAS.filter((x) => x.pic === k && !tutupStatus(x)).length;
+  return `<div class="pic-pop" role="listbox" aria-label="Pilih penanggung jawab">
+    <div class="judul-pop">Penanggung jawab dari Tim</div>
+    ${Object.keys(ORANG).map((k) => { const n = beban(k); return `<button class="pic-op" type="button" role="option" aria-selected="${t.pic === k}" data-pilih-pic="${k}">${av(k)}<b>${ORANG[k].lengkap}</b><small>${ORANG[k].jabatan}</small><span class="beban ${n >= 4 ? 'berat' : ''}">${n} terbuka</span></button>`; }).join('')}
+    <a class="pic-kelola" href="#">Kelola daftar di Tim →</a>
+  </div>`;
 }
 
 // ---------- Render ----------
@@ -826,7 +925,7 @@ function renderPeek() {
     <h2 class="pk-judul" contenteditable="true" spellcheck="false" data-judul aria-label="Judul tugas">${esc(t.judul)}</h2>
     <dl class="props">
       <dt><svg><use href="#status"/></svg>Status</dt><dd>${pilihan('st', t.st, STATUS.map((s) => [s, besar(s)]), st(t.st))}</dd>
-      <dt><svg><use href="#saya"/></svg>PIC</dt><dd>${pilihan('pic', t.pic, Object.keys(ORANG).map((k) => [k, ORANG[k].nama]), orang(t.pic))}</dd>
+      <dt><svg><use href="#saya"/></svg>PIC</dt><dd><button class="pic-btn" type="button" data-pic-buka aria-haspopup="listbox" aria-expanded="${!!S.picBuka}">${orang(t.pic)}<svg><use href="#bawah-p"/></svg></button>${S.picBuka ? pemilihPic(t) : ''}</dd>
       <dt><svg><use href="#hari"/></svg>Tenggat</dt><dd><input class="prop-ubah" type="date" data-prop="tgl" value="${t.tgl}" aria-label="Tenggat"><span class="prop-tampil tgl ${tg.kls}">${tg.teks}</span></dd>
       <dt><svg><use href="#bendera"/></svg>Prioritas</dt><dd>${pilihan('pr', t.pr, PRIO.map((s) => [s, besar(s)]), pr(t.pr))}</dd>
       <dt><svg><use href="#map"/></svg>Proyek</dt><dd>${pilihan('p', t.p, PROYEK.map((x) => [x.id, x.nama]), `<span class="orang">${kp(t.p)}${p.nama}</span>`)}</dd>
@@ -849,7 +948,7 @@ function render() {
 
 // ---------- Aksi ----------
 function catat(t, teks) { t.akt.unshift(['MA', teks, '18 Okt']); }
-function buka(kode) { S.dipilih = kode; render(); }
+function buka(kode) { S.dipilih = kode; S.picBuka = false; render(); }
 function tutup() { S.dipilih = null; render(); }
 function geser(arah) {
   if (!S.dipilih) return;
@@ -876,6 +975,10 @@ function bacaCepat(teks) {
 
 document.addEventListener('click', (e) => {
   const el = e.target;
+  const pilihPic = el.closest('[data-pilih-pic]');
+  if (pilihPic) { const t = TUGAS.find((x) => x.kode === S.dipilih); t.pic = pilihPic.dataset.pilihPic; S.picBuka = false; catat(t, `mengubah PIC ke <b>${ORANG[t.pic].nama}</b>`); render(); $('[data-pic-buka]')?.focus(); return; }
+  if (el.closest('[data-pic-buka]')) { S.picBuka = !S.picBuka; render(); if (S.picBuka) $('.pic-op[aria-selected="true"]')?.focus(); return; }
+  if (S.picBuka && !el.closest('.pic-pop')) { S.picBuka = false; renderPeek(); }
   const c = el.closest('[data-cek]');
   if (c) { const t = TUGAS.find((x) => x.kode === c.dataset.cek); t.st = t.st === 'selesai' ? 'proses' : 'selesai'; catat(t, `mengubah status ke <b>${besar(t.st)}</b>`); render(); return; }
   const sb = el.closest('[data-sub]');
@@ -935,6 +1038,7 @@ document.addEventListener('submit', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   const mengetik = !!e.target.matches?.('input, select, textarea, [contenteditable="true"]');
+  if (e.key === 'Escape' && S.picBuka) { S.picBuka = false; renderPeek(); $('[data-pic-buka]')?.focus(); return; }
   if (e.key === 'Escape') { if (mengetik) { e.target.blur(); return; } if (document.body.classList.contains('laci-buka')) { document.body.classList.remove('laci-buka'); return; } tutup(); return; }
   if (e.key === 'Enter' && e.target.matches?.('[data-judul]')) { e.preventDefault(); e.target.blur(); return; }
   if (mengetik) return;
@@ -948,14 +1052,16 @@ $('#selubung').addEventListener('click', () => { document.body.classList.remove(
 
 // Pengalih gaya hanya alat banding prototipe; pilihan diingat per peramban.
 function pakaiGaya(nama) {
-  document.body.dataset.gaya = nama === 'clay' ? 'ceria' : nama;
+  document.body.dataset.gaya = nama === 'clay' || nama === 'lekuk' ? 'ceria' : nama;
   document.body.dataset.kulit = nama;
   document.querySelectorAll('.gaya [data-gaya]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.gaya === nama));
-  try { localStorage.setItem('prototipe-gaya-3', nama); } catch {}
+  try { localStorage.setItem('prototipe-gaya-4', nama); } catch {}
 }
 document.querySelector('.gaya').addEventListener('click', (e) => { const b = e.target.closest('.gaya [data-gaya]'); if (b) pakaiGaya(b.dataset.gaya); });
-let gayaAwal = 'clay';
-try { gayaAwal = localStorage.getItem('prototipe-gaya-3') || gayaAwal; } catch {}
+// Pengalih hanya untuk membandingkan: buka dengan ?banding.
+if (location.search.includes('banding')) document.querySelector('.gaya').hidden = false;
+let gayaAwal = 'lekuk';
+try { if (location.search.includes('banding')) gayaAwal = localStorage.getItem('prototipe-gaya-4') || gayaAwal; } catch {}
 pakaiGaya(gayaAwal);
 render();
 </script>
