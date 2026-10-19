@@ -431,6 +431,74 @@ body[data-gaya="ceria"] .komentar button { border-radius: 999px; }
   .nav-pil button svg { width: 21px; height: 21px; }
   .nav-pil button[aria-current="page"] { background: var(--aksen); border-color: var(--aksen); }
 }
+
+/* ---------- Kulit Clay: kedalaman lembut senada Dunia Koperasi 3D (19 Okt 2026) ----------
+   Dipakai di atas tata letak Ceria; body memakai data-gaya="ceria" + data-kulit="clay". */
+.hero { display: none; }
+body[data-kulit="clay"] { --aksen: #7c5cf5; --aksen-muda: #efeaff; --aksen-garis: #d6cbff; --garis: #e7e1fb; background: #eceaff; }
+body[data-kulit="clay"] .app { background: radial-gradient(55% 45% at 88% 0%, #ffe0f0 0%, transparent 60%), radial-gradient(45% 50% at 0% 100%, #d6f1ff 0%, transparent 60%), linear-gradient(160deg, #f2eeff, #e8e4ff); }
+body[data-kulit="clay"] .utama, body[data-kulit="clay"] .atas { background: transparent; }
+body[data-kulit="clay"] .sb { margin: 12px 0 12px 12px; border-radius: 26px; background: rgb(255 255 255 / .55); -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3); border: 1px solid rgb(255 255 255 / .75); box-shadow: 0 24px 48px -28px rgb(76 60 160 / .45), inset 0 1px 0 #fff; }
+body[data-kulit="clay"] .sb-i[aria-current="page"] { background: linear-gradient(180deg, #fff, #f1edff); color: var(--aksen); box-shadow: 0 8px 16px -10px rgb(124 92 245 / .7), inset 0 -2px 0 rgb(124 92 245 / .1); }
+body[data-kulit="clay"] .logo { background: linear-gradient(145deg, #a48bff, #6a4be6); box-shadow: 0 6px 12px -4px rgb(124 92 245 / .8), inset 0 1px 0 rgb(255 255 255 / .45); }
+body[data-kulit="clay"] .cari-atas, body[data-kulit="clay"] .pilih { background: rgb(255 255 255 / .7); box-shadow: inset 0 2px 4px rgb(76 60 160 / .1), 0 1px 0 #fff; }
+body[data-kulit="clay"] .halo { display: none; }
+
+/* Kartu sambutan dengan ilustrasi isometrik. */
+body[data-kulit="clay"] .hero { display: grid; grid-template-columns: minmax(0, 1fr) 210px; align-items: center; gap: 12px; position: relative; overflow: hidden; margin: 6px 0 22px; padding: 22px 26px; border-radius: 30px; color: #fff; background: linear-gradient(125deg, #6f4ff0 0%, #9c7bff 52%, #ff9ccc 100%); box-shadow: 0 30px 50px -30px rgb(111 79 240 / .95), inset 0 2px 0 rgb(255 255 255 / .35), inset 0 -12px 26px rgb(50 20 140 / .28); }
+.hero::before { content: ""; position: absolute; width: 260px; height: 260px; right: 90px; top: -150px; border-radius: 50%; background: radial-gradient(circle, rgb(255 255 255 / .28), transparent 65%); }
+.hero small { font-size: 13px; opacity: .85; }
+.hero b { display: block; font-size: 24px; font-weight: 700; letter-spacing: -.02em; margin: 2px 0 12px; }
+.hero p { margin: 0 0 8px; font-size: 13px; opacity: .92; }
+.hero .bar { height: 10px; max-width: 320px; border-radius: 999px; background: rgb(255 255 255 / .22); box-shadow: inset 0 2px 3px rgb(40 10 110 / .25); overflow: hidden; }
+.hero .bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #fff, #ffe3f1); box-shadow: 0 0 12px rgb(255 255 255 / .9); }
+.hero svg { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 18px 16px rgb(40 15 120 / .35)); animation: apung 5s ease-in-out infinite; }
+@keyframes apung { 50% { transform: translateY(-6px); } }
+
+/* Ubin status timbul. */
+body[data-kulit="clay"] .ubin { border-radius: 28px; color: #fff; box-shadow: 0 22px 30px -22px var(--bayang-u), inset 0 2px 0 rgb(255 255 255 / .5), inset 0 -10px 18px rgb(0 0 0 / .1); }
+body[data-kulit="clay"] .ubin:hover { transform: translateY(-4px); box-shadow: 0 28px 36px -22px var(--bayang-u), inset 0 2px 0 rgb(255 255 255 / .5), inset 0 -10px 18px rgb(0 0 0 / .1); }
+body[data-kulit="clay"] .ubin.u-rencana { background: linear-gradient(150deg, #b5a0ff, #7356f0); --bayang-u: rgb(115 86 240 / .95); }
+body[data-kulit="clay"] .ubin.u-proses { background: linear-gradient(150deg, #ffd56e, #ffa62b); --bayang-u: rgb(235 150 30 / .9); color: #422a00; }
+body[data-kulit="clay"] .ubin.u-lewat { background: linear-gradient(150deg, #ffa3c8, #ee5d9a); --bayang-u: rgb(225 80 140 / .9); }
+body[data-kulit="clay"] .ubin.u-selesai { background: linear-gradient(150deg, #7fe8a6, #23b064); --bayang-u: rgb(30 160 90 / .9); color: #07391d; }
+body[data-kulit="clay"] .ubin .ikon-u { background: radial-gradient(circle at 30% 25%, rgb(255 255 255 / .95), rgb(255 255 255 / .45) 45%, rgb(255 255 255 / .18)); color: rgb(0 0 0 / .55); box-shadow: inset 0 -2px 4px rgb(0 0 0 / .12), 0 4px 8px -4px rgb(0 0 0 / .25); }
+body[data-kulit="clay"] .ubin .lbl-u { background: rgb(255 255 255 / .22); box-shadow: inset 0 1px 0 rgb(255 255 255 / .35); }
+body[data-kulit="clay"] .ubin .angka-u { font-size: 30px; font-weight: 700; text-shadow: 0 2px 0 rgb(0 0 0 / .08); }
+body[data-kulit="clay"] .ubin[aria-pressed="true"] { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--aksen), 0 22px 30px -22px var(--bayang-u); }
+
+/* Tab, tombol, dan kartu empuk. */
+body[data-kulit="clay"] .tabs { background: rgb(255 255 255 / .6); box-shadow: inset 0 2px 4px rgb(76 60 160 / .1), 0 1px 0 #fff; }
+body[data-kulit="clay"] .tab[aria-selected="true"], body[data-kulit="clay"] .baru { background: linear-gradient(160deg, #9b80ff, #6a4be6); box-shadow: 0 10px 18px -10px rgb(106 75 230 / .95), inset 0 1px 0 rgb(255 255 255 / .4); }
+body[data-kulit="clay"] .baris { background: linear-gradient(160deg, #fff, #f8f5ff); border: 1px solid rgb(255 255 255 / .95); border-radius: 26px; box-shadow: 0 18px 28px -20px rgb(76 60 160 / .5), inset 0 -4px 10px rgb(124 92 245 / .06); transition: transform .15s, box-shadow .15s; }
+body[data-kulit="clay"] .baris:hover { background: linear-gradient(160deg, #fff, #f8f5ff); transform: translateY(-3px); box-shadow: 0 26px 34px -22px rgb(76 60 160 / .6), inset 0 -4px 10px rgb(124 92 245 / .06); }
+body[data-kulit="clay"] .baris.pilih-ini { background: linear-gradient(150deg, #9c80ff, #6647e3); border-color: rgb(255 255 255 / .3); box-shadow: 0 24px 38px -20px rgb(102 71 227 / .95), inset 0 2px 0 rgb(255 255 255 / .35), inset 0 -8px 16px rgb(40 15 120 / .25); }
+body[data-kulit="clay"] .tag { box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 2px 4px -2px rgb(76 60 160 / .25); }
+body[data-kulit="clay"] .cek { width: 22px; height: 22px; border: 0; background: #eee9ff; box-shadow: inset 0 2px 4px rgb(76 60 160 / .28), 0 1px 0 #fff; }
+body[data-kulit="clay"] .cek[aria-checked="true"] { background: linear-gradient(145deg, #74e6a0, #1fa75a); box-shadow: 0 5px 10px -4px rgb(31 167 90 / .8), inset 0 1px 0 rgb(255 255 255 / .55); }
+body[data-kulit="clay"] .baris.pilih-ini .cek { background: rgb(255 255 255 / .25); box-shadow: inset 0 2px 4px rgb(40 15 120 / .35); }
+body[data-kulit="clay"] .grup-k { font-size: 15px; }
+body[data-kulit="clay"] .tambah-cepat, body[data-kulit="clay"] .kartu { background: linear-gradient(160deg, #fff, #f8f5ff); box-shadow: 0 14px 24px -18px rgb(76 60 160 / .5); }
+body[data-kulit="clay"] .kartu.pilih-ini { background: linear-gradient(150deg, #9c80ff, #6647e3); }
+
+/* Panel kaca melayang. */
+body[data-kulit="clay"] .peek { margin: 12px 12px 12px 0; border-radius: 26px; background: rgb(255 255 255 / .72); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border: 1px solid rgb(255 255 255 / .8); box-shadow: 0 24px 48px -26px rgb(76 60 160 / .5); }
+body[data-kulit="clay"] .props dd .prop-ubah, body[data-kulit="clay"] .sublist li, body[data-kulit="clay"] .komentar { background: #f5f2ff; border-color: transparent; box-shadow: inset 0 2px 4px rgb(76 60 160 / .1); }
+body[data-kulit="clay"] .komentar button { background: linear-gradient(160deg, #9b80ff, #6a4be6); }
+
+@media (max-width: 1279px) { body[data-kulit="clay"] .peek { margin: 12px; } }
+@media (max-width: 1023px) {
+  body[data-kulit="clay"] .sb { margin: 0; border-radius: 0 26px 26px 0; background: rgb(255 255 255 / .9); }
+  body[data-kulit="clay"] .hero { grid-template-columns: minmax(0, 1fr) 160px; }
+}
+@media (max-width: 767px) {
+  body[data-kulit="clay"] .peek { margin: 0; border-radius: 0; }
+  body[data-kulit="clay"] .hero { grid-template-columns: minmax(0, 1fr) 112px; padding: 18px; border-radius: 26px; }
+  body[data-kulit="clay"] .hero b { font-size: 19px; }
+  body[data-kulit="clay"] .nav-pil { background: linear-gradient(180deg, #2a2745, #15132a); box-shadow: 0 18px 30px -12px rgb(23 22 42 / .75), inset 0 1px 0 rgb(255 255 255 / .12); }
+  body[data-kulit="clay"] .nav-pil button[aria-current="page"] { background: linear-gradient(160deg, #9b80ff, #6a4be6); box-shadow: inset 0 1px 0 rgb(255 255 255 / .4); }
+}
+@media (prefers-reduced-motion: reduce) { .hero svg { animation: none; } body[data-kulit="clay"] .baris:hover, body[data-kulit="clay"] .ubin:hover { transform: none; } }
 </style>
 </head>
 <body>
@@ -487,7 +555,7 @@ body[data-gaya="ceria"] .komentar button { border-radius: 999px; }
     <div class="atas">
       <button class="ikon-t tombol-menu" type="button" id="tombol-laci" aria-label="Buka navigasi" aria-expanded="false"><svg class="i"><use href="#menu"/></svg></button>
       <div class="jejak" id="jejak"></div>
-      <div class="kanan"><div class="gaya" role="group" aria-label="Gaya prototipe"><button type="button" data-gaya="ceria">Ceria</button><button type="button" data-gaya="sampul">Sampul</button><button type="button" data-gaya="tinta">Tinta</button><button type="button" data-gaya="pastel">Pastel</button></div><label class="cari-atas"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari tugas"><kbd>/</kbd></label></div>
+      <div class="kanan"><div class="gaya" role="group" aria-label="Gaya prototipe"><button type="button" data-gaya="clay">Clay</button><button type="button" data-gaya="ceria">Ceria</button><button type="button" data-gaya="sampul">Sampul</button><button type="button" data-gaya="tinta">Tinta</button><button type="button" data-gaya="pastel">Pastel</button></div><label class="cari-atas"><svg class="i" style="width:15px;height:15px"><use href="#cari"/></svg><span class="sr">Cari tugas</span><input id="cari" type="search" placeholder="Cari tugas"><kbd>/</kbd></label></div>
     </div>
     <div class="gulir" id="gulir"></div>
   </main>
@@ -582,6 +650,33 @@ function tugasTerlihat(abaikanStatus) {
 const urut = (a, b) => (tutupStatus(a) - tutupStatus(b)) || a.tgl.localeCompare(b.tgl);
 let urutanAktif = [];
 
+// ---------- Ilustrasi isometrik ----------
+function isoKoperasi() {
+  const T = (x, y, z) => [(x - y) * 0.866, (x + y) * 0.5 - z];
+  const P = (x, y, z) => T(x, y, z).map((n) => n.toFixed(1)).join(',');
+  const kotak = (x, y, z, w, d, h, [a, b, c]) =>
+    `<polygon points="${P(x, y, z + h)} ${P(x + w, y, z + h)} ${P(x + w, y + d, z + h)} ${P(x, y + d, z + h)}" fill="${a}"/>` +
+    `<polygon points="${P(x, y + d, z)} ${P(x + w, y + d, z)} ${P(x + w, y + d, z + h)} ${P(x, y + d, z + h)}" fill="${b}"/>` +
+    `<polygon points="${P(x + w, y, z)} ${P(x + w, y + d, z)} ${P(x + w, y + d, z + h)} ${P(x + w, y, z + h)}" fill="${c}"/>`;
+  const [dx, dy] = T(98.5, 92.5, 32);
+  return `<svg viewBox="-108 -50 216 178" aria-hidden="true">
+    <defs><radialGradient id="daun" cx="35%" cy="30%"><stop offset="0" stop-color="#c3f7d3"/><stop offset="1" stop-color="#22a85d"/></radialGradient></defs>
+    ${kotak(0, 0, 0, 120, 120, 8, ['#f3eeff', '#cdbcff', '#ab95f3'])}
+    ${kotak(18, 22, 8, 64, 52, 38, ['#ffffff', '#f4f0ff', '#dcd2ff'])}
+    ${kotak(24, 74, 26, 10, 1, 10, ['#bfe9ff', '#bfe9ff', '#94d3f2'])}
+    ${kotak(64, 74, 26, 10, 1, 10, ['#bfe9ff', '#bfe9ff', '#94d3f2'])}
+    ${kotak(42, 74, 8, 16, 1, 22, ['#7c5cf5', '#7c5cf5', '#6545e0'])}
+    ${kotak(18, 74, 38, 64, 9, 3, ['#ffb3d6', '#f483b9', '#d9629b'])}
+    ${kotak(14, 18, 46, 72, 60, 7, ['#b4a0ff', '#8b6cf0', '#6c4ed9'])}
+    ${kotak(36, 42, 53, 28, 5, 12, ['#ffe08a', '#ffcf4d', '#e3ab2c'])}
+    ${kotak(92, 26, 8, 16, 16, 16, ['#ffe08a', '#ffcf4d', '#e3ab2c'])}
+    ${kotak(94, 48, 8, 14, 14, 11, ['#a3f1c0', '#5fd08a', '#3cae6a'])}
+    ${kotak(96, 90, 8, 5, 5, 16, ['#cf9a66', '#a8743f', '#8e5f31'])}
+    <circle cx="${dx.toFixed(1)}" cy="${dy.toFixed(1)}" r="14" fill="url(#daun)"/>
+    <circle cx="${(dx - 4).toFixed(1)}" cy="${(dy - 5).toFixed(1)}" r="4" fill="#fff" opacity=".45"/>
+  </svg>`;
+}
+
 // ---------- Render ----------
 function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   const tot = daftar.length;
@@ -590,6 +685,7 @@ function kepalaHalaman(ikon, daftar, label, cakupan = daftar) {
   return {
     sampul: '<div class="sampul" aria-hidden="true"></div>',
     ikon: `<div class="ikon-hal" aria-hidden="true">${ikon}</div>`,
+    hero: `<div class="hero"><div><small>Hai, Manajer</small><b>Selamat datang kembali</b><p>${cakupan.filter((t) => t.st === 'selesai').length} dari ${cakupan.length} tugas selesai${cakupan.filter(lewat).length ? ` · ${cakupan.filter(lewat).length} terlambat` : ''}</p><div class="bar"><i style="width:${cakupan.length ? Math.round((cakupan.filter((t) => t.st === 'selesai').length / cakupan.length) * 100) : 0}%"></i></div></div>${isoKoperasi()}</div>`,
     halo: `<div class="halo">${av('MA')}<div>Hai, Manajer<b>Selamat datang kembali</b></div></div>`,
     ubin: `<div class="ubin-status" role="group" aria-label="Saring menurut status">${[
       ['rencana', 'Rencana', 'semua', cakupan.filter((t) => t.st === 'rencana' && !lewat(t)).length],
@@ -664,7 +760,7 @@ function renderDaftar() {
   const ikon = S.tampil === 'proyek' ? `<span style="font-size:30px;font-weight:700;color:${proyek(S.proyek).w}">${S.proyek}</span>` : `<svg><use href="#${S.tampil === 'saya' ? 'saya' : 'semua'}"/></svg>`;
   const kh = kepalaHalaman(ikon, daftar, 'tugas', tugasTerlihat(true));
   $('#gulir').innerHTML = `${kh.sampul}<div class="dalam">
-    ${kh.halo}${kh.ikon}
+    ${kh.halo}${kh.hero}${kh.ikon}
     <h1 class="judul-hal">${esc(judul)} <span class="contoh">CONTOH</span></h1>
     <p class="ringkas">${ringkasan(daftar)}</p>
     ${kh.sapa}${kh.ubin}
@@ -701,7 +797,7 @@ function renderHariIni() {
   const nHari = hari.filter((t) => !tutupStatus(t)).length;
   const kh = kepalaHalaman('<svg><use href="#hari"/></svg>', hari, 'tugas hari ini', TUGAS);
   $('#gulir').innerHTML = `${kh.sampul}<div class="fokus">
-    ${kh.halo}${kh.ikon}
+    ${kh.halo}${kh.hero}${kh.ikon}
     <h1 class="judul-hal">Hari ini <span class="contoh">CONTOH</span></h1>
     <p class="ringkas">Sabtu, 18 Oktober 2026</p>
     ${kh.sapa}${kh.ubin}
@@ -852,13 +948,14 @@ $('#selubung').addEventListener('click', () => { document.body.classList.remove(
 
 // Pengalih gaya hanya alat banding prototipe; pilihan diingat per peramban.
 function pakaiGaya(nama) {
-  document.body.dataset.gaya = nama;
-  document.querySelectorAll('[data-gaya]').forEach((b) => b !== document.body && b.setAttribute('aria-pressed', b.dataset.gaya === nama));
-  try { localStorage.setItem('prototipe-gaya-2', nama); } catch {}
+  document.body.dataset.gaya = nama === 'clay' ? 'ceria' : nama;
+  document.body.dataset.kulit = nama;
+  document.querySelectorAll('.gaya [data-gaya]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.gaya === nama));
+  try { localStorage.setItem('prototipe-gaya-3', nama); } catch {}
 }
-document.querySelector('.gaya').addEventListener('click', (e) => { const b = e.target.closest('[data-gaya]'); if (b) pakaiGaya(b.dataset.gaya); });
-let gayaAwal = 'ceria';
-try { gayaAwal = localStorage.getItem('prototipe-gaya-2') || gayaAwal; } catch {}
+document.querySelector('.gaya').addEventListener('click', (e) => { const b = e.target.closest('.gaya [data-gaya]'); if (b) pakaiGaya(b.dataset.gaya); });
+let gayaAwal = 'clay';
+try { gayaAwal = localStorage.getItem('prototipe-gaya-3') || gayaAwal; } catch {}
 pakaiGaya(gayaAwal);
 render();
 </script>
