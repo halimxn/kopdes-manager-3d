@@ -587,6 +587,32 @@ body[data-kulit="lekuk"] .komentar button { background: var(--aksen); }
 .pic-op .beban { grid-row: 1 / 3; grid-column: 3; font-size: 11.5px; color: var(--redup); white-space: nowrap; }
 .pic-op .beban.berat { color: var(--late); font-weight: 600; }
 .pic-kelola { display: block; margin-top: 4px; padding: 10px; border-top: 1px solid var(--garis); font-size: 12.5px; font-weight: 600; color: var(--aksen); text-decoration: none; border-radius: 0 0 10px 10px; }
+
+/* ---------- Lekuk tenang: satu kolom, kepala ringkas ---------- */
+body[data-kulit="lekuk"] .dalam { max-width: 820px; }
+body[data-kulit="lekuk"] .dalam section { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+body[data-kulit="lekuk"] .halo { margin: 4px 0 10px; }
+body[data-kulit="lekuk"] .halo .av { width: 40px; height: 40px; }
+body[data-kulit="lekuk"] .halo b { font-size: 15px; }
+body[data-kulit="lekuk"] .judul-hal { margin: 0 0 14px; }
+body[data-kulit="lekuk"] .ubin-status { gap: 10px; margin-bottom: 20px; }
+body[data-kulit="lekuk"] .ubin { min-height: 96px; padding-bottom: 12px; }
+body[data-kulit="lekuk"] .ubin .angka-u { font-size: 22px; }
+body[data-kulit="lekuk"] .grup-k { height: 44px; padding-top: 14px; font-size: 14px; }
+body[data-kulit="lekuk"] .grup-k[data-lipat="lewat"] { color: var(--late); }
+body[data-kulit="lekuk"] .grup-k[data-lipat="selesai"] { color: var(--redup); }
+body[data-kulit="lekuk"] .baris { gap: 10px; padding: 16px 18px 14px 20px; }
+body[data-kulit="lekuk"] .tag-kartu:empty { display: none; }
+.kaki-kartu > span { white-space: nowrap; flex: none; }
+.kaki-kartu .proyek-k { flex: 1 1 auto; color: var(--pudar); min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: block; }
+.kaki-kartu .proyek-k .kp { margin: 0 2px 0 0; }
+body[data-kulit="lekuk"] .baris.pilih-ini .proyek-k { color: rgb(255 255 255 / .85); }
+@media (max-width: 1023px) { body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 767px) {
+  body[data-kulit="lekuk"] .ubin-status { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body[data-kulit="lekuk"] .ubin { min-height: 88px; }
+  body[data-kulit="lekuk"] .kaki-kartu { gap: 10px; }
+}
 </style>
 </head>
 <body>
@@ -693,7 +719,7 @@ let TUGAS = [
 ];
 
 // ---------- Keadaan ----------
-const S = { status: '', tampil: 'semua', proyek: null, cari: '', pic: '', kelompok: 'proyek', tab: 'daftar', dipilih: null, lipat: new Set() };
+const S = { status: '', tampil: 'semua', proyek: null, cari: '', pic: '', kelompok: 'tenggat', tab: 'daftar', dipilih: null, lipat: new Set(['selesai']) };
 
 // ---------- Utilitas ----------
 const $ = (s, el = document) => el.querySelector(s);
@@ -826,12 +852,20 @@ function renderBaris(t) {
     <span class="sel">${orang(t.pic)}</span>
     <span class="sel tgl ${tg.kls}">${tg.teks}</span>
     <span class="meta-hp">${st(t.st)}<span class="tgl ${tg.kls}">${tg.teks}</span>${av(t.pic)}</span>
-    <span class="tag-kartu">${t.pr === 'mendesak' || t.pr === 'tinggi' ? `<span class="tag ${t.pr}">${besar(t.pr)}</span>` : ''}<span class="tag ${lewat(t) ? 'lewat' : t.st}">${lewat(t) ? 'Terlambat' : besar(t.st)}</span><span class="tag">${esc(t.ms || proyek(t.p).nama)}</span></span>
-    <span class="kaki-kartu"><span class="${tg.kls === 'lewat' ? 'lewat' : ''}"><svg><use href="#hari"/></svg>${tg.teks}</span>${t.sub.length ? `<span><svg><use href="#semua"/></svg>${t.sub.filter((x) => x.ok).length}/${t.sub.length}</span>` : ''}<span><svg><use href="#komen"/></svg>${t.akt.length}</span><span class="tumpuk">${av(t.pic)}</span></span>
+    <span class="tag-kartu">${t.pr === 'mendesak' || t.pr === 'tinggi' ? `<span class="tag ${t.pr}">${besar(t.pr)}</span>` : ''}<span class="tag ${t.st}">${besar(t.st)}</span></span>
+    <span class="kaki-kartu"><span class="${tg.kls === 'lewat' ? 'lewat' : ''}"><svg><use href="#hari"/></svg>${tg.teks}</span>${t.sub.length ? `<span><svg><use href="#semua"/></svg>${t.sub.filter((x) => x.ok).length}/${t.sub.length}</span>` : ''}<span class="proyek-k">${kp(t.p)}${proyek(t.p).nama}</span><span class="tumpuk">${av(t.pic)}</span></span>
   </div>`;
 }
 
+// Manajer perlu tahu urutan kerja, jadi kelompok bawaan memakai tenggat, bukan proyek.
+function kunciTenggat(t) {
+  if (tutupStatus(t)) return 'selesai';
+  if (lewat(t)) return 'lewat';
+  if (t.tgl === HARI_INI) return 'hari';
+  return t.tgl <= tambahHari(7) ? 'minggu' : 'nanti';
+}
 function kelompokkan(daftar) {
+  if (S.kelompok === 'tenggat') return [['lewat', 'Terlambat'], ['hari', 'Hari ini'], ['minggu', '7 hari ke depan'], ['nanti', 'Nanti'], ['selesai', 'Selesai']].map(([id, label]) => ({ id, label, ikon: '', isi: daftar.filter((t) => kunciTenggat(t) === id) }));
   if (S.kelompok === 'status') return STATUS.map((s) => ({ id: s, label: besar(s), ikon: st(s).replace(/>[A-Z][a-z]+</, '><'), isi: daftar.filter((t) => t.st === s) }));
   if (S.kelompok === 'pic') return Object.keys(ORANG).map((k) => ({ id: k, label: ORANG[k].nama, ikon: av(k), isi: daftar.filter((t) => t.pic === k) }));
   return PROYEK.map((p) => ({ id: p.id, label: p.nama, ikon: kp(p.id), isi: daftar.filter((t) => t.p === p.id) }));
@@ -845,7 +879,7 @@ function renderDaftar() {
   urutanAktif = [];
   const isiGrup = grup.map((g) => {
     const isi = g.isi.sort(urut);
-    const tutup = S.lipat.has(g.id);
+    const tutup = S.lipat.has(g.id) && !S.status;
     if (!tutup) urutanAktif.push(...isi.map((t) => t.kode));
     return `<section>
       <button class="grup-k" type="button" data-lipat="${g.id}" aria-expanded="${!tutup}"><span class="panah"><svg class="i" style="width:14px;height:14px"><use href="#bawah-p"/></svg></span>${g.ikon}${esc(g.label)}<span class="jml">${isi.length}</span></button>
@@ -869,7 +903,7 @@ function renderDaftar() {
       </div>
       <div class="kanan">
         <label class="sr" for="kelompok">Kelompokkan</label>
-        <select class="pilih" id="kelompok">${[['proyek', 'Proyek'], ['status', 'Status'], ['pic', 'PIC']].map(([v, l]) => `<option value="${v}" ${S.kelompok === v ? 'selected' : ''}>Per ${l.toLowerCase()}</option>`).join('')}</select>
+        <select class="pilih" id="kelompok">${[['tenggat', 'Tenggat'], ['proyek', 'Proyek'], ['status', 'Status'], ['pic', 'PIC']].map(([v, l]) => `<option value="${v}" ${S.kelompok === v ? 'selected' : ''}>Per ${l.toLowerCase()}</option>`).join('')}</select>
         <button class="baru" type="button" data-baru=""><svg class="i" style="width:15px;height:15px"><use href="#plus"/></svg>Baru</button>
       </div>
     </div>
@@ -1011,7 +1045,7 @@ document.addEventListener('click', (e) => {
 document.addEventListener('change', (e) => {
   const el = e.target;
   if (el.id === 'saring-pic') { S.pic = el.value; render(); return; }
-  if (el.id === 'kelompok') { S.kelompok = el.value; S.lipat.clear(); render(); return; }
+  if (el.id === 'kelompok') { S.kelompok = el.value; S.lipat = new Set(S.kelompok === 'tenggat' ? ['selesai'] : []); render(); return; }
   if (el.dataset.prop) {
     const t = TUGAS.find((x) => x.kode === S.dipilih);
     const k = el.dataset.prop;
