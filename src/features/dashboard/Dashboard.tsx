@@ -30,6 +30,7 @@ import { schemas } from '../records/schemas';
 import { isOverdue, scopeProgress } from '@/lib/progress';
 import { today, formatDate, daysBetween, hariSeminggu } from '@/lib/date';
 import { meetingJoinUrl } from '../meetings/meeting';
+import { INFO_JENIS, catatHasilHref, jenisDari } from '../meetings/jenis';
 import { ModulUsahaHarian } from './ModulUsahaHarian';
 import { KasBanding, useKasDuaBulan } from './KasBanding';
 import { Select } from '@/components/ui/Select';
@@ -267,7 +268,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
         selesaiPada: t.completed_at || undefined,
         pic: t.assignee || undefined,
       })),
-      rapat: data.meetings ? rapatHariIni.map((m) => ({ judul: String(m.data.title), jam: String(m.data.time || '') || undefined })) : undefined,
+      rapat: data.meetings
+        ? rapatHariIni.map((m) => ({ judul: String(m.data.title), jam: String(m.data.time || '') || undefined, jenis: INFO_JENIS[jenisDari(m)].label }))
+        : undefined,
       kegiatan: data.journal
         ? data.journal.filter((j) => String(j.data.date) === now).map((j) => ({ judul: String(j.data.title) }))
         : undefined,
@@ -280,8 +283,6 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
     }
   }
 
-  const catatHasil = (m: (typeof rapatHariIni)[number]) =>
-    `/jurnal?${new URLSearchParams({ baru: '1', 'isi.meeting_id': m.id, 'isi.title': `Hasil: ${String(m.data.title)}`, 'isi.date': now })}`;
   const persenRutin = routines.length ? Math.round((routineCompletedCount / routines.length) * 100) : 0;
 
   return (
@@ -429,13 +430,13 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
               <Clock size={17} />
             </span>
             <h2 id="judul-agenda">Agenda hari ini</h2>
-            <span className="beranda-jumlah">{rapatHariIni.length} rapat</span>
+            <span className="beranda-jumlah">{rapatHariIni.length} agenda</span>
           </div>
           <Link
             href={`/rapat?${new URLSearchParams({ baru: '1', 'isi.date': now })}`}
             className="takik-aksi"
-            aria-label="Jadwalkan rapat"
-            title="Jadwalkan rapat"
+            aria-label="Jadwalkan agenda"
+            title="Jadwalkan agenda"
           >
             <Plus size={18} aria-hidden="true" />
           </Link>
@@ -456,10 +457,13 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                 const selesai = mulai ? tambahMenit(mulai, Number(m.data.duration) || 60) : '';
                 const url = meetingJoinUrl(m);
                 const tandaiKini = m.id === idRapatSetelahKini;
+                const jenis = jenisDari(m);
+                const { label: labelJenis, Ikon: IkonJenis } = INFO_JENIS[jenis];
                 return (
                   <li
                     key={m.id}
                     className={`agenda-butir is-${keadaan}`}
+                    data-jenis={jenis}
                     data-kini={tandaiKini ? `${jamTitik(jamSekarang)} sekarang` : undefined}
                   >
                     <span className="agenda-jam">
@@ -467,6 +471,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                       {selesai && <small>{jamTitik(selesai)}</small>}
                     </span>
                     <div className="agenda-isi">
+                      <span className="cip-jenis">
+                        <IkonJenis size={12} aria-hidden="true" /> {labelJenis}
+                      </span>
                       <Link href={recordHref('meetings', m)} className="agenda-judul">
                         {String(m.data.title)}
                       </Link>
@@ -484,7 +491,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                             </a>
                           )}
                           {keadaan === 'lewat' && (
-                            <Link href={catatHasil(m)} className="agenda-tombol">
+                            <Link href={catatHasilHref(m, now)} className="agenda-tombol">
                               Catat hasil
                             </Link>
                           )}
@@ -499,8 +506,8 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
             <EmptyState
               compact
               ikon="kalender"
-              title="Tidak ada rapat hari ini"
-              description="Rapat, kunjungan, atau rapat online yang dijadwalkan untuk hari ini akan tampil di sini."
+              title="Tidak ada agenda hari ini"
+              description="Rapat, kunjungan, acara, atau rapat online yang dijadwalkan untuk hari ini akan tampil di sini."
             />
           )}
         </section>
@@ -574,7 +581,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
             <CalendarDays size={18} aria-hidden="true" />
           </Link>
           <p className="pita-ringkas">
-            {hariPilih === now ? 'Hari ini' : hariPanjang.format(tanggalUtc(hariPilih))}: {pilihan.tugas.length} tugas · {pilihan.rapat.length} rapat
+            {hariPilih === now ? 'Hari ini' : hariPanjang.format(tanggalUtc(hariPilih))}: {pilihan.tugas.length} tugas · {pilihan.rapat.length} agenda
           </p>
           <div className="pita-minggu" role="group" aria-label="Pilih hari">
             {minggu.map((tanggal) => {
@@ -586,7 +593,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                   className="pita-hari"
                   aria-pressed={tanggal === hariPilih}
                   data-hari-ini={tanggal === now ? 'true' : undefined}
-                  aria-label={`${hariPanjang.format(tanggalUtc(tanggal))}: ${isi.tugas.length} tugas, ${isi.rapat.length} rapat`}
+                  aria-label={`${hariPanjang.format(tanggalUtc(tanggal))}: ${isi.tugas.length} tugas, ${isi.rapat.length} agenda`}
                   onClick={() => setHariPilih(tanggal)}
                 >
                   <small>{hariPendek.format(tanggalUtc(tanggal))}</small>
@@ -604,12 +611,12 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
               {pilihan.rapat.slice(0, 3).map((m) => (
                 <li key={m.id}>
                   <Link href={recordHref('meetings', m)}>
-                    <span className="beranda-tanggal is-rapat">
-                      <Clock size={13} aria-hidden="true" /> {m.data.time ? jamTitik(String(m.data.time)) : 'Rapat'}
+                    <span className="beranda-tanggal is-rapat" data-jenis={jenisDari(m)}>
+                      <Clock size={13} aria-hidden="true" /> {m.data.time ? jamTitik(String(m.data.time)) : 'Agenda'}
                     </span>
                     <span className="beranda-baris-teks">
                       <strong>{String(m.data.title)}</strong>
-                      <small>Rapat</small>
+                      <small>{INFO_JENIS[jenisDari(m)].label}</small>
                     </span>
                   </Link>
                 </li>
@@ -630,7 +637,7 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
               ))}
             </ul>
           ) : (
-            <p className="beranda-kosong">Tidak ada tugas terbuka atau rapat pada hari ini.</p>
+            <p className="beranda-kosong">Tidak ada tugas terbuka atau agenda pada hari ini.</p>
           )}
         </section>
       </div>

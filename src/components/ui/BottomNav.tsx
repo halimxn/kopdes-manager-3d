@@ -14,7 +14,7 @@ export function BottomNav({ path, menu, onAction, onMenu }: {
   const items = [
     { label: 'Beranda', href: '/beranda', aktif: hub === 'beranda' },
     { label: 'Tugas', href: '/tugas', aktif: hub === 'pekerjaan' },
-    { label: 'Rapat', href: '/rapat', aktif: path.split(/[?#]/)[0] === '/rapat' },
+    { label: 'Agenda', href: '/rapat', aktif: path.split(/[?#]/)[0] === '/rapat' },
   ];
   const lainnyaAktif = !items.some((item) => item.aktif);
   return (

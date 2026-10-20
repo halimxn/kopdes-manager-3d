@@ -3,6 +3,7 @@ import { RecordDrawer, ikonEntitas } from './RecordDrawer';
 import { isiDariQuery } from './terkait';
 import { calonPenanggung } from './PilihPenanggung';
 import { UbinStatusTugas } from '../tasks/UbinStatusTugas';
+import { INFO_JENIS, jenisDari } from '../meetings/jenis';
 import { bacaTambahCepat } from '../dashboard/beranda-bantu';
 import { Ikon3D } from '@/components/ui/Ikon3D';
 import { Button } from '@/components/ui/Button';
@@ -12,7 +13,7 @@ import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { catalog, labels, options, formatChoiceLabel } from './catalog';
-import { schemas, type Entity, type Item } from './schemas';
+import { jenisAgenda, schemas, type Entity, type Item } from './schemas';
 import type { Workspace } from '../workspace/useWorkspace';
 import { SavedTaskViews, type TaskView } from '../tasks/SavedTaskViews';
 import { TaskBatchActions } from '../tasks/TaskBatchActions';
@@ -160,6 +161,7 @@ export function Records({
     [priority, setPriority] = useState(''),
     // Saringan penanggung jawab; '-' berarti tugas yang belum punya penanggung jawab.
     [pic, setPic] = useState(''),
+    [jenisFilter, setJenisFilter] = useState(''),
     [sort, setSort] = useState('due'),
     [view, setView] = useState<string>(() => {
       if (initialView) return initialView;
@@ -262,6 +264,7 @@ export function Records({
     workstream,
     priority,
     pic,
+    jenisFilter,
     journalUnit,
     journalStakeholder,
     journalMeeting,
@@ -290,6 +293,7 @@ export function Records({
           (!workstream || row.data.workstream_id === workstream) &&
           (!sprintFilter || row.data.sprint_id === sprintFilter) &&
           (!priority || row.data.priority === priority) &&
+          (!jenisFilter || entity !== 'meetings' || jenisDari(row) === jenisFilter) &&
           (!pic ||
             (pic === '-'
               ? !String(row.data.assignee || '').trim()
@@ -687,6 +691,20 @@ export function Records({
                     })),
                   ]}
                   ariaLabel="Status"
+                />
+              </label>
+            )}
+            {entity === 'meetings' && (
+              <label>
+                <span className="field-caption">Jenis kegiatan</span>
+                <Select
+                  value={jenisFilter}
+                  onChange={setJenisFilter}
+                  options={[
+                    { value: '', label: 'Semua jenis' },
+                    ...jenisAgenda.map((jenis) => ({ value: jenis, label: INFO_JENIS[jenis].label })),
+                  ]}
+                  ariaLabel="Jenis kegiatan"
                 />
               </label>
             )}
@@ -1155,12 +1173,12 @@ export function Records({
               <>
                 <section
                   className="meeting-section-group"
-                  aria-label="Rapat akan datang dan hari ini"
+                  aria-label="Agenda hari ini dan mendatang"
                 >
                   <div className="meeting-section-header">
                     <div className="meeting-section-title-wrap">
                       <CalendarDays size={16} />
-                      <h3>Rapat hari ini dan mendatang</h3>
+                      <h3>Agenda hari ini dan mendatang</h3>
                     </div>
                     <span className="badge">{upcoming.length}</span>
                   </div>

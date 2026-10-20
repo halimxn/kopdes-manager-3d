@@ -499,6 +499,13 @@ dialog.ui-modal h2 { font-size: 19px; }
 
 /* Avatar berwarna tetap per orang */
 .avatar-warna { display: inline-grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; font-size: 12px; font-weight: 700; }
+/* Jenis agenda: pastel per jenis lewat data-jenis, selalu disertai label (rapat, kunjungan, acara, lainnya) */
+[data-jenis] { --j-bg: var(--pastel-pink); --j-ink: var(--pastel-pink-ink); }
+[data-jenis='kunjungan'] { --j-bg: var(--pastel-purple-bg); --j-ink: var(--pastel-purple-text); }
+[data-jenis='acara'] { --j-bg: var(--pastel-mint); --j-ink: var(--pastel-mint-ink); }
+[data-jenis='lainnya'] { --j-bg: var(--pastel-mentega); --j-ink: var(--pastel-mentega-ink); }
+.cip-jenis { display: inline-flex; align-items: center; gap: 5px; min-height: 22px; padding: 0 9px; border-radius: var(--r-full); background: var(--surface); color: var(--j-ink, var(--ink-muted)); font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+
 /* Avatar kecil di baris tabel dan kartu papan */
 .avatar-warna.avatar-mini { width: 24px; height: 24px; font-size: 10px; }
 .avatar-warna.is-aksen { background: var(--pastel-aksen); color: var(--pastel-aksen-ink); }

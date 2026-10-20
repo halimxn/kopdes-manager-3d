@@ -80,7 +80,7 @@ describe('susunLaporanHarian', () => {
         { judul: 'Kirim undangan', status: 'rencana', tenggat: '2026-10-14', pic: 'Sinta' },
         { judul: 'Dibatalkan', status: 'dibatalkan', tenggat: '2026-10-10' },
       ],
-      rapat: [{ judul: 'Rapat pengurus', jam: '10:00' }],
+      rapat: [{ judul: 'Rapat pengurus', jam: '10:00', jenis: 'Rapat' }, { judul: 'Ke gudang pemasok', jam: '13:00', jenis: 'Kunjungan' }],
       kegiatan: [{ judul: 'Survei lokasi' }],
     });
     expect(teks).toContain('Senin, 19 Oktober 2026 · KDMP Contoh');
@@ -90,7 +90,7 @@ describe('susunLaporanHarian', () => {
     expect(teks).toContain('Tugas selesai hari ini (1)\n- Pasang rak (Ayu)');
     expect(teks).toContain('Jatuh tempo hari ini (1)\n- Cek timbangan');
     expect(teks).toContain('Terlambat (1)\n- Kirim undangan (Sinta), tenggat 2026-10-14');
-    expect(teks).toContain('- 10.00 Rapat pengurus');
+    expect(teks).toContain('Agenda hari ini\n- 10.00 Rapat pengurus\n- 13.00 Ke gudang pemasok (kunjungan)');
     expect(teks).toContain('- Survei lokasi');
     expect(teks).not.toContain('Selesai kemarin');
     expect(teks).not.toContain('Dibatalkan');
@@ -98,7 +98,7 @@ describe('susunLaporanHarian', () => {
 
   it('data yang tidak dimuat dilewati, dan hari kosong ditulis jujur', () => {
     const teks = susunLaporanHarian({ tanggal: '2026-10-19', rutin: [], tugas: [] });
-    expect(teks).not.toContain('Rapat hari ini');
+    expect(teks).not.toContain('Agenda hari ini');
     expect(teks).toContain('Belum ada pekerjaan tercatat hari ini.');
   });
 });

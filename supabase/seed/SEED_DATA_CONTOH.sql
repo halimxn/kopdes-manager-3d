@@ -1,4 +1,4 @@
--- SEED DATA CONTOH: Kopdes Management Web (347 catatan fiktif)
+-- SEED DATA CONTOH: Kopdes Management Web (349 catatan fiktif)
 -- Tujuan: proyek yang baru direset (<project-ref>). Jalankan SETELAH berkas reset.
 -- Semua nama, nomor, dan angka adalah contoh acak; id diawali c0de0000.
 -- Hapus seluruhnya dengan HAPUS_DATA_CONTOH.sql sebelum mencatat data nyata.
@@ -22,7 +22,7 @@ create function pg_temp.tanggal_contoh(j jsonb) returns jsonb language sql as $f
 $f$;
 insert into public.hub_records(id, entity, data, created_at, updated_at)
 select id::uuid, entity, pg_temp.tanggal_contoh(data::jsonb),
-  now() - make_interval(secs => 347 - n), now() - make_interval(secs => 347 - n)
+  now() - make_interval(secs => 349 - n), now() - make_interval(secs => 349 - n)
 from (values
   ('c0de0000-0001-4000-8000-000000000001', 'organization', '{"title":"KDMP Sukamaju (contoh)","village":"Sukamaju","district":"Ngadirejo","regency":"Temanggung","province":"Jawa Tengah","manager":"Slamet Purnomo","start_date":"@d-120","target_date":"@d240"}', 0),
   ('c0de0000-0005-4000-8000-000000000001', 'units', '{"title":"Gerai Sembako Sukamaju","kind":"sembako","assignee":"Ayu Wijaya","location":"Dusun Ngasem","status":"aktif","slot":"otomatis","physical":"Bangunan tersedia","equipment":"Lengkap","sop":"","staff":"","link":"","notes":""}', 1),
@@ -62,9 +62,9 @@ from (values
   ('c0de0000-0008-4000-8000-000000000002', 'interactions', '{"title":"Kunjungan gudang pemasok","stakeholder_id":"c0de0000-0007-4000-8000-000000000002","date":"@d-4","notes":"Catatan contoh hasil pertemuan.","follow_up":""}', 35),
   ('c0de0000-0008-4000-8000-000000000003', 'interactions', '{"title":"Koordinasi layanan klinik","stakeholder_id":"c0de0000-0007-4000-8000-000000000003","date":"@d-16","notes":"Catatan contoh hasil pertemuan.","follow_up":""}', 36),
   ('c0de0000-0008-4000-8000-000000000004', 'interactions', '{"title":"Diskusi pembiayaan","stakeholder_id":"c0de0000-0007-4000-8000-000000000004","date":"@d-9","notes":"Catatan contoh hasil pertemuan.","follow_up":""}', 37),
-  ('c0de0000-0009-4000-8000-000000000001', 'meetings', '{"title":"Briefing pagi tim","date":"@d0","time":"08:00","participants":"Slamet Purnomo, Bambang Wijaya, Murni Prasetyo, Eko Setiawan, Eko Santoso, Nur Lestari","agenda":"Pembagian tugas harian dan kiriman masuk","minutes":"","mode":"tatap muka","location":"Ruang rapat kantor","meeting_url":"","duration":30}', 38),
-  ('c0de0000-0009-4000-8000-000000000002', 'meetings', '{"title":"Rapat pengurus bulanan","date":"@d0","time":"14:00","participants":"Slamet Purnomo, Eko Setiawan, Lestari Saputra","agenda":"Evaluasi kas bulan lalu dan rencana gerai kopi","minutes":"","mode":"hybrid","location":"Ruang rapat kantor","meeting_url":"","duration":90}', 39),
-  ('c0de0000-0009-4000-8000-000000000003', 'meetings', '{"title":"Koordinasi pemasok sembako","date":"@d2","time":"10:00","participants":"Eko Santoso, Budi Hartono","agenda":"Jadwal kirim dan harga minyak goreng","minutes":"","mode":"online","location":"","meeting_url":"https://meet.example.com/kdmp-sukamaju","duration":60}', 40),
+  ('c0de0000-0009-4000-8000-000000000001', 'meetings', '{"title":"Briefing pagi tim","jenis":"rapat","date":"@d0","time":"08:00","participants":"Slamet Purnomo, Bambang Wijaya, Murni Prasetyo, Eko Setiawan, Eko Santoso, Nur Lestari","agenda":"Pembagian tugas harian dan kiriman masuk","minutes":"","mode":"tatap muka","location":"Ruang rapat kantor","meeting_url":"","duration":30}', 38),
+  ('c0de0000-0009-4000-8000-000000000002', 'meetings', '{"title":"Rapat pengurus bulanan","jenis":"rapat","date":"@d0","time":"14:00","participants":"Slamet Purnomo, Eko Setiawan, Lestari Saputra","agenda":"Evaluasi kas bulan lalu dan rencana gerai kopi","minutes":"","mode":"hybrid","location":"Ruang rapat kantor","meeting_url":"","duration":90}', 39),
+  ('c0de0000-0009-4000-8000-000000000003', 'meetings', '{"title":"Koordinasi pemasok sembako","jenis":"rapat","date":"@d2","time":"10:00","participants":"Eko Santoso, Budi Hartono","agenda":"Jadwal kirim dan harga minyak goreng","minutes":"","mode":"online","location":"","meeting_url":"https://meet.example.com/kdmp-sukamaju","duration":60}', 40),
   ('c0de0000-0010-4000-8000-000000000001', 'decisions', '{"title":"Jam buka gerai sembako 07.00–20.00","meeting_id":"c0de0000-0009-4000-8000-000000000001","date":"@d0","reason":"Keputusan contoh hasil rapat.","link":""}', 41),
   ('c0de0000-0010-4000-8000-000000000002', 'decisions', '{"title":"Minimum stok minyak goreng 24 botol","meeting_id":"c0de0000-0009-4000-8000-000000000001","date":"@d-6","reason":"Keputusan contoh hasil rapat.","link":""}', 42),
   ('c0de0000-0010-4000-8000-000000000003', 'decisions', '{"title":"Gerai kopi uji coba dua minggu","meeting_id":"","date":"@d-12","reason":"Keputusan contoh hasil rapat.","link":""}', 43),
@@ -370,6 +370,8 @@ from (values
   ('c0de0000-0028-4000-8000-000000000038', 'savings', '{"title":"Simpanan wajib · Bayu Susanti","member_id":"c0de0000-0019-4000-8000-000000000011","date":"@d0","kind":"wajib","direction":"setor","amount":50000,"reference_number":"SMP-0038","notes":""}', 343),
   ('c0de0000-0028-4000-8000-000000000039', 'savings', '{"title":"Simpanan pokok · Budi Prasetyo","member_id":"c0de0000-0019-4000-8000-000000000012","date":"@d-39","kind":"pokok","direction":"setor","amount":100000,"reference_number":"SMP-0039","notes":""}', 344),
   ('c0de0000-0028-4000-8000-000000000040', 'savings', '{"title":"Simpanan wajib · Budi Prasetyo","member_id":"c0de0000-0019-4000-8000-000000000012","date":"@d-30","kind":"wajib","direction":"setor","amount":50000,"reference_number":"SMP-0040","notes":""}', 345),
-  ('c0de0000-0028-4000-8000-000000000041', 'savings', '{"title":"Simpanan wajib · Budi Prasetyo","member_id":"c0de0000-0019-4000-8000-000000000012","date":"@d0","kind":"wajib","direction":"setor","amount":50000,"reference_number":"SMP-0041","notes":""}', 346)
+  ('c0de0000-0028-4000-8000-000000000041', 'savings', '{"title":"Simpanan wajib · Budi Prasetyo","member_id":"c0de0000-0019-4000-8000-000000000012","date":"@d0","kind":"wajib","direction":"setor","amount":50000,"reference_number":"SMP-0041","notes":""}', 346),
+  ('c0de0000-0009-4000-8000-000000000004', 'meetings', '{"title":"Kunjungan gudang pemasok beras","jenis":"kunjungan","date":"@d0","time":"10:30","participants":"Slamet Purnomo, Budi Hartono","agenda":"Cek mutu beras dan jadwal kirim bulan depan","minutes":"","mode":"tatap muka","location":"Gudang pemasok","meeting_url":"","duration":60}', 347),
+  ('c0de0000-0009-4000-8000-000000000005', 'meetings', '{"title":"Sosialisasi simpanan anggota","jenis":"acara","date":"@d1","time":"16:00","participants":"Slamet Purnomo, Bambang Wijaya","agenda":"Penjelasan simpanan pokok, wajib, dan sukarela","minutes":"","mode":"tatap muka","location":"Balai desa","meeting_url":"","duration":90}', 348)
 ) as v(id, entity, data, n);
 commit;

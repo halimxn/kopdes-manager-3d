@@ -11,14 +11,16 @@ import { labels, options, formatChoiceLabel } from './catalog';
 import { schemas, type Entity, type Item } from './schemas';
 import type { Workspace } from '../workspace/useWorkspace';
 import { api } from '@/lib/client';
+import Link from 'next/link';
 import { today, addDays, formatDate } from '@/lib/date';
 import { selectTaskStatus, taskStatusChange, isActiveTask, type TaskStatus } from '@/lib/task-status';
 import { readiness, subtaskProgress } from '@/lib/progress';
 import { Meter } from '@/components/charts/Charts';
 import { ReadinessRadar } from '@/components/charts/ReadinessRadar';
 import { Select } from '@/components/ui/Select';
-import { Calendar, ChevronDown, Shield, Landmark, Scale, Users2, Building2, Wheat, Handshake, CircleDot, Clock, MapPin, Users, BookOpen, FileText, Phone, CheckCircle2, Video, AlertCircle, ShieldCheck, CheckSquare, Check, RotateCcw, ExternalLink, Flame, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Calendar, ChevronDown, Shield, Landmark, Scale, Users2, Building2, Wheat, Handshake, CircleDot, Clock, MapPin, Users, BookOpen, FileText, Phone, CheckCircle2, Video, AlertCircle, ShieldCheck, CheckSquare, Check, RotateCcw, ExternalLink, Flame, MoreHorizontal, Trash2, NotebookPen } from 'lucide-react';
 import { downloadMeeting, meetingJoinUrl } from '../meetings/meeting';
+import { INFO_JENIS, catatHasilHref, jenisDari } from '../meetings/jenis';
 import { formatDisplayCode } from '../tasks/task-code';
 
 // Dibutuhkan kartu dari halaman catatan; disediakan oleh Records.
@@ -315,7 +317,7 @@ export function kartuCatatan(row: Item, k: KonteksKartu) {
     return kartuTugasKalender(row, k);
   }
   return (
-    <article className={`record card ${entity === 'units' ? 'unit-record' : ''} ${entity === 'meetings' ? 'meeting-record' : ''}`} key={row.id}>
+    <article className={`record card ${entity === 'units' ? 'unit-record' : ''} ${entity === 'meetings' ? 'meeting-record' : ''}`} key={row.id} data-jenis={entity === 'meetings' ? jenisDari(row) : undefined}>
       <div className="section-head">
         <h3>
           {(entity === 'units' || entity === 'meetings') && <span className="record-domain-icon"><Ikon3D kind={entity === 'units' ? 'toko' : 'kalender'} size={28} rapat /></span>}
@@ -402,6 +404,14 @@ export function kartuCatatan(row: Item, k: KonteksKartu) {
         )}
         {entity === 'meetings' && (
           <>
+            {(() => {
+              const { label, Ikon } = INFO_JENIS[jenisDari(row)];
+              return (
+                <span className="cip-jenis">
+                  <Ikon size={12} aria-hidden="true" /> {label}
+                </span>
+              );
+            })()}
             <span className="meeting-time-tag">
               <Clock size={12} /> {String(row.data.time)} WIB
             </span>
@@ -660,7 +670,7 @@ export function kartuCatatan(row: Item, k: KonteksKartu) {
               {Boolean(row.data.participants) && (
                 <p className="meeting-detail-row">
                   <Users size={13} />
-                  <strong>Peserta Rapat: </strong>
+                  <strong>Peserta: </strong>
                   <span>{String(row.data.participants)}</span>
                 </p>
               )}
@@ -735,6 +745,13 @@ export function kartuCatatan(row: Item, k: KonteksKartu) {
                 >
                   + Tindak Lanjut
                 </Button>
+                {/* Agenda yang sudah tiba atau lewat: hasilnya dicatat sebagai catatan kegiatan yang tertaut. */}
+                {String(row.data.date || '') <= today() && (
+                  <Link className="button meeting-join btn-catat-hasil" href={catatHasilHref(row, today())}>
+                    <NotebookPen size={13} aria-hidden="true" />
+                    Catat hasil
+                  </Link>
+                )}
               </div>
             </div>
           );

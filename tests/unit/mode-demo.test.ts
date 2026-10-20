@@ -25,7 +25,8 @@ describe('data contoh', () => {
   it('deterministik dan memuat kasus yang perlu tampak', () => {
     expect(dataContoh('2026-10-10')).toEqual(rows);
     const of = (e: string) => rows.filter((r) => r.entity === e);
-    expect(of('meetings').filter((m) => m.data.date === '2026-10-10')).toHaveLength(2);
+    expect(of('meetings').filter((m) => m.data.date === '2026-10-10')).toHaveLength(3);
+    expect(new Set(of('meetings').map((m) => m.data.jenis))).toEqual(new Set(['rapat', 'kunjungan', 'acara']));
     expect(of('units').some((u) => u.data.status !== 'aktif')).toBe(true);
     expect(
       of('work-items').some((t) => t.data.status === 'rencana' && String(t.data.due_date) < '2026-10-10'),

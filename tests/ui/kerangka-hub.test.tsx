@@ -67,6 +67,7 @@ it('sidebar mendahulukan halaman kerja harian; hub lain di Ruang lain mengikuti 
     'Beranda',
     'Hari ini',
     'Tugas',
+    'Agenda',
     'Proyek',
     'Linimasa',
     'Catatan',

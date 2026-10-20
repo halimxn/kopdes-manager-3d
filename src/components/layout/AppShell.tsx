@@ -184,7 +184,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
                 href={hub.tabs[0]}
                 aria-label={hub.label}
                 title={hub.label}
-                aria-current={hubAktif?.id === hub.id ? 'page' : undefined}
+                aria-current={hubAktif?.id === hub.id && !MENU_KERJA.includes(path) ? 'page' : undefined}
               >
                 <IkonHalaman href={hub.ikon} size={22} />
                 <span className="shell-hub-label">{hub.label}</span>

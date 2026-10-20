@@ -2,6 +2,14 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Agenda berjenis dan Catat hasil — 20 Oktober 2026
+
+- Paket 3: agenda (data `meetings`) punya kolom baru **Jenis kegiatan**: rapat, kunjungan (pemasok, sales, mitra), acara, atau lainnya. Data lama tanpa jenis dibaca sebagai rapat; kolom JSON baru tanpa migrasi SQL. Label "Jenis rapat" (tatap muka/online/hybrid) diganti "Bentuk pertemuan" agar tidak rancu.
+- Halaman `/rapat` tampil sebagai **Agenda** dan masuk menu Kerja (sidebar) serta dok ponsel; URL tetap. Kartu agenda berlabel jenis (ikon + teks, pastel per jenis), punya tombol **Catat hasil** untuk agenda yang sudah tiba/lewat (membuka form kegiatan yang tertaut), dan Filter menurut jenis.
+- Beranda: Agenda hari ini dan Minggu ini berwarna per jenis dengan cip berlabel; hitungan memakai kata "agenda"; laporan WhatsApp menulis "Agenda hari ini" dan menandai jenis selain rapat.
+- Data contoh demo menambah satu kunjungan hari ini dan satu acara besok (di akhir agar nomor contoh lain tetap); `SEED_DATA_CONTOH.sql` dibangun ulang, belum dijalankan di cloud.
+- Verifikasi: 468 tes / 79 berkas, typecheck, lint, `lint:ui`, build lulus; JS awal 240 KB. `audit:tampilan` Beranda dan Agenda (daftar, form, laci) 0 temuan pada 375, 768, 1024, 1440 px.
+
 ## Halaman Tugas bergaya Lekuk Lavender — 20 Oktober 2026
 
 - Ringkasan jumlah berupa deretan chip diganti empat ubin status berwarna (Rencana, Dikerjakan, Terlambat, Selesai) yang sekaligus menjadi saringan; tekan lagi untuk melepas. Halaman catatan lain tetap memakai ringkasan lama.

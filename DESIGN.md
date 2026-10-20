@@ -145,8 +145,8 @@ Tanpa label kecil di atas judul (eyebrow). Bobot maksimal 700.
 ## Layout
 
 - Kerangka: sidebar 248 px di desktop (rel ikon 76 px di tablet ≤ 1023 px), kepala halaman, isi maksimal 1240 px dengan gutter 28 px (16 px di ponsel).
-- Sidebar dua kelompok kartu: **Kerja** (Beranda, Hari ini, Tugas, Proyek, Linimasa) dan **Ruang lain** (Catatan, Usaha, Koperasi, Dunia), lalu kartu Tim bertakik. Sumber: `src/components/layout/navigasi.ts`. Halaman lain tetap tab hub di bawah judul.
-- Ponsel (≤ 767 px): dok pil mengambang (Beranda, Tugas, Rapat, Lainnya; label hanya pada yang aktif) dan tombol tambah bulat terpisah; safe area dihormati.
+- Sidebar dua kelompok kartu: **Kerja** (Beranda, Hari ini, Tugas, Agenda, Proyek, Linimasa) dan **Ruang lain** (Catatan, Usaha, Koperasi, Dunia), lalu kartu Tim bertakik. Sumber: `src/components/layout/navigasi.ts`. Halaman lain tetap tab hub di bawah judul.
+- Ponsel (≤ 767 px): dok pil mengambang (Beranda, Tugas, Agenda, Lainnya; label hanya pada yang aktif) dan tombol tambah bulat terpisah; safe area dihormati.
 - Beranda: kepala sapaan → tambah cepat → grid dua kolom (Rutin | Agenda, Perlu tindakan | Minggu ini; 1fr : 1,2fr, tinggi rata per baris) → Pekerjaan berjalan → Usaha harian. Grid menjadi satu kolom bila area halaman < 860 px (container query `halaman`).
 - Diperiksa pada 360, 768, 1024, 1440 px; tanpa gulir samping halaman.
 
@@ -165,6 +165,7 @@ Datar. Kartu, ubin ikon, dan tombol utama tanpa bayangan; lapisan dibedakan oleh
 - **Tombol utama:** isi lavender, teks putih, sudut 12 px, tinggi 44 px, tanpa bayangan; hover lavender tua.
 - **Kartu modul** (`.modul`): putih, sudut 24 px, padding 20/22 px (16 px di ponsel), judul `h2` 17 px.
 - **Kartu Rutin harian:** latar lavender muda, baris putih 52 px, bilah progres lavender; hanya baris "Berikutnya" berisi lavender dengan teks putih; selesai = lingkaran hijau dan judul dicoret. Centang terakhir memicu konfeti singkat (mati bila gerak dikurangi). Rutin bukan tenggat: jam yang lewat ditandai lingkaran putus-putus, bukan merah.
+- **Jenis agenda:** `data-jenis` memberi pastel per jenis (rapat = jambu, kunjungan = persik, acara = pandan, lainnya = kunyit) lewat `--j-bg/--j-ink`, selalu bersama cip `.cip-jenis` berikon dan berlabel.
 - **Agenda:** hitung mundur ke rapat berikutnya (pita lavender muda, titik berdenyut), linimasa jam kiri dan isi jambu kanan, garis "sekarang" jingga bata, pil Gabung/Catat hasil.
 - **Baris ringkas** (`.beranda-baris`): cip tanggal pil (terlambat, hari ini, rapat), judul + keterangan, avatar inisial berwarna tetap per nama.
 - **Pita minggu:** tujuh tombol hari ≥ 44 px; titik penuh = tugas, cincin = rapat; hari terpilih lavender.

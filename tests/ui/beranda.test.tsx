@@ -146,7 +146,7 @@ it('pita minggu menampilkan tugas pada hari yang dipilih', () => {
   render(<Dashboard data={{ 'work-items': [tugas('t1', { title: 'Antar faktur', status: 'rencana', due_date: hari })] }} />);
   const minggu = screen.getByRole('region', { name: 'Minggu ini' });
   expect(within(minggu).queryByText('Antar faktur')).toBeNull();
-  const tombol = within(minggu).getByRole('button', { name: /1 tugas, 0 rapat/ });
+  const tombol = within(minggu).getByRole('button', { name: /1 tugas, 0 agenda/ });
   fireEvent.click(tombol);
   expect(tombol.getAttribute('aria-pressed')).toBe('true');
   expect(within(minggu).getByText('Antar faktur')).toBeTruthy();

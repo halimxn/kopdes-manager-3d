@@ -24,7 +24,7 @@ it('tanggal memakai satu pemicu dan mempertahankan validasi form native', () => 
   expect(screen.getByRole('group', { name: 'Kalender Tanggal' })).toBeTruthy();
   expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Pilih tanggal' }));
 });
-it('dok pil berisi Beranda, Tugas, Rapat, Lainnya, dan tombol tambah yang dapat dioperasikan', () => {
+it('dok pil berisi Beranda, Tugas, Agenda, Lainnya, dan tombol tambah yang dapat dioperasikan', () => {
   const action = vi.fn(), menu = vi.fn();
   render(<BottomNav path="/tugas" menu={true} onAction={action} onMenu={menu} />);
   const dok = screen.getByRole('navigation');

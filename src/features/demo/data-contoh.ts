@@ -631,6 +631,30 @@ export function dataContoh(hariIni: string): ItemContoh[] {
     if (i === 3) simpan('sukarela', 'tarik', 50_000, 0);
   }
 
+  // Agenda berjenis selain rapat (ditambah paling akhir agar nomor contoh lain tidak bergeser).
+  tambah('meetings', {
+    title: 'Kunjungan gudang pemasok beras',
+    jenis: 'kunjungan',
+    date: tgl(0),
+    time: '10:30',
+    duration: 60,
+    participants: `${staf[0].nama}, ${staf[8].nama}`,
+    agenda: 'Cek mutu beras dan jadwal kirim bulan depan',
+    mode: 'tatap muka',
+    location: 'Gudang pemasok',
+  });
+  tambah('meetings', {
+    title: 'Sosialisasi simpanan anggota',
+    jenis: 'acara',
+    date: tgl(1),
+    time: '16:00',
+    duration: 90,
+    participants: `${staf[0].nama}, ${staf[1].nama}`,
+    agenda: 'Penjelasan simpanan pokok, wajib, dan sukarela',
+    mode: 'tatap muka',
+    location: 'Balai desa',
+  });
+
   // Validasi dengan skema yang sama dengan server: data contoh tidak boleh lolos tanpa aturan.
   return baris.map(({ entity, data }, i) => {
     const { __id, ...isi } = data;

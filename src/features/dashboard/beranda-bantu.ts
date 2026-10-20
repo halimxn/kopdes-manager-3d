@@ -111,7 +111,7 @@ export type BahanLaporan = {
   koperasi?: string;
   rutin: { judul: string; jam: string; selesai: boolean }[];
   tugas: { judul: string; status: string; tenggat: string; selesaiPada?: string; pic?: string }[];
-  rapat?: { judul: string; jam?: string }[];
+  rapat?: { judul: string; jam?: string; jenis?: string }[];
   kegiatan?: { judul: string }[];
 };
 
@@ -148,7 +148,8 @@ export function susunLaporanHarian(bahan: BahanLaporan): string {
   bagian(`Tugas selesai hari ini (${selesaiHariIni.length})`, selesaiHariIni.map((t) => `- ${t.judul}${pic(t.pic)}`));
   bagian(`Jatuh tempo hari ini (${jatuhTempo.length})`, jatuhTempo.map((t) => `- ${t.judul}${pic(t.pic)}`));
   bagian(`Terlambat (${terlambat.length})`, terlambat.map((t) => `- ${t.judul}${pic(t.pic)}, tenggat ${t.tenggat}`));
-  if (bahan.rapat) bagian('Rapat hari ini', bahan.rapat.map((r) => `- ${r.jam ? jamTitik(r.jam) + ' ' : ''}${r.judul}`));
+  if (bahan.rapat)
+    bagian('Agenda hari ini', bahan.rapat.map((r) => `- ${r.jam ? jamTitik(r.jam) + ' ' : ''}${r.judul}${r.jenis && r.jenis !== 'Rapat' ? ` (${r.jenis.toLowerCase()})` : ''}`));
   if (bahan.kegiatan) bagian('Kegiatan tercatat', bahan.kegiatan.map((k) => `- ${k.judul}`));
   if (baris.length === 2) baris.push('', 'Belum ada pekerjaan tercatat hari ini.');
   return baris.join('\n');

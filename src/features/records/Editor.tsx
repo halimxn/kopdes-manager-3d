@@ -268,7 +268,7 @@ export function Editor({
                                   : entity === 'meetings' && field === 'meeting_url'
                                     ? 'Tautan Rapat Online'
                                     : entity === 'meetings' && field === 'participants'
-                                      ? 'Daftar Peserta Rapat'
+                                      ? 'Daftar peserta'
                                       : entity === 'meetings' && field === 'duration'
                                         ? 'Estimasi Durasi (menit)'
                                         : entity === 'meetings' && field === 'time'

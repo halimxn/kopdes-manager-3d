@@ -20,7 +20,7 @@ const tabLabels: Partial<Record<Entity, string>> = {
   organization: 'Profil koperasi',
   workstreams: 'Bidang kerja',
   decisions: 'Keputusan',
-  meetings: 'Rapat',
+  meetings: 'Agenda',
   issues: 'Isu lapangan',
   risks: 'Risiko',
   interactions: 'Riwayat interaksi',

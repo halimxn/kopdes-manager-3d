@@ -13,7 +13,7 @@ it('enam hub dengan urutan sidebar yang disepakati', () => {
 });
 
 it('menu kerja membuka Beranda dan halaman Pekerjaan langsung; hub lain menjadi Ruang lain', () => {
-  expect(MENU_KERJA).toEqual(['/beranda', '/hari-ini', '/tugas', '/proyek', '/roadmap']);
+  expect(MENU_KERJA).toEqual(['/beranda', '/hari-ini', '/tugas', '/rapat', '/proyek', '/roadmap']);
   expect(RUANG_LAIN.map((hub) => hub.id)).toEqual(['catatan', 'usaha', 'koperasi', 'dunia']);
 });
 

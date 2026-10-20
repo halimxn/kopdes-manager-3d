@@ -42,6 +42,8 @@ const money = z.preprocess(
   z.number().int().min(1).max(1_000_000_000_000),
 );
 export const statuses = ['rencana', 'proses', 'selesai', 'dibatalkan'] as const;
+// Jenis agenda (keputusan pemilik 20 Okt 2026): rapat, kunjungan ke pemasok/sales/mitra, acara, atau lainnya.
+export const jenisAgenda = ['rapat', 'kunjungan', 'acara', 'lainnya'] as const;
 const status = z.enum(statuses).default('rencana');
 const poac = z.enum(['planning', 'organizing', 'actuating', 'controlling']).default('planning');
 export const schemas = {
@@ -185,6 +187,7 @@ export const schemas = {
   meetings: z
     .object({
       title,
+      jenis: z.enum(jenisAgenda).default('rapat'),
       date,
       time: z
         .string()

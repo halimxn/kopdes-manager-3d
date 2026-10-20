@@ -479,6 +479,8 @@
 .meeting-action-row { display: flex; flex-wrap: wrap; gap: 6px; }
 .meeting-action-row .button { min-height: 34px; font-size: 12.5px; }
 .meeting-action-row .btn-join-meeting { --btn-bg: var(--brand-isi); --btn-fg: var(--on-brand); --btn-line: var(--brand); }
+.meeting-record .cip-jenis { background: var(--j-bg); }
+.meeting-action-row .btn-catat-hasil { --btn-bg: var(--j-bg); --btn-fg: var(--j-ink); --btn-line: transparent; }
 .journal-join-link { display: inline-flex; align-items: center; gap: 4px; color: var(--brand-ink); font-weight: 600; }
 
 .document-card-details, .doc-dates-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; color: var(--ink-muted); font-size: 12.5px; }
