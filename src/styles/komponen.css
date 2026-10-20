@@ -499,6 +499,8 @@ dialog.ui-modal h2 { font-size: 19px; }
 
 /* Avatar berwarna tetap per orang */
 .avatar-warna { display: inline-grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; font-size: 12px; font-weight: 700; }
+/* Avatar kecil di baris tabel dan kartu papan */
+.avatar-warna.avatar-mini { width: 24px; height: 24px; font-size: 10px; }
 .avatar-warna.is-aksen { background: var(--pastel-aksen); color: var(--pastel-aksen-ink); }
 .avatar-warna.is-ungu { background: var(--pastel-purple-bg); color: var(--pastel-purple-text); }
 .avatar-warna.is-oranye { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }

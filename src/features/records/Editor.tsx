@@ -28,6 +28,7 @@ import { EntryGuide } from '../workspace/EntryGuide';
 import { Ikon3D } from '@/components/ui/Ikon3D';
 import { IKON_HALAMAN } from '@/components/ui/IkonHalaman';
 import { pages } from './catalog';
+import { PilihPenanggung } from './PilihPenanggung';
 
 const STAKEHOLDER_PRESETS = [
   {
@@ -277,6 +278,17 @@ export function Editor({
                                             : entity === 'meetings' && field === 'minutes'
                                               ? 'Notulen & Ringkasan Keputusan'
                                               : labels[`${entity}.${field}`] || labels[field] || field;
+            if (entity === 'work-items' && field === 'assignee')
+              return (
+                <PilihPenanggung
+                  key={field}
+                  id={`${headingId}-${field}`}
+                  label={label}
+                  nilai={String(value || '')}
+                  staf={workspace.staff || []}
+                  manajer={String(workspace.organization?.[0]?.data.manager || '')}
+                />
+              );
 
             if (field.endsWith('_date') || field === 'date' || field === 'last_contact')
               return (
@@ -1503,7 +1515,7 @@ export function Editor({
           )}
         <EntryGuide entity={entity} />
         <datalist id={`${headingId}-team`}>{(workspace.staff || []).map(person => <option key={person.id} value={String(person.data.title)} />)}</datalist>
-        {['work-items', 'staff', 'inventory-items', 'deliveries', 'meetings'].includes(entity) && <details className="editor-world-note"><summary><Ikon3D kind="pulau" size={28}/>Terhubung dengan dunia 3D</summary><p>{entity === 'inventory-items' ? 'Gerai dan rak menentukan lokasi barang di dunia 3D. Rak C1–C3 berada di cold storage.' : entity === 'staff' ? 'Seksi dan gerai menghubungkan figur dengan ruang kerjanya. Atur rupa pada bagian Tampilan di Dunia Koperasi.' : entity === 'deliveries' ? 'Status, pintu dok, dan kendaraan tampil di gudang 3D.' : entity === 'meetings' ? 'Nama peserta yang sesuai data Tim menempatkan figur di ruang rapat saat rapat berlangsung.' : 'Pilih penanggung jawab dari Tim agar tugas terhubung dengan figur di dunia 3D. Nama lain tetap dapat diketik.'}</p></details>}
+        {['work-items', 'staff', 'inventory-items', 'deliveries', 'meetings'].includes(entity) && <details className="editor-world-note"><summary><Ikon3D kind="pulau" size={28}/>Terhubung dengan dunia 3D</summary><p>{entity === 'inventory-items' ? 'Gerai dan rak menentukan lokasi barang di dunia 3D. Rak C1–C3 berada di cold storage.' : entity === 'staff' ? 'Seksi dan gerai menghubungkan figur dengan ruang kerjanya. Atur rupa pada bagian Tampilan di Dunia Koperasi.' : entity === 'deliveries' ? 'Status, pintu dok, dan kendaraan tampil di gudang 3D.' : entity === 'meetings' ? 'Nama peserta yang sesuai data Tim menempatkan figur di ruang rapat saat rapat berlangsung.' : 'Penanggung jawab dipilih dari daftar Tim, jadi tugas terhubung dengan figur orang itu di dunia 3D.'}</p></details>}
         <div className="form-grid">
 {primaryFields.map(renderField)}
           {optionalFields.length > 0 && <details className="entry-related-fields field-wide" open={optionalFields.some((field) => Boolean(defaults[field as keyof typeof defaults]))}><summary>Hubungan dan rincian opsional</summary><p className="field-helper">Isi hanya bila terkait. Tidak perlu membuat anggota, barang atau gerai untuk setiap transaksi.</p><div className="form-grid">{optionalFields.map(renderField)}</div></details>}

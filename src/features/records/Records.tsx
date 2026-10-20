@@ -49,6 +49,7 @@ import { formatDisplayCode } from '../tasks/task-code';
 import { EmptyState } from '@/components/ui/EmptyState';
 import dynamic from 'next/dynamic';
 import { kartuCatatan } from './RecordCard';
+import { inisialOrang, warnaOrang } from '@/lib/orang';
 // Tampilan, laci, dan formulir dimuat saat dipakai agar halaman catatan terbuka cepat.
 const Editor = dynamic(() => import('./Editor').then((module) => module.Editor));
 const TaskCalendar = dynamic(() =>
@@ -1062,6 +1063,9 @@ export function Records({
                             className="task-assignee-pill"
                             title={`Penanggung jawab: ${assigneeName}`}
                           >
+                            <span className={`avatar-warna avatar-mini is-${warnaOrang(assigneeName)}`} aria-hidden="true">
+                              {inisialOrang(assigneeName)}
+                            </span>
                             {assigneeName}
                           </span>
                         ) : (

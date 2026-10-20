@@ -283,7 +283,7 @@
 .task-due-chip.task-due-today { background: var(--brand-soft); color: var(--brand-ink); }
 .task-due-chip.task-due-done { background: var(--ok-bg); color: var(--ok); }
 .task-due-empty, .task-assignee-empty, .task-done-label { color: var(--ink-subtle); font-size: 12.5px; }
-.task-assignee-pill { color: var(--ink); font-weight: 550; white-space: nowrap; }
+.task-assignee-pill { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 550; white-space: nowrap; }
 .table-btn-done.ui-btn,
 .table-btn-reopen.ui-btn { min-height: 34px; padding: 0 12px; font-size: 12.5px; }
 .table-btn-done.ui-btn:hover { border-color: var(--ok-line); background: var(--ok-bg); color: var(--ok); }

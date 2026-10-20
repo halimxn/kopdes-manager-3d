@@ -121,7 +121,6 @@
 .card-bottom-section { justify-content: space-between; align-items: center; }
 .card-footer-left { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .scrum-assignee-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
-.assignee-mini-avatar { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-ink); font-size: 11px; font-weight: 600; }
 .card-subtasks-chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: var(--r-sm); background: var(--surface-2); color: var(--ink-muted); font-size: 11.5px; font-weight: 600; }
 .card-quick-move-row, .card-quick-move-group { display: flex; gap: 4px; }
 .card-quick-move-btn.ui-btn { min-height: 30px; padding: 0 9px; font-size: 12px; }

@@ -2,6 +2,12 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Penanggung jawab tugas dipilih dari Tim — 20 Oktober 2026
+
+- Paket 2 (sebagian): form tugas tidak lagi memakai kolom teks bebas untuk penanggung jawab. Pemilih berupa kartu orang (avatar berwarna, nama, peran): manajer dari profil, lalu anggota Tim yang tidak nonaktif, plus "Belum ada". Nama lama yang tidak ada di Tim tetap ditawarkan agar data lama tidak hilang; bila Tim kosong, ada tautan untuk menambah anggota.
+- Tabel Tugas dan kartu papan menampilkan avatar penanggung jawab berwarna tetap per orang. Rumus warna dan inisial avatar disatukan di `lib/orang.ts` (sebelumnya disalin di Beranda dan Usaha harian).
+- Verifikasi: 463 tes / 77 berkas, typecheck, lint, `lint:ui`, build lulus; JS awal 239 KB. `audit:tampilan` 1440×900 dan 375×812 untuk Tugas (daftar, harian, papan, kalender, Gantt, laci) dan form tugas: 0 temuan. Susunan halaman Tugas sendiri belum ditata ulang ke gaya Lekuk.
+
 ## Warna Lavender menggantikan Merah Putih — 20 Oktober 2026
 
 - Pemilik menilai Beranda kurang menarik dan warna merah tidak cocok. Dari empat contoh (`docs/desain/pilih-warna-beranda.html`: lavender, hijau pandan, terakota, nila) pemilik memilih Lavender.

@@ -31,11 +31,12 @@ it('tugas cepat menyimpan penanggung jawab dan gerai untuk dunia', async () => {
   const onSaved = vi.fn().mockResolvedValue(undefined);
   const { container } = render(<Editor entity="work-items" quick workspace={popupWorkspace} onClose={() => {}} onSaved={onSaved} />);
   fireEvent.change(screen.getByRole('textbox', { name: 'Nama / judul' }), { target: { value: 'Periksa rak' } });
-  const assignee = screen.getByRole('combobox', { name: 'Penanggung jawab' });
-  fireEvent.change(assignee, { target: { value: 'Contoh QA' } });
+  // Penanggung jawab dipilih dari daftar Tim, bukan diketik bebas.
+  const anggota = String(popupWorkspace.staff![0].data.title);
+  fireEvent.click(screen.getByRole('radio', { name: new RegExp(anggota) }));
   fireEvent.change(container.querySelector('select[name="unit_id"]')!, { target: { value: popupWorkspace.units![0].id } });
   fireEvent.submit(container.querySelector('form')!);
-  await waitFor(() => expect(api).toHaveBeenCalledWith('work-items', expect.objectContaining({ data: expect.objectContaining({ assignee: 'Contoh QA', unit_id: popupWorkspace.units![0].id }) })));
+  await waitFor(() => expect(api).toHaveBeenCalledWith('work-items', expect.objectContaining({ data: expect.objectContaining({ assignee: String(popupWorkspace.staff![0].data.title), unit_id: popupWorkspace.units![0].id }) })));
   expect(onSaved).toHaveBeenCalled();
 });
 

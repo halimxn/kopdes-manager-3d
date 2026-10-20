@@ -1,5 +1,6 @@
 'use client';
 import { useDragSort } from '@/components/ui/useDragSort';
+import { warnaOrang } from '@/lib/orang';
 import { DragOverlay } from '@/components/ui/DragOverlay';
 import { IconButton } from '@/components/ui/Button';
 import { GripVertical } from 'lucide-react';
@@ -370,7 +371,7 @@ export function ScrumBoardView({
                               className="scrum-assignee-pill"
                               title={`Penanggung jawab: ${assignee}`}
                             >
-                              <span className="assignee-mini-avatar">{initials}</span>
+                              <span className={`avatar-warna avatar-mini is-${warnaOrang(assignee)}`} aria-hidden="true">{initials}</span>
                               <span className="assignee-name">{assignee}</span>
                             </span>
 

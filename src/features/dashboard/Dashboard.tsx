@@ -34,22 +34,9 @@ import { ModulUsahaHarian } from './ModulUsahaHarian';
 import { KasBanding, useKasDuaBulan } from './KasBanding';
 import { Select } from '@/components/ui/Select';
 import { KartuPekerjaan } from './KartuPekerjaan';
+import { inisialOrang, warnaOrang } from '@/lib/orang';
 import { bacaTambahCepat, selisihMenit, susunLaporanHarian, tambahMenit, teksSisaWaktu } from './beranda-bantu';
 
-const WARNA_AVATAR = ['aksen', 'ungu', 'oranye', 'teal', 'pink'] as const;
-/** Warna avatar tetap per nama agar orang yang sama selalu berwarna sama. */
-function warnaAvatar(nama: string) {
-  let h = 0;
-  for (const huruf of nama) h = (h * 31 + huruf.charCodeAt(0)) >>> 0;
-  return WARNA_AVATAR[h % WARNA_AVATAR.length];
-}
-const inisial = (nama: string) =>
-  nama
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((kata) => kata[0].toUpperCase())
-    .join('') || '?';
 const jamTitik = (jam: string) => jam.replace(':', '.');
 const hariPendek = new Intl.DateTimeFormat('id-ID', { weekday: 'short', timeZone: 'UTC' });
 const hariPanjang = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
@@ -545,8 +532,8 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                           .join(' · ') || 'Tanpa proyek'}
                       </small>
                     </span>
-                    <span className={`avatar-warna is-${warnaAvatar(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
-                      {inisial(t.assignee || '?')}
+                    <span className={`avatar-warna is-${warnaOrang(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
+                      {inisialOrang(t.assignee || '?')}
                     </span>
                   </Link>
                 </li>
@@ -635,8 +622,8 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
                       <strong>{t.title}</strong>
                       <small>{namaProyek(t.workstream_id) || 'Tanpa proyek'}</small>
                     </span>
-                    <span className={`avatar-warna is-${warnaAvatar(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
-                      {inisial(t.assignee || '?')}
+                    <span className={`avatar-warna is-${warnaOrang(t.assignee || '?')}`} title={t.assignee || 'Belum ditugaskan'}>
+                      {inisialOrang(t.assignee || '?')}
                     </span>
                   </Link>
                 </li>

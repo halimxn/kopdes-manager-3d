@@ -3,6 +3,7 @@
 // tanggal tepat agar angka tidak bergantung pada 50 catatan terbaru; disembunyikan bila
 // migrasi belum aktif supaya Beranda tidak dipenuhi modul kosong.
 import Link from 'next/link';
+import { warnaOrang } from '@/lib/orang';
 import { useEffect, useState } from 'react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { api } from '@/lib/client';
@@ -109,12 +110,6 @@ function PenjualanGerai({ sales, hari }: { sales: Item[]; hari: string }) {
 }
 
 const urutanPerhatian = ['terjadwal', 'alpa', 'terlambat', 'sakit', 'izin', 'cuti', 'hadir', 'libur'];
-const WARNA = ['aksen', 'ungu', 'oranye', 'teal', 'pink'] as const;
-const warnaOrang = (nama: string) => {
-  let h = 0;
-  for (const huruf of nama) h = (h * 31 + huruf.charCodeAt(0)) >>> 0;
-  return WARNA[h % WARNA.length];
-};
 
 /** Tim hari ini (pola Team Members M.project): bilah hadir/izin/belum, lalu petugas yang perlu dilihat dulu. */
 function KehadiranHariIni({ attendance, staff }: { attendance: Item[]; staff: Item[] }) {
