@@ -109,7 +109,7 @@ function PenjualanGerai({ sales, hari }: { sales: Item[]; hari: string }) {
 }
 
 const urutanPerhatian = ['terjadwal', 'alpa', 'terlambat', 'sakit', 'izin', 'cuti', 'hadir', 'libur'];
-const WARNA = ['delima', 'ungu', 'oranye', 'teal', 'pink'] as const;
+const WARNA = ['aksen', 'ungu', 'oranye', 'teal', 'pink'] as const;
 const warnaOrang = (nama: string) => {
   let h = 0;
   for (const huruf of nama) h = (h * 31 + huruf.charCodeAt(0)) >>> 0;

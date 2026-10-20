@@ -11,9 +11,12 @@ import { Toast } from '@/components/ui/Toast';
 import {
   ArrowUpRight,
   CalendarDays,
+  CalendarRange,
+  CircleAlert,
   Check,
   ClipboardCopy,
   Clock,
+  ListChecks,
   Plus,
   RotateCcw,
   SlidersHorizontal,
@@ -33,7 +36,7 @@ import { Select } from '@/components/ui/Select';
 import { KartuPekerjaan } from './KartuPekerjaan';
 import { bacaTambahCepat, selisihMenit, susunLaporanHarian, tambahMenit, teksSisaWaktu } from './beranda-bantu';
 
-const WARNA_AVATAR = ['delima', 'ungu', 'oranye', 'teal', 'pink'] as const;
+const WARNA_AVATAR = ['aksen', 'ungu', 'oranye', 'teal', 'pink'] as const;
 /** Warna avatar tetap per nama agar orang yang sama selalu berwarna sama. */
 function warnaAvatar(nama: string) {
   let h = 0;
@@ -57,7 +60,7 @@ const KONFETI = Array.from({ length: 18 }, (_, i) => ({
   x: Math.round(Math.cos((i / 18) * Math.PI * 2) * (70 + (i % 3) * 34)),
   y: -36 - ((i * 23) % 80),
   r: (i * 47) % 360,
-  warna: ['var(--on-brand)', 'var(--pastel-mentega)', 'var(--pastel-mint)', 'var(--pastel-pink)'][i % 4],
+  warna: ['var(--brand-isi)', 'var(--grafik-oranye)', 'var(--grafik-teal)', 'var(--grafik-pink)'][i % 4],
 }));
 
 const routineSchema = z.array(z.object({ id: z.string(), time: z.string(), title: z.string() }));
@@ -356,6 +359,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
       <div className="beranda-grid">
         <section className="modul bertakik beranda-rutin" aria-labelledby="judul-rutin">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-aksen" aria-hidden="true">
+              <ListChecks size={17} />
+            </span>
             <h2 id="judul-rutin">Rutin harian</h2>
             <span className={`beranda-jumlah${semuaRutinSelesai ? ' is-selesai' : ''}`}>
               {routineCompletedCount}/{routines.length}
@@ -432,6 +438,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
 
         <section className="modul bertakik beranda-agenda" aria-labelledby="judul-agenda">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-pink" aria-hidden="true">
+              <Clock size={17} />
+            </span>
             <h2 id="judul-agenda">Agenda hari ini</h2>
             <span className="beranda-jumlah">{rapatHariIni.length} rapat</span>
           </div>
@@ -511,6 +520,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
 
         <section id="perhatian" className="modul bertakik beranda-tindakan" aria-labelledby="judul-tindakan">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-oranye" aria-hidden="true">
+              <CircleAlert size={17} />
+            </span>
             <h2 id="judul-tindakan">Perlu tindakan</h2>
             <span className="beranda-jumlah">{fokusTerlambat.length + fokusHariIni.length + perhatianLain.length}</span>
           </div>
@@ -566,6 +578,9 @@ export function Dashboard({ data, preferenceScope = '' }: { data: Workspace; pre
 
         <section className="modul bertakik beranda-minggu" aria-labelledby="judul-minggu">
           <div className="modul-kepala">
+            <span className="ubin ubin-kecil ubin-teal" aria-hidden="true">
+              <CalendarRange size={17} />
+            </span>
             <h2 id="judul-minggu">Minggu ini</h2>
           </div>
           <Link href="/tugas?view=kalender" className="takik-aksi" aria-label="Buka kalender tugas" title="Buka kalender tugas">

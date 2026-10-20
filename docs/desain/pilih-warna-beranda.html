@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pilih warna Beranda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Pembanding empat palet untuk Beranda Lekuk. Susunan sama; yang berbeda hanya warna.
+     Perbaikan tampilan yang ikut diusulkan: ubin ikon di kepala kartu, kartu rutin pastel
+     (bukan blok warna penuh), baris "berikutnya" sebagai satu-satunya isian warna tegas. */
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; background: #ecebe8; color: #23202a; font: 14px/1.5 'Plus Jakarta Sans', system-ui, sans-serif; }
+  h1 { margin: 0 0 4px; font-size: 22px; }
+  .ket { margin: 0 0 20px; color: #5f5a66; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(540px, 1fr)); gap: 24px; }
+  .varian { padding: 18px; border-radius: 28px; background: var(--canvas); }
+  .varian > header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+  .varian > header b { font-size: 17px; }
+  .varian > header span { color: var(--muted); font-size: 13px; }
+  .swatch { display: flex; gap: 6px; margin-left: auto; }
+  .swatch i { width: 18px; height: 18px; border-radius: 6px; }
+
+  .sapa { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .sapa h2 { margin: 0; font-size: 20px; font-weight: 600; color: var(--heading); }
+  .sapa p { margin: 0; font-size: 12.5px; color: var(--muted); }
+  .sapa p b { color: var(--late); }
+  .pil { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 999px; background: var(--surface); font-size: 12.5px; font-weight: 600; color: var(--heading); }
+  .tambah { display: flex; gap: 8px; align-items: center; padding: 8px 8px 8px 16px; margin-bottom: 14px; border-radius: 22px; background: var(--surface); }
+  .tambah b { font-size: 13px; color: var(--heading); white-space: nowrap; }
+  .tambah span { flex: 1; height: 38px; display: flex; align-items: center; padding: 0 14px; border-radius: 999px; background: var(--surface3); color: var(--subtle); font-size: 12.5px; }
+  .tambah em { font-style: normal; height: 38px; display: grid; place-items: center; padding: 0 16px; border-radius: 999px; background: var(--brand); color: #fff; font-weight: 600; font-size: 13px; }
+
+  .dua { display: grid; grid-template-columns: 1fr 1.15fr; gap: 12px; }
+  .kartu { position: relative; padding: 14px; border-radius: 22px; background: var(--surface); }
+  .kartu-kepala { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-right: 40px; }
+  .kartu-kepala h3 { margin: 0; font-size: 14.5px; font-weight: 600; color: var(--heading); }
+  .kartu-kepala small { color: var(--muted); font-weight: 600; }
+  .ubin { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--soft); color: var(--brand-ink); }
+  .ubin svg { width: 16px; height: 16px; }
+  /* Takik */
+  .takik::before { content: ''; position: absolute; top: -1px; right: -1px; width: 46px; height: 46px; border-bottom-left-radius: 16px; background: var(--canvas); }
+  .takik-btn { position: absolute; z-index: 1; top: 0; right: 0; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 14px; background: var(--surface); color: var(--heading); }
+  .takik-btn svg { width: 15px; height: 15px; }
+
+  .rutin { background: var(--rutin-bg); }
+  .rutin .ubin { background: var(--surface); }
+  .bilah { height: 6px; margin-bottom: 10px; border-radius: 999px; background: var(--rutin-track); overflow: hidden; }
+  .bilah i { display: block; width: 34%; height: 100%; border-radius: 999px; background: var(--brand); }
+  .rutin ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+  .rutin li { display: grid; grid-template-columns: 20px 38px 1fr; align-items: center; gap: 8px; min-height: 38px; padding: 4px 10px; border-radius: 13px; background: var(--surface); font-size: 12.5px; color: var(--ink); }
+  .rutin li b { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+  .cek { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line); }
+  .rutin li.ok .cek { background: var(--ok); border-color: var(--ok); }
+  .rutin li.ok span { color: var(--subtle); text-decoration: line-through; }
+  .rutin li.next { background: var(--brand); color: #fff; }
+  .rutin li.next b { color: #fff; }
+  .rutin li.next .cek { border-color: #fff; }
+  .rutin li.next small { display: block; font-size: 10.5px; font-weight: 700; opacity: .9; }
+
+  .hitung { display: flex; justify-content: space-between; padding: 8px 12px; margin-bottom: 8px; border-radius: 12px; background: var(--soft2); color: var(--brand-ink); font-size: 12px; font-weight: 600; }
+  .agenda { display: grid; grid-template-columns: 38px 1fr; gap: 8px; margin-bottom: 6px; }
+  .agenda > b { padding-top: 8px; text-align: right; font-size: 12px; color: var(--heading); }
+  .agenda div { padding: 8px 10px; border-radius: 13px; background: var(--jenis); font-size: 12px; }
+  .agenda div strong { display: block; font-size: 12.5px; color: var(--heading); }
+  .agenda div span { color: var(--muted); }
+  .agenda.lewat div { background: var(--surface3); }
+  .agenda.kunjungan { --jenis: var(--p2); }
+  .agenda.zoom { --jenis: var(--p3); }
+
+  .bawah { display: grid; grid-template-columns: 1.15fr 1fr; gap: 12px; margin-top: 12px; }
+  .baris { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid var(--line); font-size: 12.5px; }
+  .baris:first-of-type { border-top: 0; }
+  .cip { min-width: 70px; text-align: center; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--surface3); color: var(--muted); }
+  .cip.telat { background: var(--late-bg); color: var(--late); }
+  .cip.hari { background: var(--soft); color: var(--brand-ink); }
+  .baris strong { flex: 1; color: var(--heading); font-weight: 600; }
+  .av { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 9.5px; font-weight: 700; background: var(--p2); color: var(--heading); }
+  .pita { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .pita span { display: grid; justify-items: center; padding: 6px 0; border-radius: 12px; background: var(--surface3); font-size: 10.5px; color: var(--muted); }
+  .pita span b { font-size: 14px; color: var(--heading); }
+  .pita span.on { background: var(--brand); color: #fff; }
+  .pita span.on b { color: #fff; }
+
+  /* ---------- Empat palet ---------- */
+  .v-lavender { --canvas:#f5f3fa; --surface:#fff; --surface3:#f1eef8; --ink:#2a2534; --heading:#221d2e; --muted:#625b70; --subtle:#7a7387; --line:#ebe7f3;
+    --brand:#6a55c8; --brand-ink:#5443a8; --soft:#ece8fb; --soft2:#efeafd; --rutin-bg:#e9e4fb; --rutin-track:#d6cdf6;
+    --p2:#fde4d3; --p3:#d9eef0; --ok:#3f8a5a; --late:#b0482a; --late-bg:#fbe5dc; }
+  .v-pandan { --canvas:#f3f5f0; --surface:#fff; --surface3:#eef2ea; --ink:#232a24; --heading:#1c241d; --muted:#5a665b; --subtle:#717c72; --line:#e5eae1;
+    --brand:#3d7a54; --brand-ink:#2f6343; --soft:#e2f0e5; --soft2:#e6f2e8; --rutin-bg:#e1efe3; --rutin-track:#c6e0cc;
+    --p2:#f8e9c4; --p3:#e3e4f6; --ok:#3d7a54; --late:#b0482a; --late-bg:#fbe5dc; }
+  .v-terakota { --canvas:#f8f3ee; --surface:#fff; --surface3:#f5eee8; --ink:#2d2420; --heading:#261c17; --muted:#6b5d55; --subtle:#80716a; --line:#efe6df;
+    --brand:#a8532f; --brand-ink:#8f4526; --soft:#fbe8dc; --soft2:#fcebdf; --rutin-bg:#f9e4d6; --rutin-track:#f0cdb6;
+    --p2:#e4ecd9; --p3:#e1e6f3; --ok:#3f7d4f; --late:#a8401f; --late-bg:#f7e0d6; }
+  .v-nila { --canvas:#f2f4f8; --surface:#fff; --surface3:#eef1f6; --ink:#232836; --heading:#1b2133; --muted:#586078; --subtle:#6f778d; --line:#e3e7ef;
+    --brand:#2f3e6b; --brand-ink:#2f3e6b; --soft:#e4e9f5; --soft2:#fff2cc; --rutin-bg:#e6ebf6; --rutin-track:#cbd5ea;
+    --p2:#fbe7c6; --p3:#dcefe6; --ok:#3f8a5a; --late:#b0482a; --late-bg:#fbe5dc; }
+</style>
+</head>
+<body>
+<h1>Pilih warna Beranda</h1>
+<p class="ket">Susunan sama di keempat contoh; hanya warnanya berbeda. Kartu rutin kini pastel (bukan blok merah penuh), kepala kartu berikon, dan hanya baris "berikutnya" yang berwarna tegas. Semua teks lolos kontras 4,5:1.</p>
+<div class="grid" id="grid"></div>
+
+<template id="beranda">
+  <div class="sapa">
+    <div><h2>Selamat pagi, Manajer</h2><p>Senin, 19 Oktober · <b>2 terlambat</b> · 3 jatuh tempo</p></div>
+    <span class="pil">Salin laporan</span>
+  </div>
+  <div class="tambah"><b>Tambah tugas</b><span>Cek stok gula @Budi besok !tinggi</span><em>Buat</em></div>
+  <div class="dua">
+    <section class="kartu takik rutin">
+      <div class="kartu-kepala"><span class="ubin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h3>Rutin harian</h3><small>2/6</small></div>
+      <span class="takik-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>
+      <div class="bilah"><i></i></div>
+      <ol>
+        <li class="ok"><i class="cek"></i><b>07.30</b><span>Buka gerai & cek kas awal</span></li>
+        <li class="ok"><i class="cek"></i><b>08.30</b><span>Briefing petugas kasir</span></li>
+        <li class="next"><i class="cek"></i><b>10.00</b><span>Cek stok rak<small>Berikutnya</small></span></li>
+        <li><i class="cek"></i><b>13.00</b><span>Rekap setoran anggota</span></li>
+        <li><i class="cek"></i><b>16.30</b><span>Tutup buku kas harian</span></li>
+      </ol>
+    </section>
+    <section class="kartu takik">
+      <div class="kartu-kepala"><span class="ubin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></span><h3>Agenda hari ini</h3><small>3</small></div>
+      <span class="takik-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+      <div class="hitung"><span>Berikutnya: Kunjungan pemasok</span><span>48 menit lagi</span></div>
+      <div class="agenda lewat"><b>08.00</b><div><strong>Rapat pagi tim</strong><span>Ruang rapat · selesai</span></div></div>
+      <div class="agenda kunjungan"><b>11.00</b><div><strong>Kunjungan pemasok beras</strong><span>Gudang Pak Joko</span></div></div>
+      <div class="agenda zoom"><b>14.00</b><div><strong>Zoom dinas koperasi</strong><span>Rapat online</span></div></div>
+    </section>
+  </div>
+  <div class="bawah">
+    <section class="kartu takik">
+      <div class="kartu-kepala"><span class="ubin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16v.5"/><circle cx="12" cy="12" r="9"/></svg></span><h3>Perlu tindakan</h3><small>5</small></div>
+      <span class="takik-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+      <div class="baris"><span class="cip telat">Lewat 2 hari</span><strong>Unggah bukti kas</strong><span class="av">BD</span></div>
+      <div class="baris"><span class="cip hari">Hari ini</span><strong>Opname pupuk urea</strong><span class="av">AR</span></div>
+      <div class="baris"><span class="cip">Barang</span><strong>Galon isi ulang menipis</strong></div>
+    </section>
+    <section class="kartu takik">
+      <div class="kartu-kepala"><span class="ubin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><h3>Minggu ini</h3></div>
+      <span class="takik-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16"/></svg></span>
+      <div class="pita"><span class="on">Sen<b>19</b></span><span>Sel<b>20</b></span><span>Rab<b>21</b></span><span>Kam<b>22</b></span><span>Jum<b>23</b></span><span>Sab<b>24</b></span><span>Min<b>25</b></span></div>
+    </section>
+  </div>
+</template>
+
+<script>
+  const varian = [
+    ['v-lavender', 'A · Lavender', 'ungu lembut, hangat, paling dekat prototipe awal', ['#6a55c8', '#e9e4fb', '#fde4d3', '#d9eef0']],
+    ['v-pandan', 'B · Hijau pandan', 'tenang dan segar, cocok untuk koperasi desa', ['#3d7a54', '#e1efe3', '#f8e9c4', '#e3e4f6']],
+    ['v-terakota', 'C · Terakota', 'jingga tanah, hangat tanpa terasa merah', ['#a8532f', '#f9e4d6', '#e4ecd9', '#e1e6f3']],
+    ['v-nila', 'D · Nila + kuning', 'biru tua kalem dengan aksen mentega', ['#2f3e6b', '#e6ebf6', '#fbe7c6', '#dcefe6']],
+  ];
+  const tpl = document.getElementById('beranda');
+  for (const [kelas, nama, ket, warna] of varian) {
+    const el = document.createElement('article');
+    el.className = 'varian ' + kelas;
+    el.innerHTML = `<header><b>${nama}</b><span>${ket}</span><span class="swatch">${warna.map((w) => `<i style="background:${w}"></i>`).join('')}</span></header>`;
+    el.append(tpl.content.cloneNode(true));
+    document.getElementById('grid').append(el);
+  }
+</script>
+</body>
+</html>

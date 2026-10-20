@@ -1,26 +1,27 @@
 ---
 name: Kopdes Manager 3D
-description: Ruang kerja harian manajer Koperasi Desa/Kelurahan Merah Putih
+description: Ruang kerja harian manajer Koperasi Desa/Kelurahan Merah Putih (KDMP)
 colors:
-  delima: "#a04656"
-  delima-tua: "#8e3b4a"
-  delima-muda: "#f7e6e8"
-  putih-susu: "#f7f1ec"
+  lavender: "#6a55c8"
+  lavender-tua: "#5443a8"
+  lavender-muda: "#ece8fb"
+  latar-lavender: "#f5f3fa"
   permukaan: "#ffffff"
-  permukaan-redup: "#f6f0eb"
-  tinta: "#2b2326"
-  tinta-judul: "#24191d"
-  tinta-redup: "#6e6064"
-  tinta-samar: "#7a6a6f"
-  garis: "#f0e7e2"
-  garis-tegas: "#e6dad4"
+  permukaan-redup: "#f1eef8"
+  tinta: "#2a2534"
+  tinta-judul: "#221d2e"
+  tinta-redup: "#625b70"
+  tinta-samar: "#6f6880"
+  garis: "#ebe7f3"
+  garis-tegas: "#ddd7ea"
   status-aman: "#2d6a3e"
   status-terlambat: "#a8401f"
   status-peringatan: "#7a5208"
   pastel-jambu: "#f6e0e6"
   pastel-kunyit: "#f5e6be"
   pastel-pandan: "#d7e8d3"
-  pastel-talas: "#e6e1f1"
+  pastel-persik: "#fde4d3"
+  pastel-air: "#d9eef0"
 typography:
   title:
     fontFamily: "Plus Jakarta Sans Variable, Plus Jakarta Sans, system-ui, sans-serif"
@@ -53,19 +54,19 @@ spacing:
   sentuh: "44px"
 components:
   button-primary:
-    backgroundColor: "{colors.delima}"
+    backgroundColor: "{colors.lavender}"
     textColor: "{colors.permukaan}"
     rounded: "{rounded.md}"
     height: "44px"
   button-primary-hover:
-    backgroundColor: "{colors.delima-tua}"
+    backgroundColor: "{colors.lavender-tua}"
   card:
     backgroundColor: "{colors.permukaan}"
     rounded: "{rounded.xl}"
     padding: "20px 22px"
   card-rutin:
-    backgroundColor: "{colors.delima}"
-    textColor: "{colors.permukaan}"
+    backgroundColor: "{colors.lavender-muda}"
+    textColor: "{colors.tinta}"
     rounded: "{rounded.xl}"
   takik-aksi:
     backgroundColor: "{colors.permukaan}"
@@ -77,7 +78,7 @@ components:
     rounded: "{rounded.full}"
     height: "48px"
   menu-aktif:
-    backgroundColor: "{colors.delima}"
+    backgroundColor: "{colors.lavender}"
     textColor: "{colors.permukaan}"
     rounded: "14px"
 ---
@@ -86,48 +87,49 @@ components:
 
 ## Overview
 
-**Creative North Star: "Lekuk Merah Putih"**
+**Creative North Star: "Lekuk Lavender"**
 
-Ruang kerja yang dibuka manajer koperasi setiap pagi: tenang, hangat, dan jelas apa yang harus dikerjakan. Merah putih dibawa sebagai warna yang halus, bukan bendera: latar putih susu, kartu putih datar, dan satu aksen merah delima lembut. Kepribadian datang dari bentuk, bukan dari dekorasi: kartu bersudut besar dengan takik di pojok kanan atas yang memuat satu tombol aksi, pil, dan tombol bulat.
+Ruang kerja yang dibuka manajer koperasi setiap pagi: tenang, lembut, dan jelas apa yang harus dikerjakan. Latar lavender sangat muda, kartu putih datar, satu aksen ungu lavender, dan pastel pendamping untuk jenis kartu. Kepribadian datang dari bentuk, bukan dari dekorasi: kartu bersudut besar dengan takik di pojok kanan atas yang memuat satu tombol aksi, pil, dan tombol bulat.
 
 Halaman operasional bersifat Operate: tugas dan rutin di tengah, angka cukup sebagai ringkasan kecil. Dunia Koperasi 3D punya gaya sendiri (`src/features/dunia-3d/monitoring.css`, kontrak di `docs/DUNIA-KOPERASI.md`) dan tidak diatur dokumen ini.
 
-Ditolak pemilik: biru Taskflow, Cerah, Senja, Kebun, Teal, palet "templat AI", kartu hitam, grafik bergaya kripto yang ramai.
+Ditolak pemilik: merah putih (19 Oktober, "warna merah tidak cocok"), biru Taskflow, Cerah, Senja, Kebun, Teal, palet "templat AI", kartu hitam, grafik bergaya kripto yang ramai.
 
 **Key Characteristics:**
 
-- Satu aksen delima; warna jenuh hanya pada grafik, status, tombol utama, menu aktif, dan kartu Rutin harian.
+- Satu aksen lavender; warna jenuh hanya pada grafik, status, tombol utama, menu aktif, dan baris rutin berikutnya.
 - Kartu datar tanpa bayangan; kedalaman dari selisih nada latar dan permukaan.
 - Takik Lekuk: pojok kanan atas kartu dicekung, berisi satu tombol aksi 46 px.
 - Status selalu bertuliskan, tidak hanya warna.
-- Mode gelap bernada hangat (cokelat kemerahan), bukan abu dingin.
+- Mode gelap ungu malam, bukan abu dingin.
+- Kepala kartu Beranda berikon dalam ubin pastel datar.
 
 ## Colors
 
-Putih susu hangat dengan satu aksen merah delima lembut dan empat pastel pendamping. Sumber tunggal: `src/styles/token.css` (terang di `:root`, gelap di `:root.dark`); warna mentah di luar berkas itu ditolak `npm run lint:ui`.
+Lavender sangat muda dengan satu aksen ungu lavender dan pastel pendamping. Sumber tunggal: `src/styles/token.css` (terang di `:root`, gelap di `:root.dark`); warna mentah di luar berkas itu ditolak `npm run lint:ui`.
 
 ### Primary
 
-- **Merah delima** (`--brand`, `--brand-isi`, #a04656): tombol utama, menu aktif, hari terpilih, kartu Rutin harian. Teks putih di atasnya 5,99:1.
-- **Delima tua** (`--brand-hover`, `--brand-ink`, #8e3b4a): hover tombol, teks tautan dan label aksen di atas latar terang.
-- **Delima muda** (`--brand-soft`, #f7e6e8): latar lembut hover dan cip "Hari ini".
+- **Lavender** (`--brand`, `--brand-isi`, #6a55c8): tombol utama, menu aktif, hari terpilih, baris rutin berikutnya. Teks putih di atasnya 5,61:1.
+- **Lavender tua** (`--brand-hover`, `--brand-ink`, #5443a8): hover tombol, teks tautan dan label aksen di atas latar terang.
+- **Lavender muda** (`--brand-soft`, #ece8fb): latar kartu Rutin, hover lembut, cip "Hari ini", pita hitung mundur.
 
 ### Neutral
 
-- **Putih susu** (`--canvas`, #f7f1ec): latar halaman dan warna yang mengisi takik.
-- **Permukaan** (`--surface`, #ffffff) dan **permukaan redup** (`--surface-3`, #f6f0eb): kartu dan isian.
-- **Tinta** (`--ink` #2b2326, `--ink-heading` #24191d, `--ink-muted` #6e6064, `--ink-subtle` #7a6a6f): cokelat gelap, bukan hitam murni. Semua lolos 4,5:1 di atas permukaan dan latar.
+- **Latar lavender** (`--canvas`, #f5f3fa): latar halaman dan warna yang mengisi takik.
+- **Permukaan** (`--surface`, #ffffff) dan **permukaan redup** (`--surface-3`, #f1eef8): kartu dan isian.
+- **Tinta** (`--ink` #2a2534, `--ink-heading` #221d2e, `--ink-muted` #625b70, `--ink-subtle` #6f6880): ungu gelap, bukan hitam murni. Semua lolos 4,5:1 di atas permukaan dan latar.
 
 ### Status dan pastel
 
-- Status: aman `--ok` #2d6a3e, terlambat `--late` #a8401f (jingga bata, sengaja beda dari merah merek), peringatan `--warn` #7a5208, masing-masing dengan `-bg` dan `-line`.
-- Pastel (`--pastel-*` + `-ink`): delima = Tugas, jambu = Rapat, kunyit = Buku koperasi, pandan = Gerai, talas = Proyek/Dunia. Seri grafik `--grafik-*` mengikuti peta yang sama.
+- Status: aman `--ok` #2d6a3e, terlambat `--late` #a8401f, peringatan `--warn` #7a5208, masing-masing dengan `-bg` dan `-line`.
+- Pastel (`--pastel-*` + `-ink`): aksen lavender = Tugas, jambu = Rapat, kunyit = Buku koperasi, pandan = Gerai, persik = Proyek, air = Dunia. Seri grafik `--grafik-*` mengikuti peta yang sama.
 
 ### Named Rules
 
-**Aturan satu aksen.** Delima hanya untuk tindakan utama dan penanda terpilih. Kategori memakai pastel, status memakai token status.
+**Aturan satu aksen.** Lavender hanya untuk tindakan utama dan penanda terpilih. Kategori memakai pastel, status memakai token status.
 
-**Aturan teks putih.** Teks putih hanya di atas `--brand-isi` (atau `--brand-isi-hover`), tidak pernah di atas `--brand`/`--brand-hover` (dijaga tes `token-warna`). Baris di dalam kartu delima digelapkan (`--sumur-delima`), tidak diputihkan, agar teks putih tetap ≥ 4,5:1 di kedua tema.
+**Aturan teks putih.** Teks putih hanya di atas `--brand-isi` (atau `--brand-isi-hover`), tidak pernah di atas `--brand`/`--brand-hover` (dijaga tes `token-warna`).
 
 ## Typography
 
@@ -160,14 +162,14 @@ Datar. Kartu, ubin ikon, dan tombol utama tanpa bayangan; lapisan dibedakan oleh
 
 ## Components
 
-- **Tombol utama:** isi delima, teks putih, sudut 12 px, tinggi 44 px, tanpa bayangan; hover delima tua.
+- **Tombol utama:** isi lavender, teks putih, sudut 12 px, tinggi 44 px, tanpa bayangan; hover lavender tua.
 - **Kartu modul** (`.modul`): putih, sudut 24 px, padding 20/22 px (16 px di ponsel), judul `h2` 17 px.
-- **Kartu Rutin harian:** delima penuh, teks putih, bilah progres putih, baris sumur gelap 52 px; baris "Berikutnya" putih dengan teks tinta. Centang terakhir memicu konfeti singkat (mati bila gerak dikurangi). Rutin bukan tenggat: jam yang lewat ditandai lingkaran putus-putus, bukan merah.
-- **Agenda:** hitung mundur ke rapat berikutnya (pita jambu, titik berdenyut), linimasa jam kiri dan isi jambu kanan, garis "sekarang" jingga bata, pil Gabung/Catat hasil.
+- **Kartu Rutin harian:** latar lavender muda, baris putih 52 px, bilah progres lavender; hanya baris "Berikutnya" berisi lavender dengan teks putih; selesai = lingkaran hijau dan judul dicoret. Centang terakhir memicu konfeti singkat (mati bila gerak dikurangi). Rutin bukan tenggat: jam yang lewat ditandai lingkaran putus-putus, bukan merah.
+- **Agenda:** hitung mundur ke rapat berikutnya (pita lavender muda, titik berdenyut), linimasa jam kiri dan isi jambu kanan, garis "sekarang" jingga bata, pil Gabung/Catat hasil.
 - **Baris ringkas** (`.beranda-baris`): cip tanggal pil (terlambat, hari ini, rapat), judul + keterangan, avatar inisial berwarna tetap per nama.
-- **Pita minggu:** tujuh tombol hari ≥ 44 px; titik penuh = tugas, cincin = rapat; hari terpilih delima.
-- **Isian:** sudut 12 px, garis tegas; fokus berupa cincin delima `--focus-ring`. Tambah cepat memakai pil 48 px di atas permukaan redup.
-- **Menu aktif sidebar:** isi delima, teks putih; ikon halaman dua nada delima (`Ikon3D`, token `--ikon-garis-a/b`, `--ikon-isi`).
+- **Pita minggu:** tujuh tombol hari ≥ 44 px; titik penuh = tugas, cincin = rapat; hari terpilih lavender.
+- **Isian:** sudut 12 px, garis tegas; fokus berupa cincin lavender `--focus-ring`. Tambah cepat memakai pil 48 px di atas permukaan redup.
+- **Menu aktif sidebar:** isi lavender, teks putih; ikon halaman dua nada lavender (`Ikon3D`, token `--ikon-garis-a/b`, `--ikon-isi`).
 
 ## Do's and Don'ts
 
@@ -182,6 +184,6 @@ Datar. Kartu, ubin ikon, dan tombol utama tanpa bayangan; lapisan dibedakan oleh
 
 - **Don't** memakai biru Taskflow #546FFF di halaman web, kartu hitam, atau gradien ungu-biru ala templat.
 - **Don't** menaruh garis warna di sisi kiri kartu atau baris (lebih dari 1 px), ubin ikon bergradien, atau label kecil di atas judul.
-- **Don't** meletakkan teks putih di atas `--brand`/`--brand-hover` atau di atas baris yang diputihkan di kartu delima.
+- **Don't** meletakkan teks putih di atas `--brand`/`--brand-hover`, atau kembali ke merah sebagai aksen.
 - **Don't** memberi bayangan pada kartu bertakik; takik akan terlihat sebagai tambalan.
 - **Don't** menampilkan angka contoh atau nol palsu ketika data belum dimuat atau fitur belum aktif.

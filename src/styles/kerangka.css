@@ -1,5 +1,5 @@
 /*
-  Kerangka aplikasi gaya Merah Putih Lekuk: sidebar di atas kanvas dengan kelompok menu berupa kartu
+  Kerangka aplikasi gaya Lavender Lekuk: sidebar di atas kanvas dengan kelompok menu berupa kartu
   putih (Kerja, Ruang lain) dan kartu Tim bertakik, kepala halaman (judul, cari, lonceng, Tambah,
   profil), tab hub di bawah judul, rel ikon di tablet, nav pil + lembar menu di ponsel,
   pencarian, dan pusat aksi.
@@ -26,7 +26,7 @@
 }
 .manager-shell.sidebar-collapsed { --kolom-samping: var(--rail-w); }
 
-/* ---------- Sidebar: kelompok Kerja dan Ruang lain sebagai kartu putih, item aktif merah delima ---------- */
+/* ---------- Sidebar: kelompok Kerja dan Ruang lain sebagai kartu putih, item aktif lavender ---------- */
 .shell-sidebar {
   position: fixed;
   z-index: 40;

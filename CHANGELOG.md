@@ -2,6 +2,13 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Warna Lavender menggantikan Merah Putih — 20 Oktober 2026
+
+- Pemilik menilai Beranda kurang menarik dan warna merah tidak cocok. Dari empat contoh (`docs/desain/pilih-warna-beranda.html`: lavender, hijau pandan, terakota, nila) pemilik memilih Lavender.
+- Token: aksen `#6A55C8` (teks putih 5,61:1), latar `#F5F3FA`, tinta ungu gelap, pastel persik (Proyek) dan air (Dunia) menggantikan talas yang kini terlalu dekat dengan aksen; mode gelap ungu malam, jambu gelap digeser ke mauve. Nama token `delima` diganti netral `aksen` (`--grafik-aksen`, `--pastel-aksen`, `.ubin-aksen`) agar tidak ikut berganti tiap palet.
+- Beranda: kartu Rutin harian kini pastel dengan baris putih, hanya baris "Berikutnya" yang berisi aksen; kepala keempat kartu berubin ikon (rutin, agenda, tindakan, minggu); pita hitung mundur agenda memakai aksen. Token dan tes sumur kartu merah dilepas.
+- Verifikasi: lihat entri status terbaru.
+
 ## Desain Merah Putih Lekuk: kerangka dan Beranda baru — 19 Oktober 2026
 
 - Pemilik memilih arah "Lekuk" (kartu terpisah berikon dengan takik, pil, tombol bulat) dan palet Merah Putih yang halus setelah banyak putaran prototipe (arsip `docs/desain/`), menggantikan Taskflow biru. Ini paket 1 dari 4 (kerangka + Beranda); berikutnya Tugas dengan PIC dari Tim, Agenda + Catat hasil, lalu palet Ctrl+K dan interaksi. Sistem gaya dicatat di `DESIGN.md`.

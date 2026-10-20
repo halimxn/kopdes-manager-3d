@@ -1,22 +1,22 @@
 /*
-  Token sistem gaya Kopdes — "Merah Putih" dengan bentuk Lekuk (keputusan pemilik 19 Oktober 2026,
-  menggantikan Taskflow biru). Latar putih susu hangat, kartu putih sudut 22 px, aksen merah delima
-  lembut #A04656, pastel pendamping talas/kunyit/jingga bata/pandan, tinta cokelat gelap, huruf
+  Token sistem gaya Kopdes — "Lavender" dengan bentuk Lekuk (keputusan pemilik 20 Oktober 2026,
+  menggantikan Merah Putih yang dinilai tidak cocok). Latar lavender sangat muda, kartu putih sudut 22 px,
+  aksen ungu lembut #6A55C8, pastel pendamping persik/jambu/kunyit/pandan/air, tinta ungu gelap, huruf
   Plus Jakarta Sans. Semua pasangan teks di bawah lolos kontras 4,5:1. Status selalu bertuliskan.
 */
 :root {
   color-scheme: light;
-  --scrim: rgba(43, 25, 30, 0.34);
+  --scrim: rgba(34, 29, 46, 0.34);
   /* Isi di atas warna merek/status, kilau merek, sinyal kuning, jalur Gantt, toast */
   --on-brand: #fff;
-  --brand-bright: #d27c8b;
+  --brand-bright: #9d89f2;
   --sinyal: #e8b83a;
-  --jalur-rencana: #f7e6e8;
-  --titik-rencana: #e8c4ca;
+  --jalur-rencana: #ece8fb;
+  --titik-rencana: #d3c9f3;
   --titik-selesai: #a9cfa3;
-  --toast-bg: #2b2326;
+  --toast-bg: #2a2534;
   --toast-fg: #fff;
-  --toast-aksi: #f2b8c1;
+  --toast-aksi: #c9bdf7;
 
   /* Huruf */
   --font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -30,40 +30,40 @@
   --lh-tight: 1.25;
   --lh-body: 1.5;
 
-  /* Permukaan: latar putih susu, kartu putih */
-  --canvas: #f7f1ec;
-  --canvas-deep: #f3ece6;
+  /* Permukaan: latar lavender sangat muda, kartu putih */
+  --canvas: #f5f3fa;
+  --canvas-deep: #efecf6;
   --surface: #ffffff;
-  --surface-2: #fcfaf8;
-  --surface-3: #f6f0eb;
-  --wall: #f7f1ec;
-  --wall-deep: #f7f1ec;
+  --surface-2: #faf9fd;
+  --surface-3: #f1eef8;
+  --wall: #f5f3fa;
+  --wall-deep: #f5f3fa;
 
-  /* Tinta cokelat gelap, bukan hitam murni */
-  --ink: #2b2326;
-  --ink-heading: #24191d;
-  --ink-muted: #6e6064;
-  --ink-subtle: #7a6a6f;
+  /* Tinta ungu gelap, bukan hitam murni */
+  --ink: #2a2534;
+  --ink-heading: #221d2e;
+  --ink-muted: #625b70;
+  --ink-subtle: #6f6880;
   --ink-inverse: #ffffff;
 
   /* Garis */
-  --line: #f0e7e2;
-  --line-strong: #e6dad4;
+  --line: #ebe7f3;
+  --line-strong: #ddd7ea;
 
-  /* Aksen merah delima lembut */
-  --brand: #a04656;
-  --brand-hover: #8e3b4a;
-  --brand-press: #7c3240;
-  --brand-soft: #f7e6e8;
-  --brand-soft-2: #f1d6da;
-  --brand-soft-border: #e8c4ca;
-  --brand-ink: #8e3b4a;
-  /* Isian yang memuat teks putih (5,99:1) */
-  --brand-isi: #a04656;
-  --brand-isi-hover: #8e3b4a;
+  /* Aksen ungu lavender */
+  --brand: #6a55c8;
+  --brand-hover: #5443a8;
+  --brand-press: #47388f;
+  --brand-soft: #ece8fb;
+  --brand-soft-2: #e1daf8;
+  --brand-soft-border: #d3c9f3;
+  --brand-ink: #5443a8;
+  /* Isian yang memuat teks putih (5,61:1) */
+  --brand-isi: #6a55c8;
+  --brand-isi-hover: #5443a8;
   --brand-text: #ffffff;
   --brand-contrast: #ffffff;
-  --focus-ring: 0 0 0 3px rgba(160, 70, 86, 0.28);
+  --focus-ring: 0 0 0 3px rgba(106, 85, 200, 0.28);
 
   /* Sisa gaya dunia lama (kayu); dipakai beberapa aksen hangat */
   --wood: #ffe3b8;
@@ -80,7 +80,7 @@
   --lantai: var(--lantai-kerja);
   --lantai-garis: transparent;
 
-  /* Status — hanya untuk makna. Terlambat memakai jingga bata agar beda dari merah merek. */
+  /* Status — hanya untuk makna. */
   --ok: #2d6a3e;
   --ok-bg: #e4f0e1;
   --ok-line: #cbe2c6;
@@ -92,7 +92,7 @@
   --warn-line: #f1dfa6;
   --info: var(--brand-ink);
   --info-bg: var(--brand-soft);
-  --neutral-bg: #f3ece8;
+  --neutral-bg: #efecf5;
 
   /* Bentuk dan kedalaman: kartu Lekuk datar, bayangan hangat tipis untuk lapisan mengambang */
   --r-xs: 6px;
@@ -101,11 +101,11 @@
   --r-lg: 18px;
   --r-xl: 24px;
   --r-full: 999px;
-  --shadow-sm: 0 1px 2px rgba(60, 30, 36, 0.05);
-  --shadow: 0 1px 2px rgba(60, 30, 36, 0.04), 0 8px 22px -14px rgba(60, 30, 36, 0.12);
-  --shadow-md: 0 2px 4px rgba(60, 30, 36, 0.05), 0 14px 30px -14px rgba(60, 30, 36, 0.18);
-  --shadow-lg: 0 24px 60px rgba(43, 25, 30, 0.2);
-  --shadow-dock: 0 16px 34px -12px rgba(60, 30, 36, 0.32);
+  --shadow-sm: 0 1px 2px rgba(40, 30, 70, 0.05);
+  --shadow: 0 1px 2px rgba(40, 30, 70, 0.04), 0 8px 22px -14px rgba(40, 30, 70, 0.12);
+  --shadow-md: 0 2px 4px rgba(40, 30, 70, 0.05), 0 14px 30px -14px rgba(40, 30, 70, 0.18);
+  --shadow-lg: 0 24px 60px rgba(34, 29, 46, 0.2);
+  --shadow-dock: 0 16px 34px -12px rgba(40, 30, 70, 0.32);
 
   /* Gerak */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -124,23 +124,20 @@
   /* Kartu tanpa garis di mode terang; mode gelap butuh garis agar tepi terbaca */
   --kartu-garis: transparent;
 
-  /* Ikon dua nada: garis gradasi delima, isian merah muda sangat muda */
-  --ikon-isi: #f7e6e8;
-  --ikon-garis-a: #c86a7c;
-  --ikon-garis-b: #8e3b4a;
-  --ikon-bayang: rgba(142, 59, 74, 0.16);
-  /* Sumur baris di kartu delima (Rutin harian): menggelapkan, bukan memutihkan, agar teks putih tetap >= 4,5:1 di kedua tema */
-  --sumur-delima: rgba(60, 20, 30, 0.16);
-  --sumur-delima-hover: rgba(60, 20, 30, 0.26);
+  /* Ikon dua nada: garis gradasi lavender, isian lavender sangat muda */
+  --ikon-isi: #ece8fb;
+  --ikon-garis-a: #9d89f2;
+  --ikon-garis-b: #5443a8;
+  --ikon-bayang: rgba(84, 67, 168, 0.16);
 
-  /* Grafik lembut: seri mengikuti pastel Merah Putih */
-  --grafik-delima: #b65466;
+  /* Grafik lembut: seri mengikuti pastel Lavender */
+  --grafik-aksen: #8471d6;
   --grafik-oranye: #d49a2a;
   --grafik-teal: #5c9a63;
   --grafik-pink: #c9637f;
   --grafik-ungu: #8573c2;
   --grafik-redup: #d7b98a;
-  --grafik-dasar: #f1e9e4;
+  --grafik-dasar: #efecf5;
 
   /* Alias untuk gaya inline di komponen (jangan tambah alias baru) */
   --success: var(--ok);
@@ -162,11 +159,11 @@
   --pastel-blue-text: var(--brand-ink);
   --pastel-blue-bg: var(--brand-soft);
   --pastel-blue-border: var(--brand-soft-border);
-  --pastel-purple-text: #463a73;
-  --pastel-purple-bg: #e6e1f1;
-  /* Pastel modul: delima (aksi/Tugas), jambu (Rapat), kunyit (Buku koperasi), pandan (Gerai), talas (Proyek) */
-  --pastel-delima: #f3dcdd;
-  --pastel-delima-ink: #7e2f3b;
+  --pastel-purple-text: #7a3f1c;
+  --pastel-purple-bg: #fde4d3;
+  /* Pastel modul: aksen lavender (aksi/Tugas), jambu (Rapat), kunyit (Buku koperasi), pandan (Gerai), persik (Proyek) */
+  --pastel-aksen: #ebe6fb;
+  --pastel-aksen-ink: #4a3a9a;
   --pastel-pink: #f6e0e6;
   --pastel-pink-ink: #8c3553;
   --pastel-mentega: #f5e6be;
@@ -176,51 +173,51 @@
   /* Sudut kartu, lebar kolom kerangka, sampul kartu per hub (tanpa foto) */
   --r-card: 22px;
   --rail-w: 76px;
-  --sampul-pekerjaan: #f3dcdd;
-  --sampul-pekerjaan-ink: #7e2f3b;
+  --sampul-pekerjaan: #ebe6fb;
+  --sampul-pekerjaan-ink: #4a3a9a;
   --sampul-catatan: #f6e0e6;
   --sampul-catatan-ink: #8c3553;
   --sampul-usaha: #d7e8d3;
   --sampul-usaha-ink: #2d5532;
   --sampul-koperasi: #f5e6be;
   --sampul-koperasi-ink: #6a4d12;
-  --sampul-dunia: #e6e1f1;
-  --sampul-dunia-ink: #463a73;
+  --sampul-dunia: #d9eef0;
+  --sampul-dunia-ink: #1f5a60;
 }
 
 :root.dark {
   color-scheme: dark;
   --scrim: rgba(0, 0, 0, 0.58);
-  --brand-bright: #ecb5bd;
-  --jalur-rencana: #3e262c;
-  --titik-rencana: #6b3f48;
+  --brand-bright: #c4b8f8;
+  --jalur-rencana: #2e2843;
+  --titik-rencana: #4a3f6e;
   --titik-selesai: #4f8a58;
-  --toast-bg: #f2eae7;
-  --toast-fg: #2b2326;
-  --toast-aksi: #a04656;
-  --canvas: #1a1517;
-  --canvas-deep: #140f11;
-  --surface: #241d20;
-  --surface-2: #2a2225;
-  --surface-3: #322a2d;
-  --wall: #1a1517;
-  --wall-deep: #1a1517;
-  --ink: #f2eae7;
-  --ink-heading: #fbf5f3;
-  --ink-muted: #c7b9bc;
-  --ink-subtle: #a89a9d;
-  --line: #362c30;
-  --line-strong: #463a3e;
-  --brand: #e3a1ab;
-  --brand-hover: #ecb5bd;
-  --brand-press: #d98f9a;
-  --brand-soft: #3e262c;
-  --brand-soft-2: #4a2d34;
-  --brand-soft-border: #5c3a42;
-  --brand-ink: #f2c4cb;
-  --brand-isi: #b05264;
-  --brand-isi-hover: #a84c5e;
-  --focus-ring: 0 0 0 3px rgba(227, 161, 171, 0.38);
+  --toast-bg: #ece9f3;
+  --toast-fg: #2a2534;
+  --toast-aksi: #6a55c8;
+  --canvas: #17151d;
+  --canvas-deep: #121017;
+  --surface: #211e29;
+  --surface-2: #27232f;
+  --surface-3: #2e2a38;
+  --wall: #17151d;
+  --wall-deep: #17151d;
+  --ink: #ece9f3;
+  --ink-heading: #f7f5fb;
+  --ink-muted: #bdb6cc;
+  --ink-subtle: #a39bb3;
+  --line: #332e3e;
+  --line-strong: #433d50;
+  --brand: #b3a4f5;
+  --brand-hover: #c4b8f8;
+  --brand-press: #a191ef;
+  --brand-soft: #2e2843;
+  --brand-soft-2: #382f54;
+  --brand-soft-border: #4a3f6e;
+  --brand-ink: #cfc5fa;
+  --brand-isi: #6a55c8;
+  --brand-isi-hover: #5f4bbd;
+  --focus-ring: 0 0 0 3px rgba(179, 164, 245, 0.38);
   --wood: #5a4520;
   --wood-deep: #f5a142;
   --wood-edge: #8a6420;
@@ -241,45 +238,45 @@
   --warn: #ebcb7a;
   --warn-bg: #33290f;
   --warn-line: #514219;
-  --neutral-bg: #322a2d;
+  --neutral-bg: #2e2a38;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 14px 34px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
   --shadow-dock: 0 12px 30px rgba(0, 0, 0, 0.5);
   --kartu-garis: var(--line);
-  --ikon-isi: rgba(227, 161, 171, 0.2);
-  --ikon-garis-a: #f6d3d9;
-  --ikon-garis-b: #e3a1ab;
+  --ikon-isi: rgba(179, 164, 245, 0.2);
+  --ikon-garis-a: #ddd5fb;
+  --ikon-garis-b: #b3a4f5;
   --ikon-bayang: rgba(0, 0, 0, 0.3);
-  --grafik-delima: #e3a1ab;
+  --grafik-aksen: #b3a4f5;
   --grafik-oranye: #e8be62;
   --grafik-teal: #8cc79a;
   --grafik-pink: #e49ab4;
   --grafik-ungu: #b6a8e8;
   --grafik-redup: #9a7b62;
-  --grafik-dasar: #2e2629;
+  --grafik-dasar: #2a2633;
   --tone-success-accent: #8cc79a;
-  --pastel-purple-text: #dcd5f2;
-  --pastel-purple-bg: #36304a;
-  --pastel-delima: #4a2a31;
-  --pastel-delima-ink: #f2c4cb;
-  --pastel-pink: #48283a;
-  --pastel-pink-ink: #f1b7cd;
+  --pastel-purple-text: #f6cfb3;
+  --pastel-purple-bg: #45301f;
+  --pastel-aksen: #322b4d;
+  --pastel-aksen-ink: #d6cdfa;
+  --pastel-pink: #3f2a44;
+  --pastel-pink-ink: #f1c3dc;
   --pastel-mentega: #453a20;
   --pastel-mentega-ink: #f2dfae;
   --pastel-mint: #2c3e2e;
   --pastel-mint-ink: #cbe5c6;
-  --sampul-pekerjaan: #4a2a31;
-  --sampul-pekerjaan-ink: #f2c4cb;
-  --sampul-catatan: #48283a;
-  --sampul-catatan-ink: #f1b7cd;
+  --sampul-pekerjaan: #322b4d;
+  --sampul-pekerjaan-ink: #d6cdfa;
+  --sampul-catatan: #3f2a44;
+  --sampul-catatan-ink: #f1c3dc;
   --sampul-usaha: #2c3e2e;
   --sampul-usaha-ink: #cbe5c6;
   --sampul-koperasi: #453a20;
   --sampul-koperasi-ink: #f2dfae;
-  --sampul-dunia: #36304a;
-  --sampul-dunia-ink: #dcd5f2;
+  --sampul-dunia: #1f3a3d;
+  --sampul-dunia-ink: #bfe6e9;
 }
 
 @media (max-width: 767px) {

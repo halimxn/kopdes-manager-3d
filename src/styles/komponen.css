@@ -480,7 +480,7 @@ dialog.ui-modal h2 { font-size: 19px; }
 
 /* ---------- Ubin ikon Lekuk: datar, latar pastel dari warna peta aksen, ikon berwarna penuh ---------- */
 .ubin {
-  --ubin: var(--grafik-delima);
+  --ubin: var(--grafik-aksen);
   display: grid;
   place-items: center;
   width: 46px;
@@ -491,7 +491,7 @@ dialog.ui-modal h2 { font-size: 19px; }
   color: color-mix(in srgb, var(--ubin) 82%, var(--ink-heading));
 }
 .ubin-kecil { width: 34px; height: 34px; border-radius: 11px; }
-.ubin-delima { --ubin: var(--grafik-delima); }
+.ubin-aksen { --ubin: var(--grafik-aksen); }
 .ubin-ungu { --ubin: var(--grafik-ungu); }
 .ubin-oranye { --ubin: var(--grafik-oranye); }
 .ubin-teal { --ubin: var(--grafik-teal); }
@@ -499,7 +499,7 @@ dialog.ui-modal h2 { font-size: 19px; }
 
 /* Avatar berwarna tetap per orang */
 .avatar-warna { display: inline-grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; font-size: 12px; font-weight: 700; }
-.avatar-warna.is-delima { background: var(--pastel-delima); color: var(--pastel-delima-ink); }
+.avatar-warna.is-aksen { background: var(--pastel-aksen); color: var(--pastel-aksen-ink); }
 .avatar-warna.is-ungu { background: var(--pastel-purple-bg); color: var(--pastel-purple-text); }
 .avatar-warna.is-oranye { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
 .avatar-warna.is-teal { background: var(--pastel-mint); color: var(--pastel-mint-ink); }
@@ -518,7 +518,7 @@ dialog.ui-modal h2 { font-size: 19px; }
 .modul-kepala { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
 .modul-kepala h2 { margin: 0; font-size: var(--fs-h3); font-weight: 600; letter-spacing: -0.01em; }
 .modul-ikon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 10px; }
-.modul-ikon.pastel-delima { background: var(--pastel-delima); color: var(--pastel-delima-ink); }
+.modul-ikon.pastel-aksen { background: var(--pastel-aksen); color: var(--pastel-aksen-ink); }
 .modul-ikon.pastel-pink { background: var(--pastel-pink); color: var(--pastel-pink-ink); }
 .modul-ikon.pastel-mentega { background: var(--pastel-mentega); color: var(--pastel-mentega-ink); }
 .modul-ikon.pastel-mint { background: var(--pastel-mint); color: var(--pastel-mint-ink); }
