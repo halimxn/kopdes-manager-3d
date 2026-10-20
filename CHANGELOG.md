@@ -2,6 +2,13 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Palet perintah Ctrl+K, geser kartu, dan interaksi — 20 Oktober 2026
+
+- Paket 4: kotak cari Ctrl+K menjadi palet perintah: grup Perintah (tambah tugas, jadwalkan agenda, catat kegiatan, catat kas, tambah anggota Tim, lihat tugas terlambat), pilihan teratas "Buat tugas: …" dari teks yang diketik (membuka form tugas terisi, memahami @nama/#proyek/!prioritas/waktu), ikon di setiap halaman, dan navigasi panah atas/bawah + Enter. Tidak ada perintah yang menulis data sendiri.
+- Geser kartu: kartu ikut bergerak selama digeser dan berwarna sesuai aksi (hijau = selesai, aksen = ubah); kini juga di daftar Tugas ponsel, dengan Toast "Batalkan" setelah tugas ditandai selesai dan petunjuk singkat di layar sentuh. Geser boleh dimulai dari judul kartu; klik sesudah geser hanya ditahan pada kartu itu.
+- Kartu Beranda dan ubin status Tugas muncul bertahap saat halaman dibuka (mati bila gerak dikurangi).
+- Verifikasi: 473 tes / 80 berkas, typecheck, lint, `lint:ui`, build lulus; JS awal 247 KB (naik 7 KB karena palet di kerangka). `audit:tampilan` palet 0 temuan pada 375 dan 1440 px; geser diuji lewat tes peristiwa sentuh, belum di perangkat fisik.
+
 ## Agenda berjenis dan Catat hasil — 20 Oktober 2026
 
 - Paket 3: agenda (data `meetings`) punya kolom baru **Jenis kegiatan**: rapat, kunjungan (pemasok, sales, mitra), acara, atau lainnya. Data lama tanpa jenis dibaca sebagai rapat; kolom JSON baru tanpa migrasi SQL. Label "Jenis rapat" (tatap muka/online/hybrid) diganti "Bentuk pertemuan" agar tidak rancu.

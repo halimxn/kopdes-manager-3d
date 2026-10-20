@@ -3,6 +3,8 @@ import { RecordDrawer, ikonEntitas } from './RecordDrawer';
 import { isiDariQuery } from './terkait';
 import { calonPenanggung } from './PilihPenanggung';
 import { UbinStatusTugas } from '../tasks/UbinStatusTugas';
+import { useSwipeAction } from '@/components/ui/useSwipeAction';
+import { Toast } from '@/components/ui/Toast';
 import { INFO_JENIS, jenisDari } from '../meetings/jenis';
 import { bacaTambahCepat } from '../dashboard/beranda-bantu';
 import { Ikon3D } from '@/components/ui/Ikon3D';
@@ -162,6 +164,8 @@ export function Records({
     // Saringan penanggung jawab; '-' berarti tugas yang belum punya penanggung jawab.
     [pic, setPic] = useState(''),
     [jenisFilter, setJenisFilter] = useState(''),
+    // Tugas yang baru diselesaikan lewat geser kartu, untuk tombol Batalkan.
+    [selesaiTerakhir, setSelesaiTerakhir] = useState<Item | null>(null),
     [sort, setSort] = useState('due'),
     [view, setView] = useState<string>(() => {
       if (initialView) return initialView;
@@ -337,6 +341,24 @@ export function Records({
       setBusy(false);
     }
   };
+  // Geser kartu tugas di ponsel: kanan = selesai (bisa dibatalkan), kiri = ubah.
+  const geser = useSwipeAction(
+    (id) => {
+      const row = rows.find((r) => r.id === id);
+      if (row && isActiveTask(row.data.status))
+        void update(row, taskStatusChange('complete')).then(() => setSelesaiTerakhir(row));
+    },
+    (id) => {
+      const row = rows.find((r) => r.id === id);
+      if (row) setEdit(row);
+    },
+    busy || entity !== 'work-items',
+  );
+  useEffect(() => {
+    if (!selesaiTerakhir) return;
+    const timer = window.setTimeout(() => setSelesaiTerakhir(null), 6000);
+    return () => window.clearTimeout(timer);
+  }, [selesaiTerakhir]);
   const konteksKartu = {
     entity,
     workspace,
@@ -995,7 +1017,24 @@ export function Records({
           onOpenItem={(item) => setEdit(item)}
         />
       ) : entity === 'work-items' && rows.length ? (
-        <div className="task-table-wrap">
+        <div className="task-table-wrap" {...geser}>
+          {entity === 'work-items' && !isCompletedArchive && rows.length > 0 && (
+            <p className="petunjuk-geser">Geser kartu ke kanan untuk menandai selesai, ke kiri untuk mengubah.</p>
+          )}
+          {selesaiTerakhir && (
+            <Toast
+              message={`Selesai: ${String(selesaiTerakhir.data.title)}`}
+              busy={busy}
+              action={{
+                label: 'Batalkan',
+                onClick: () => {
+                  const sebelum = selesaiTerakhir;
+                  setSelesaiTerakhir(null);
+                  void update(sebelum, { status: sebelum.data.status, completed_at: sebelum.data.completed_at || '' });
+                },
+              }}
+            />
+          )}
           <table className="task-table">
             <thead>
               <tr>
@@ -1025,11 +1064,12 @@ export function Records({
                   const assigneeName = String(row.data.assignee || '').trim();
 
                   return (
-                    <tr key={row.id} className={isDone ? 'row-completed' : ''}>
+                    <tr key={row.id} className={isDone ? 'row-completed' : ''} data-swipe-task={entity === 'work-items' && !isDone ? row.id : undefined}>
                       <td className="col-task-title">
                         <div className="task-title-cell">
                           <Button
                             type="button"
+                            data-boleh-geser
                             className={`task-title-btn ${isDone ? 'is-done-text' : ''}`}
                             onClick={() => setDetailTask(row)}
                             title="Buka rincian tugas"

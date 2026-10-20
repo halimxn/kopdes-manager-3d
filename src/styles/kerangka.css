@@ -281,6 +281,12 @@ dialog.command-dialog[open] { animation: muncul-dialog 240ms var(--ease-out); }
 .workspace-search-scopes .ui-btn { flex-shrink: 0; min-height: 36px; padding: 0 14px; border-radius: var(--r-full); font-size: 13px; box-shadow: none; }
 .workspace-search-scopes .ui-btn[aria-pressed='true'] { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-ink); }
 .workspace-search-hint { color: var(--ink-muted); font-size: var(--fs-meta); }
+.workspace-search-hint kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); color: var(--ink); font: inherit; font-size: 11px; font-weight: 700; }
+/* Perintah: ikon berlatar aksen lembut; "Buat tugas" di atas sebagai pilihan pertama Enter */
+.workspace-search-results > a.is-perintah .workspace-search-icon { background: var(--brand-soft); color: var(--brand-ink); }
+.workspace-search-results > a.is-buat { background: var(--brand-soft); }
+.workspace-search-results > a.is-buat strong { color: var(--brand-ink); }
+.workspace-search-results > a.is-buat:hover, .workspace-search-results > a.is-buat:focus-visible { background: var(--brand-soft-2); }
 .workspace-search-results { display: grid; gap: 2px; padding-top: 4px; border-top: 1px solid var(--line); }
 .workspace-search-results > p { padding: 10px 6px; color: var(--ink-muted); font-size: 13px; }
 /* Judul kelompok (Catatan, Halaman) dengan jumlah sebagai pil */

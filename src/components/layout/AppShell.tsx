@@ -259,7 +259,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
             type="button"
             className="quick-action-hub-btn"
             onClick={() => setActionModalOpen(true)}
-            title="Tambah tugas, rapat, atau catatan"
+            title="Tambah tugas, agenda, atau catatan"
             aria-label="Tambah catatan"
           >
             <Plus size={18} />
@@ -440,7 +440,7 @@ function ShellFrame({ children }: { children: React.ReactNode }) {
             }}
           >
             <Sparkles size={14} />
-            <span>Tambah tugas, rapat, atau catatan</span>
+            <span>Tambah tugas, agenda, atau catatan</span>
             <ArrowUpRight size={14} />
           </Button>
         </div>

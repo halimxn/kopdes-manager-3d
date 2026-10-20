@@ -31,3 +31,16 @@ it('scroll vertikal dan sentuhan pada tombol tidak menjalankan swipe', () => {
   pointer('pointerdown', button, 100, 100); pointer('pointerup', button, 200, 100);
   expect(right).not.toHaveBeenCalled(); expect(left).not.toHaveBeenCalled();
 });
+
+it('kartu ikut bergeser dan ditandai arah aksi selama digeser, lalu kembali saat dilepas', () => {
+  render(<Harness right={vi.fn()} left={vi.fn()} open={vi.fn()} />);
+  const card = screen.getByText('Kartu');
+  const kartu = card.closest('[data-swipe-task]') as HTMLElement;
+  pointer('pointerdown', card, 100, 100);
+  pointer('pointermove', card, 200, 102);
+  expect(kartu.dataset.geser).toBe('kanan');
+  expect(kartu.style.translate).toBe('70px 0');
+  pointer('pointerup', card, 200, 102);
+  expect(kartu.dataset.geser).toBeUndefined();
+  expect(kartu.style.translate).toBe('');
+});
