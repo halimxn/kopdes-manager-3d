@@ -131,6 +131,27 @@ describe('Alur kerja dasar UI', () => {
     expect(refresh).not.toHaveBeenCalled();
   });
 });
+it('tambah tugas memahami @nama, !prioritas, dan kata waktu tanpa membuka form', async () => {
+  mocks.api.mockResolvedValue({});
+  render(
+    <Records
+      entity="work-items"
+      workspace={{ staff: [{ id: 's1', created_at: '', updated_at: '', data: { title: 'Budi Darma' } }] }}
+      refresh={vi.fn().mockResolvedValue(undefined)}
+    />,
+  );
+  const input = screen.getByLabelText('Tulis tugas baru');
+  fireEvent.change(input, { target: { value: 'Cek timbangan @budi !tinggi' } });
+  fireEvent.submit(input.closest('form')!);
+  await waitFor(() =>
+    expect(mocks.api).toHaveBeenCalledWith(
+      'work-items',
+      expect.objectContaining({
+        data: expect.objectContaining({ title: 'Cek timbangan', assignee: 'Budi Darma', priority: 'tinggi' }),
+      }),
+    ),
+  );
+});
 it('tambah tugas langsung menyimpan judul dan mempertahankan lingkup proyek', async () => {
   mocks.api.mockResolvedValue({});
   const scope = '7fd6a2ac-dc55-48bc-abd8-f0e4c76b00a5';

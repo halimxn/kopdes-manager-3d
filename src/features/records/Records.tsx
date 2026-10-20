@@ -1,6 +1,9 @@
 'use client';
 import { RecordDrawer, ikonEntitas } from './RecordDrawer';
 import { isiDariQuery } from './terkait';
+import { calonPenanggung } from './PilihPenanggung';
+import { UbinStatusTugas } from '../tasks/UbinStatusTugas';
+import { bacaTambahCepat } from '../dashboard/beranda-bantu';
 import { Ikon3D } from '@/components/ui/Ikon3D';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -155,6 +158,8 @@ export function Records({
     [filter, setFilter] = useState<string | null>(initialFilter || null),
     [workstream, setWorkstream] = useState(''),
     [priority, setPriority] = useState(''),
+    // Saringan penanggung jawab; '-' berarti tugas yang belum punya penanggung jawab.
+    [pic, setPic] = useState(''),
     [sort, setSort] = useState('due'),
     [view, setView] = useState<string>(() => {
       if (initialView) return initialView;
@@ -256,6 +261,7 @@ export function Records({
     effectiveFilter,
     workstream,
     priority,
+    pic,
     journalUnit,
     journalStakeholder,
     journalMeeting,
@@ -284,6 +290,10 @@ export function Records({
           (!workstream || row.data.workstream_id === workstream) &&
           (!sprintFilter || row.data.sprint_id === sprintFilter) &&
           (!priority || row.data.priority === priority) &&
+          (!pic ||
+            (pic === '-'
+              ? !String(row.data.assignee || '').trim()
+              : String(row.data.assignee || '').trim().toLowerCase() === pic.toLowerCase())) &&
           (!journalUnit || row.data.unit_id === journalUnit) &&
           (!journalStakeholder || row.data.stakeholder_id === journalStakeholder) &&
           (!journalMeeting || row.data.meeting_id === journalMeeting),
@@ -301,6 +311,15 @@ export function Records({
                   String(b.data.due_date || b.data.date || ''),
                 ),
       );
+  function pilihStatus(value: string) {
+    setFilter(value);
+    if (entity === 'work-items' && query.has('status')) {
+      const next = new URLSearchParams(query.toString());
+      next.delete('status');
+      router.replace((scopeId ? '/proyek' : '/tugas') + (next.size ? '?' + next.toString() : ''));
+    }
+  }
+  const namaStaf = (workspace.staff || []).map((row) => String(row.data.title || '')).filter(Boolean);
   const update = async (item: Item, changes: Record<string, unknown>) => {
     if (busy) return;
     setBusy(true);
@@ -372,7 +391,7 @@ export function Records({
               {catalog[entity].title}
             </h2>
             <p>{catalog[entity].description}</p>
-            {all.length > 0 && (
+            {all.length > 0 && entity !== 'work-items' && (
               <div className="records-stats" aria-label="Ringkasan jumlah">
                 <span>
                   <strong>{all.length}</strong> total
@@ -426,6 +445,9 @@ export function Records({
         </div>
       )}
       {tabs}
+      {entity === 'work-items' && all.length > 0 && (
+        <UbinStatusTugas rows={all} aktif={effectiveFilter} onPilih={pilihStatus} />
+      )}
       {ringkasan}
       {entity === 'work-items' && closedProject && (
         <p className="notice">
@@ -573,11 +595,16 @@ export function Records({
             setBusy(true);
             setError('');
             try {
+              const isian = bacaTambahCepat(quickTitle, {
+                hariIni: today(),
+                staf: namaStaf,
+                proyek: (workspace.workstreams || []).map((row) => ({ id: row.id, title: String(row.data.title) })),
+              });
               await api(entity, {
                 data: schemas['work-items'].parse({
-                  title: quickTitle,
-                  due_date: today(),
-                  workstream_id: scopeId || workstream || '',
+                  ...isian,
+                  due_date: isian.due_date || today(),
+                  workstream_id: scopeId || isian.workstream_id || workstream || '',
                 }),
               });
               await refresh();
@@ -594,10 +621,11 @@ export function Records({
             <Input
               type="text"
               aria-label="Tulis tugas baru"
+              title="@nama penanggung jawab · #proyek · !tinggi · besok, lusa, nama hari, atau tgl/bln"
               value={quickTitle}
               maxLength={200}
               onChange={(event) => setQuickTitle(event.target.value)}
-              placeholder="Tambah tugas baru, lalu tekan Enter…"
+              placeholder="Tambah tugas: Cek stok gula @Budi #gerai besok !tinggi, lalu Enter"
               disabled={busy}
             />
           </div>
@@ -644,16 +672,7 @@ export function Records({
                 <span className="field-caption">Status</span>
                 <Select
                   value={effectiveFilter}
-                  onChange={(value) => {
-                    setFilter(value);
-                    if (entity === 'work-items' && query.has('status')) {
-                      const next = new URLSearchParams(query.toString());
-                      next.delete('status');
-                      router.replace(
-                        (scopeId ? '/proyek' : '/tugas') + (next.size ? '?' + next.toString() : ''),
-                      );
-                    }
-                  }}
+                  onChange={pilihStatus}
                   options={[
                     { value: '', label: entity === 'work-items' ? 'Tugas aktif' : 'Semua Status' },
                     ...(scopeId && entity === 'work-items'
@@ -668,6 +687,25 @@ export function Records({
                     })),
                   ]}
                   ariaLabel="Status"
+                />
+              </label>
+            )}
+            {entity === 'work-items' && (
+              <label>
+                <span className="field-caption">Penanggung jawab</span>
+                <Select
+                  value={pic}
+                  onChange={setPic}
+                  options={[
+                    { value: '', label: 'Semua orang' },
+                    { value: '-', label: 'Belum ada penanggung jawab' },
+                    ...calonPenanggung(
+                      workspace.staff || [],
+                      String(workspace.organization?.[0]?.data.manager || ''),
+                      '',
+                    ).map((orang) => ({ value: orang.nama, label: orang.nama })),
+                  ]}
+                  ariaLabel="Penanggung jawab"
                 />
               </label>
             )}

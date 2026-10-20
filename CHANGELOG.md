@@ -2,6 +2,14 @@
 
 Semua perubahan penting dicatat di sini, satu entri per paket kerja (terbaru di atas). Riwayat sebelum repo ini (versi pixel dan pengembangan awal 3D) ada di repo `kopdes-manager-web`.
 
+## Halaman Tugas bergaya Lekuk Lavender — 20 Oktober 2026
+
+- Ringkasan jumlah berupa deretan chip diganti empat ubin status berwarna (Rencana, Dikerjakan, Terlambat, Selesai) yang sekaligus menjadi saringan; tekan lagi untuk melepas. Halaman catatan lain tetap memakai ringkasan lama.
+- Tambah cepat di Tugas kini memahami `@nama` (dari Tim), `#proyek`, `!prioritas`, dan kata waktu seperti Beranda, lalu langsung menyimpan; lingkup proyek tetap diutamakan.
+- Saringan baru "Penanggung jawab" (orang di Tim, manajer, atau "Belum ada penanggung jawab").
+- Tampilan Lekuk: wadah halaman Tugas akhirnya berjarak (sebelumnya blok menempel), pilihan tampilan dan "Aktif/Riwayat" berupa pil dengan isian aksen, tambah cepat satu baris berisian pil, cari/Filter tanpa garis tegas, tabel dalam kartu datar dengan kepala kolom tenang. Kontrol segmen bersama ikut berubah di semua halaman.
+- Verifikasi: 466 tes / 78 berkas, typecheck, lint, `lint:ui`, build lulus; JS awal 239 KB. `audit:tampilan` Tugas (daftar, harian, papan, kalender, Gantt, laci, form) 0 temuan pada 375, 768, 1024, 1440 px. Peramban demo: ubin Terlambat menyaring 20 → 4 tugas dan kembali saat dilepas.
+
 ## Penanggung jawab tugas dipilih dari Tim — 20 Oktober 2026
 
 - Paket 2 (sebagian): form tugas tidak lagi memakai kolom teks bebas untuk penanggung jawab. Pemilih berupa kartu orang (avatar berwarna, nama, peran): manajer dari profil, lalu anggota Tim yang tidak nonaktif, plus "Belum ada". Nama lama yang tidak ada di Tim tetap ditawarkan agar data lama tidak hilang; bila Tim kosong, ada tautan untuk menambah anggota.

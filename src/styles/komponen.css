@@ -321,10 +321,10 @@ dialog.ui-modal h2 { font-size: 19px; }
   display: inline-flex;
   gap: 2px;
   max-width: 100%;
-  padding: 3px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: var(--surface-2);
+  padding: 4px;
+  border: 1px solid var(--kartu-garis);
+  border-radius: var(--r-full);
+  background: var(--surface);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -334,10 +334,10 @@ dialog.ui-modal h2 { font-size: 19px; }
   flex: 0 0 auto;
   align-items: center;
   gap: 6px;
-  min-height: 34px;
-  padding: 0 12px;
+  min-height: 38px;
+  padding: 0 14px;
   border: 0;
-  border-radius: 9px;
+  border-radius: var(--r-full);
   background: transparent;
   color: var(--ink-muted);
   font: inherit;
@@ -348,13 +348,13 @@ dialog.ui-modal h2 { font-size: 19px; }
   transition: background var(--dur-fast), color var(--dur-fast);
 }
 .ui-segmented-item:hover { color: var(--ink); }
+/* Lekuk: pilihan aktif berupa pil berisi aksen, sama dengan menu aktif sidebar */
 .ui-segmented-item.is-active,
 .ui-segmented-item.active {
-  background: var(--surface);
-  color: var(--brand-ink);
-  box-shadow: var(--shadow-sm), 0 0 0 1px var(--line);
+  background: var(--brand-isi);
+  color: var(--on-brand);
 }
-.ui-segmented-active-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }
+.ui-segmented-active-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
 /* ---------- Progres ---------- */
 .ui-progress {

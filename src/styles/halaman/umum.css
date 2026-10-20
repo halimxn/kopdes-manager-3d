@@ -23,16 +23,17 @@
 }
 .workspace-page .tabs .ui-btn[aria-selected='true'] { color: var(--ink-heading); box-shadow: inset 0 -2px 0 var(--brand); }
 .workspace-scope-control .ui-btn {
-  min-height: 36px;
-  padding: 0 14px;
+  min-height: 38px;
+  padding: 0 16px;
   border: 0;
+  border-radius: var(--r-full);
   background: transparent;
   color: var(--ink-muted);
   font-size: 13px;
   box-shadow: none;
 }
-.workspace-scope-control .ui-btn[aria-pressed='true'] { background: var(--brand-soft); color: var(--brand-ink); }
-.workspace-scope-control { display: inline-flex; gap: 4px; justify-self: start; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
+.workspace-scope-control .ui-btn[aria-pressed='true'] { background: var(--brand-isi); color: var(--on-brand); }
+.workspace-scope-control { display: inline-flex; gap: 4px; justify-self: start; padding: 4px; border: 1px solid var(--kartu-garis); border-radius: var(--r-full); background: var(--surface); }
 .workspace-page > .workspace-scope-control { margin-top: 12px; }
 .workspace-partial-note { color: var(--ink-muted); font-size: 12.5px; }
 .workspace-load-more.ui-btn { justify-self: center; }
