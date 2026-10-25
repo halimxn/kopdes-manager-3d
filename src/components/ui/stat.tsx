@@ -1,8 +1,10 @@
+'use client';
 import { cn } from '@/lib/utils';
 import type { Tone } from '@/lib/tones';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Wave } from './wave';
 import { AvatarStack } from './avatar';
+import { CountUp } from './count-up';
 
 /** Ubin angka pastel ala ringkasan TaskTrack; catatan kecil menjelaskan arti angkanya. */
 export function StatTile({
@@ -53,6 +55,58 @@ export function StatTile({
         {value}
       </span>
       {note && <span className="relative text-xs font-semibold opacity-80">{note}</span>}
+    </Tag>
+  );
+}
+
+/**
+ * Ubin angka putih ringkas (acuan dashboard 25 Okt): ikon dalam kotak berwarna, label kecil,
+ * angka besar yang menghitung naik. Terangkat sedikit saat disentuh kursor.
+ */
+export function MetricTile({
+  label,
+  value,
+  note,
+  tone = 'slate',
+  icon,
+  onClick,
+  className,
+  style,
+}: {
+  label: string;
+  value: number;
+  note?: ReactNode;
+  tone?: Tone;
+  icon?: ReactNode;
+  onClick?: () => void;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  const Tag = onClick ? 'button' : 'div';
+  return (
+    <Tag
+      type={onClick ? 'button' : undefined}
+      onClick={onClick}
+      style={style}
+      className={cn(
+        'enter flex min-w-0 items-center gap-3 max-sm:flex-col max-sm:items-start max-sm:gap-2.5 rounded-[var(--radius-card)] bg-surface p-3.5 text-left shadow-card ring-1 ring-line/60 transition duration-300 md:p-4',
+        onClick && 'hover:-translate-y-1 hover:shadow-float active:scale-[0.98]',
+        className,
+      )}
+    >
+      <span
+        data-tone={tone}
+        className="grid size-11 shrink-0 place-items-center rounded-2xl bg-tone text-tone-ink [&_svg]:size-5"
+      >
+        {icon}
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-xs font-bold text-ink-3">{label}</span>
+        <span className="block text-[24px] leading-tight font-extrabold tracking-tight text-ink">
+          <CountUp value={value} />
+        </span>
+        {note && <span className="block truncate text-xs font-semibold text-ink-3">{note}</span>}
+      </span>
     </Tag>
   );
 }

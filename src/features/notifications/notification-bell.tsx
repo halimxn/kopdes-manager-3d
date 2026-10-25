@@ -94,7 +94,7 @@ export function NotificationBell() {
       }}
     >
       <Popover.Trigger
-        className="relative grid size-10 place-items-center rounded-full text-ink transition hover:bg-surface-2"
+        className="relative grid size-10 place-items-center rounded-full bg-surface text-ink transition hover:bg-surface-2 md:size-11"
         aria-label={unseen ? `Pengingat, ${unseen} baru` : 'Pengingat'}
       >
         <Bell className="size-5" />

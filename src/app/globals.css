@@ -13,19 +13,19 @@
 [data-theme='light'] {
   --font-sans: 'Urbanist Variable', 'Urbanist', ui-sans-serif, system-ui, sans-serif;
 
-  --canvas: #f4f4fa;
+  --canvas: #ebeae4;
   --surface: #ffffff;
-  --surface-2: #f8f8fc;
-  --surface-3: #efeff7;
-  --line: #ececf4;
-  --line-strong: #d9d9e7;
-  --ink: #1a1f33;
-  --ink-2: #4f566e;
-  --ink-3: #676d86;
+  --surface-2: #f6f5f1;
+  --surface-3: #eeede7;
+  --line: #e5e3db;
+  --line-strong: #d5d2c7;
+  --ink: #1c1d1a;
+  --ink-2: #4b4d47;
+  --ink-3: #62645d;
 
-  /* Aksi utama: biru tua, netral di antara kartu pastel. */
-  --action: #1e2a4a;
-  --action-hover: #121b35;
+  /* Aksi utama: hitam kebiruan di atas latar batu hangat (acuan dashboard 25 Okt). */
+  --action: #1c2027;
+  --action-hover: #2b313b;
   --on-action: #ffffff;
 
   /* Warna logo; hanya untuk tanda Kopdes, bukan untuk tombol. */
@@ -33,9 +33,9 @@
   --on-brand: #ffffff;
 
   /* Sorotan (kapsul navigasi, hari terpilih, fokus); dipilih pengguna dari lima nada. */
-  --accent: #e7e2ff;
-  --accent-ink: #5340c2;
-  --accent-strong: #7a66e8;
+  --accent: #e1e9df;
+  --accent-ink: #3b5742;
+  --accent-strong: #5f8067;
 
   --plan: #ebe8ff;
   --plan-ink: #4a3bb8;
@@ -53,22 +53,28 @@
   --late-bar: #e8577a;
 
   /* Kolom isian: latar sedikit lebih gelap dari kartu dan garis yang cukup terlihat. */
-  --field: #f7f7fb;
-  --field-line: #d3d4e3;
+  --field: #f6f5f1;
+  --field-line: #d8d5ca;
 
   /* Contoh warna pada pemilih sorotan (profil dan Pengaturan); sama di tema terang dan gelap. */
+  --swatch-sage: #5f8067;
   --swatch-lavender: #7a66e8;
   --swatch-sky: #4f8fe0;
   --swatch-mint: #36b37e;
   --swatch-peach: #ef8a3c;
   --swatch-rose: #ec6a8a;
 
-  --shadow-card: 0 1px 2px rgb(70 60 150 / 0.03), 0 10px 30px -14px rgb(70 60 150 / 0.14);
-  --shadow-float: 0 28px 64px -24px rgb(70 60 150 / 0.3);
-  --scrim: rgb(14 17 30 / 0.32);
+  --shadow-card: 0 1px 2px rgb(40 38 30 / 0.04), 0 10px 28px -16px rgb(40 38 30 / 0.16);
+  --shadow-float: 0 28px 64px -24px rgb(40 38 30 / 0.32);
+  --scrim: rgb(20 20 16 / 0.32);
   color-scheme: light;
 }
 
+[data-accent='sage'] {
+  --accent: #e1e9df;
+  --accent-ink: #3b5742;
+  --accent-strong: #5f8067;
+}
 [data-accent='lavender'] {
   --accent: #e7e2ff;
   --accent-ink: #5340c2;
@@ -96,39 +102,44 @@
 }
 
 [data-theme='dark'] {
-  --canvas: #0e111b;
-  --surface: #161a28;
-  --surface-2: #1b2031;
-  --surface-3: #242a3e;
-  --line: #2a3047;
-  --line-strong: #3a4160;
-  --ink: #eceef6;
-  --ink-2: #b1b7ce;
-  --ink-3: #9198b3;
-  /* Biru tua yang sama dengan tema terang, sedikit lebih terang agar tetap terbaca di latar malam. */
-  --action: #4152a0;
-  --action-hover: #4d5fb2;
+  --canvas: #121310;
+  --surface: #1a1b18;
+  --surface-2: #20221e;
+  --surface-3: #292b26;
+  --line: #2d2f2a;
+  --line-strong: #3e413a;
+  --ink: #eceae4;
+  --ink-2: #bab9b1;
+  --ink-3: #9b9a92;
+  /* Di latar malam tombol hitam tidak terlihat: aksi memakai sage tua dengan teks putih. */
+  --action: #4f6d57;
+  --action-hover: #5b7b63;
   --on-action: #ffffff;
   --brand: #f36b79;
-  --plan: #2d2d4d;
+  --plan: #2f2e3f;
   --plan-ink: #c6bcff;
-  --doing: #22304a;
+  --doing: #27323d;
   --doing-ink: #a4cdfa;
-  --done: #1d3538;
+  --done: #22362c;
   --done-ink: #8fe0b9;
-  --late: #382a3a;
+  --late: #3b2b2e;
   --late-ink: #ffadbc;
-  --warn: #39322a;
+  --warn: #3a3424;
   --warn-ink: #f2c66a;
   --done-bar: #4cc890;
   --warn-bar: #f2b53a;
   --late-bar: #f07a97;
-  --field: #121624;
-  --field-line: #343b56;
+  --field: #161714;
+  --field-line: #3b3d37;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -16px rgb(0 0 0 / 0.7);
   --shadow-float: 0 24px 56px -20px rgb(0 0 0 / 0.8);
   --scrim: rgb(0 0 0 / 0.55);
   color-scheme: dark;
+}
+[data-theme='dark'][data-accent='sage'] {
+  --accent: #26302a;
+  --accent-ink: #b5d1bc;
+  --accent-strong: #86ab8f;
 }
 [data-theme='dark'][data-accent='lavender'] {
   --accent: #2c2753;
@@ -199,52 +210,52 @@
   --tone-bar: #7a839c;
   --tone-line: #cfd4e1;
 }
-/* Nada gelap: sedikit warna batang di atas biru malam permukaan, agar kartu menyatu dengan latar. */
+/* Nada gelap: sedikit warna batang di atas permukaan malam yang hangat, agar kartu menyatu. */
 [data-theme='dark'] [data-tone='rose'],
 [data-theme='dark'][data-tone='rose'] {
-  --tone: #3d2b3c;
+  --tone: #402c2f;
   --tone-ink: #ffc0ce;
   --tone-bar: #f07a97;
   --tone-line: #5a2c3b;
 }
 [data-theme='dark'] [data-tone='peach'],
 [data-theme='dark'][data-tone='peach'] {
-  --tone: #3e3130;
+  --tone: #413222;
   --tone-ink: #ffcfa6;
   --tone-bar: #f39a52;
   --tone-line: #5a3d26;
 }
 [data-theme='dark'] [data-tone='sky'],
 [data-theme='dark'][data-tone='sky'] {
-  --tone: #25324c;
+  --tone: #28333f;
   --tone-ink: #b5d5fb;
   --tone-bar: #6aa3ef;
   --tone-line: #29446b;
 }
 [data-theme='dark'] [data-tone='lavender'],
 [data-theme='dark'][data-tone='lavender'] {
-  --tone: #2d2d4d;
+  --tone: #302e40;
   --tone-ink: #d0c7ff;
   --tone-bar: #9583f5;
   --tone-line: #403874;
 }
 [data-theme='dark'] [data-tone='mint'],
 [data-theme='dark'][data-tone='mint'] {
-  --tone: #1e383a;
+  --tone: #21392d;
   --tone-ink: #9de6c2;
   --tone-bar: #43c48b;
   --tone-line: #23523f;
 }
 [data-theme='dark'] [data-tone='lemon'],
 [data-theme='dark'][data-tone='lemon'] {
-  --tone: #3b3629;
+  --tone: #3e371c;
   --tone-ink: #f4d77c;
   --tone-bar: #e4b52d;
   --tone-line: #54461c;
 }
 [data-theme='dark'] [data-tone='slate'],
 [data-theme='dark'][data-tone='slate'] {
-  --tone: #232838;
+  --tone: #262825;
   --tone-ink: #c9cfe0;
   --tone-bar: #8e97b2;
   --tone-line: #353c52;
@@ -623,6 +634,52 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+/* Halaman PIN: titik angka meletup masuk, getar saat salah lalu titik rontok, kursor berkedip. */
+/* Cincin dan setengah donat progres terisi dari kosong saat muncul. */
+@keyframes ring-fill {
+  from {
+    stroke-dashoffset: var(--ring-length);
+  }
+}
+/* Rel navigasi masuk dari kiri saat aplikasi dibuka. */
+@keyframes rail-in {
+  from {
+    opacity: 0;
+    transform: translateX(-18px) scaleY(0.96);
+  }
+}
+@keyframes pin-dot {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.4);
+  }
+}
+@keyframes pin-drop {
+  to {
+    opacity: 0;
+    transform: translateY(14px) rotate(25deg);
+  }
+}
+@keyframes pin-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-9px);
+  }
+  40%,
+  80% {
+    transform: translateX(9px);
+  }
+}
+@keyframes pin-caret {
+  50% {
+    opacity: 0;
   }
 }
 

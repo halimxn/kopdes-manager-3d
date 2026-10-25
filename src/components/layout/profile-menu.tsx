@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { DropdownMenu } from 'radix-ui';
-import { ChevronsUpDown, LockKeyhole, Settings } from 'lucide-react';
+import { LockKeyhole, Settings } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 import { api, resetAuthNavigation } from '@/lib/client';
 import { useLoadedWorkspace, organizationInfo } from '@/features/workspace/use-loaded-workspace';
@@ -17,23 +17,12 @@ export function ProfileMenu({ compact }: { compact?: boolean }) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         className={cn(
-          'flex w-full items-center gap-3 rounded-2xl text-left transition hover:bg-surface-2',
-          compact
-            ? 'bg-surface p-2 shadow-card max-lg:justify-center max-lg:bg-transparent max-lg:shadow-none'
-            : 'p-0',
+          'grid place-items-center rounded-full transition hover:ring-4 hover:ring-surface-3 active:scale-95',
+          'size-11',
         )}
         aria-label="Profil dan tampilan"
       >
-        <Avatar name={name} className={compact ? 'size-10 ring-0' : 'size-11 ring-0'} />
-        {compact && (
-          <>
-            <span className="min-w-0 flex-1 max-lg:hidden">
-              <span className="block truncate text-sm font-bold">{name}</span>
-              <span className="block text-xs text-ink-3">Manajer koperasi</span>
-            </span>
-            <ChevronsUpDown className="size-4 text-ink-3 max-lg:hidden" />
-          </>
-        )}
+        <Avatar name={name} className="size-10 ring-0" />
       </DropdownMenu.Trigger>
       <MenuContent
         side={compact ? 'right' : 'bottom'}

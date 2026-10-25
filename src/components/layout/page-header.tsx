@@ -6,7 +6,7 @@ export function HeaderDivider() {
 }
 
 /**
- * Kepala halaman berupa bilah putih seperti acuan TaskTrack: judul (satu-satunya h1) dan ringkasan
+ * Kepala halaman langsung di atas latar (acuan dashboard 25 Okt): judul (satu-satunya h1) dan ringkasan
  * di kiri, bagian tambahan dipisah garis tegak, aksi utama di kanan.
  */
 export function PageHeader({
@@ -21,10 +21,10 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-3 rounded-[var(--radius-card)] lg:gap-x-6 bg-surface px-4 py-3.5 shadow-card ring-1 ring-line/60 md:px-5 md:py-4">
+    <div className="flex animate-[item-in_0.4s_var(--ease-out)] flex-wrap items-center gap-x-3 gap-y-3 px-1 py-1 lg:gap-x-6">
       {/* Judul minimal 11rem: bila aksi tidak muat, aksi turun ke baris berikut, judul tidak terjepit. */}
       <div className="min-w-44 flex-1 lg:flex-none">
-        <h1 className="text-[22px] leading-tight font-extrabold tracking-tight text-ink md:text-[24px]">
+        <h1 className="text-[24px] leading-tight font-extrabold tracking-tight text-ink md:text-[28px]">
           {title}
         </h1>
         {subtitle && <p className="text-[13px] font-semibold text-ink-3">{subtitle}</p>}

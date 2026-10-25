@@ -104,3 +104,82 @@ export function Bar({
     </div>
   );
 }
+
+/**
+ * Cincin persen (kartu proyek, acuan dashboard): busur warna nada induk yang terisi saat muncul,
+ * angka persen di tengah.
+ */
+export function Ring({
+  value,
+  size = 44,
+  label,
+  className,
+}: {
+  value: number;
+  size?: number;
+  label?: string;
+  className?: string;
+}) {
+  const r = 16;
+  const length = 2 * Math.PI * r;
+  const percent = Math.max(0, Math.min(100, Math.round(value)));
+  return (
+    <span
+      role="img"
+      aria-label={label ?? `${percent}%`}
+      className={cn('relative grid shrink-0 place-items-center', className)}
+      style={{ width: size, height: size }}
+    >
+      <svg viewBox="0 0 40 40" className="absolute inset-0 -rotate-90" aria-hidden="true">
+        <circle cx="20" cy="20" r={r} fill="none" strokeWidth="3.5" className="stroke-line" />
+        <circle
+          cx="20"
+          cy="20"
+          r={r}
+          fill="none"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeDasharray={length}
+          strokeDashoffset={length * (1 - percent / 100)}
+          className="animate-[ring-fill_0.9s_var(--ease-out)_backwards] stroke-[var(--tone-bar,var(--accent-strong))]"
+          style={{ ['--ring-length' as string]: `${length}` }}
+        />
+      </svg>
+      <span className="tabular relative text-[11px] font-extrabold text-ink">{percent}%</span>
+    </span>
+  );
+}
+
+/** Setengah donat (acuan "69% of target"): busur atas terisi sesuai persen, angka di bawahnya. */
+export function HalfDonut({ value, label }: { value: number; label: string }) {
+  const r = 52;
+  const length = Math.PI * r;
+  const percent = Math.max(0, Math.min(100, Math.round(value)));
+  return (
+    <span
+      role="img"
+      aria-label={`${label}: ${percent}%`}
+      className="relative block w-full max-w-[220px]"
+    >
+      <svg viewBox="0 0 120 66" className="block w-full" aria-hidden="true">
+        <path
+          d="M8 60a52 52 0 0 1 104 0"
+          fill="none"
+          strokeWidth="12"
+          strokeLinecap="round"
+          className="stroke-surface-3"
+        />
+        <path
+          d="M8 60a52 52 0 0 1 104 0"
+          fill="none"
+          strokeWidth="12"
+          strokeLinecap="round"
+          strokeDasharray={length}
+          strokeDashoffset={length * (1 - percent / 100)}
+          className="animate-[ring-fill_1.1s_var(--ease-out)_0.15s_backwards] stroke-accent-strong"
+          style={{ ['--ring-length' as string]: `${length}` }}
+        />
+      </svg>
+    </span>
+  );
+}

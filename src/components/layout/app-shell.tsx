@@ -114,41 +114,47 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <MotionConfig reducedMotion="user">
         <ConfirmProvider>
           <div className="flex min-h-dvh">
-            <Suspense fallback={<div className="hidden w-[84px] md:block lg:w-[264px]" />}>
+            <Suspense fallback={<div className="hidden w-[80px] md:block" />}>
               <Sidebar />
             </Suspense>
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-canvas/90 px-4 py-3 backdrop-blur-md md:px-8 md:py-4">
+              <header className="sticky top-0 z-30 flex items-center gap-3 bg-canvas/85 px-4 py-3 backdrop-blur-md md:px-6 md:py-4">
                 <div className="md:hidden">
                   <ProfileMenu />
                 </div>
-                <Greeting className="flex min-w-0 max-md:flex-1 md:max-lg:hidden" />
+                <Greeting className="flex min-w-0 flex-1" />
                 <button
                   type="button"
                   onClick={() => setPalette(true)}
-                  className="group hidden h-12 min-w-0 items-center gap-3 rounded-2xl bg-surface px-4 text-sm font-semibold text-ink-3 shadow-card ring-1 ring-transparent transition hover:text-ink-2 hover:ring-line-strong md:flex md:w-[min(34rem,40vw)] lg:mx-auto"
+                  className="group hidden h-11 min-w-0 items-center gap-2 rounded-full bg-surface pr-1.5 pl-4 text-sm font-semibold text-ink-3 shadow-card ring-1 ring-line/70 transition hover:text-ink-2 hover:ring-line-strong md:flex md:w-[min(26rem,36vw)]"
                   aria-label="Cari atau buka (Ctrl K)"
                 >
-                  <Search className="size-5 shrink-0 text-ink-2 transition-colors group-hover:text-accent-strong" />
-                  <span className="truncate">Cari tugas, catatan, atau menu</span>
-                  <span className="ml-auto flex shrink-0 items-center gap-1" aria-hidden="true">
+                  <span className="truncate">Cari tugas, catatan, atau menu…</span>
+                  <span
+                    className="ml-auto flex shrink-0 items-center gap-1 max-lg:hidden"
+                    aria-hidden="true"
+                  >
                     <Kbd>Ctrl</Kbd>
                     <Kbd>K</Kbd>
                   </span>
+                  {/* Tombol bulat gelap seperti kotak cari acuan. */}
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-action text-on-action transition-transform duration-200 group-hover:scale-105">
+                    <Search className="size-4" />
+                  </span>
                 </button>
-                <div className="flex items-center gap-3 md:max-lg:ml-auto">
-                  <div className="flex items-center gap-1 rounded-full bg-surface p-1 shadow-card">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 [&>button]:shadow-card [&>button]:ring-1 [&>button]:ring-line/70">
                     <button
                       type="button"
                       onClick={() => setPalette(true)}
                       aria-label="Cari"
-                      className="grid size-10 place-items-center rounded-full text-ink transition hover:bg-surface-2 md:hidden"
+                      className="grid size-10 place-items-center rounded-full bg-surface text-ink transition hover:bg-surface-2 md:hidden"
                     >
                       <Search className="size-5" />
                     </button>
                     <NotificationBell />
                     <Popover.Root open={quick} onOpenChange={setQuick}>
-                      <Popover.Trigger className="hidden h-10 items-center gap-1.5 rounded-full bg-action pr-4 pl-3 text-sm font-bold text-on-action transition hover:bg-action-hover active:scale-[0.97] md:inline-flex">
+                      <Popover.Trigger className="hidden h-11 items-center gap-1.5 rounded-full bg-action pr-4 pl-3 text-sm font-bold text-on-action shadow-[0_10px_20px_-10px_var(--action)] transition hover:bg-action-hover active:scale-[0.97] md:inline-flex">
                         <Plus className="size-[18px]" strokeWidth={2.6} />
                         Tambah
                       </Popover.Trigger>
@@ -157,12 +163,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       </PopoverContent>
                     </Popover.Root>
                   </div>
-                  <div className="hidden lg:block">
-                    <ProfileMenu />
-                  </div>
                 </div>
               </header>
-              <main id="main" className="flex-1 px-4 pt-4 pb-32 md:px-8 md:pt-6 md:pb-12">
+              <main id="main" className="flex-1 px-4 pt-2 pb-32 md:px-6 md:pt-2 md:pb-10">
                 {children}
               </main>
             </div>

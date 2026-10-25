@@ -1,6 +1,6 @@
 # Tampilan
 
-Gaya yang berlaku sekarang (arahan pemilik 23 Oktober 2026) mengacu pada desain **TaskTrack** di Dribbble: cangkang putih bersih, kartu pastel penuh, label pil bergaris, progres bersegmen, avatar bertumpuk. Ini bukan aturan permanen. Mengganti tampilan cukup dengan mengubah token; komponen tidak boleh berisi warna mentah.
+Gaya yang berlaku sekarang (arahan pemilik 25 Oktober 2026) mengikuti acuan video dashboard: latar batu hangat, kartu putih bersudut besar, aksen hijau sage, tombol hitam kebiruan, rel navigasi kapsul melayang, dan gerak yang mengalir. Kartu pastel per proyek (TaskTrack) tetap dipakai untuk warna proyek. Ini bukan aturan permanen. Mengganti tampilan cukup dengan mengubah token; komponen tidak boleh berisi warna mentah.
 
 ## Aturan tetap
 
@@ -17,13 +17,13 @@ Gaya yang berlaku sekarang (arahan pemilik 23 Oktober 2026) mengacu pada desain 
 |---|---|---|
 | Permukaan | `canvas`, `surface`, `surface-2`, `surface-3`, `line`, `line-strong` | latar, kartu, garis |
 | Teks | `ink`, `ink-2`, `ink-3` | utama, kedua, keterangan (kontras ≥ 4.5:1) |
-| Aksi | `action`, `action-hover`, `on-action` | tombol utama dan tombol tambah HP: biru tua kehitaman di tema terang, biru tua lebih terang di tema gelap |
+| Aksi | `action`, `action-hover`, `on-action` | tombol utama, menu aktif di rel, dan tombol tambah HP: hitam kebiruan di tema terang, sage tua di tema gelap |
 | Logo | `brand`, `on-brand` | tanda Kopdes (ubin koral) dan titik pengingat |
-| Sorotan | `accent`, `accent-ink`, `accent-strong` | menu aktif, tab, hari terpilih, fokus; 5 pilihan pengguna |
+| Sorotan | `accent`, `accent-ink`, `accent-strong` | tab, fokus, cincin progres; bawaan sage, 6 pilihan pengguna (sage, lavender, langit, mint, peach, mawar) |
 | Status | `plan`, `doing`, `done`, `late`, `warn` (+ `-ink`) | rencana, dikerjakan, selesai, terlambat, perhatian |
 | Nada kartu | `tone`, `tone-ink`, `tone-bar`, `tone-line` | dipasang lewat `data-tone="rose\|peach\|sky\|lavender\|mint\|lemon\|slate"` |
 | Kolom isian | `field`, `field-line` | latar dan garis kolom yang terlihat saat diam; saat diketik menyala warna sorotan |
-| Contoh sorotan | `swatch-lavender`, `swatch-sky`, `swatch-mint`, `swatch-peach`, `swatch-rose` | bulatan pemilih warna di Pengaturan |
+| Contoh sorotan | `swatch-sage`, `swatch-lavender`, `swatch-sky`, `swatch-mint`, `swatch-peach`, `swatch-rose` | bulatan pemilih warna di Pengaturan |
 
 - Tema terang dan gelap: `data-theme` di `<html>`, pilihan tersimpan di `localStorage` (`kopdes-theme`, `kopdes-accent`), diterapkan sebelum halaman tampil.
 - Warna kartu tugas dan proyek mengikuti **proyek** (`lib/tones.ts`, kolom `color` proyek). Kartu catatan lain mengikuti artinya: kas masuk mint, keluar mawar; stok habis mawar, menipis peach (`features/records/card-tone.ts`).
@@ -53,11 +53,11 @@ Gaya yang berlaku sekarang (arahan pemilik 23 Oktober 2026) mengacu pada desain 
 
 ## Kerangka
 
-- Laptop (≥ 1024 px): sidebar 264 px dengan grup Kerja, Catatan, Usaha, Koperasi, lalu proyek aktif dan profil. Menu utama muat utuh di layar setinggi 900 px; di layar lebih pendek menu bergulir dengan bilah gulir tipis yang terlihat.
-- Tablet (768–1023 px): rel ikon 84 px dengan label kecil; semua menu muat di layar 1024 px.
+- Tablet dan laptop (≥ 768 px): rel kapsul putih 68 px melayang di kiri. Ikon berkelompok (Kerja, Catatan, Usaha, Koperasi) dipisah garis tipis; menu aktif berupa lingkaran gelap yang meluncur; nama menu muncul sebagai label melayang. Dunia 3D, Pengaturan, Bantuan, dan avatar profil di bawah.
 - HP (< 768 px): bilah atas ringkas + navigasi bawah melayang. Item aktif mengembang menjadi kapsul pastel berlabel yang meluncur; tombol tambah biru tua (warna aksi) di tengah membuka menu tambah cepat. Bilah bawah minggir saat menggulir ke bawah dan muncul lagi saat menggulir ke atas (`lib/use-hide-on-scroll.ts`), agar tidak menutupi isi. Saringan Tugas menjadi satu baris geser.
-- Bilah atas: sapaan dan nama manajer di kiri, cari (Ctrl K) di tengah, lalu satu kapsul putih berisi lonceng dan tombol Tambah, lalu avatar. Di HP: avatar + sapaan, kapsul berisi ikon cari dan lonceng.
-- Menu aktif di sidebar: kapsul putih berbayang dengan ikon berwarna sorotan.
+- Bilah atas tanpa garis: sapaan di kiri; kotak cari berbentuk pil dengan tombol bulat gelap (Ctrl K), lonceng bulat putih, dan tombol Tambah hitam di kanan. Kepala halaman (judul + ringkasan) langsung di atas latar, bukan bilah putih.
+- Beranda berupa bento: empat ubin angka putih (angka menghitung naik), rutin hari ini, progres tugas setengah donat, tugas cepat, tenggat dekat, Hari ini, Perlu perhatian, dan proyek berjalan sebagai kartu dengan cincin persen.
+- Halaman PIN: satu kartu di tengah. Kotak per angka yang terisi titik, cincin gembok mengikuti jumlah angka, tombol terisi bertahap; berhasil = hijau bercentang, salah = kartu bergetar dan titik rontok.
 
 ## Gerak
 

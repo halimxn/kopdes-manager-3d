@@ -14,6 +14,8 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 - Mode demo diperiksa di peramban: Beranda, Tugas, dan Dunia 3D (lebar 375, 768/900, 1200, 1440, tema gelap).
 - **Poles tampilan menyeluruh** (24 Okt): kolom isian terlihat jelas dan menyala saat diketik; palet Ctrl K dan pencarian Dunia 3D menandai jenis setiap hasil (Tugas, Proyek, Agenda, Menu, Perintah) dan menyorot kata yang dicari; semua menu dan popover memakai satu komponen (`components/ui/menu.tsx`) dengan gerak pegas; laci di HP bisa ditarik turun untuk menutup; sidebar dan rel tablet muat tanpa terpotong; toast tanpa `!important`; gerak berkurang dihormati. Kolom di laci tugas dan formulir (tanggal, jam, penanggung jawab, referensi) berikon dan rapi; tombol aksi panel Dunia 3D selebar panel. Atur rutin harian berupa daftar ringkas (jam, nama, ringkasan hari: Setiap hari/Hari tertentu); laporan harian tersalin dengan judul tebal, ringkasan angka, dan daftar bernomor; tema hanya diatur di Pengaturan. Data halaman disimpan di perangkat (IndexedDB) dan hanya diminta ulang bila penanda versi server (`/api/version`) berubah; dihapus saat aplikasi dikunci. Rincian di [TAMPILAN](TAMPILAN.md).
 
+- **Tampilan baru mengikuti acuan video (25 Okt)**: latar batu hangat, aksen sage, tombol hitam kebiruan, rel navigasi kapsul, cari berbentuk pil, Beranda bento, halaman PIN bergaya kartu verifikasi kode. Asisten AI acuan sengaja tidak dibuat (layanan berbayar).
+
 ## Langkah berikut
 
 1. Pemilik meninjau tampilan di `npm run dev:demo -- -p 3200` (HP, tablet, laptop) dan memberi koreksi.
@@ -25,6 +27,7 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 
 Daftar lengkap ada di [PRODUK](PRODUK.md). Yang paling baru:
 
+- 25 Okt 2026: tampilan mengikuti acuan video dashboard (warna acuan: batu hangat, sage, tombol hitam kebiruan); perombakan kerangka + Beranda + halaman PIN; asisten AI dilewati dulu (tanpa layanan berbayar).
 - 23–24 Okt 2026: satu gaya kode untuk seluruh proyek, termasuk Dunia 3D (bahasa Inggris, Tailwind, token warna aplikasi); kode lama dirapikan sebelum fitur baru.
 - 23 Okt 2026: acuan tampilan TaskTrack; warna kartu per proyek; hiasan lengkung halus; navigasi bawah HP putih dengan kapsul pastel; semua modal formulir diganti laci/lembar bawah; Beranda mendahulukan rutin; rutin di database dengan hari aktif per rutin; aksi biru tua; huruf Urbanist; langsung dibangun di aplikasi (prototipe HTML dihapus).
 - 23 Okt 2026: tanpa gradasi di mana pun.
