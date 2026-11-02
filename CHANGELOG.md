@@ -6,7 +6,7 @@ Hanya perubahan besar (fitur, fase, migrasi). Entri baru di atas. Format dan atu
 
 - Alasan: arahan pemilik untuk menulis ulang seluruh desain mengikuti tiga video: acuan desain (Solvik), konsep dashboard (Kinlo), dan konsep animasi (Crew). Desain sebelumnya disimpan di cabang `arsip/desain-oktober`.
 - Perubahan:
-  - Tema gelap menjadi bawaan: latar warna buram, panel hampir hitam, kartu biru batu/zaitun/karat per proyek, aksi hijau limau. Tema terang mengikuti Kinlo: latar aqua dan persik, aksi teal. Semua perangkat mulai dari tema gelap satu kali, lalu bebas mengganti. Gradasi hanya di latar halaman.
+  - Tema gelap menjadi bawaan: latar warna buram, panel hampir hitam, kartu warna redup per proyek, aksi hijau limau. Warna kuat hanya dua: limau untuk aksi dan progres, koral khusus terlambat (arahan pemilik: hindari tabrakan warna). Tema terang mengikuti Kinlo: latar aqua dan persik, aksi teal. Semua perangkat mulai dari tema gelap satu kali, lalu bebas mengganti. Gradasi hanya di latar halaman.
   - Kerangka baru: pil kelompok menu di atas yang meregang saat pindah, rel ikon halaman di kiri, tombol tema di rel dengan sapuan melingkar.
   - Beranda: sapaan besar dengan angka berikon, konstelasi kerja dari data asli (bisa diputar, titik membuka tugas), kartu progres gelap, grafik tugas selesai per minggu. Di HP urutannya rutin, tenggat, konstelasi.
   - Angka ringkasan sebaris dengan judul halaman; kartu tugas dan catatan baru; kartu orang di Anggota, Kontak, dan Tim (baris ringkas di HP); grafik uang masuk dan keluar per bulan di Kas.

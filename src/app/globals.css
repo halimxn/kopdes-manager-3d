@@ -121,16 +121,16 @@
 
 [data-theme='dark'] {
   --canvas: #15161a;
-  /* Latar buram biru batu di atas, karat di tengah bawah, zaitun di kedua sisi bawah. Titik paling
-     terang dijaga agar teks keterangan --ink-3 yang langsung di atas latar tetap ≥ 4,5:1. */
+  /* Latar buram biru batu di atas, turun ke abu hangat yang redup: warna tidak melawan isi. Titik
+     paling terang dijaga agar teks keterangan --ink-3 yang langsung di atas latar tetap ≥ 4,5:1. */
   --ground:
     radial-gradient(70% 58% at 8% 0%, #3f4f5a 0%, transparent 76%),
     radial-gradient(56% 50% at 90% 2%, #424b53 0%, transparent 76%),
-    radial-gradient(66% 56% at 52% 104%, #5a3524 0%, transparent 74%),
-    radial-gradient(50% 66% at 0% 78%, #434529 0%, transparent 76%),
-    radial-gradient(48% 62% at 100% 84%, #3a4122 0%, transparent 76%), #24262a;
-  --surface: rgb(23 22 21 / 0.68);
-  --surface-solid: #1c1c1d;
+    radial-gradient(66% 56% at 52% 104%, #463a33 0%, transparent 74%),
+    radial-gradient(50% 66% at 0% 78%, #3b3e34 0%, transparent 76%),
+    radial-gradient(48% 62% at 100% 84%, #363a31 0%, transparent 76%), #24262a;
+  --surface: rgb(22 23 25 / 0.7);
+  --surface-solid: #1c1d1f;
   --surface-2: rgb(255 255 255 / 0.055);
   --surface-3: rgb(255 255 255 / 0.11);
   --line: rgb(255 255 255 / 0.09);
@@ -143,10 +143,11 @@
   --on-action: #182009;
   --brand: #c2ec4a;
   --on-brand: #182009;
-  --deep: #16202b;
+  /* Tema gelap: semua panel satu warna, tidak ada panel biru di samping panel hitam. */
+  --deep: rgb(22 23 25 / 0.7);
   --deep-2: rgb(255 255 255 / 0.07);
   --on-deep: #f3f1ea;
-  --on-deep-2: #b4bcc4;
+  --on-deep-2: #c2bfb6;
   --plan: #2f2d45;
   --plan-ink: #cfc7ff;
   --doing: #223244;
@@ -210,98 +211,101 @@
   --surface: var(--surface-solid);
 }
 
-/* Nada kartu per proyek: isi kartu, teks, batang progres, dan garis. Dipasang lewat data-tone. */
+/*
+  Nada kartu per proyek: isi kartu, teks, batang progres, dan garis. Dipasang lewat data-tone.
+  Sengaja redup dan setingkat terangnya: warna proyek hanya membedakan, tidak berebut perhatian.
+  Warna kuat disisakan untuk aksi (--action) dan terlambat (--late-bar).
+*/
 [data-tone='rose'] {
-  --tone: #fbdedf;
-  --tone-ink: #7f2233;
-  --tone-bar: #d9506b;
-  --tone-line: #f2bcc4;
+  --tone: #f5e6e6;
+  --tone-ink: #6f2b3a;
+  --tone-bar: #c96f83;
+  --tone-line: #ecd3d6;
 }
 [data-tone='peach'] {
-  --tone: #fbe0cf;
-  --tone-ink: #7c3e12;
-  --tone-bar: #e07b45;
-  --tone-line: #f1c3a6;
+  --tone: #f6e8de;
+  --tone-ink: #6f4020;
+  --tone-bar: #c98a62;
+  --tone-line: #ead3c2;
 }
 [data-tone='sky'] {
-  --tone: #d6ebef;
-  --tone-ink: #124a5a;
-  --tone-bar: #197b90;
-  --tone-line: #aed3db;
+  --tone: #dfedf0;
+  --tone-ink: #134a5a;
+  --tone-bar: #3d8a9c;
+  --tone-line: #c5dde2;
 }
 [data-tone='lavender'] {
-  --tone: #e6e2fb;
-  --tone-ink: #41349a;
-  --tone-bar: #7464de;
-  --tone-line: #c9c1f4;
+  --tone: #e9e7f4;
+  --tone-ink: #40378c;
+  --tone-bar: #8a80cf;
+  --tone-line: #d4d0ea;
 }
 [data-tone='mint'] {
-  --tone: #d6f0e2;
-  --tone-ink: #115a3d;
-  --tone-bar: #1f9d6b;
-  --tone-line: #aee0c6;
+  --tone: #e0efe6;
+  --tone-ink: #155a3f;
+  --tone-bar: #4aa37f;
+  --tone-line: #c5e0d1;
 }
 [data-tone='lemon'] {
-  --tone: #f8edc6;
-  --tone-ink: #665009;
-  --tone-bar: #c99a14;
-  --tone-line: #ebd88f;
+  --tone: #f4efdc;
+  --tone-ink: #5f4d10;
+  --tone-bar: #bda24a;
+  --tone-line: #e5dcb8;
 }
 [data-tone='slate'] {
-  --tone: #e4e9ec;
+  --tone: #e8ecee;
   --tone-ink: #36464f;
-  --tone-bar: #6c7f8a;
-  --tone-line: #cbd5da;
+  --tone-bar: #7d8d96;
+  --tone-line: #d3dadd;
 }
-/* Nada gelap: kartu berwarna seperti kartu kesepakatan acuan (biru batu, zaitun, karat, batu). */
 [data-theme='dark'] [data-tone='rose'],
 [data-theme='dark'][data-tone='rose'] {
-  --tone: #683f4a;
-  --tone-ink: #ffdbe2;
-  --tone-bar: #f39bae;
-  --tone-line: rgb(255 214 224 / 0.26);
+  --tone: #4d3f44;
+  --tone-ink: #ecd9dd;
+  --tone-bar: #d6a2ae;
+  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='peach'],
 [data-theme='dark'][data-tone='peach'] {
-  --tone: #6f4a3b;
-  --tone-ink: #ffe0cf;
-  --tone-bar: #f4a27f;
-  --tone-line: rgb(255 222 204 / 0.26);
+  --tone: #4f433c;
+  --tone-ink: #eddccf;
+  --tone-bar: #d8a98f;
+  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='sky'],
 [data-theme='dark'][data-tone='sky'] {
-  --tone: #445766;
-  --tone-ink: #d9ebfb;
-  --tone-bar: #8fbef2;
-  --tone-line: rgb(214 235 255 / 0.26);
+  --tone: #3c4853;
+  --tone-ink: #d6e3ee;
+  --tone-bar: #9dbcd8;
+  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='lavender'],
 [data-theme='dark'][data-tone='lavender'] {
-  --tone: #4f4d70;
-  --tone-ink: #e2defe;
-  --tone-bar: #b9aef5;
-  --tone-line: rgb(226 221 255 / 0.26);
+  --tone: #454452;
+  --tone-ink: #dddbee;
+  --tone-bar: #aca7df;
+  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='mint'],
 [data-theme='dark'][data-tone='mint'] {
-  --tone: #5a6a3f;
-  --tone-ink: #eef6cf;
-  --tone-bar: #c2ec4a;
-  --tone-line: rgb(236 248 196 / 0.26);
+  --tone: #454c3b;
+  --tone-ink: #e2e8cf;
+  --tone-bar: #b6cc8c;
+  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='lemon'],
 [data-theme='dark'][data-tone='lemon'] {
-  --tone: #6a5d31;
-  --tone-ink: #fbedbd;
-  --tone-bar: #f0c264;
-  --tone-line: rgb(251 236 188 / 0.26);
+  --tone: #4c4739;
+  --tone-ink: #ece4c6;
+  --tone-bar: #d6c48b;
+  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='slate'],
 [data-theme='dark'][data-tone='slate'] {
-  --tone: #5b5c57;
-  --tone-ink: #eceae3;
-  --tone-bar: #c4c2b8;
-  --tone-line: rgb(236 234 227 / 0.26);
+  --tone: #45464a;
+  --tone-ink: #e5e5e2;
+  --tone-bar: #b9bab8;
+  --tone-line: rgb(255 255 255 / 0.13);
 }
 
 @theme inline {

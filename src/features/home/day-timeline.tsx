@@ -90,7 +90,7 @@ export function DayTimeline({
       </div>
       <div
         ref={scroller}
-        className="relative max-h-[30rem] overflow-y-auto rounded-2xl"
+        className="relative max-h-[20rem] overflow-y-auto rounded-2xl"
         aria-label="Jadwal per jam"
       >
         <div className="relative" style={{ height: hours.length * HOUR }}>
@@ -174,8 +174,8 @@ export function DayTimeline({
               style={{ top: nowTop }}
               aria-label={`Sekarang ${now}`}
             >
-              <span className="size-2.5 rounded-full bg-late-ink" />
-              <span className="h-0.5 flex-1 bg-late-ink" />
+              <span className="size-2.5 rounded-full bg-accent-strong" />
+              <span className="h-0.5 flex-1 bg-accent-strong" />
             </div>
           )}
         </div>

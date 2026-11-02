@@ -292,7 +292,7 @@ export function RecordCard({
     >
       <div className="flex flex-wrap items-center gap-1.5">
         {status && (
-          <span className="rounded-full bg-tone-ink px-2.5 py-1 text-[11px] font-semibold text-tone dark:text-on-bar">
+          <span className="rounded-full bg-surface/50 px-2.5 py-1 text-[11px] font-medium text-ink">
             {status}
           </span>
         )}

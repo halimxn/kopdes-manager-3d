@@ -31,7 +31,6 @@ import { AvatarStack } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { AreaChart, StackBar } from '@/components/ui/charts';
 import { Input } from '@/components/ui/field';
-import { Pill } from '@/components/ui/pill';
 import { StatGrid, StatTile } from '@/components/ui/stat';
 import { CountUp } from '@/components/ui/count-up';
 import { ErrorState, EmptyState, Skeleton } from '@/components/ui/states';
@@ -198,13 +197,6 @@ export function HomePage() {
               value={late}
               tone="rose"
               icon={<AlarmClock />}
-              badge={
-                late > 0 ? (
-                  <Pill tone="late" className="max-sm:hidden">
-                    Perlu ditindak
-                  </Pill>
-                ) : undefined
-              }
               onClick={() => router.push('/tasks?status=terlambat')}
             />
             <StatTile
@@ -321,17 +313,17 @@ export function HomePage() {
             <StackBar
               label={`${counts.selesai} selesai, ${counts.proses} dikerjakan, ${counts.rencana} belum dikerjakan`}
               parts={[
-                { value: counts.selesai, className: 'bg-done-bar' },
-                { value: counts.proses, className: 'bg-doing-bar' },
-                { value: counts.rencana, className: 'bg-plan-bar' },
+                { value: counts.selesai, className: 'bg-action' },
+                { value: counts.proses, className: 'bg-on-deep/55' },
+                { value: counts.rencana, className: 'bg-on-deep/25' },
               ]}
             />
             <dl className="flex flex-1 flex-col justify-around text-sm">
               {(
                 [
-                  ['Selesai', counts.selesai, 'bg-done-bar', 'selesai'],
-                  ['Dikerjakan', counts.proses, 'bg-doing-bar', 'proses'],
-                  ['Belum dikerjakan', counts.rencana, 'bg-plan-bar', 'rencana'],
+                  ['Selesai', counts.selesai, 'bg-action', 'selesai'],
+                  ['Dikerjakan', counts.proses, 'bg-on-deep/55', 'proses'],
+                  ['Belum dikerjakan', counts.rencana, 'bg-on-deep/25', 'rencana'],
                   ['Terlambat', late, 'bg-late-bar', 'terlambat'],
                 ] as const
               ).map(([label, value, dot, status]) => (
@@ -372,8 +364,11 @@ export function HomePage() {
       <div className="grid gap-4 max-md:contents lg:grid-cols-12">
         <section
           aria-labelledby="done-title"
-          data-tone="peach"
-          className={cn(PANEL, 'flex flex-col gap-3 max-md:order-5 lg:col-span-7')}
+          // Garis grafik memakai warna sorotan, bukan warna yang mirip tanda terlambat.
+          className={cn(
+            PANEL,
+            'flex flex-col gap-3 [--tone-bar:var(--accent-strong)] max-md:order-5 lg:col-span-7',
+          )}
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 id="done-title" className="text-[15px] font-medium">
@@ -442,6 +437,7 @@ export function HomePage() {
                 {deadlines.slice(0, 4).map((row) => (
                   <TaskCard
                     key={row.id}
+                    compact
                     task={row}
                     ws={data}
                     refresh={refresh}
@@ -535,7 +531,9 @@ export function HomePage() {
                       <span
                         className={cn(
                           'grid size-10 shrink-0 place-items-center rounded-full',
-                          item.urgent ? 'bg-late text-late-ink' : 'bg-warn text-warn-ink',
+                          item.urgent
+                            ? 'bg-late text-late-ink'
+                            : 'bg-surface-2 text-ink-2 ring-1 ring-line',
                         )}
                       >
                         {item.urgent ? (

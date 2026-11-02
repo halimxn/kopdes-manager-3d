@@ -278,7 +278,6 @@ export function RoutinesCard({
   return (
     <section
       aria-labelledby="routines-title"
-      data-tone="mint"
       className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line"
     >
       <header className="flex flex-col gap-3 px-5 pt-5 pb-3">
@@ -328,13 +327,12 @@ export function RoutinesCard({
                   layout
                   className={cn(
                     'flex items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors',
-                    item.state === 'next' && 'bg-accent',
-                    item.state === 'missed' && 'bg-warn/60',
+                    item.state === 'next' && 'bg-surface-2 ring-1 ring-line',
                   )}
                 >
                   <span
                     className={cn(
-                      'tabular w-12 shrink-0 text-sm font-bold',
+                      'tabular w-11 shrink-0 text-sm font-normal',
                       item.done ? 'text-ink-3' : 'text-ink-2',
                     )}
                   >
@@ -347,21 +345,17 @@ export function RoutinesCard({
                   />
                   <span
                     className={cn(
-                      'min-w-0 flex-1 text-[14.5px] font-semibold',
+                      'min-w-0 flex-1 text-[14.5px] font-normal',
                       item.done ? 'text-ink-3 line-through' : 'text-ink',
                     )}
                   >
                     {String(item.routine.data.title)}
                   </span>
                   {item.state === 'next' && (
-                    <span className="shrink-0 rounded-full bg-surface px-2 py-0.5 text-[11px] font-bold text-accent-ink">
-                      Berikutnya
-                    </span>
+                    <span className="shrink-0 text-xs font-medium text-accent-ink">Berikutnya</span>
                   )}
                   {item.state === 'missed' && (
-                    <span className="shrink-0 rounded-full bg-surface px-2 py-0.5 text-[11px] font-bold text-warn-ink">
-                      Terlewat
-                    </span>
+                    <span className="shrink-0 text-xs text-ink-3">Terlewat</span>
                   )}
                 </motion.li>
               ))}

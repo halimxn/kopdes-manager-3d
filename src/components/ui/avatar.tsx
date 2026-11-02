@@ -7,7 +7,7 @@ export function Avatar({ name, className }: { name: string; className?: string }
       data-tone={personTone(name)}
       title={name}
       className={cn(
-        'inline-grid size-8 shrink-0 place-items-center rounded-full bg-tone text-[11px] font-semibold text-tone-ink ring-2 ring-canvas/70 dark:bg-tone-ink dark:text-on-bar',
+        'inline-grid size-8 shrink-0 place-items-center rounded-full bg-tone text-[11px] font-semibold text-tone-ink ring-2 ring-surface-solid dark:bg-tone-ink dark:text-on-bar dark:ring-canvas/70',
         className,
       )}
     >

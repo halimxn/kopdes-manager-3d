@@ -49,7 +49,7 @@ export function Constellation({
     [projects, tasks, date],
   );
   const [filter, setFilter] = useState<Filter>('all');
-  const panel = useRef<HTMLElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const tooltip = useRef<HTMLDivElement>(null);
   const filterRef = useRef(filter);
@@ -77,7 +77,7 @@ export function Constellation({
       late: read('--late-bar'),
       brand: read('--brand'),
       onBar: read('--on-bar'),
-      deep: read('--deep'),
+      label: read('--surface-solid'),
     };
     // Warna nada dibaca dari token agar kanvas ikut bila palet diganti.
     const toneColor: Record<string, string> = {};
@@ -309,7 +309,7 @@ export function Constellation({
         for (let step = 0; step < 8 && hits(top); step++) top = Math.min(height - 27, top + 24);
         taken.push({ left, right: left + pillWidth, top, bottom: top + 21 });
         context.globalAlpha = label.alpha * 0.94;
-        context.fillStyle = colors.deep;
+        context.fillStyle = colors.label;
         context.beginPath();
         context.roundRect(left, top, pillWidth, 21, 11);
         context.fill();
@@ -441,80 +441,80 @@ export function Constellation({
   ];
 
   return (
-    // Panel selalu bertoken gelap: titik bercahaya butuh latar malam di kedua tema.
+    // Dasar panel mengikuti tema; isinya bertoken gelap karena titik bercahaya butuh latar malam.
     <section
-      ref={panel}
-      data-theme="dark"
       aria-labelledby="constellation-title"
-      className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-deep text-on-deep ring-1 ring-line shadow-card"
+      className="h-full overflow-hidden rounded-[var(--radius-card)] bg-deep shadow-card ring-1 ring-line"
     >
-      <header className="flex flex-wrap items-start gap-x-4 gap-y-2 px-5 pt-5">
-        <div className="min-w-0 flex-1 basis-48">
-          <h2 id="constellation-title" className="text-lg font-medium">
-            Konstelasi kerja
-          </h2>
-          <p className="text-[13px] text-on-deep-2">
-            {clusters.length} proyek · {activeCount} tugas aktif · {lateCount} terlambat
-          </p>
-        </div>
-        <div role="group" aria-label="Saring peta" className="flex flex-wrap gap-1.5">
-          {filters.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              aria-pressed={filter === item.id}
-              onClick={() => setFilter(item.id)}
-              className={cn(
-                'flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium ring-1 ring-line-strong transition-colors',
-                filter === item.id ? 'bg-on-deep text-deep' : 'text-on-deep hover:bg-deep-2',
-              )}
-            >
-              {item.label}
-              <span className="tabular opacity-70">{item.count}</span>
-            </button>
-          ))}
-        </div>
-      </header>
-      {clusters.length ? (
-        <div className="relative min-h-[21rem] flex-1">
-          <canvas
-            ref={canvas}
-            role="img"
-            aria-label={`Peta ${clusters.length} proyek dengan ${activeCount} tugas aktif, ${lateCount} di antaranya terlambat. Daftar lengkapnya ada di halaman Tugas.`}
-            className="absolute inset-0 size-full cursor-grab touch-pan-y"
-          />
-          <div
-            ref={tooltip}
-            hidden
-            className="pointer-events-none absolute top-0 left-0 z-10 max-w-64 rounded-2xl bg-surface-solid px-3 py-2 text-ink shadow-float ring-1 ring-line-strong"
-          >
-            <p className="line-clamp-2 text-[13px] leading-snug font-medium" />
-            <p className="truncate text-xs text-ink-2" />
+      <div ref={panel} data-theme="dark" className="flex h-full flex-col text-on-deep">
+        <header className="flex flex-wrap items-start gap-x-4 gap-y-2 px-5 pt-5">
+          <div className="min-w-0 flex-1 basis-48">
+            <h2 id="constellation-title" className="text-lg font-medium">
+              Konstelasi kerja
+            </h2>
+            <p className="text-[13px] text-on-deep-2">
+              {clusters.length} proyek · {activeCount} tugas aktif · {lateCount} terlambat
+            </p>
           </div>
-        </div>
-      ) : (
-        <p className="m-auto max-w-xs px-5 py-8 text-center text-sm text-on-deep-2">
-          Belum ada tugas aktif untuk digambar. Tugas baru akan muncul di sini sebagai titik di
-          sekitar proyeknya.
-        </p>
-      )}
-      <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 pt-1 pb-4 text-xs text-on-deep-2">
-        <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-full bg-tone-bar" data-tone="sky" aria-hidden="true" />
-          Aktif, warna proyek
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-full bg-late-bar" aria-hidden="true" />
-          Terlambat
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-full ring-1 ring-on-deep-2" aria-hidden="true" />
-          Selesai 30 hari
-        </span>
-        <span className="w-full xl:ml-auto xl:w-auto">
-          Geser untuk memutar, pilih titik untuk membuka
-        </span>
-      </footer>
+          <div role="group" aria-label="Saring peta" className="flex flex-wrap gap-1.5">
+            {filters.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={filter === item.id}
+                onClick={() => setFilter(item.id)}
+                className={cn(
+                  'flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium ring-1 ring-line-strong transition-colors',
+                  filter === item.id ? 'bg-on-deep text-on-bar' : 'text-on-deep hover:bg-deep-2',
+                )}
+              >
+                {item.label}
+                <span className="tabular opacity-70">{item.count}</span>
+              </button>
+            ))}
+          </div>
+        </header>
+        {clusters.length ? (
+          <div className="relative min-h-[21rem] flex-1">
+            <canvas
+              ref={canvas}
+              role="img"
+              aria-label={`Peta ${clusters.length} proyek dengan ${activeCount} tugas aktif, ${lateCount} di antaranya terlambat. Daftar lengkapnya ada di halaman Tugas.`}
+              className="absolute inset-0 size-full cursor-grab touch-pan-y"
+            />
+            <div
+              ref={tooltip}
+              hidden
+              className="pointer-events-none absolute top-0 left-0 z-10 max-w-64 rounded-2xl bg-surface-solid px-3 py-2 text-ink shadow-float ring-1 ring-line-strong"
+            >
+              <p className="line-clamp-2 text-[13px] leading-snug font-medium" />
+              <p className="truncate text-xs text-ink-2" />
+            </div>
+          </div>
+        ) : (
+          <p className="m-auto max-w-xs px-5 py-8 text-center text-sm text-on-deep-2">
+            Belum ada tugas aktif untuk digambar. Tugas baru akan muncul di sini sebagai titik di
+            sekitar proyeknya.
+          </p>
+        )}
+        <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 pt-1 pb-4 text-xs text-on-deep-2">
+          <span className="flex items-center gap-1.5">
+            <span className="size-2 rounded-full bg-tone-bar" data-tone="sky" aria-hidden="true" />
+            Aktif, warna proyek
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="size-2 rounded-full bg-late-bar" aria-hidden="true" />
+            Terlambat
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="size-2 rounded-full ring-1 ring-on-deep-2" aria-hidden="true" />
+            Selesai 30 hari
+          </span>
+          <span className="w-full xl:ml-auto xl:w-auto">
+            Geser untuk memutar, pilih titik untuk membuka
+          </span>
+        </footer>
+      </div>
     </section>
   );
 }

@@ -114,8 +114,8 @@ export const ENTITY_VIEWS: Partial<Record<Entity, View>> = {
               <BarChart
                 rows={months}
                 series={[
-                  { label: 'Uang masuk', className: 'fill-done-bar' },
-                  { label: 'Uang keluar', className: 'fill-late-bar' },
+                  { label: 'Uang masuk', className: 'fill-accent-strong' },
+                  { label: 'Uang keluar', className: 'fill-ink-3' },
                 ]}
                 format={(value) => (value ? short(value).replace(/^Rp\s*/, '') : '0')}
                 label={`Uang masuk dan keluar tercatat enam bulan terakhir. Total masuk ${short(cash.incoming)}, keluar ${short(cash.outgoing)}.`}

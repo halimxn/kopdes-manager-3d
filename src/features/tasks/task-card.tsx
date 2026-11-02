@@ -5,6 +5,7 @@ import {
   CalendarClock,
   CalendarPlus,
   Clock,
+  Flag,
   Ellipsis,
   ListChecks,
   MessageCircle,
@@ -50,6 +51,7 @@ export function TaskCard({
   className,
   draggable,
   style,
+  compact,
 }: {
   task: Item;
   ws: Workspace;
@@ -58,6 +60,8 @@ export function TaskCard({
   className?: string;
   draggable?: boolean;
   style?: React.CSSProperties;
+  /** Tanpa catatan singkat, untuk daftar pendek seperti Tenggat dekat di Beranda. */
+  compact?: boolean;
 }) {
   const project = ws.workstreams?.find((row) => row.id === task.data.workstream_id);
   const subtasks = (task.data.subtasks as { done: boolean }[]) || [];
@@ -104,10 +108,9 @@ export function TaskCard({
               <span className="truncate">{due.text}</span>
             </span>
           )}
-          {['tinggi', 'mendesak'].includes(priority) && (
-            <Pill tone={priority === 'mendesak' ? 'late' : 'warn'}>
-              {priority === 'mendesak' ? 'Mendesak' : 'Tinggi'}
-            </Pill>
+          {priority === 'mendesak' && <Pill tone="warn">Mendesak</Pill>}
+          {priority === 'tinggi' && (
+            <Flag className="size-3.5 shrink-0" role="img" aria-label="Prioritas tinggi" />
           )}
           {Boolean(task.data.recurrence) && task.data.recurrence !== 'tidak' && (
             <Repeat className="size-3.5 shrink-0" aria-label="Berulang" />
@@ -160,7 +163,7 @@ export function TaskCard({
       <p className="-mt-1 truncate text-[13px]">
         {project ? String(project.data.title) : 'Tanpa proyek'}
       </p>
-      {note && <p className="line-clamp-1 text-[12px]">{note}</p>}
+      {note && !compact && <p className="line-clamp-1 text-[12px]">{note}</p>}
       {subtasks.length > 0 && (
         <div className="mt-1 flex flex-col gap-1.5">
           <span className="flex justify-between text-[12px] font-medium">

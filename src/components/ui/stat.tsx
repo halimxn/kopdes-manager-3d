@@ -7,7 +7,8 @@ import { CountUp } from './count-up';
 
 /**
  * Angka ringkasan langsung di atas latar (acuan Solvik): ikon dalam lingkaran, angka yang menghitung
- * naik, dan label di bawahnya. Catatan kecil menjelaskan arti angka; `badge` untuk lencana di sampingnya.
+ * naik, dan label di bawahnya. Ikon satu warna agar deretan angka tenang; hanya nada `rose` (yang perlu
+ * diperhatikan) berwarna koral. Catatan kecil menjelaskan arti angka.
  */
 export function StatTile({
   label,
@@ -39,7 +40,6 @@ export function StatTile({
       type={onClick ? 'button' : undefined}
       onClick={onClick}
       aria-pressed={onClick ? active : undefined}
-      data-tone={tone}
       className={cn(
         'flex min-w-0 items-center gap-3 rounded-[1.75rem] text-left',
         onClick &&
@@ -47,8 +47,13 @@ export function StatTile({
         className,
       )}
     >
-      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 text-tone-bar ring-1 ring-line [&_svg]:size-[18px]">
-        {icon ?? <span className="size-2.5 rounded-full bg-tone-bar" />}
+      <span
+        className={cn(
+          'grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 ring-1 ring-line [&_svg]:size-[18px]',
+          tone === 'rose' ? 'text-late-bar' : 'text-ink-2',
+        )}
+      >
+        {icon ?? <span className="size-2.5 rounded-full bg-current" />}
       </span>
       <span className="min-w-0">
         <span className="flex flex-wrap items-center gap-x-2">

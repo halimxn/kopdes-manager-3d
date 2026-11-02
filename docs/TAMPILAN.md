@@ -8,6 +8,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 
 - Semua warna di blok token `src/app/globals.css`. Komponen memakai kelas token: `bg-surface`, `text-ink-2`, `bg-action`, `bg-tone`, `bg-deep`, dan seterusnya.
 - **Gradasi hanya di latar halaman** (token `--ground`, keputusan pemilik 2 Nov 2026). Kartu, tombol, dan grafik tetap warna solid; isian grafik dan cahaya titik memakai warna tembus datar, bukan gradasi. Titik paling terang latar gelap dijaga agar `ink-3` tetap ≥ 4,5:1 (saat ini 4,62:1); ukur ulang bila `--ground` diubah.
+- **Warna kuat hanya dua:** warna aksi (limau di tema gelap, teal di tema terang) untuk aksi dan progres, koral (`late-bar`) khusus terlambat. Nada kartu sengaja redup dan setingkat terangnya; ikon angka satu warna; status lain cukup kata atau lencana lembut. Semua panel Beranda satu warna (arahan pemilik 2 Nov 2026: hindari tabrakan warna).
 - Tidak ada `!important` kecuali pengaturan `prefers-reduced-motion` dan cetak.
 - Satu `h1` per halaman (`PageHeader` atau kepala detail).
 - Area sentuh minimal 44 px di HP; fokus keyboard selalu terlihat; status ditandai teks, bukan warna saja.
@@ -25,8 +26,8 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 | Aksi | `action`, `action-hover`, `on-action` | tombol utama dan menu aktif di rel: limau di tema gelap, teal di tema terang |
 | Logo | `brand`, `on-brand` | tanda Kopdes, warnanya sama dengan aksi |
 | Sorotan | `accent`, `accent-ink`, `accent-strong` | tab, fokus, cincin; bawaan mengikuti tema, 5 pilihan lain (lavender, langit, mint, peach, mawar) |
-| Status | `plan`, `doing`, `done`, `late`, `warn` (+ `-ink`, `-bar`), `on-bar` | isi lembut, teks, dan warna penuh. Di tema gelap `Pill` memakai warna penuh seperti lencana acuan; di tema terang lembut |
-| Nada kartu | `tone`, `tone-ink`, `tone-bar`, `tone-line` | dipasang lewat `data-tone="rose\|peach\|sky\|lavender\|mint\|lemon\|slate"`. Di tema gelap menjadi kartu biru batu, zaitun, karat, dan batu |
+| Status | `plan`, `doing`, `done`, `late`, `warn` (+ `-ink`, `-bar`), `on-bar` | isi lembut, teks, dan warna penuh. `Pill` lembut, kecuali terlambat yang penuh di tema gelap |
+| Nada kartu | `tone`, `tone-ink`, `tone-bar`, `tone-line` | dipasang lewat `data-tone="rose\|peach\|sky\|lavender\|mint\|lemon\|slate"`. Redup dan setingkat terangnya agar tidak saling bertabrakan |
 | Kolom isian | `field`, `field-line` | latar dan garis kolom yang terlihat saat diam; saat diketik menyala warna sorotan |
 | Contoh sorotan | `swatch-lime`, `swatch-lavender`, `swatch-sky`, `swatch-mint`, `swatch-peach`, `swatch-rose` | bulatan pemilih warna di Pengaturan |
 
@@ -41,7 +42,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 | Pil menu atas | `components/layout/top-nav.tsx` | Satu butir per kelompok (Kerja, Catatan, Usaha, Koperasi) ditambah Dunia 3D. Penanda meregang: tepi depan 0,36 detik, tepi belakang 0,56 detik; bergerak saat diklik tanpa menunggu halaman baru |
 | Rel ikon | `components/layout/sidebar.tsx` | Kapsul di kiri: halaman dalam kelompok aktif, tombol Tambah, lalu Pengaturan, Bantuan, dan tema. Menu aktif lingkaran warna aksi yang meluncur; nama muncul sebagai label melayang |
 | Kepala halaman | `components/layout/page-header.tsx` | Judul besar ringan, angka berikon bulat sebaris (`sections`), aksi di kanan. HP dan tablet: angka di baris sendiri. Di halaman catatan kepala dibangun `RecordsView` karena angkanya mengikuti saringan; panel di bawahnya lewat `details` (`entity-views.tsx`) |
-| Angka ringkasan | `components/ui/stat.tsx` | `StatTile` langsung di atas latar: ikon dalam lingkaran, angka menghitung naik, label, `badge` opsional. Tanpa ubin |
+| Angka ringkasan | `components/ui/stat.tsx` | `StatTile` langsung di atas latar: ikon satu warna dalam lingkaran (koral bila nada `rose`), angka menghitung naik, label. Tanpa ubin |
 | Grafik | `components/ui/charts.tsx` | `AreaChart` (mengisi tinggi induk, warna dari `data-tone`), `BarChart` (batang berdampingan), `StackBar` (satu baris bertumpuk). Digambar sesuai piksel asli |
 | Konstelasi kerja | `features/home/constellation.tsx`, `constellation-data.ts` | Kanvas 2D perspektif: proyek jadi gugus, tugas jadi titik (maks. 7 gugus, 14 titik per gugus, yang mendesak didahulukan). Berputar pelan, digeser untuk memutar, klik membuka tugas atau proyek, saringan Semua/Terlambat/Hari ini. Label digambar paling akhir dan menghindari tabrakan; area sentuh 44 px di perangkat sentuh. Selesai 30 hari terakhir tampil redup; yang terlambat berdenyut koral. Berhenti menggambar saat tidak terlihat. Dimuat belakangan |
 | Laci / lembar bawah | `components/ui/sheet.tsx` | Semua formulir dan detail. Panel penuh tinggi di kanan (tablet/laptop), dari bawah di HP dan bisa ditarik turun untuk menutup |
