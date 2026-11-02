@@ -46,7 +46,7 @@
   --accent-ink: #0b5062;
   --accent-strong: #0f7d94;
 
-  /* Panel gelap di kedua tema: kartu ringkasan dan peta koperasi. */
+  /* Panel gelap di kedua tema: kartu ringkasan. */
   --deep: #1f3e46;
   --deep-2: rgb(255 255 255 / 0.08);
   --on-deep: #f3f8f8;
@@ -69,6 +69,9 @@
   --warn-bar: #e0a21f;
   --late-bar: #e2694a;
   --on-bar: #ffffff;
+  /* Isi petak mendesak di peta koperasi: paling kuat di antara warna keadaan. */
+  --late-solid: #f3a78f;
+  --on-late-solid: #4a1408;
 
   /* Kolom isian: latar sedikit berbeda dari kartu dan garis yang cukup terlihat. */
   --field: rgb(255 255 255 / 0.7);
@@ -164,6 +167,8 @@
   --warn-bar: #f0c264;
   --late-bar: #f08f72;
   --on-bar: #15161a;
+  --late-solid: #b4503a;
+  --on-late-solid: #fff6f2;
   --field: rgb(255 255 255 / 0.06);
   --field-line: rgb(255 255 255 / 0.2);
   --swatch-lime: #c2ec4a;
@@ -324,6 +329,8 @@
   --color-done-bar: var(--done-bar);
   --color-warn-bar: var(--warn-bar);
   --color-late-bar: var(--late-bar);
+  --color-late-solid: var(--late-solid);
+  --color-on-late-solid: var(--on-late-solid);
   --color-tone: var(--tone);
   --color-tone-ink: var(--tone-ink);
   --color-tone-bar: var(--tone-bar);

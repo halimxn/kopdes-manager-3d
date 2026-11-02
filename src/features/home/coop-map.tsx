@@ -40,7 +40,22 @@ const LAYOUT = ['gerai', 'barang', 'kas', 'agenda', null, 'kerja', 'anggota', 't
 const matchesFilter = (record: MapRecord, filter: Filter) =>
   filter === 'all' || (filter === 'urgent' ? record.level === 'urgent' : record.today);
 
-/** Satu petak bidang: angka yang perlu ditangani paling besar, lalu nama dan satu fakta nyata. */
+type PlotState = 'urgent' | 'soon' | 'safe' | 'quiet' | 'off';
+// Warna petak hanya berarti keadaan, jadi kondisi koperasi terbaca sebelum angkanya dibaca.
+const PLOT_STATE: Record<PlotState, string> = {
+  urgent: 'bg-late-solid text-on-late-solid',
+  soon: 'bg-doing text-doing-ink',
+  safe: 'bg-done text-done-ink',
+  quiet: 'bg-surface-2 text-ink-3',
+  off: 'border border-dashed border-line-strong text-ink-3',
+};
+const LEGEND = [
+  { label: 'Mendesak', swatch: 'bg-late-solid' },
+  { label: 'Perlu ditangani', swatch: 'bg-doing' },
+  { label: 'Aman', swatch: 'bg-done' },
+];
+
+/** Satu petak bidang: warna keadaan, angka yang perlu ditangani paling besar, lalu nama bidangnya. */
 function Plot({
   domain,
   filter,
@@ -63,7 +78,15 @@ function Plot({
   const scoped = domain.actions.filter((record) => matchesFilter(record, filter));
   const urgent = scoped.filter((record) => record.level === 'urgent').length;
   const stat = domain.stats[0];
-  const muted = pressed ? 'text-on-action/75' : 'text-on-deep-2';
+  const state: PlotState = !domain.active
+    ? 'off'
+    : urgent
+      ? 'urgent'
+      : scoped.length
+        ? 'soon'
+        : filter === 'all'
+          ? 'safe'
+          : 'quiet';
   return (
     <button
       type="button"
@@ -82,44 +105,38 @@ function Plot({
       onBlur={() => onHover(null)}
       style={{ animationDelay: `${index * 40}ms` }}
       className={cn(
-        'enter flex min-w-0 flex-col rounded-[1.25rem] p-3 text-left ring-1 transition-[background-color,opacity,box-shadow] duration-200',
-        pressed
-          ? 'bg-action text-on-action ring-transparent'
-          : 'bg-deep-2 text-on-deep hover:bg-surface-3',
-        !pressed && (urgent ? 'ring-late-bar/70' : lit ? 'ring-on-deep-2' : 'ring-line'),
+        'enter flex min-w-0 flex-col p-2.5 text-left ring-current transition-[background-color,color,opacity,box-shadow] duration-300 ring-inset -outline-offset-4 hover:ring-1 focus-visible:outline-current @md/map:p-3.5',
+        PLOT_STATE[state],
+        pressed ? 'ring-[3px] hover:ring-[3px]' : lit && 'ring-1',
         dimmed && 'opacity-55',
-        filter !== 'all' && !scoped.length && !pressed && 'opacity-40',
       )}
     >
-      <span className="flex items-start justify-between gap-1">
-        <span className={cn('grid size-8 place-items-center [&_svg]:size-5', pressed || muted)}>
-          <PageIcon name={domain.icon} />
-        </span>
-        {!domain.active ? null : scoped.length ? (
-          <span
-            className={cn(
-              'tabular text-[24px] leading-8 font-medium tracking-tight',
-              !pressed && urgent > 0 && 'text-late-bar',
-            )}
-          >
+      <span className="flex items-start gap-1">
+        {state === 'urgent' || state === 'soon' ? (
+          <span className="tabular text-[30px] leading-9 font-normal tracking-tight @md/map:text-[40px] @md/map:leading-[2.75rem]">
             {scoped.length}
           </span>
         ) : (
-          filter === 'all' && (
-            <span className={cn('grid size-8 place-items-center [&_svg]:size-4', muted)}>
+          state === 'safe' && (
+            <span className="-ml-0.5 grid size-9 place-items-center [&_svg]:size-6">
               <CheckIcon aria-hidden="true" />
             </span>
           )
         )}
+        <span className="ml-auto grid size-6 shrink-0 place-items-center [&_svg]:size-[18px] @md/map:[&_svg]:size-5">
+          <PageIcon name={domain.icon} />
+        </span>
       </span>
       <span className="mt-auto line-clamp-2 pt-1 text-[13.5px] leading-tight font-medium">
         {domain.label}
       </span>
-      {!domain.active ? (
-        <span className={cn('truncate text-xs', muted)}>Belum aktif</span>
+      {state === 'off' ? (
+        <span className="truncate text-xs">Belum aktif</span>
+      ) : state === 'urgent' ? (
+        <span className="truncate pt-0.5 text-xs">{urgent} mendesak</span>
       ) : (
         stat && (
-          <span className={cn('hidden truncate pt-0.5 text-xs @md/map:block', muted)}>
+          <span className="hidden truncate pt-0.5 text-xs @md/map:block">
             {stat.value} {stat.label.toLowerCase()}
           </span>
         )
@@ -179,21 +196,20 @@ export function CoopMap({
   };
 
   return (
-    // Dasar panel mengikuti tema; isinya bertoken gelap seperti kartu ringkasan lain.
     <section
       aria-labelledby="coop-map-title"
-      className="@container isolate h-full overflow-hidden rounded-[var(--radius-card)] bg-deep shadow-card ring-1 ring-line"
+      className="@container isolate h-full overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line"
       onKeyDown={(event) => {
         if (event.key === 'Escape' && selected) setSelected(null);
       }}
     >
-      <div data-theme="dark" className="flex h-full flex-col text-on-deep">
+      <div className="flex h-full flex-col">
         <header className="flex flex-wrap items-start gap-x-4 gap-y-2 px-5 pt-5">
           <div className="min-w-0 flex-1 basis-48">
             <h2 id="coop-map-title" className="text-lg font-medium">
               Peta koperasi
             </h2>
-            <p className="text-[13px] text-on-deep-2">
+            <p className="text-[13px] text-ink-3">
               {needing
                 ? `${needing} dari ${domains.length} bidang perlu ditangani`
                 : 'Semua bidang aman'}
@@ -208,8 +224,10 @@ export function CoopMap({
                 aria-pressed={filter === item.id}
                 onClick={() => setFilter(item.id)}
                 className={cn(
-                  'flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium ring-1 ring-line-strong transition-colors',
-                  filter === item.id ? 'bg-on-deep text-on-bar' : 'text-on-deep hover:bg-deep-2',
+                  'flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium transition-colors',
+                  filter === item.id
+                    ? 'bg-accent text-accent-ink'
+                    : 'text-ink-2 ring-1 ring-line-strong hover:bg-surface-2',
                 )}
               >
                 {item.label}
@@ -221,7 +239,7 @@ export function CoopMap({
 
         <div className="flex min-h-0 flex-1 flex-col @xl:flex-row">
           <div className="@container/map flex min-w-0 flex-1 flex-col p-4 @xl:p-5">
-            <div className="grid min-h-[22rem] flex-1 grid-cols-3 grid-rows-3 gap-2.5 @md/map:gap-3.5">
+            <div className="grid min-h-[22rem] flex-1 grid-cols-3 grid-rows-3 gap-[3px] overflow-hidden rounded-[1.25rem]">
               {LAYOUT.map((id, index) => {
                 const domain = domains.find((item) => item.id === id);
                 if (domain)
@@ -245,16 +263,27 @@ export function CoopMap({
                     onClick={() => setSelected(null)}
                     aria-label={`${coop || 'Koperasi'}: tampilkan semua bidang`}
                     style={{ animationDelay: `${index * 40}ms` }}
-                    className="enter flex min-w-0 flex-col items-center justify-center gap-1.5 rounded-[1.25rem] p-2 text-center"
+                    className="enter flex min-w-0 flex-col items-center justify-center gap-1.5 bg-surface-2 p-2 text-center -outline-offset-4"
                   >
                     <LogoMark className="size-11 rounded-[14px]" />
-                    <span className="line-clamp-2 text-xs leading-tight text-on-deep-2">
+                    <span className="line-clamp-2 text-xs leading-tight text-ink-2">
                       {coop || 'Koperasi'}
                     </span>
                   </button>
                 );
               })}
             </div>
+            <ul className="flex flex-wrap gap-x-4 gap-y-1 pt-3 text-xs text-ink-2">
+              {LEGEND.map((item) => (
+                <li key={item.label} className="flex items-center gap-1.5">
+                  <span
+                    aria-hidden="true"
+                    className={cn('size-2.5 rounded-[3px] ring-1 ring-line', item.swatch)}
+                  />
+                  {item.label}
+                </li>
+              ))}
+            </ul>
           </div>
 
           <aside
@@ -268,7 +297,7 @@ export function CoopMap({
               ) : (
                 <div className="flex items-center justify-between px-4 pt-4 pb-2">
                   <h3 className="text-sm font-medium">Perlu ditangani</h3>
-                  <span className="tabular text-xs text-on-deep-2">{list.length}</span>
+                  <span className="tabular text-xs text-ink-3">{list.length}</span>
                 </div>
               )}
               <ul
@@ -287,7 +316,7 @@ export function CoopMap({
                   />
                 ))}
                 {!list.length && (
-                  <li className="px-2 py-3 text-[13px] text-on-deep-2">
+                  <li className="px-2 py-3 text-[13px] text-ink-3">
                     {filter !== 'all'
                       ? 'Tidak ada yang cocok dengan saringan ini.'
                       : current && !current.active
@@ -315,23 +344,23 @@ function DomainHeader({ domain, onBack }: { domain: CoopDomain; onBack: () => vo
           type="button"
           onClick={onBack}
           aria-label="Kembali ke semua bidang"
-          className="-ml-1.5 grid size-9 shrink-0 place-items-center rounded-full text-on-deep-2 transition hover:bg-deep-2 hover:text-on-deep [&_svg]:size-4 max-sm:size-11"
+          className="-ml-1.5 grid size-9 shrink-0 place-items-center rounded-full text-ink-3 transition hover:bg-surface-2 hover:text-ink [&_svg]:size-4 max-sm:size-11"
         >
           <ArrowLeft />
         </button>
         <h3 className="min-w-0 flex-1 truncate text-[15px] font-medium">{domain.label}</h3>
       </div>
       {domain.stats.length > 0 && (
-        <dl className="grid grid-cols-2 gap-x-3 gap-y-2 rounded-2xl bg-deep-2 p-3">
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-2 rounded-2xl bg-surface-2 p-3">
           {domain.stats.map((stat) => (
             <div key={stat.label} className="min-w-0">
-              <dt className="truncate text-xs text-on-deep-2">{stat.label}</dt>
+              <dt className="truncate text-xs text-ink-3">{stat.label}</dt>
               <dd className="tabular truncate text-sm font-medium">{stat.value}</dd>
             </div>
           ))}
         </dl>
       )}
-      {domain.note && <p className="text-xs text-on-deep-2">{domain.note}</p>}
+      {domain.note && <p className="text-xs text-ink-3">{domain.note}</p>}
     </div>
   );
 }
@@ -364,7 +393,7 @@ function DomainActions({ domain }: { domain: CoopDomain }) {
 }
 
 const ROW_ICON =
-  'grid size-9 shrink-0 place-items-center rounded-full text-on-deep-2 transition hover:bg-deep-2 hover:text-on-deep [&_svg]:size-4 max-sm:size-11';
+  'grid size-9 shrink-0 place-items-center rounded-full text-ink-3 transition hover:bg-surface-2 hover:text-ink [&_svg]:size-4 max-sm:size-11';
 
 /** Satu hal yang perlu ditangani: tindakan tersering langsung di barisnya, tanpa pindah halaman. */
 function ActionRow({
@@ -396,7 +425,7 @@ function ActionRow({
       <span
         className={cn(
           'line-clamp-2 text-xs',
-          record.level === 'urgent' ? 'text-late-bar' : 'text-on-deep-2',
+          record.level === 'urgent' ? 'text-late-ink' : 'text-ink-3',
         )}
       >
         {record.note}
@@ -407,7 +436,7 @@ function ActionRow({
   return (
     <li
       onPointerEnter={onHover}
-      className="flex items-center gap-2 rounded-2xl py-1.5 pr-1 pl-2 transition-colors hover:bg-deep-2"
+      className="flex items-center gap-2 rounded-2xl py-1.5 pr-1 pl-2 transition-colors hover:bg-surface-2"
     >
       {task ? (
         <Check
@@ -419,7 +448,7 @@ function ActionRow({
         <span
           className={cn(
             'mx-1.5 size-2 shrink-0 rounded-full',
-            record.level === 'urgent' ? 'bg-late-bar' : 'bg-on-deep',
+            record.level === 'urgent' ? 'bg-late-bar' : 'bg-doing-bar',
           )}
           aria-hidden="true"
         />

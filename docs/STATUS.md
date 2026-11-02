@@ -23,6 +23,7 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 
 Daftar lengkap ada di [PRODUK](PRODUK.md). Yang paling baru:
 
+- 3 Nov 2026 (koreksi): warna Peta koperasi dirancang ulang atas permintaan pemilik. Warna petak kini berarti keadaan (koral mendesak, biru perlu ditangani, hijau aman) dan panelnya mengikuti tema, tidak lagi gelap di tema terang. Biru dipilih AI karena kuning di tema gelap menjadi kotak cokelat; bisa diubah setelah dilihat.
 - 2 Nov 2026 (koreksi): Peta koperasi dirancang ulang atas permintaan pemilik. Bentuknya denah tetap berisi delapan petak berangka, tanpa kanvas putar dan titik (pilihan AI karena pemilik meminta langsung dikerjakan; bisa diubah setelah dilihat).
 - 2 Nov 2026 (koreksi): label rel tidak boleh tertutup; penempatan kartu dirancang ulang agar rapi dan bersih. Kartu dibuat netral, warna hanya sebagai titik (keputusan AI atas arahan "rapi dan bersih", bisa dikembalikan bila pemilik lebih suka kartu berwarna).
 - 2 Nov 2026 (koreksi): modal ditulis ulang, bukan hanya diganti warna; kartu tidak boleh berwarna pekat atau kotor; tidak boleh ada yang tumpang tindih.
