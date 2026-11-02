@@ -17,7 +17,7 @@ export function ProfileMenu({ compact }: { compact?: boolean }) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         className={cn(
-          'grid place-items-center rounded-full transition hover:ring-4 hover:ring-surface-3 active:scale-95',
+          'grid place-items-center rounded-full transition hover:ring-2 hover:ring-line-strong active:scale-95',
           'size-11',
         )}
         aria-label="Profil dan tampilan"

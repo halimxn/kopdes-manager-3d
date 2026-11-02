@@ -73,7 +73,7 @@ export default function PinPage() {
         : 'Masukkan PIN ruang kerja manajer koperasi.';
 
   return (
-    <main className="grid min-h-dvh place-items-center bg-canvas px-4 py-10">
+    <main className="grid min-h-dvh place-items-center px-4 py-10">
       <div className="flex w-full max-w-[25rem] flex-col items-center gap-6">
         <Logo className="animate-[item-in_0.5s_var(--ease-out)]" />
         <form
@@ -90,7 +90,7 @@ export default function PinPage() {
           <LockBadge progress={progress} phase={phase} />
           <h1
             key={title}
-            className="mt-5 animate-[item-in_0.35s_var(--ease-out)] text-[22px] font-extrabold tracking-tight text-ink"
+            className="mt-5 animate-[item-in_0.35s_var(--ease-out)] text-[26px] font-normal tracking-[-0.02em] text-ink"
           >
             {title}
           </h1>
@@ -197,7 +197,7 @@ export default function PinPage() {
             type="submit"
             disabled={!ready || busy}
             className={cn(
-              'relative mt-6 h-12 w-full overflow-hidden rounded-2xl bg-surface-3 text-[15px] font-bold transition-colors duration-300',
+              'relative mt-6 h-12 w-full overflow-hidden rounded-full bg-surface-3 text-[15px] font-medium transition-colors duration-300',
               ready ? 'text-on-action' : 'text-ink-3',
               phase === 'success' && 'bg-done-bar',
             )}
@@ -206,7 +206,7 @@ export default function PinPage() {
             <span
               aria-hidden="true"
               className={cn(
-                'absolute inset-y-0 left-0 rounded-2xl transition-[width,background-color] duration-500 ease-[var(--ease-out)]',
+                'absolute inset-y-0 left-0 rounded-full transition-[width,background-color] duration-500 ease-[var(--ease-out)]',
                 // Sebelum cukup angka isi berwarna sorotan muda (label tetap terbaca); siap = hitam penuh.
                 ready ? 'bg-action' : 'bg-accent',
                 phase === 'success' && 'bg-done-bar',

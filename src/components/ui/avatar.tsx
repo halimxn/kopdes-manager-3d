@@ -7,7 +7,7 @@ export function Avatar({ name, className }: { name: string; className?: string }
       data-tone={personTone(name)}
       title={name}
       className={cn(
-        'inline-grid size-8 shrink-0 place-items-center rounded-full bg-tone text-[11px] font-bold text-tone-ink ring-2 ring-surface',
+        'inline-grid size-8 shrink-0 place-items-center rounded-full bg-tone text-[11px] font-semibold text-tone-ink ring-2 ring-canvas/70 dark:bg-tone-ink dark:text-on-bar',
         className,
       )}
     >
@@ -34,7 +34,7 @@ export function AvatarStack({
         <Avatar key={name + index} name={name} className={index ? '-ml-1.5' : ''} />
       ))}
       {people.length > max && (
-        <span className="-ml-1.5 inline-grid size-8 place-items-center rounded-full bg-surface text-[11px] font-bold text-ink ring-2 ring-surface">
+        <span className="-ml-1.5 inline-grid size-8 shrink-0 place-items-center rounded-full bg-surface-solid text-[11px] font-semibold text-ink ring-2 ring-canvas/70">
           +{people.length - max}
         </span>
       )}

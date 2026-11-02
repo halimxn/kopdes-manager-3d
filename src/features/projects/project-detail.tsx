@@ -1,7 +1,18 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Diamond, ExternalLink, Pencil, Plus, RotateCcw } from 'lucide-react';
+import {
+  ArrowDownLeft,
+  ArrowLeft,
+  ArrowUpRight,
+  Diamond,
+  ExternalLink,
+  Pencil,
+  Plus,
+  RotateCcw,
+  Scale,
+  Wallet,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import type { Item, Task } from '@/features/records/schemas';
 import type { Workspace } from '@/features/workspace/use-workspace';
@@ -11,16 +22,15 @@ import { formatChoiceLabel } from '@/features/records/catalog';
 import { PageLoading } from '@/features/records/records-page';
 import { TaskBoard } from '@/features/tasks/task-board';
 import { TaskList } from '@/features/tasks/task-list';
-import { TaskSheet } from '@/features/tasks/task-sheet';
+import { TaskSheet } from '@/features/tasks/lazy';
 import { TaskRow } from '@/features/tasks/task-card';
 import { recordLink } from '@/components/layout/nav';
 import { Tabs } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/field';
-import { StatTile } from '@/components/ui/stat';
+import { StatGrid, StatTile } from '@/components/ui/stat';
 import { EmptyState, ErrorState, Notice } from '@/components/ui/states';
 import { SegmentBar, Bar } from '@/components/ui/progress';
-import { Wave } from '@/components/ui/wave';
 import { api } from '@/lib/client';
 import { rupiah } from '@/lib/ledger';
 import { daysBetween, formatDate, today } from '@/lib/date';
@@ -91,7 +101,7 @@ function NotesView({ text }: { text: string }) {
               <span
                 className={cn(
                   'grid size-4 place-items-center rounded border-2 border-line-strong text-[10px]',
-                  line[3] === 'x' && 'border-done-ink bg-done-ink text-white',
+                  line[3] === 'x' && 'border-done-bar bg-done-bar text-on-bar',
                 )}
               >
                 {line[3] === 'x' ? '✓' : ''}
@@ -399,9 +409,8 @@ export function ProjectDetail({ id }: { id: string }) {
       </Link>
       <section
         data-tone={projectTone(project)}
-        className="relative overflow-hidden rounded-[1.75rem] bg-tone p-6 text-tone-ink md:p-8"
+        className="relative overflow-hidden rounded-[1.75rem] bg-tone p-6 text-tone-ink ring-1 ring-tone-line ring-inset md:p-8"
       >
-        <Wave />
         <div className="relative flex flex-wrap items-start gap-4">
           <div className="min-w-0 flex-1">
             <p className="flex flex-wrap gap-1.5 text-xs font-bold">
@@ -412,7 +421,7 @@ export function ProjectDetail({ id }: { id: string }) {
                 {formatChoiceLabel(String(project.data.status))}
               </span>
             </p>
-            <h1 className="mt-3 text-[28px] leading-tight font-extrabold tracking-tight text-ink md:text-[34px]">
+            <h1 className="mt-3 text-[30px] leading-[1.1] font-normal tracking-[-0.02em] text-ink md:text-[38px]">
               {String(project.data.title)}
             </h1>
             {project.data.description ? (
@@ -567,31 +576,35 @@ export function ProjectDetail({ id }: { id: string }) {
           <ErrorState message={cash.error} />
         ) : (
           <section className="flex flex-col gap-3">
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <StatGrid>
               <StatTile
+                icon={<Wallet />}
                 label="Anggaran"
                 value={budget ? rupiah(budget) : 'Belum diisi'}
                 tone="lavender"
               />
               <StatTile
+                icon={<ArrowUpRight />}
                 label="Uang keluar"
                 value={cash.loading ? '…' : rupiah(spent)}
                 tone="rose"
                 note={`${cash.rows.length} transaksi tertaut`}
               />
               <StatTile
+                icon={<ArrowDownLeft />}
                 label="Uang masuk"
                 value={cash.loading ? '…' : rupiah(received)}
                 tone="mint"
               />
               <StatTile
+                icon={<Scale />}
                 label={spent > budget && budget ? 'Melebihi anggaran' : 'Sisa anggaran'}
                 value={budget ? rupiah(Math.abs(budget - spent)) : '—'}
                 tone={spent > budget && budget ? 'rose' : 'sky'}
               />
-            </div>
+            </StatGrid>
             {budget > 0 && (
-              <div className="rounded-2xl bg-surface p-4 shadow-card">
+              <div className="rounded-2xl bg-surface p-4 ring-1 ring-line">
                 <p className="mb-2 flex justify-between text-sm font-bold">
                   Anggaran terpakai{' '}
                   <span className="tabular">{Math.round((spent / budget) * 100)}%</span>

@@ -25,7 +25,7 @@ export function Tabs({
       role="tablist"
       aria-label={label}
       className={cn(
-        'scrollbar-none inline-flex min-w-0 max-w-full gap-1 overflow-x-auto rounded-2xl bg-surface p-1 shadow-card',
+        'scrollbar-none inline-flex max-w-full min-w-0 gap-1 overflow-x-auto rounded-full bg-surface-2 p-1 ring-1 ring-line',
         className,
       )}
     >
@@ -39,14 +39,14 @@ export function Tabs({
             aria-selected={active}
             onClick={() => onChange(item.id)}
             className={cn(
-              'relative flex h-9 shrink-0 items-center gap-2 rounded-xl px-3.5 text-sm font-semibold transition-colors [&_svg]:size-4',
-              active ? 'text-accent-ink' : 'text-ink-3 hover:text-ink',
+              'relative flex h-9 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors [&_svg]:size-4',
+              active ? 'text-ink' : 'text-ink-2 hover:text-ink',
             )}
           >
             {active && (
               <motion.span
                 layoutId={layoutId}
-                className="absolute inset-0 rounded-xl bg-accent"
+                className="absolute inset-0 rounded-full bg-surface-solid shadow-card ring-1 ring-line dark:bg-surface-3 dark:shadow-none"
                 transition={{ type: 'spring', stiffness: 420, damping: 36 }}
               />
             )}
@@ -57,7 +57,7 @@ export function Tabs({
                 <span
                   className={cn(
                     'tabular rounded-full px-1.5 text-[11px]',
-                    active ? 'bg-surface/70' : 'bg-surface-3',
+                    active ? 'bg-surface-2' : 'bg-surface-3',
                   )}
                 >
                   {item.count}

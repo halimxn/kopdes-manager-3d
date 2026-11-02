@@ -197,7 +197,10 @@ export function CommandPalette({
                 <Command.Item
                   value={theme === 'dark' ? 'pakai tema terang' : 'pakai tema gelap'}
                   onSelect={() => {
-                    setTheme(theme === 'dark' ? 'light' : 'dark');
+                    setTheme(
+                      theme === 'dark' ? 'light' : 'dark',
+                      document.querySelector<HTMLElement>('main'),
+                    );
                     onOpenChange(false);
                   }}
                   className={ITEM}

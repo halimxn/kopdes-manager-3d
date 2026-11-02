@@ -1,13 +1,22 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { ClipboardCopy, FileCheck2, Printer, Trash2 } from 'lucide-react';
+import {
+  CircleCheck,
+  ClipboardCopy,
+  FileCheck2,
+  Flag,
+  Printer,
+  ShieldAlert,
+  Trash2,
+  TriangleAlert,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import type { ReportSnapshot } from './report-snapshot';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Textarea } from '@/components/ui/field';
 import { DateField } from '@/components/ui/date-time-field';
 import { Tabs } from '@/components/ui/tabs';
-import { StatTile } from '@/components/ui/stat';
+import { StatGrid, StatTile } from '@/components/ui/stat';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { useConfirm } from '@/components/ui/confirm';
 import { api } from '@/lib/client';
@@ -336,12 +345,32 @@ function ReportDocument({
           {draft ? 'DRAF-MGR' : 'LAP-MGR'}/{report.period_end.replaceAll('-', '')}
         </p>
       </header>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Tugas rampung" value={s.completed.length} tone="mint" />
-        <StatTile label="Milestone tercapai" value={s.milestones.length} tone="lavender" />
-        <StatTile label="Perlu perhatian" value={s.overdue.length} tone="rose" />
-        <StatTile label="Risiko terbuka" value={s.risks.length} tone="peach" />
-      </div>
+      <StatGrid>
+        <StatTile
+          icon={<CircleCheck />}
+          label="Tugas rampung"
+          value={s.completed.length}
+          tone="mint"
+        />
+        <StatTile
+          icon={<Flag />}
+          label="Milestone tercapai"
+          value={s.milestones.length}
+          tone="lavender"
+        />
+        <StatTile
+          icon={<TriangleAlert />}
+          label="Perlu perhatian"
+          value={s.overdue.length}
+          tone="rose"
+        />
+        <StatTile
+          icon={<ShieldAlert />}
+          label="Risiko terbuka"
+          value={s.risks.length}
+          tone="peach"
+        />
+      </StatGrid>
       {s.cash.count > 0 && (
         <div className="grid gap-3 rounded-2xl bg-surface-2 p-4 sm:grid-cols-3">
           <p>

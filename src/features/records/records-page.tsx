@@ -73,32 +73,44 @@ export function RecordsPage({
   const entity = current?.entity;
   const view = entity ? ENTITY_VIEWS[entity] : undefined;
   const blocked = entity ? entityReady(entity, caps) : '';
+  const header = (stats?: ReactNode) => (
+    <PageHeader
+      title={info.label}
+      sections={stats || undefined}
+      subtitle={subtitle ?? (entity ? catalog[entity].description : undefined)}
+      actions={
+        tabs.length > 1 ? (
+          <Tabs
+            label={`Bagian ${info.label}`}
+            items={tabs.map((tab) => ({
+              id: tab.id,
+              label: tab.label,
+              count: tab.entity && !loading ? (data[tab.entity] || []).length : undefined,
+            }))}
+            value={current.id}
+            onChange={(id) => setParam('tab', id === tabs[0].id ? null : id)}
+          />
+        ) : undefined
+      }
+    />
+  );
   return (
     <div className="flex flex-col gap-5">
-      <PageHeader
-        title={info.label}
-        subtitle={subtitle ?? (entity ? catalog[entity].description : undefined)}
-        actions={
-          tabs.length > 1 ? (
-            <Tabs
-              label={`Bagian ${info.label}`}
-              items={tabs.map((tab) => ({
-                id: tab.id,
-                label: tab.label,
-                count: tab.entity && !loading ? (data[tab.entity] || []).length : undefined,
-              }))}
-              value={current.id}
-              onChange={(id) => setParam('tab', id === tabs[0].id ? null : id)}
-            />
-          ) : undefined
-        }
-      />
       {error ? (
-        <ErrorState message={error} onRetry={() => void refresh()} />
+        <>
+          {header()}
+          <ErrorState message={error} onRetry={() => void refresh()} />
+        </>
       ) : loading ? (
-        <PageLoading />
+        <>
+          {header()}
+          <PageLoading />
+        </>
       ) : current && extraTabs[current.id] ? (
-        extraTabs[current.id]
+        <>
+          {header()}
+          {extraTabs[current.id]}
+        </>
       ) : entity ? (
         <RecordsView
           key={entity}
@@ -108,6 +120,8 @@ export function RecordsPage({
           ready={!blocked}
           notReadyText={blocked}
           metrics={view?.metrics ? (rows) => view.metrics!(rows, data) : undefined}
+          details={view?.details ? (rows) => view.details!(rows, data) : undefined}
+          header={header}
           quickFilters={view?.quickFilters}
           columns={view?.columns}
           cardExtra={view?.cardExtra ? (row) => view.cardExtra!(row, data) : undefined}

@@ -2,11 +2,12 @@ import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 
 const TONES = {
-  plan: 'bg-plan text-plan-ink',
-  doing: 'bg-doing text-doing-ink',
-  done: 'bg-done text-done-ink',
-  late: 'bg-late text-late-ink',
-  warn: 'bg-warn text-warn-ink',
+  // Tema gelap: lencana penuh seperti acuan; tema terang: lembut.
+  plan: 'bg-plan text-plan-ink dark:bg-plan-bar dark:text-on-bar',
+  doing: 'bg-doing text-doing-ink dark:bg-doing-bar dark:text-on-bar',
+  done: 'bg-done text-done-ink dark:bg-done-bar dark:text-on-bar',
+  late: 'bg-late text-late-ink dark:bg-late-bar dark:text-on-bar',
+  warn: 'bg-warn text-warn-ink dark:bg-warn-bar dark:text-on-bar',
   accent: 'bg-accent text-accent-ink',
   neutral: 'bg-surface-3 text-ink-2',
   outline: 'border border-current/30 bg-transparent',
@@ -25,7 +26,7 @@ export function Pill({
   return (
     <span
       className={cn(
-        'inline-flex h-6 shrink-0 items-center gap-1 rounded-full px-2.5 text-xs font-bold whitespace-nowrap [&_svg]:size-3.5',
+        'inline-flex h-6 shrink-0 items-center gap-1 rounded-full px-2.5 text-xs font-semibold whitespace-nowrap [&_svg]:size-3.5',
         TONES[tone],
         className,
       )}

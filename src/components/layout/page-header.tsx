@@ -1,13 +1,8 @@
-import { Fragment, type ReactNode } from 'react';
-
-/** Garis tegak pemisah bagian di bilah kepala, seperti bilah atas TaskTrack. */
-export function HeaderDivider() {
-  return <span className="hidden h-11 w-px bg-line lg:block" aria-hidden="true" />;
-}
+import type { ReactNode } from 'react';
 
 /**
- * Kepala halaman langsung di atas latar (acuan dashboard 25 Okt): judul (satu-satunya h1) dan ringkasan
- * di kiri, bagian tambahan dipisah garis tegak, aksi utama di kanan.
+ * Kepala halaman langsung di atas latar (acuan 2 Nov): judul besar yang ringan (satu-satunya h1) dan
+ * ringkasan di kiri, angka berikon bulat di sebelahnya, aksi utama di kanan.
  */
 export function PageHeader({
   title,
@@ -17,26 +12,26 @@ export function PageHeader({
 }: {
   title: ReactNode;
   subtitle?: ReactNode;
-  sections?: ReactNode[];
+  sections?: ReactNode;
   actions?: ReactNode;
 }) {
   return (
-    <div className="flex animate-[item-in_0.4s_var(--ease-out)] flex-wrap items-center gap-x-3 gap-y-3 px-1 py-1 lg:gap-x-6">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 py-1 lg:gap-x-8">
       {/* Judul minimal 11rem: bila aksi tidak muat, aksi turun ke baris berikut, judul tidak terjepit. */}
       <div className="min-w-44 flex-1 lg:flex-none">
-        <h1 className="text-[24px] leading-tight font-extrabold tracking-tight text-ink md:text-[28px]">
+        <h1 className="text-[30px] leading-[1.1] font-normal tracking-[-0.02em] text-balance text-ink md:text-[36px]">
           {title}
         </h1>
-        {subtitle && <p className="text-[13px] font-semibold text-ink-3">{subtitle}</p>}
+        {subtitle && <p className="mt-1 max-w-xl text-[13px] text-ink-3">{subtitle}</p>}
       </div>
-      {sections?.map((section, index) => (
-        <Fragment key={index}>
-          <HeaderDivider />
-          {section}
-        </Fragment>
-      ))}
+      {/* HP dan tablet: judul dan aksi sebaris, angka di baris sendiri; laptop: semua sebaris. */}
+      {sections && (
+        <div className="order-3 flex w-full flex-wrap items-center gap-x-8 gap-y-3 lg:order-2 lg:w-auto">
+          {sections}
+        </div>
+      )}
       {actions && (
-        <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2 lg:ml-auto">
+        <div className="order-2 flex max-w-full min-w-0 flex-wrap items-center gap-2 lg:order-3 lg:ml-auto">
           {actions}
         </div>
       )}

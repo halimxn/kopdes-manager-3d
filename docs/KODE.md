@@ -5,7 +5,7 @@
 | Bagian | Pakai |
 |---|---|
 | Kerangka | Next.js App Router, React, TypeScript strict |
-| Tampilan | Tailwind v4 (token di `src/app/globals.css`), Radix (`radix-ui`) untuk laci/menu/dialog, Motion (`motion/react`) untuk animasi, `lucide-react` untuk ikon, `sonner` untuk toast, `cmdk` untuk palet Ctrl K |
+| Tampilan | Tailwind v4 (token di `src/app/globals.css`), Radix (`radix-ui`) untuk laci/menu/dialog, Motion (`motion/react`) untuk animasi, `lucide-react` untuk ikon, `sonner` untuk toast, `cmdk` untuk palet Ctrl K. Grafik digambar sendiri dengan SVG (`components/ui/charts.tsx`), konstelasi dengan kanvas 2D |
 | Data | Supabase (satu tabel `hub_records` berisi JSON), Zod untuk validasi |
 | Dunia 3D | Three.js, model dibangun dari kode |
 | Tes | Vitest, PGlite untuk tes database |
@@ -37,11 +37,11 @@ src/
     pin/                  halaman masuk
   components/
     ui/                   tombol, isian, laci (sheet), konfirmasi, tab, pil, avatar, progres, ubin angka
-    layout/               kerangka, sidebar, dok HP, palet Ctrl K, menu tambah cepat, nav.ts
+    layout/               kerangka, pil menu atas, rel ikon, dok HP, palet Ctrl K, menu tambah cepat, nav.ts
   features/
     records/              katalog, skema Zod, layanan server, formulir otomatis, daftar umum, kartu, laci detail
     workspace/            pemuat data per halaman (use-workspace, scope)
-    home/                 Beranda, rutin harian, linimasa hari, tambah cepat, laporan harian
+    home/                 Beranda, rutin harian, konstelasi kerja, linimasa hari, tambah cepat, laporan harian
     tasks/                halaman tugas, papan, daftar, kalender, linimasa, laci tugas, aksi tugas
     projects/             daftar dan detail proyek
     notes/                laporan kerja
@@ -58,7 +58,7 @@ tests/                    unit, database, security
 
 ## Menu satu sumber
 
-`src/components/layout/nav.ts` berisi semua halaman, tab per halaman, grup menu, dok HP, dan `recordLink()` (alamat catatan untuk notifikasi, pencarian, dan dunia). Sidebar, dok, menu lengkap, dan palet Ctrl K membaca berkas ini.
+`src/components/layout/nav.ts` berisi semua halaman, tab per halaman, grup menu, dok HP, dan `recordLink()` (alamat catatan untuk notifikasi, pencarian, dan dunia). Pil menu atas, rel ikon, dok, menu lengkap, dan palet Ctrl K membaca berkas ini.
 
 Alamat lama berbahasa Indonesia (`/tugas`, `/keuangan`, `/dunia-koperasi`, …) dialihkan di `next.config.ts`. Parameter lama (`?baru=1`, `isi.<kolom>`, `?bagian=`, `?arah=`, `?barang=`, `?penanggung=`, `?ubah=1`) tetap dibaca oleh `features/records/use-record-params.ts`.
 
@@ -89,4 +89,4 @@ Jenis catatan `routines` (judul, jam, hari aktif 1–7, aktif) dan `routine-chec
 
 ## Ukuran unduhan
 
-`npm run ukur:bundel` memeriksa JS awal halaman utama (batas 500 KB mentah). Komponen berat (formulir, palet, dunia 3D) dimuat dengan `next/dynamic`; animasi memakai `LazyMotion`.
+`npm run ukur:bundel` memeriksa JS awal halaman utama (batas 500 KB mentah). Komponen berat (formulir, laci tugas, palet, konstelasi, dunia 3D) dimuat dengan `next/dynamic`; animasi memakai `LazyMotion`.

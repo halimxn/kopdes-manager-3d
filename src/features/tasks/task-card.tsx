@@ -5,7 +5,7 @@ import {
   CalendarClock,
   CalendarPlus,
   Clock,
-  EllipsisVertical,
+  Ellipsis,
   ListChecks,
   MessageCircle,
   Repeat,
@@ -13,8 +13,8 @@ import {
 } from 'lucide-react';
 import type { Item } from '@/features/records/schemas';
 import type { Workspace } from '@/features/workspace/use-workspace';
-import { Wave } from '@/components/ui/wave';
 import { Check } from '@/components/ui/check';
+import { Pill } from '@/components/ui/pill';
 import { MenuContent, MenuItem, MenuSeparator } from '@/components/ui/menu';
 import { SegmentBar } from '@/components/ui/progress';
 import { AvatarStack } from '@/components/ui/avatar';
@@ -41,7 +41,7 @@ export function dueText(task: Item, date = today()): { text: string; late: boole
   return { text: formatDate(due), late: false };
 }
 
-/** Kartu tugas pastel per proyek (gaya TaskTrack): label proyek, judul, progres bersegmen, orang, tenggat. */
+/** Kartu tugas berwarna per proyek: tenggat dan aksi di atas, judul, proyek, progres, orang di bawah. */
 export function TaskCard({
   task,
   ws,
@@ -85,34 +85,43 @@ export function TaskCard({
         if (event.key === 'Enter' && event.target === event.currentTarget) onOpen();
       }}
       className={cn(
-        'group relative flex flex-col gap-3 overflow-hidden rounded-[var(--radius-card)] bg-tone p-4 text-tone-ink ring-1 ring-white/50 ring-inset dark:ring-white/5 outline-none transition-shadow hover:shadow-card focus-visible:ring-2 focus-visible:ring-tone-bar',
+        'group relative flex flex-col gap-2 rounded-[var(--radius-card)] bg-tone p-4 text-tone-ink ring-1 ring-tone-line ring-inset outline-none transition duration-300 hover:-translate-y-0.5 hover:shadow-card focus-visible:ring-2 focus-visible:ring-tone-bar',
         draggable && 'cursor-grab touch-pan-y select-none active:cursor-grabbing',
-        done && 'opacity-80',
         className,
       )}
     >
-      <Wave />
-      <div className="relative flex items-center gap-1.5">
-        <span className="max-w-[58%] truncate rounded-full border border-[color-mix(in_srgb,var(--tone-bar)_45%,transparent)] bg-surface/40 text-[color-mix(in_srgb,var(--tone-bar)_70%,var(--tone-ink))] px-2.5 py-0.5 text-[11px] font-semibold">
-          #{project ? String(project.data.title) : 'tanpa proyek'}
-        </span>
-        {['tinggi', 'mendesak'].includes(priority) && (
-          <span className="rounded-full border border-[color-mix(in_srgb,var(--tone-bar)_45%,transparent)] bg-surface/40 text-[color-mix(in_srgb,var(--tone-bar)_70%,var(--tone-ink))] px-2.5 py-0.5 text-[11px] font-semibold">
-            #{priority === 'mendesak' ? 'mendesak' : 'tinggi'}
-          </span>
-        )}
-        {Boolean(task.data.recurrence) && task.data.recurrence !== 'tidak' && (
-          <Repeat className="size-3.5 opacity-70" aria-label="Berulang" />
-        )}
-        <span className="ml-auto flex items-center gap-0.5">
+      <div className="flex items-start gap-1.5">
+        {/* Kartu sempit: lencana turun ke baris berikut, tombol aksi tetap di dalam kartu. */}
+        <div className="flex min-h-8 min-w-0 flex-1 flex-wrap items-center gap-1.5">
+          {due.late ? (
+            <Pill tone="late" className="min-w-0">
+              <Clock />
+              <span className="truncate">{due.text}</span>
+            </Pill>
+          ) : (
+            <span className="flex min-w-0 items-center gap-1 text-[12px] font-medium">
+              <Clock className="size-3.5 shrink-0" />
+              <span className="truncate">{due.text}</span>
+            </span>
+          )}
+          {['tinggi', 'mendesak'].includes(priority) && (
+            <Pill tone={priority === 'mendesak' ? 'late' : 'warn'}>
+              {priority === 'mendesak' ? 'Mendesak' : 'Tinggi'}
+            </Pill>
+          )}
+          {Boolean(task.data.recurrence) && task.data.recurrence !== 'tidak' && (
+            <Repeat className="size-3.5 shrink-0" aria-label="Berulang" />
+          )}
+        </div>
+        <span className="flex shrink-0 items-center gap-1.5">
           <DropdownMenu.Root>
             <DropdownMenu.Trigger
-              className="grid size-8 place-items-center rounded-lg text-ink transition hover:bg-surface/60"
+              className="grid size-8 place-items-center rounded-full ring-1 ring-tone-line transition hover:bg-surface/40"
               aria-label={`Aksi untuk ${String(task.data.title)}`}
               onClick={(event) => event.stopPropagation()}
               onPointerDown={(event) => event.stopPropagation()}
             >
-              <EllipsisVertical className="size-4" />
+              <Ellipsis className="size-4" />
             </DropdownMenu.Trigger>
             <MenuContent align="end" onClick={(event) => event.stopPropagation()}>
               <MenuItem onSelect={() => void postponeTask(task, 1, refresh)}>
@@ -134,7 +143,6 @@ export function TaskCard({
             checked={done}
             onChange={() => void toggleTaskDone(task, refresh)}
             label={`${done ? 'Buka lagi' : 'Tandai selesai'}: ${String(task.data.title)}`}
-            className="ml-1.5"
           />
         </span>
       </div>
@@ -143,27 +151,25 @@ export function TaskCard({
         onClick={onOpen}
         onPointerDown={(event) => draggable && event.stopPropagation()}
         className={cn(
-          'relative line-clamp-2 text-left text-[15.5px] leading-snug font-bold text-ink outline-none',
-          done && 'text-ink-3 line-through',
+          'line-clamp-2 text-left text-[16px] leading-snug font-medium text-ink outline-none',
+          done && 'line-through',
         )}
       >
         {String(task.data.title)}
       </button>
-      {note && (
-        <p className="relative line-clamp-1 text-[12px] font-semibold text-ink-2">
-          <span className="text-ink">Catatan:</span> {note}
-        </p>
-      )}
+      <p className="-mt-1 truncate text-[13px]">
+        {project ? String(project.data.title) : 'Tanpa proyek'}
+      </p>
+      {note && <p className="line-clamp-1 text-[12px]">{note}</p>}
       {subtasks.length > 0 && (
-        <div className="relative flex flex-col gap-1.5">
-          <span className="flex justify-between text-[12px] font-semibold text-ink-3">
-            Progres <span className="tabular font-bold text-ink">{progress}%</span>
+        <div className="mt-1 flex flex-col gap-1.5">
+          <span className="flex justify-between text-[12px] font-medium">
+            Progres <span className="tabular font-semibold text-ink">{progress}%</span>
           </span>
           <SegmentBar value={progress} segments={7} label="Progres subtugas" onTone />
         </div>
       )}
-      <div className="relative flex items-center gap-3 text-[12px] font-semibold text-ink-3">
-        <AvatarStack names={people} max={3} />
+      <div className="mt-auto flex items-center gap-3 pt-1 text-[12px] font-medium">
         {comments > 0 && (
           <span className="flex items-center gap-1" title={`${comments} komentar`}>
             <MessageCircle className="size-3.5" />
@@ -178,12 +184,7 @@ export function TaskCard({
             </span>
           </span>
         )}
-        <span
-          className={cn('ml-auto flex items-center gap-1', due.late && 'font-bold text-late-ink')}
-        >
-          <Clock className="size-3.5" />
-          {due.text}
-        </span>
+        <AvatarStack names={people} max={3} className="ml-auto" />
       </div>
     </article>
   );
@@ -214,18 +215,18 @@ export function TaskRow({
       onKeyDown={(event) => {
         if (event.key === 'Enter' && event.target === event.currentTarget) onOpen();
       }}
-      className="flex items-center gap-3 rounded-2xl bg-surface px-3 py-2.5 outline-none transition hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-accent-strong"
+      className="flex items-center gap-3 rounded-[1.25rem] bg-surface px-3 py-2.5 ring-1 ring-line outline-none transition hover:bg-surface-3 focus-visible:ring-2 focus-visible:ring-accent-strong"
     >
       <Check
         checked={done}
         onChange={() => void toggleTaskDone(task, refresh)}
         label={`${done ? 'Buka lagi' : 'Tandai selesai'}: ${String(task.data.title)}`}
       />
-      <span className="h-8 w-1 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
+      <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
       <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left">
         <span
           className={cn(
-            'block truncate text-[14.5px] font-bold text-ink',
+            'block truncate text-[14.5px] font-medium text-ink',
             done && 'text-ink-3 line-through',
           )}
         >
@@ -242,7 +243,7 @@ export function TaskRow({
       </button>
       <span
         className={cn(
-          'hidden shrink-0 text-xs font-bold sm:block',
+          'hidden shrink-0 text-xs font-medium sm:block',
           due.late ? 'text-late-ink' : 'text-ink-3',
         )}
       >

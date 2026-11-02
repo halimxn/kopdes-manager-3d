@@ -8,15 +8,15 @@ export const metadata: Metadata = {
 };
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ebeae4' },
-    { media: '(prefers-color-scheme: dark)', color: '#121310' },
+    { media: '(prefers-color-scheme: light)', color: '#eef2f2' },
+    { media: '(prefers-color-scheme: dark)', color: '#15161a' },
   ],
   viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" data-theme="light" data-accent="sage" suppressHydrationWarning>
+    <html lang="id" data-theme="dark" data-accent="lime" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>

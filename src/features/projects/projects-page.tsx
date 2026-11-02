@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FolderKanban, Plus, Search } from 'lucide-react';
+import { CircleCheck, FolderKanban, ListChecks, LoaderCircle, Plus, Search } from 'lucide-react';
 import type { Item, Task } from '@/features/records/schemas';
 import type { Workspace } from '@/features/workspace/use-workspace';
 import { useWorkspace } from '@/features/workspace/use-workspace';
@@ -17,11 +17,10 @@ import { PageHeader } from '@/components/layout/page-header';
 import { Tabs } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/field';
-import { StatTile } from '@/components/ui/stat';
+import { StatGrid, StatTile } from '@/components/ui/stat';
 import { EmptyState, ErrorState } from '@/components/ui/states';
 import { SegmentBar } from '@/components/ui/progress';
 import { AvatarStack } from '@/components/ui/avatar';
-import { Wave } from '@/components/ui/wave';
 import { scopeProgress } from '@/lib/progress';
 import { formatDate, today } from '@/lib/date';
 import { projectTone } from '@/lib/tones';
@@ -64,9 +63,8 @@ export function ProjectCard({
       <Link
         href={`/projects/${project.id}`}
         data-tone={projectTone(project)}
-        className="relative flex h-full flex-col gap-3 overflow-hidden rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink transition hover:-translate-y-0.5 hover:shadow-card"
+        className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink ring-1 ring-tone-line ring-inset transition duration-300 hover:-translate-y-0.5 hover:shadow-card"
       >
-        <Wave />
         <span className="relative flex flex-wrap items-center gap-1.5">
           <span className="rounded-full border border-tone-line px-2.5 py-0.5 text-[11px] font-semibold">
             #{String(project.data.code || 'PRJ')}
@@ -159,6 +157,40 @@ export function ProjectsPage() {
       <PageHeader
         title="Proyek"
         subtitle={tab === 'list' ? 'Proyek dan bidang kerja koperasi beserta tugasnya.' : undefined}
+        sections={
+          tab === 'list' && !loading
+            ? [
+                <StatGrid key="stats">
+                  <StatTile
+                    icon={<FolderKanban />}
+                    label="Total proyek"
+                    value={(data.workstreams || []).length}
+                    tone="lavender"
+                  />
+                  <StatTile
+                    icon={<LoaderCircle />}
+                    label="Berjalan"
+                    value={(data.workstreams || []).filter((p) => p.data.status === 'aktif').length}
+                    tone="sky"
+                  />
+                  <StatTile
+                    icon={<CircleCheck />}
+                    label="Selesai"
+                    value={
+                      (data.workstreams || []).filter((p) => p.data.status === 'selesai').length
+                    }
+                    tone="mint"
+                  />
+                  <StatTile
+                    icon={<ListChecks />}
+                    label="Tugas terhubung"
+                    value={tasks.filter((t) => t.data.workstream_id).length}
+                    tone="peach"
+                  />
+                </StatGrid>,
+              ]
+            : undefined
+        }
         actions={
           <>
             <Tabs
@@ -191,36 +223,14 @@ export function ProjectsPage() {
           entity={tab === 'risks' ? 'risks' : 'issues'}
           ws={data}
           refresh={refresh}
-          metrics={
-            ENTITY_VIEWS[tab === 'risks' ? 'risks' : 'issues']?.metrics
-              ? (rows) => ENTITY_VIEWS[tab === 'risks' ? 'risks' : 'issues']!.metrics!(rows, data)
+          details={
+            ENTITY_VIEWS[tab === 'risks' ? 'risks' : 'issues']?.details
+              ? (rows) => ENTITY_VIEWS[tab === 'risks' ? 'risks' : 'issues']!.details!(rows, data)
               : undefined
           }
         />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <StatTile
-              label="Total proyek"
-              value={(data.workstreams || []).length}
-              tone="lavender"
-            />
-            <StatTile
-              label="Berjalan"
-              value={(data.workstreams || []).filter((p) => p.data.status === 'aktif').length}
-              tone="sky"
-            />
-            <StatTile
-              label="Selesai"
-              value={(data.workstreams || []).filter((p) => p.data.status === 'selesai').length}
-              tone="mint"
-            />
-            <StatTile
-              label="Tugas terhubung"
-              value={tasks.filter((t) => t.data.workstream_id).length}
-              tone="peach"
-            />
-          </div>
           <div className="flex flex-wrap items-center gap-2">
             <Tabs
               label="Proyek berjalan atau riwayat"
@@ -233,12 +243,12 @@ export function ProjectsPage() {
             />
             <label className="relative min-w-0 flex-1 basis-52">
               <span className="sr-only">Cari proyek</span>
-              <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-ink-3" />
+              <Search className="pointer-events-none absolute top-1/2 left-4 z-10 size-[18px] -translate-y-1/2 text-ink-3" />
               <Input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Cari proyek…"
-                className="bg-surface pl-10 shadow-card"
+                className="rounded-full border-line-strong bg-surface-2 pl-11"
               />
             </label>
             <div className="scrollbar-none flex gap-2 overflow-x-auto">
@@ -248,7 +258,7 @@ export function ProjectsPage() {
                   type="button"
                   aria-pressed={status === value}
                   onClick={() => setStatus(value)}
-                  className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface px-3.5 text-[13px] font-semibold text-ink-2 shadow-card aria-pressed:bg-action aria-pressed:text-on-action"
+                  className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 shadow-card aria-pressed:bg-action aria-pressed:text-on-action"
                 >
                   {value ? formatChoiceLabel(value) : 'Semua'}
                   <span className="tabular text-xs opacity-70">

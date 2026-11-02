@@ -22,7 +22,6 @@ import { Button } from '@/components/ui/button';
 import { Field, Input } from '@/components/ui/field';
 import { ErrorState } from '@/components/ui/states';
 import { useConfirm } from '@/components/ui/confirm';
-import { Wave } from '@/components/ui/wave';
 import { ACCENTS, useTheme } from '@/lib/theme';
 import { api, resetAuthNavigation } from '@/lib/client';
 import { formatDate } from '@/lib/date';
@@ -53,9 +52,8 @@ export function SettingsPage() {
             <section
               data-tone="sky"
               aria-label="Profil"
-              className="relative overflow-hidden rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink ring-1 ring-white/50 ring-inset md:p-6 dark:ring-white/5"
+              className="relative overflow-hidden rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink ring-1 ring-tone-line ring-inset md:p-6"
             >
-              <Wave />
               <div className="relative flex flex-wrap items-center gap-4">
                 <Avatar name={manager} className="size-16 text-lg ring-4" />
                 <div className="min-w-0 flex-1">
@@ -208,7 +206,8 @@ function ThemePreview({ value }: { value: 'light' | 'dark' }) {
   return (
     <span
       data-theme={value}
-      className="flex h-20 w-full gap-1.5 overflow-hidden rounded-xl bg-canvas p-1.5 ring-1 ring-line"
+      data-accent="lime"
+      className="flex h-20 w-full gap-1.5 overflow-hidden rounded-xl p-1.5 ring-1 ring-line [background:var(--ground)]"
       aria-hidden="true"
     >
       <span className="flex w-5 flex-col gap-1 rounded-md bg-surface p-1">
@@ -239,7 +238,7 @@ function Appearance() {
               key={value}
               type="button"
               aria-pressed={theme === value}
-              onClick={() => setTheme(value)}
+              onClick={(event) => setTheme(value, event.currentTarget)}
               className="flex flex-col gap-2.5 rounded-2xl p-2 text-left ring-2 ring-transparent transition hover:bg-surface-2 aria-pressed:bg-accent aria-pressed:ring-accent-strong"
             >
               <ThemePreview value={value} />

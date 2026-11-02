@@ -179,8 +179,8 @@ Keputusan tentang gaya tampilan lama tidak dicatat lagi. Riwayatnya ada di Git d
 - **13 Okt 2026**: status draf/final laporan tetap terjaga saat cadangan dipulihkan (migrasi 9).
 - **15 Okt 2026**: administrasi usaha ditambahkan (migrasi 10): simpanan, penjualan harian, pembelian, aset, absensi. Simpanan hanya setor/tarik pokok, wajib, sukarela.
 - **22–23 Okt 2026**: tampilan web dirombak total.
-  - Acuan rasa: task manager pastel ala TaskTrack.
-  - Tanpa gradasi. Warna solid lembut saja.
+  - Acuan rasa (pemilik, 2 Nov 2026): tiga video acuan, rinciannya di [TAMPILAN](TAMPILAN.md).
+  - Gradasi hanya di latar halaman; kartu, tombol, dan grafik warna solid.
   - Huruf Urbanist.
   - Warna aksi biru tua, ditambah lima aksen sorotan.
   - Rutin harian disimpan di database lewat migrasi 11, dengan hari aktif per rutin.

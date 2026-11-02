@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { PageHeader } from '@/components/layout/page-header';
 import { ShortcutList } from '@/components/layout/shortcuts';
-import { Wave } from '@/components/ui/wave';
 
 const STEPS = [
   {
@@ -58,9 +57,8 @@ export function HelpPage() {
             key={step.title}
             href={step.href}
             data-tone={step.tone}
-            className="relative flex flex-col gap-2 overflow-hidden rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink transition hover:-translate-y-0.5 hover:shadow-card"
+            className="relative flex flex-col gap-2 rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink ring-1 ring-tone-line ring-inset transition duration-300 hover:-translate-y-0.5 hover:shadow-card"
           >
-            <Wave />
             <span className="relative grid size-9 place-items-center rounded-full bg-surface/80 font-extrabold">
               {index + 1}
             </span>

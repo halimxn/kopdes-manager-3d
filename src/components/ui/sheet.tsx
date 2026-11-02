@@ -102,16 +102,11 @@ export function Sheet({
         <Dialog.Content
           ref={panel}
           className={cn(
-            'sheet fixed inset-x-0 bottom-0 z-50 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-[1.75rem] bg-surface shadow-float outline-none',
+            'sheet fixed inset-x-0 bottom-0 z-50 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-[1.75rem] bg-surface shadow-float ring-1 ring-line-strong outline-none',
             'md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-[min(30rem,100vw)] md:rounded-none md:rounded-l-[1.75rem]',
             wide && 'md:w-[min(44rem,100vw)]',
           )}
         >
-          {/* Garis sorotan di atas laci, seperti panel detail pada acuan. */}
-          <span
-            className="absolute inset-x-0 top-0 hidden h-[3px] bg-accent-strong md:block"
-            aria-hidden="true"
-          />
           <div
             className="shrink-0 touch-none md:touch-auto"
             onPointerDown={onPointerDown}
@@ -126,7 +121,7 @@ export function Sheet({
             {/* Hanya baris tutup yang tetap; judul ikut bergulir agar isi tidak tertutup di layar pendek. */}
             <header className="flex items-center gap-2 px-5 pt-2 pb-1 md:px-7 md:pt-4">
               <Dialog.Close
-                className="-ml-2 grid size-10 shrink-0 place-items-center rounded-xl text-ink-2 transition hover:bg-surface-2 hover:text-ink active:scale-95"
+                className="-ml-2 grid size-10 shrink-0 place-items-center rounded-full text-ink-2 transition hover:bg-surface-2 hover:text-ink active:scale-95"
                 aria-label="Tutup"
               >
                 <X className="size-5" />
@@ -137,7 +132,7 @@ export function Sheet({
           </div>
           <div className="sheet-body min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 md:px-7">
             <div className="pt-1 pb-4">
-              <Dialog.Title className="text-[22px] leading-tight font-extrabold tracking-tight text-ink md:text-2xl">
+              <Dialog.Title className="text-[24px] leading-tight font-normal tracking-[-0.02em] text-ink md:text-[28px]">
                 {title}
               </Dialog.Title>
               {description ? (

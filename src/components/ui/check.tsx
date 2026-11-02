@@ -38,7 +38,7 @@ export function Check({
         size === 'md' ? 'size-6' : 'size-5',
         checked
           ? 'border-[var(--tone-bar,var(--action))] bg-[var(--tone-bar,var(--action))] text-on-action'
-          : 'border-line-strong bg-surface text-transparent hover:border-[var(--tone-bar,var(--action))]',
+          : 'border-ink-3/70 bg-surface-2 text-transparent hover:border-[var(--tone-bar,var(--action))]',
         className,
       )}
     >

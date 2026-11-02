@@ -23,7 +23,7 @@ export function EmptyState({
       )}
     >
       {icon && (
-        <span className="grid size-14 place-items-center rounded-2xl bg-accent text-accent-ink [&_svg]:size-6">
+        <span className="grid size-14 place-items-center rounded-full bg-accent text-accent-ink [&_svg]:size-6">
           {icon}
         </span>
       )}
@@ -56,7 +56,7 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-xl bg-surface px-3 py-2 text-sm font-bold text-ink"
+          className="rounded-full bg-surface-solid px-4 py-2 text-sm font-medium text-ink"
         >
           Coba lagi
         </button>

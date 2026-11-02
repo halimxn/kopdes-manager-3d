@@ -34,8 +34,8 @@ Seluruh data kerja hidup di **Dunia Koperasi**: diorama kantor 3D yang membaca c
 ## Brand Commitments
 
 - Nama produk: Kopdes Manager 3D; di dalam aplikasi: "Dunia Koperasi" untuk diorama.
-- Tampilan (arahan pemilik 23 Oktober 2026): acuan desain TaskTrack — cangkang putih, kartu pastel penuh berwarna per proyek, label pil bergaris, progres bersegmen, avatar bertumpuk, hiasan lengkung sangat halus; tanpa gradasi; huruf Urbanist; aksi biru tua; navigasi bawah HP putih dengan kapsul pastel. Rincian di `docs/TAMPILAN.md`.
-- Tampilan harus bisa diganti kapan saja: semua gaya lewat token di `src/app/globals.css`; gaya sekarang bukan aturan permanen. Tema terang + gelap, lima warna sorotan.
+- Tampilan (arahan pemilik 2 November 2026): tiga acuan video. Tema gelap bawaan mengikuti Solvik (latar warna buram, panel hampir hitam, kartu biru batu/zaitun/karat, aksi limau, pil menu atas, rel ikon kiri); tema terang dan isi Beranda mengikuti Kinlo (latar aqua dan persik, aksi teal, sapaan besar, kartu ringkasan gelap); gerak mengikuti Crew (isi muncul dari buram, grafik tergambar, konstelasi hidup). Gradasi hanya di latar halaman; kartu, tombol, dan grafik warna solid. Huruf Urbanist ringan. Rincian di `docs/TAMPILAN.md`. Tampilan sebelumnya ada di cabang `arsip/desain-oktober`.
+- Tampilan harus bisa diganti kapan saja: semua gaya lewat token di `src/app/globals.css`; gaya sekarang bukan aturan permanen. Tema gelap bawaan + terang, enam warna sorotan.
 - Grafik dipakai bila menjawab pertanyaan kerja (berapa, membaik atau tidak, apa yang perlu dikerjakan), selalu dengan ringkasan teks; tidak pernah menampilkan angka contoh atau nol palsu.
 - Tampilan seimbang di HP, tablet, dan laptop; setiap data yang tampil harus bisa ditindaklanjuti; tidak ada tombol aksi ganda.
 - Bahasa UI Indonesia sehari-hari: langsung, ringkas, tidak terdengar terjemahan, tidak lebay, tanpa slogan motivasi.

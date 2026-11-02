@@ -181,7 +181,7 @@ export function TaskTimeline({
           onChange={(id) => setScale(id as keyof typeof SCALES)}
         />
         <div
-          className="flex items-center rounded-2xl bg-surface p-1 shadow-card"
+          className="flex items-center rounded-full bg-surface-2 p-1 ring-1 ring-line"
           role="group"
           aria-label="Geser jadwal"
         >
@@ -214,14 +214,14 @@ export function TaskTimeline({
         </p>
       )}
       {changed > 0 && (
-        <div className="sticky top-20 z-20 flex flex-wrap items-center gap-3 rounded-2xl bg-action px-4 py-3 text-on-action shadow-float">
+        <div className="sticky top-20 z-20 flex flex-wrap items-center gap-3 rounded-[1.5rem] bg-action px-4 py-3 text-on-action shadow-float">
           <span className="flex-1 text-sm font-bold">
             {changed} perubahan jadwal belum disimpan. Jadwal tugas lain tidak digeser otomatis.
           </span>
           <Button
             size="sm"
             variant="ghost"
-            className="text-on-action hover:bg-white/10"
+            className="text-on-action hover:bg-on-action/10"
             onClick={() => setPending({})}
           >
             Batal
@@ -394,7 +394,7 @@ export function TaskTimeline({
                           // Batang kapsul seperti acuan; batang terpilih berwarna penuh dengan teks putih.
                           'absolute flex h-9 cursor-grab items-center gap-2 overflow-hidden rounded-full border pr-4 pl-1 text-[13px] font-medium whitespace-nowrap outline-none transition-colors active:cursor-grabbing',
                           solid
-                            ? 'z-10 border-transparent bg-tone-bar text-white shadow-[0_10px_20px_-10px_var(--tone-bar)]'
+                            ? 'z-10 border-transparent bg-tone-bar text-on-bar shadow-[0_10px_20px_-10px_var(--tone-bar)]'
                             : 'border-[color-mix(in_srgb,var(--tone-bar)_22%,transparent)] bg-tone text-ink hover:border-[color-mix(in_srgb,var(--tone-bar)_45%,transparent)]',
                           done && !solid && 'opacity-60',
                         )}
@@ -407,7 +407,7 @@ export function TaskTimeline({
                                 key={name}
                                 name={name}
                                 className={cn(
-                                  'size-7 text-[9px] ring-2 ring-white',
+                                  'size-7 text-[9px] ring-2 ring-canvas/70',
                                   index && '-ml-1.5',
                                 )}
                               />

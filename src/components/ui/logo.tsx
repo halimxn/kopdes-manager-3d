@@ -5,7 +5,7 @@ export function LogoMark({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        'grid size-11 shrink-0 place-items-center rounded-[14px] bg-brand text-on-brand shadow-[0_8px_18px_-8px_var(--brand)]',
+        'grid size-11 shrink-0 place-items-center rounded-[14px] bg-brand text-on-brand',
         className,
       )}
     >
@@ -33,7 +33,7 @@ export function Logo({ className, compact }: { className?: string; compact?: boo
     <span className={cn('flex items-center gap-2.5', className)}>
       <LogoMark />
       {!compact && (
-        <span className="text-[24px] leading-none font-extrabold tracking-[-0.03em] text-ink">
+        <span className="text-[24px] leading-none font-medium tracking-[-0.03em] text-ink">
           Kopdes
         </span>
       )}

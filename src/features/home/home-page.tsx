@@ -1,21 +1,18 @@
 'use client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   AlarmClock,
-  ArrowRight,
   ArrowUpRight,
-  CircleAlert,
-  FolderKanban,
-  ChevronLeft,
+  CalendarDays,
   ChevronRight,
-  CircleCheck,
-  CircleDashed,
+  CircleAlert,
   ClipboardCopy,
   Globe2,
-  LoaderCircle,
-  Sparkles,
+  ListPlus,
+  ListTodo,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useWorkspace } from '@/features/workspace/use-workspace';
@@ -24,19 +21,22 @@ import { getFollowUps } from '@/features/notifications/follow-ups';
 import { RecordDetailSheet } from '@/features/records/record-card';
 import { RecordFormSheet } from '@/features/records/lazy';
 import { TaskCard } from '@/features/tasks/task-card';
-import { TaskSheet } from '@/features/tasks/task-sheet';
+import { TaskSheet } from '@/features/tasks/lazy';
 import { countTaskStates } from '@/features/tasks/status-counts';
 import { MEETING_KINDS, meetingKindOf } from '@/features/agenda/meeting-kinds';
 import { isProjectHistory } from '@/features/projects/lifecycle';
+import { PageHeader } from '@/components/layout/page-header';
 import { PageLoading } from '@/features/records/records-page';
 import { AvatarStack } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { AreaChart, StackBar } from '@/components/ui/charts';
 import { Input } from '@/components/ui/field';
-import { MetricTile } from '@/components/ui/stat';
+import { Pill } from '@/components/ui/pill';
+import { StatGrid, StatTile } from '@/components/ui/stat';
 import { CountUp } from '@/components/ui/count-up';
-import { ErrorState, EmptyState } from '@/components/ui/states';
-import { HalfDonut, Ring } from '@/components/ui/progress';
-import { Wave } from '@/components/ui/wave';
+import { ErrorState, EmptyState, Skeleton } from '@/components/ui/states';
+import { Ring } from '@/components/ui/progress';
+import { Tabs } from '@/components/ui/tabs';
 import { addDays, formatDate, today, weekDays } from '@/lib/date';
 import { isActiveTask } from '@/lib/task-status';
 import { scopeProgress } from '@/lib/progress';
@@ -44,9 +44,23 @@ import { projectTone } from '@/lib/tones';
 import { cn } from '@/lib/utils';
 import type { Task } from '@/features/records/schemas';
 import { RoutinesCard, routineStates, useRoutineChecks } from './routines';
-import { useJakartaClock } from '@/lib/clock';
+import { greeting, useJakartaClock } from '@/lib/clock';
 import { DayTimeline } from './day-timeline';
 import { buildDailyReport, parseQuickAdd } from './quick-add';
+import { weeklyDone } from './weekly-done';
+
+// Kanvas konstelasi dimuat sesudah halaman tampil agar tidak memperbesar unduhan awal.
+const Constellation = dynamic(
+  () => import('./constellation').then((module) => module.Constellation),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-full min-h-[25rem] rounded-[var(--radius-card)]" />,
+  },
+);
+
+const PANEL = 'rounded-[var(--radius-card)] bg-surface p-5 shadow-card ring-1 ring-line';
+const ROUND_LINK =
+  'grid size-10 shrink-0 place-items-center rounded-full text-ink-2 ring-1 ring-line-strong transition hover:bg-surface-2 hover:text-ink [&_svg]:size-4';
 
 const DAY_SHORT = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
 const longDate = (date: string) =>
@@ -54,7 +68,6 @@ const longDate = (date: string) =>
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric',
     timeZone: 'UTC',
   }).format(new Date(date + 'T12:00:00Z'));
 
@@ -68,14 +81,14 @@ export function HomePage() {
   const [openMeeting, setOpenMeeting] = useState<string | null>(null);
   const [draft, setDraft] = useState<Record<string, unknown> | null>(null);
   const [quick, setQuick] = useState('');
-  const carousel = useRef<HTMLDivElement>(null);
+  const [span, setSpan] = useState('12');
   const router = useRouter();
   const tasks = useMemo(() => data['work-items'] || [], [data]);
   const meetings = useMemo(
     () => (data.meetings || []).filter((m) => m.data.status !== 'dibatalkan'),
     [data],
   );
-  const { name: coop } = organizationInfo(data);
+  const { name: coop, manager } = organizationInfo(data);
   const team = (data.staff || [])
     .filter((row) => row.data.status !== 'nonaktif')
     .map((row) => String(row.data.title));
@@ -92,9 +105,10 @@ export function HomePage() {
         .sort((a, b) => String(a.data.due_date).localeCompare(String(b.data.due_date))),
     [tasks, date],
   );
-  const attention = getFollowUps(data, date)
-    .filter((item) => !item.id.startsWith('work-items') && !item.id.startsWith('meetings'))
-    .slice(0, 4);
+  const followUps = getFollowUps(data, date).filter(
+    (item) => !item.id.startsWith('work-items') && !item.id.startsWith('meetings'),
+  );
+  const attention = followUps.slice(0, 4);
   const projects = (data.workstreams || []).filter((p) => !isProjectHistory(p)).slice(0, 4);
   const week = weekDays(day);
   const dayTasks = tasks.filter(
@@ -148,113 +162,119 @@ export function HomePage() {
 
   const active = counts.rencana + counts.proses;
   const doneRate = active + counts.selesai ? (counts.selesai / (active + counts.selesai)) * 100 : 0;
+  const todayMeetings = meetings.filter((m) => m.data.date === date).length;
+  const needed = late + followUps.length;
+  const weeks = weeklyDone(tasks, date, Number(span));
+  const weekTotal = weeks.reduce((total, week) => total + week.value, 0);
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Kepala langsung di atas latar, seperti acuan: judul dan tanggal kiri, aksi berbentuk pil kanan. */}
-      <header className="enter flex flex-wrap items-end gap-x-4 gap-y-3 px-1">
-        <div className="min-w-44 flex-1">
-          <h1 className="text-[26px] leading-tight font-extrabold tracking-tight text-ink md:text-[30px]">
-            Kerja hari ini
-          </h1>
-          <p className="text-[13px] font-semibold text-ink-3">
+      <PageHeader
+        title={`${greeting(now)}, ${(manager || 'Manajer').split(' ')[0]}`}
+        subtitle={
+          <>
             {longDate(date)}
             {coop && <span className="max-sm:hidden"> · {coop}</span>}
-            {' · '}
-            {todayCount} tugas hari ini
-            {late > 0 && (
-              <>
-                {' · '}
-                <Link
-                  href="/tasks?status=terlambat"
-                  className="font-bold text-late-ink hover:underline"
-                >
-                  {late} terlambat
-                </Link>
-              </>
+            {needed > 0 && (
+              <span className="font-semibold text-ink"> · {needed} hal perlu ditindak</span>
             )}
-          </p>
-        </div>
-        {team.length > 0 && (
-          <Link
-            href="/team"
-            className="hidden items-center xl:flex"
-            aria-label={`Tim: ${team.length} orang`}
+          </>
+        }
+        sections={[
+          // HP: tiga kolom agar angka ketiga tidak sendirian di barisnya.
+          <StatGrid
+            key="stats"
+            className="max-sm:grid-cols-3 max-sm:[&>*]:flex-col max-sm:[&>*]:items-start max-sm:[&>*]:gap-2"
           >
-            <AvatarStack names={team} max={4} />
-          </Link>
-        )}
-        <div className="flex gap-2">
-          <Button
-            onClick={() => void copyReport()}
-            aria-label="Salin laporan hari ini"
-            className="rounded-full border-transparent shadow-card"
-          >
-            <ClipboardCopy />
-            <span className="max-sm:hidden">Salin laporan</span>
-          </Button>
-          <Button asChild variant="primary" className="rounded-full">
-            <Link href="/world?lokasi=kantor" aria-label="Masuk ke Dunia Koperasi 3D">
-              <Globe2 />
-              <span className="max-sm:hidden">Masuk ke 3D</span>
-            </Link>
-          </Button>
-        </div>
-      </header>
+            <StatTile
+              label="Tugas hari ini"
+              value={todayCount}
+              tone="sky"
+              icon={<ListTodo />}
+              onClick={() => router.push('/tasks')}
+            />
+            <StatTile
+              label="Terlambat"
+              value={late}
+              tone="rose"
+              icon={<AlarmClock />}
+              badge={
+                late > 0 ? (
+                  <Pill tone="late" className="max-sm:hidden">
+                    Perlu ditindak
+                  </Pill>
+                ) : undefined
+              }
+              onClick={() => router.push('/tasks?status=terlambat')}
+            />
+            <StatTile
+              label="Agenda hari ini"
+              value={todayMeetings}
+              tone="lavender"
+              icon={<CalendarDays />}
+              onClick={() => router.push('/agenda')}
+            />
+          </StatGrid>,
+        ]}
+        actions={
+          <>
+            <Button onClick={() => void copyReport()} aria-label="Salin laporan hari ini">
+              <ClipboardCopy />
+              <span className="max-sm:hidden">Salin laporan</span>
+            </Button>
+            <Button asChild variant="primary">
+              <Link href="/world?lokasi=kantor" aria-label="Masuk ke Dunia Koperasi 3D">
+                <Globe2 />
+                Masuk ke 3D
+              </Link>
+            </Button>
+          </>
+        }
+      />
 
-      {/* Empat ubin angka putih: urut alur kerja belum → dikerjakan → terlambat → selesai. */}
-      <section aria-label="Ringkasan tugas" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {(
-          [
-            [
-              'Belum dikerjakan',
-              counts.rencana,
-              'sky',
-              <CircleDashed key="i" />,
-              'rencana',
-              'Rencana',
-            ],
-            [
-              'Dikerjakan',
-              counts.proses,
-              'lavender',
-              <LoaderCircle key="i" />,
-              'proses',
-              'Sedang berjalan',
-            ],
-            [
-              'Terlambat',
-              late,
-              'rose',
-              <AlarmClock key="i" />,
-              'terlambat',
-              late ? 'Perlu ditindak' : 'Tidak ada',
-            ],
-            [
-              'Selesai',
-              counts.selesai,
-              'mint',
-              <CircleCheck key="i" />,
-              'selesai',
-              '30 hari terakhir',
-            ],
-          ] as const
-        ).map(([label, value, tone, icon, status, note], index) => (
-          <MetricTile
-            key={status}
-            label={label}
-            value={value}
-            tone={tone}
-            icon={icon}
-            note={note}
-            style={{ animationDelay: `${60 + index * 60}ms` }}
-            onClick={() => router.push(`/tasks?status=${status}`)}
-          />
-        ))}
-      </section>
+      <form
+        className="relative"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!quick.trim()) return;
+          const parsed = parseQuickAdd(quick, {
+            today: date,
+            staff: (data.staff || []).map((row) => String(row.data.title)),
+            projects: (data.workstreams || []).map((row) => ({
+              id: row.id,
+              title: String(row.data.title),
+            })),
+          });
+          setDraft({ due_date: date, ...parsed });
+          setQuick('');
+        }}
+      >
+        <label className="sr-only" htmlFor="quick-add">
+          Tambah tugas cepat
+        </label>
+        <Input
+          id="quick-add"
+          value={quick}
+          onChange={(event) => setQuick(event.target.value)}
+          maxLength={200}
+          icon={<ListPlus />}
+          placeholder="Tugas cepat: Cek stok gula @Budi besok"
+          className="h-12 rounded-full border-line-strong bg-surface-2 pr-28"
+        />
+        <Button
+          type="submit"
+          size="sm"
+          variant="primary"
+          className="absolute top-1/2 right-1.5 -translate-y-1/2"
+          disabled={!quick.trim()}
+        >
+          Tambah
+        </Button>
+      </form>
 
-      <div className="grid gap-4 lg:grid-cols-12">
-        <div className="enter lg:col-span-7" style={{ animationDelay: '220ms' }}>
+      {/* Baris utama: yang dicentang pagi hari, peta kerja, lalu ringkasan progres. */}
+      <div className="grid gap-4 max-md:contents lg:grid-cols-12 xl:grid-cols-[minmax(0,3.3fr)_minmax(0,6fr)_minmax(0,2.7fr)]">
+        <div className="max-md:order-1 lg:col-span-5 xl:col-auto">
           <RoutinesCard
             routines={data.routines || []}
             checks={checks}
@@ -264,149 +284,198 @@ export function HomePage() {
             ready={routinesReady}
           />
         </div>
-        <div className="flex flex-col gap-4 lg:col-span-5">
-          {/* Kartu progres setengah donat seperti "69% dari target" pada acuan. */}
-          <section
-            aria-labelledby="progress-title"
-            className="enter flex flex-col rounded-[var(--radius-card)] bg-surface p-5 shadow-card ring-1 ring-line/60"
-            style={{ animationDelay: '280ms' }}
-          >
+        <div className="max-md:order-3 lg:col-span-7 xl:col-auto">
+          <Constellation
+            projects={data.workstreams || []}
+            tasks={tasks}
+            date={date}
+            onOpenTask={setOpenTask}
+            onOpenProject={(id) => router.push(id ? `/projects/${id}` : '/tasks')}
+          />
+        </div>
+        {/* Panel gelap seperti kartu rekening acuan: dasar mengikuti tema, isinya bertoken gelap. */}
+        <section
+          aria-labelledby="progress-title"
+          className="flex flex-col rounded-[var(--radius-card)] bg-deep shadow-card ring-1 ring-line max-md:order-4 lg:col-span-12 xl:col-auto"
+        >
+          <div data-theme="dark" className="flex h-full flex-col gap-4 p-5 text-on-deep">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 id="progress-title" className="text-base font-extrabold">
+                <h2 id="progress-title" className="text-lg font-medium">
                   Progres tugas
                 </h2>
-                <p className="text-xs font-semibold text-ink-3">
-                  Selesai dari semua tugas yang sedang dilacak
-                </p>
+                <p className="text-[13px] text-on-deep-2">Semua tugas yang sedang dilacak</p>
               </div>
               <Link
                 href="/tasks"
-                className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-ink-2 transition hover:bg-surface-3 hover:text-ink"
                 aria-label="Buka Tugas"
+                className={cn(ROUND_LINK, 'text-on-deep ring-line-strong hover:bg-deep-2')}
               >
-                <ArrowUpRight className="size-4" />
+                <ArrowUpRight />
               </Link>
             </div>
-            <div className="mt-3 flex flex-col items-center">
-              <HalfDonut value={doneRate} label="Tugas selesai" />
-              <span className="-mt-9 text-[28px] leading-none font-extrabold tracking-tight">
-                <CountUp value={Math.round(doneRate)} />%
-              </span>
-              <span className="mt-1 text-xs font-semibold text-ink-3">
-                {counts.selesai} selesai · {active} masih berjalan
-              </span>
-            </div>
-          </section>
-          <form
-            className="enter relative"
-            style={{ animationDelay: '340ms' }}
-            onSubmit={(event) => {
-              event.preventDefault();
-              if (!quick.trim()) return;
-              const parsed = parseQuickAdd(quick, {
-                today: date,
-                staff: (data.staff || []).map((row) => String(row.data.title)),
-                projects: (data.workstreams || []).map((row) => ({
-                  id: row.id,
-                  title: String(row.data.title),
-                })),
-              });
-              setDraft({ due_date: date, ...parsed });
-              setQuick('');
-            }}
-          >
-            <label className="sr-only" htmlFor="quick-add">
-              Tambah tugas cepat
-            </label>
-            <Input
-              id="quick-add"
-              value={quick}
-              onChange={(event) => setQuick(event.target.value)}
-              maxLength={200}
-              icon={<Sparkles className="text-accent-strong" />}
-              placeholder="Tugas cepat: Cek stok gula @Budi besok"
-              className="h-12 rounded-full border-transparent bg-surface pr-24 shadow-card"
+            <p className="text-[38px] leading-none font-normal tracking-tight">
+              <CountUp value={Math.round(doneRate)} />%
+              <span className="ml-2 text-[13px] tracking-normal text-on-deep-2">selesai</span>
+            </p>
+            <StackBar
+              label={`${counts.selesai} selesai, ${counts.proses} dikerjakan, ${counts.rencana} belum dikerjakan`}
+              parts={[
+                { value: counts.selesai, className: 'bg-done-bar' },
+                { value: counts.proses, className: 'bg-doing-bar' },
+                { value: counts.rencana, className: 'bg-plan-bar' },
+              ]}
             />
-            <Button
-              type="submit"
-              size="sm"
-              variant="primary"
-              className="absolute top-1/2 right-1.5 -translate-y-1/2 rounded-full"
-              disabled={!quick.trim()}
-            >
-              Tambah
-            </Button>
-          </form>
-        </div>
+            <dl className="flex flex-1 flex-col justify-around text-sm">
+              {(
+                [
+                  ['Selesai', counts.selesai, 'bg-done-bar', 'selesai'],
+                  ['Dikerjakan', counts.proses, 'bg-doing-bar', 'proses'],
+                  ['Belum dikerjakan', counts.rencana, 'bg-plan-bar', 'rencana'],
+                  ['Terlambat', late, 'bg-late-bar', 'terlambat'],
+                ] as const
+              ).map(([label, value, dot, status]) => (
+                <Link
+                  key={status}
+                  href={`/tasks?status=${status}`}
+                  className="-mx-2 flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-deep-2"
+                >
+                  <span className={cn('size-2 rounded-full', dot)} aria-hidden="true" />
+                  <dt className="flex-1 text-on-deep-2">{label}</dt>
+                  <dd className="tabular font-medium">{value}</dd>
+                </Link>
+              ))}
+            </dl>
+            <div className="mt-auto grid grid-cols-2 gap-2">
+              <Link
+                href="/team"
+                className="flex flex-col gap-1.5 rounded-2xl bg-deep-2 p-3 transition-colors hover:bg-surface-3"
+              >
+                <span className="text-xs text-on-deep-2">Tim aktif</span>
+                <span className="tabular text-xl leading-none font-medium">{team.length}</span>
+                {team.length > 0 && <AvatarStack names={team} max={3} />}
+              </Link>
+              <Link
+                href="/projects"
+                className="flex flex-col gap-1.5 rounded-2xl bg-deep-2 p-3 transition-colors hover:bg-surface-3"
+              >
+                <span className="text-xs text-on-deep-2">Proyek berjalan</span>
+                <span className="tabular text-xl leading-none font-medium">
+                  {(data.workstreams || []).filter((p) => !isProjectHistory(p)).length}
+                </span>
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
 
-      <section aria-labelledby="deadline-title" className="flex flex-col gap-3">
-        <div className="flex items-center justify-between px-1">
-          <h2 id="deadline-title" className="text-lg font-extrabold">
-            Tenggat dekat
-          </h2>
-          <div className="flex gap-1">
-            <Button
-              size="icon-sm"
-              aria-label="Geser ke kiri"
-              className="rounded-full"
-              onClick={() => carousel.current?.scrollBy({ left: -320, behavior: 'smooth' })}
-            >
-              <ChevronLeft />
-            </Button>
-            <Button
-              size="icon-sm"
-              aria-label="Geser ke kanan"
-              className="rounded-full"
-              onClick={() => carousel.current?.scrollBy({ left: 320, behavior: 'smooth' })}
-            >
-              <ChevronRight />
-            </Button>
-          </div>
-        </div>
-        {deadlines.length ? (
-          <div
-            ref={carousel}
-            className="scrollbar-none -mx-4 flex snap-x snap-mandatory items-start gap-4 overflow-x-auto px-4 pt-1 pb-3 md:-mx-1 md:px-1"
-          >
-            {deadlines.map((row, index) => (
-              <div
-                key={row.id}
-                className="enter w-[min(19rem,80vw)] shrink-0 snap-start transition duration-300 hover:-translate-y-1"
-                style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}
-              >
-                <TaskCard
-                  task={row}
-                  ws={data}
-                  refresh={refresh}
-                  onOpen={() => setOpenTask(row.id)}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            title="Tidak ada tenggat dalam 14 hari"
-            description="Tugas aktif bertenggat akan muncul di sini, yang terlambat paling depan."
-          />
-        )}
-      </section>
-
-      <div className="grid gap-4 lg:grid-cols-12">
+      <div className="grid gap-4 max-md:contents lg:grid-cols-12">
         <section
-          aria-labelledby="today-title"
-          className="rounded-[var(--radius-card)] bg-surface p-4 shadow-card ring-1 ring-line/60 md:p-5 lg:col-span-7"
+          aria-labelledby="done-title"
+          data-tone="peach"
+          className={cn(PANEL, 'flex flex-col gap-3 max-md:order-5 lg:col-span-7')}
         >
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 id="done-title" className="text-[15px] font-medium">
+              Tugas selesai
+            </h2>
+            <div className="flex items-center gap-2">
+              <Tabs
+                label="Rentang waktu"
+                value={span}
+                onChange={setSpan}
+                items={[
+                  { id: '4', label: '4 mgg' },
+                  { id: '12', label: '12 mgg' },
+                ]}
+              />
+              <Link
+                href="/tasks?status=selesai"
+                aria-label="Buka arsip tugas"
+                className={ROUND_LINK}
+              >
+                <ArrowUpRight />
+              </Link>
+            </div>
+          </div>
+          <p className="flex flex-wrap items-baseline gap-x-2.5">
+            <span className="text-[34px] leading-none font-normal tracking-tight">
+              <CountUp value={weekTotal} />
+            </span>
+            <span className="text-[13px] text-ink-3">
+              tugas dalam {span} minggu terakhir, rata-rata{' '}
+              {(weekTotal / Number(span)).toLocaleString('id-ID', { maximumFractionDigits: 1 })} per
+              minggu
+            </span>
+          </p>
+          {weekTotal ? (
+            <AreaChart
+              key={span}
+              points={weeks}
+              label={`Tugas selesai per minggu, ${weekTotal} dalam ${span} minggu terakhir`}
+            />
+          ) : (
+            <p className="rounded-2xl bg-surface-2 px-4 py-8 text-center text-sm text-ink-3">
+              Belum ada tugas selesai yang bertanggal dalam {span} minggu terakhir.
+            </p>
+          )}
+        </section>
+
+        <section
+          aria-labelledby="deadline-title"
+          className={cn(PANEL, 'flex flex-col gap-3 max-md:order-2 lg:col-span-5')}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <h2 id="deadline-title" className="text-[15px] font-medium">
+              Tenggat dekat
+              {deadlines.length > 0 && (
+                <span className="tabular ml-2 font-normal text-ink-3">{deadlines.length}</span>
+              )}
+            </h2>
+            <Link href="/tasks" aria-label="Buka Tugas" className={ROUND_LINK}>
+              <ArrowUpRight />
+            </Link>
+          </div>
+          {deadlines.length ? (
+            <>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                {deadlines.slice(0, 4).map((row) => (
+                  <TaskCard
+                    key={row.id}
+                    task={row}
+                    ws={data}
+                    refresh={refresh}
+                    onOpen={() => setOpenTask(row.id)}
+                  />
+                ))}
+              </div>
+              {deadlines.length > 4 && (
+                <Link
+                  href="/tasks"
+                  className="flex items-center justify-center gap-1 rounded-full py-2 text-sm font-medium text-ink-2 transition hover:bg-surface-2 hover:text-ink"
+                >
+                  Lihat semua {deadlines.length}
+                  <ChevronRight className="size-4" />
+                </Link>
+              )}
+            </>
+          ) : (
+            <EmptyState
+              title="Tidak ada tenggat dalam 14 hari"
+              description="Tugas aktif bertenggat akan muncul di sini, yang terlambat paling depan."
+            />
+          )}
+        </section>
+      </div>
+
+      <div className="grid gap-4 max-md:order-6 lg:grid-cols-12">
+        <section aria-labelledby="today-title" className={cn(PANEL, 'lg:col-span-7')}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <h2 id="today-title" className="text-lg font-extrabold">
+            <h2 id="today-title" className="text-[15px] font-medium">
               {day === date ? 'Hari ini' : formatDate(day)}
             </h2>
-            <Link
-              href="/agenda"
-              className="flex items-center gap-1 rounded-full bg-surface-2 px-3 py-1.5 text-xs font-bold text-ink-2 transition hover:bg-surface-3 hover:text-ink"
-            >
-              Agenda <ArrowRight className="size-3.5" />
+            <Link href="/agenda" aria-label="Buka Agenda" className={ROUND_LINK}>
+              <ArrowUpRight />
             </Link>
           </div>
           <div className="mb-4 grid grid-cols-7 gap-1.5" role="group" aria-label="Pilih hari">
@@ -421,14 +490,12 @@ export function HomePage() {
                   aria-pressed={value === day}
                   onClick={() => setDay(value)}
                   className={cn(
-                    'relative flex flex-col items-center gap-0.5 rounded-2xl py-2.5 transition duration-300',
-                    value === day
-                      ? 'bg-action text-on-action shadow-[0_10px_20px_-12px_var(--action)]'
-                      : 'text-ink-2 hover:bg-surface-2',
+                    'relative flex flex-col items-center gap-0.5 rounded-[1.25rem] py-2.5 transition duration-300',
+                    value === day ? 'bg-action text-on-action' : 'text-ink-2 hover:bg-surface-2',
                   )}
                 >
-                  <span className="text-xs font-semibold opacity-80">{DAY_SHORT[index]}</span>
-                  <span className="tabular text-lg font-extrabold">{Number(value.slice(8))}</span>
+                  <span className="text-xs opacity-80">{DAY_SHORT[index]}</span>
+                  <span className="tabular text-lg font-medium">{Number(value.slice(8))}</span>
                   <span
                     className={cn(
                       'size-1.5 rounded-full',
@@ -453,24 +520,21 @@ export function HomePage() {
         </section>
 
         <div className="flex flex-col gap-4 lg:col-span-5">
-          <section
-            aria-labelledby="attention-title"
-            className="rounded-[var(--radius-card)] bg-surface p-4 shadow-card ring-1 ring-line/60 md:p-5"
-          >
-            <h2 id="attention-title" className="mb-3 text-lg font-extrabold">
+          <section aria-labelledby="attention-title" className={PANEL}>
+            <h2 id="attention-title" className="mb-3 text-[15px] font-medium">
               Perlu perhatian
             </h2>
             {attention.length ? (
-              <ul className="flex flex-col gap-2">
+              <ul className="flex flex-col gap-1">
                 {attention.map((item, index) => (
                   <li key={item.id} className="enter" style={{ animationDelay: `${index * 50}ms` }}>
                     <Link
                       href={item.href}
-                      className="group flex items-center gap-3 rounded-2xl bg-surface-2 px-3 py-2.5 transition hover:bg-surface-3"
+                      className="group -mx-2 flex items-center gap-3 rounded-2xl px-2 py-2 transition hover:bg-surface-2"
                     >
                       <span
                         className={cn(
-                          'grid size-9 shrink-0 place-items-center rounded-xl',
+                          'grid size-10 shrink-0 place-items-center rounded-full',
                           item.urgent ? 'bg-late text-late-ink' : 'bg-warn text-warn-ink',
                         )}
                       >
@@ -481,10 +545,10 @@ export function HomePage() {
                         )}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-bold text-ink">
+                        <span className="block truncate text-sm font-medium text-ink">
                           {item.title}
                         </span>
-                        <span className="block truncate text-xs font-semibold text-ink-3">
+                        <span className="block truncate text-xs text-ink-3">
                           {item.kind} · {item.reason}
                         </span>
                       </span>
@@ -494,52 +558,39 @@ export function HomePage() {
                 ))}
               </ul>
             ) : (
-              <p className="rounded-2xl bg-done px-4 py-3 text-sm font-semibold text-done-ink">
+              <p className="rounded-2xl bg-done px-4 py-3 text-sm font-medium text-done-ink">
                 Dokumen, stok, risiko, dan kendala aman.
               </p>
             )}
           </section>
-          <section aria-labelledby="projects-title" className="flex flex-col gap-3">
-            <div className="flex items-center justify-between px-1">
-              <h2 id="projects-title" className="text-lg font-extrabold">
+          <section aria-labelledby="projects-title" className={cn(PANEL, 'flex flex-1 flex-col')}>
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 id="projects-title" className="text-[15px] font-medium">
                 Proyek berjalan
               </h2>
-              <Link
-                href="/projects"
-                className="rounded-full bg-surface px-3 py-1.5 text-xs font-bold text-ink-2 shadow-card transition hover:text-ink"
-              >
-                Semua
+              <Link href="/projects" aria-label="Buka Proyek" className={ROUND_LINK}>
+                <ArrowUpRight />
               </Link>
             </div>
             {projects.length ? (
-              <div className="grid grid-cols-2 gap-3">
-                {projects.map((project, index) => {
+              <div className="grid flex-1 auto-rows-fr grid-cols-2 gap-3">
+                {projects.map((project) => {
                   const projectTasks = tasks.filter((t) => t.data.workstream_id === project.id);
                   const progress = scopeProgress(
                     projectTasks.map((t) => t.data as unknown as Task),
                   );
                   return (
-                    // Kartu seperti kartu properti acuan: area warna proyek di atas, nama dan cincin persen di bawah.
                     <Link
                       key={project.id}
                       href={`/projects/${project.id}`}
                       data-tone={projectTone(project)}
-                      className="enter group flex flex-col gap-2.5 rounded-[var(--radius-card)] bg-surface p-2.5 shadow-card ring-1 ring-line/60 transition duration-300 hover:-translate-y-1 hover:shadow-float"
-                      style={{ animationDelay: `${index * 60}ms` }}
+                      className="flex min-h-28 flex-col justify-between gap-2 rounded-[1.25rem] bg-tone p-3.5 text-tone-ink ring-1 ring-tone-line ring-inset transition duration-300 hover:-translate-y-0.5 hover:shadow-card"
                     >
-                      <span className="relative grid h-20 place-items-center overflow-hidden rounded-2xl bg-tone text-tone-ink">
-                        <Wave />
-                        <FolderKanban className="relative size-7 transition-transform duration-500 group-hover:scale-110" />
+                      <span className="line-clamp-2 text-sm leading-snug font-medium text-ink">
+                        {String(project.data.title)}
                       </span>
-                      <span className="flex items-center gap-2 px-1 pb-1">
-                        <span className="min-w-0 flex-1">
-                          <span className="line-clamp-2 text-[13px] leading-snug font-bold text-ink">
-                            {String(project.data.title)}
-                          </span>
-                          <span className="block text-[11px] font-semibold text-ink-3">
-                            {projectTasks.length} tugas
-                          </span>
-                        </span>
+                      <span className="flex items-end justify-between gap-2">
+                        <span className="text-xs">{projectTasks.length} tugas</span>
                         <Ring value={progress} label={`Progres ${String(project.data.title)}`} />
                       </span>
                     </Link>

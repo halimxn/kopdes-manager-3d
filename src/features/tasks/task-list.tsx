@@ -105,7 +105,7 @@ function SwipeRow({
             label={`${done ? 'Buka lagi' : 'Tandai selesai'}: ${String(task.data.title)}`}
           />
         )}
-        <span className="h-9 w-1 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
+        <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
         <button
           type="button"
           onClick={selecting ? onSelect : onOpen}
@@ -113,7 +113,7 @@ function SwipeRow({
         >
           <span
             className={cn(
-              'block truncate text-[15px] font-bold text-ink',
+              'block truncate text-[15px] font-medium text-ink',
               done && 'text-ink-3 line-through',
             )}
           >
@@ -131,7 +131,7 @@ function SwipeRow({
             {Boolean(task.data.recurrence) && task.data.recurrence !== 'tidak' && (
               <Repeat className="size-3 shrink-0" aria-label="Berulang" />
             )}
-            <span className={cn('shrink-0 md:hidden', due.late && 'font-bold text-late-ink')}>
+            <span className={cn('shrink-0 md:hidden', due.late && 'font-medium text-late-ink')}>
               · {due.text}
             </span>
           </span>

@@ -39,7 +39,7 @@ import { ViewMenu } from '@/components/ui/view-menu';
 import { AvatarStack } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input, SearchField, Select, TOOLBAR_CONTROL } from '@/components/ui/field';
-import { StatTile } from '@/components/ui/stat';
+import { StatGrid, StatTile } from '@/components/ui/stat';
 import { EmptyState, ErrorState, Notice } from '@/components/ui/states';
 import { Sheet } from '@/components/ui/sheet';
 import { MenuContent, MenuItem, PopoverContent } from '@/components/ui/menu';
@@ -56,7 +56,7 @@ import { TaskBoard } from './task-board';
 import { TaskList } from './task-list';
 import { TaskCalendar } from './task-calendar';
 import { TaskTimeline } from './task-timeline';
-import { TaskSheet } from './task-sheet';
+import { TaskSheet } from './lazy';
 import { TaskRow } from './task-card';
 import { saveTask } from './task-actions';
 
@@ -305,29 +305,39 @@ export function TasksPage() {
           archive
             ? undefined
             : [
-                <ViewMenu
-                  key="view"
-                  label="Cara melihat tugas"
-                  caption="Ganti tampilan"
-                  value={view}
-                  onChange={(id) => setParam('view', id === 'list' ? null : id)}
-                  items={[
-                    { id: 'list', label: 'Daftar', icon: <List /> },
-                    { id: 'board', label: 'Papan', icon: <Columns3 /> },
-                    { id: 'calendar', label: 'Kalender', icon: <CalendarDays /> },
-                    { id: 'timeline', label: 'Linimasa', icon: <CalendarRange /> },
-                  ]}
-                />,
-                ...(assignees.length
-                  ? [
-                      <AvatarStack
-                        key="people"
-                        names={assignees}
-                        max={3}
-                        className="max-lg:hidden"
-                      />,
-                    ]
-                  : []),
+                <StatGrid key="stats">
+                  <StatTile
+                    label="Rencana"
+                    value={counts.rencana}
+                    tone="lavender"
+                    icon={<CircleDashed />}
+                    onClick={() => setStatus('rencana')}
+                    active={status === 'rencana'}
+                  />
+                  <StatTile
+                    label="Dikerjakan"
+                    value={counts.proses}
+                    tone="sky"
+                    icon={<LoaderCircle />}
+                    onClick={() => setStatus('proses')}
+                    active={status === 'proses'}
+                  />
+                  <StatTile
+                    label="Terlambat"
+                    value={counts.terlambat}
+                    tone="rose"
+                    icon={<AlarmClock />}
+                    onClick={() => setStatus('terlambat')}
+                    active={status === 'terlambat'}
+                  />
+                  <StatTile
+                    label="Selesai, buka arsip"
+                    value={counts.selesai}
+                    tone="mint"
+                    icon={<CircleCheck />}
+                    onClick={() => setParam('status', 'selesai')}
+                  />
+                </StatGrid>,
               ]
         }
         actions={
@@ -350,42 +360,7 @@ export function TasksPage() {
         </Notice>
       )}
 
-      {!archive ? (
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <StatTile
-            label="Rencana"
-            value={counts.rencana}
-            tone="lavender"
-            icon={<CircleDashed />}
-            onClick={() => setStatus('rencana')}
-            active={status === 'rencana'}
-          />
-          <StatTile
-            label="Dikerjakan"
-            value={counts.proses}
-            tone="sky"
-            icon={<LoaderCircle />}
-            onClick={() => setStatus('proses')}
-            active={status === 'proses'}
-          />
-          <StatTile
-            label="Terlambat"
-            value={counts.terlambat}
-            tone="rose"
-            icon={<AlarmClock />}
-            onClick={() => setStatus('terlambat')}
-            active={status === 'terlambat'}
-          />
-          <StatTile
-            label="Selesai"
-            value={counts.selesai}
-            tone="mint"
-            icon={<CircleCheck />}
-            note="Buka arsip"
-            onClick={() => setParam('status', 'selesai')}
-          />
-        </div>
-      ) : (
+      {archive && (
         <Link
           href="/tasks"
           className="self-start text-sm font-bold text-accent-ink hover:underline"
@@ -395,6 +370,26 @@ export function TasksPage() {
       )}
 
       <div className="flex flex-wrap items-center gap-2">
+        {!archive && (
+          <>
+            <ViewMenu
+              key="view"
+              label="Cara melihat tugas"
+              caption="Ganti tampilan"
+              value={view}
+              onChange={(id) => setParam('view', id === 'list' ? null : id)}
+              items={[
+                { id: 'list', label: 'Daftar', icon: <List /> },
+                { id: 'board', label: 'Papan', icon: <Columns3 /> },
+                { id: 'calendar', label: 'Kalender', icon: <CalendarDays /> },
+                { id: 'timeline', label: 'Linimasa', icon: <CalendarRange /> },
+              ]}
+            />
+            {assignees.length > 0 && (
+              <AvatarStack names={assignees} max={3} className="max-lg:hidden" />
+            )}
+          </>
+        )}
         <SearchField
           value={search}
           onChange={setSearch}
@@ -402,9 +397,9 @@ export function TasksPage() {
           placeholder="Cari tugas…"
           className="flex-1 basis-40 sm:basis-56"
         />
-        {/* Saringan selalu di baris kedua, di bawah pencarian dan tombol aksi: di HP satu baris geser,
-            di tablet dan laptop baris yang boleh membungkus, agar tidak terpotong atau tercecer. */}
-        <div className="scrollbar-none order-last -mx-4 flex w-[calc(100%+2rem)] gap-2 overflow-x-auto px-4 py-1 md:mx-0 md:w-full md:flex-wrap md:overflow-visible md:px-0 md:py-0">
+        {/* Saringan di baris kedua, di bawah pencarian dan tombol aksi: di HP satu baris geser, di tablet
+            dan laptop baris yang boleh membungkus; layar lebar sebaris dengan pencarian. */}
+        <div className="scrollbar-none order-last -mx-4 flex w-[calc(100%+2rem)] gap-2 overflow-x-auto px-4 py-1 md:mx-0 md:w-full md:flex-wrap md:overflow-visible md:px-0 md:py-0 2xl:order-none 2xl:w-auto">
           <Select
             aria-label="Proyek"
             value={project}

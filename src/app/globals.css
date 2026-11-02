@@ -4,7 +4,9 @@
 /*
   Sistem tampilan Kopdes. Semua warna mentah hanya di blok token ini; komponen memakai kelas
   Tailwind yang dipetakan dari token (bg-surface, text-ink-2, bg-tone, …). Mengganti tampilan
-  cukup dengan menyunting token. Tanpa gradasi (arahan pemilik 23 Okt 2026).
+  cukup dengan menyunting token. Arahan pemilik 2 Nov 2026: tema gelap mengikuti acuan Solvik,
+  tema terang mengikuti acuan Kinlo. Gradasi hanya boleh di latar halaman (--ground); kartu,
+  tombol, dan grafik tetap warna solid.
 */
 
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
@@ -13,67 +15,83 @@
 [data-theme='light'] {
   --font-sans: 'Urbanist Variable', 'Urbanist', ui-sans-serif, system-ui, sans-serif;
 
-  --canvas: #ebeae4;
-  --surface: #ffffff;
-  --surface-2: #f6f5f1;
-  --surface-3: #eeede7;
-  --line: #e5e3db;
-  --line-strong: #d5d2c7;
-  --ink: #1c1d1a;
-  --ink-2: #4b4d47;
-  --ink-3: #62645d;
+  --canvas: #e8eff0;
+  /* Latar buram aqua dan persik; satu-satunya tempat gradasi boleh dipakai. */
+  --ground:
+    radial-gradient(52% 58% at 0% 100%, #fbdfcc 0%, transparent 72%),
+    radial-gradient(44% 52% at 100% 100%, #c8e3e3 0%, transparent 72%),
+    radial-gradient(40% 44% at 78% 38%, #f8e6da 0%, transparent 72%),
+    radial-gradient(52% 44% at 12% 0%, #e3f0f2 0%, transparent 72%), #eef2f2;
+  /* Panel sedikit tembus agar warna latar terasa; lapisan melayang memakai versi padat. */
+  --surface: rgb(255 255 255 / 0.74);
+  --surface-solid: #ffffff;
+  --surface-2: rgb(21 35 43 / 0.045);
+  --surface-3: rgb(21 35 43 / 0.085);
+  --line: rgb(21 35 43 / 0.09);
+  --line-strong: rgb(21 35 43 / 0.2);
+  --ink: #14222a;
+  --ink-2: #3f4f58;
+  --ink-3: #566670;
 
-  /* Aksi utama: hitam kebiruan di atas latar batu hangat (acuan dashboard 25 Okt). */
-  --action: #1c2027;
-  --action-hover: #2b313b;
+  --action: #0d6a81;
+  --action-hover: #0b5a6e;
   --on-action: #ffffff;
 
   /* Warna logo; hanya untuk tanda Kopdes, bukan untuk tombol. */
-  --brand: #f25f6e;
+  --brand: #0d6a81;
   --on-brand: #ffffff;
 
-  /* Sorotan (kapsul navigasi, hari terpilih, fokus); dipilih pengguna dari lima nada. */
-  --accent: #e1e9df;
-  --accent-ink: #3b5742;
-  --accent-strong: #5f8067;
+  /* Sorotan (kapsul navigasi, hari terpilih, fokus); dipilih pengguna. */
+  --accent: #d4ebef;
+  --accent-ink: #0b5062;
+  --accent-strong: #0f7d94;
 
-  --plan: #ebe8ff;
-  --plan-ink: #4a3bb8;
-  --doing: #ddecff;
-  --doing-ink: #1d5795;
-  --done: #d9f3e6;
-  --done-ink: #13704a;
-  --late: #ffe1e6;
-  --late-ink: #b0213d;
-  --warn: #fff0cc;
-  --warn-ink: #855700;
-  /* Isi batang progres per status (grafik dan bilah di Dunia 3D). */
-  --done-bar: #2fa874;
-  --warn-bar: #e8a317;
-  --late-bar: #e8577a;
+  /* Panel gelap di kedua tema: kartu ringkasan dan konstelasi. */
+  --deep: #1f3e46;
+  --deep-2: rgb(255 255 255 / 0.08);
+  --on-deep: #f3f8f8;
+  --on-deep-2: #bcd0d4;
 
-  /* Kolom isian: latar sedikit lebih gelap dari kartu dan garis yang cukup terlihat. */
-  --field: #f6f5f1;
-  --field-line: #d8d5ca;
+  --plan: #e8e6fb;
+  --plan-ink: #43379f;
+  --doing: #d9ecf6;
+  --doing-ink: #125674;
+  --done: #d8f1e4;
+  --done-ink: #116143;
+  --late: #fde0da;
+  --late-ink: #a52c17;
+  --warn: #fbedc8;
+  --warn-ink: #785100;
+  /* Isi batang progres per status dan lencana penuh di tema gelap. */
+  --plan-bar: #7c6fe0;
+  --doing-bar: #197b90;
+  --done-bar: #1f9d6b;
+  --warn-bar: #e0a21f;
+  --late-bar: #e2694a;
+  --on-bar: #ffffff;
 
-  /* Contoh warna pada pemilih sorotan (profil dan Pengaturan); sama di tema terang dan gelap. */
-  --swatch-sage: #5f8067;
+  /* Kolom isian: latar sedikit berbeda dari kartu dan garis yang cukup terlihat. */
+  --field: rgb(255 255 255 / 0.7);
+  --field-line: rgb(21 35 43 / 0.2);
+
+  /* Contoh warna pada pemilih sorotan di Pengaturan. */
+  --swatch-lime: #0d6a81;
   --swatch-lavender: #7a66e8;
   --swatch-sky: #4f8fe0;
   --swatch-mint: #36b37e;
   --swatch-peach: #ef8a3c;
   --swatch-rose: #ec6a8a;
 
-  --shadow-card: 0 1px 2px rgb(40 38 30 / 0.04), 0 10px 28px -16px rgb(40 38 30 / 0.16);
-  --shadow-float: 0 28px 64px -24px rgb(40 38 30 / 0.32);
-  --scrim: rgb(20 20 16 / 0.32);
+  --shadow-card: 0 1px 2px rgb(20 40 50 / 0.04), 0 12px 30px -18px rgb(20 40 50 / 0.2);
+  --shadow-float: 0 28px 64px -24px rgb(20 40 50 / 0.36);
+  --scrim: rgb(15 30 38 / 0.34);
   color-scheme: light;
 }
 
-[data-accent='sage'] {
-  --accent: #e1e9df;
-  --accent-ink: #3b5742;
-  --accent-strong: #5f8067;
+[data-accent='lime'] {
+  --accent: #d4ebef;
+  --accent-ink: #0b5062;
+  --accent-strong: #0f7d94;
 }
 [data-accent='lavender'] {
   --accent: #e7e2ff;
@@ -102,169 +120,195 @@
 }
 
 [data-theme='dark'] {
-  --canvas: #121310;
-  --surface: #1a1b18;
-  --surface-2: #20221e;
-  --surface-3: #292b26;
-  --line: #2d2f2a;
-  --line-strong: #3e413a;
-  --ink: #eceae4;
-  --ink-2: #bab9b1;
-  --ink-3: #9b9a92;
-  /* Di latar malam tombol hitam tidak terlihat: aksi memakai sage tua dengan teks putih. */
-  --action: #4f6d57;
-  --action-hover: #5b7b63;
-  --on-action: #ffffff;
-  --brand: #f36b79;
-  --plan: #2f2e3f;
-  --plan-ink: #c6bcff;
-  --doing: #27323d;
-  --doing-ink: #a4cdfa;
-  --done: #22362c;
-  --done-ink: #8fe0b9;
-  --late: #3b2b2e;
-  --late-ink: #ffadbc;
-  --warn: #3a3424;
-  --warn-ink: #f2c66a;
-  --done-bar: #4cc890;
-  --warn-bar: #f2b53a;
-  --late-bar: #f07a97;
-  --field: #161714;
-  --field-line: #3b3d37;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -16px rgb(0 0 0 / 0.7);
-  --shadow-float: 0 24px 56px -20px rgb(0 0 0 / 0.8);
-  --scrim: rgb(0 0 0 / 0.55);
+  --canvas: #15161a;
+  /* Latar buram biru batu di atas, karat di tengah bawah, zaitun di kedua sisi bawah. Titik paling
+     terang dijaga agar teks keterangan --ink-3 yang langsung di atas latar tetap ≥ 4,5:1. */
+  --ground:
+    radial-gradient(70% 58% at 8% 0%, #3f4f5a 0%, transparent 76%),
+    radial-gradient(56% 50% at 90% 2%, #424b53 0%, transparent 76%),
+    radial-gradient(66% 56% at 52% 104%, #5a3524 0%, transparent 74%),
+    radial-gradient(50% 66% at 0% 78%, #434529 0%, transparent 76%),
+    radial-gradient(48% 62% at 100% 84%, #3a4122 0%, transparent 76%), #24262a;
+  --surface: rgb(23 22 21 / 0.68);
+  --surface-solid: #1c1c1d;
+  --surface-2: rgb(255 255 255 / 0.055);
+  --surface-3: rgb(255 255 255 / 0.11);
+  --line: rgb(255 255 255 / 0.09);
+  --line-strong: rgb(255 255 255 / 0.2);
+  --ink: #f3f1ea;
+  --ink-2: #cfccc3;
+  --ink-3: #c2bfb6;
+  --action: #c2ec4a;
+  --action-hover: #cff25f;
+  --on-action: #182009;
+  --brand: #c2ec4a;
+  --on-brand: #182009;
+  --deep: #16202b;
+  --deep-2: rgb(255 255 255 / 0.07);
+  --on-deep: #f3f1ea;
+  --on-deep-2: #b4bcc4;
+  --plan: #2f2d45;
+  --plan-ink: #cfc7ff;
+  --doing: #223244;
+  --doing-ink: #aed2fa;
+  --done: #2c3a17;
+  --done-ink: #d0f27a;
+  --late: #43261d;
+  --late-ink: #ffb49c;
+  --warn: #40331a;
+  --warn-ink: #f4cd7a;
+  --plan-bar: #b9aef5;
+  --doing-bar: #8fbef2;
+  --done-bar: #c2ec4a;
+  --warn-bar: #f0c264;
+  --late-bar: #f08f72;
+  --on-bar: #15161a;
+  --field: rgb(255 255 255 / 0.06);
+  --field-line: rgb(255 255 255 / 0.2);
+  --swatch-lime: #c2ec4a;
+  --shadow-card: 0 1px 1px rgb(0 0 0 / 0.2), 0 16px 34px -22px rgb(0 0 0 / 0.75);
+  --shadow-float: 0 28px 64px -22px rgb(0 0 0 / 0.85);
+  --scrim: rgb(6 7 9 / 0.6);
   color-scheme: dark;
 }
-[data-theme='dark'][data-accent='sage'] {
-  --accent: #26302a;
-  --accent-ink: #b5d1bc;
-  --accent-strong: #86ab8f;
+[data-theme='dark'][data-accent='lime'] {
+  --accent: rgb(194 236 74 / 0.16);
+  --accent-ink: #d9f58a;
+  --accent-strong: #c2ec4a;
 }
 [data-theme='dark'][data-accent='lavender'] {
-  --accent: #2c2753;
-  --accent-ink: #cbc2ff;
-  --accent-strong: #9a8bff;
+  --accent: rgb(154 139 255 / 0.2);
+  --accent-ink: #d3cbff;
+  --accent-strong: #a899ff;
 }
 [data-theme='dark'][data-accent='sky'] {
-  --accent: #1b2e4a;
-  --accent-ink: #a8d0fb;
-  --accent-strong: #6aa8f0;
+  --accent: rgb(106 168 240 / 0.2);
+  --accent-ink: #b5d7fc;
+  --accent-strong: #84baf5;
 }
 [data-theme='dark'][data-accent='mint'] {
-  --accent: #173a2b;
-  --accent-ink: #94e3be;
-  --accent-strong: #4cc890;
+  --accent: rgb(76 200 144 / 0.18);
+  --accent-ink: #a4e8c8;
+  --accent-strong: #5fd29f;
 }
 [data-theme='dark'][data-accent='peach'] {
-  --accent: #3d2a19;
-  --accent-ink: #ffc796;
-  --accent-strong: #f59a55;
+  --accent: rgb(245 154 85 / 0.2);
+  --accent-ink: #ffd0a8;
+  --accent-strong: #f8a96c;
 }
 [data-theme='dark'][data-accent='rose'] {
-  --accent: #3e1f2a;
-  --accent-ink: #ffb3c5;
-  --accent-strong: #f07d99;
+  --accent: rgb(240 125 153 / 0.2);
+  --accent-ink: #ffbccc;
+  --accent-strong: #f591aa;
 }
 
-/* Nada pastel per proyek: isi kartu, teks, dan batang progres. Dipasang lewat data-tone. */
+/* Lapisan melayang tidak boleh tembus: isi di belakangnya mengganggu bacaan. */
+.sheet,
+.menu,
+.pop,
+.palette {
+  --surface: var(--surface-solid);
+}
+
+/* Nada kartu per proyek: isi kartu, teks, batang progres, dan garis. Dipasang lewat data-tone. */
 [data-tone='rose'] {
-  --tone: #ffdde4;
-  --tone-ink: #8f1d3d;
-  --tone-bar: #e8577a;
-  --tone-line: #f6b9c7;
+  --tone: #fbdedf;
+  --tone-ink: #7f2233;
+  --tone-bar: #d9506b;
+  --tone-line: #f2bcc4;
 }
 [data-tone='peach'] {
-  --tone: #ffe5cf;
-  --tone-ink: #864109;
-  --tone-bar: #e8822f;
-  --tone-line: #f7c79f;
+  --tone: #fbe0cf;
+  --tone-ink: #7c3e12;
+  --tone-bar: #e07b45;
+  --tone-line: #f1c3a6;
 }
 [data-tone='sky'] {
-  --tone: #d9e9ff;
-  --tone-ink: #1a4d8c;
-  --tone-bar: #4a86dc;
-  --tone-line: #b0cdf5;
+  --tone: #d6ebef;
+  --tone-ink: #124a5a;
+  --tone-bar: #197b90;
+  --tone-line: #aed3db;
 }
 [data-tone='lavender'] {
-  --tone: #e6e0ff;
-  --tone-ink: #45339f;
-  --tone-bar: #7c67e3;
-  --tone-line: #c9bdf8;
+  --tone: #e6e2fb;
+  --tone-ink: #41349a;
+  --tone-bar: #7464de;
+  --tone-line: #c9c1f4;
 }
 [data-tone='mint'] {
-  --tone: #d5f2e3;
-  --tone-ink: #115e3e;
-  --tone-bar: #2fa874;
-  --tone-line: #a9e2c5;
+  --tone: #d6f0e2;
+  --tone-ink: #115a3d;
+  --tone-bar: #1f9d6b;
+  --tone-line: #aee0c6;
 }
 [data-tone='lemon'] {
-  --tone: #fff1c2;
-  --tone-ink: #6e5200;
-  --tone-bar: #d9a514;
-  --tone-line: #f1d987;
+  --tone: #f8edc6;
+  --tone-ink: #665009;
+  --tone-bar: #c99a14;
+  --tone-line: #ebd88f;
 }
 [data-tone='slate'] {
-  --tone: #e8ebf2;
-  --tone-ink: #39415a;
-  --tone-bar: #7a839c;
-  --tone-line: #cfd4e1;
+  --tone: #e4e9ec;
+  --tone-ink: #36464f;
+  --tone-bar: #6c7f8a;
+  --tone-line: #cbd5da;
 }
-/* Nada gelap: sedikit warna batang di atas permukaan malam yang hangat, agar kartu menyatu. */
+/* Nada gelap: kartu berwarna seperti kartu kesepakatan acuan (biru batu, zaitun, karat, batu). */
 [data-theme='dark'] [data-tone='rose'],
 [data-theme='dark'][data-tone='rose'] {
-  --tone: #402c2f;
-  --tone-ink: #ffc0ce;
-  --tone-bar: #f07a97;
-  --tone-line: #5a2c3b;
+  --tone: #683f4a;
+  --tone-ink: #ffdbe2;
+  --tone-bar: #f39bae;
+  --tone-line: rgb(255 214 224 / 0.26);
 }
 [data-theme='dark'] [data-tone='peach'],
 [data-theme='dark'][data-tone='peach'] {
-  --tone: #413222;
-  --tone-ink: #ffcfa6;
-  --tone-bar: #f39a52;
-  --tone-line: #5a3d26;
+  --tone: #6f4a3b;
+  --tone-ink: #ffe0cf;
+  --tone-bar: #f4a27f;
+  --tone-line: rgb(255 222 204 / 0.26);
 }
 [data-theme='dark'] [data-tone='sky'],
 [data-theme='dark'][data-tone='sky'] {
-  --tone: #28333f;
-  --tone-ink: #b5d5fb;
-  --tone-bar: #6aa3ef;
-  --tone-line: #29446b;
+  --tone: #445766;
+  --tone-ink: #d9ebfb;
+  --tone-bar: #8fbef2;
+  --tone-line: rgb(214 235 255 / 0.26);
 }
 [data-theme='dark'] [data-tone='lavender'],
 [data-theme='dark'][data-tone='lavender'] {
-  --tone: #302e40;
-  --tone-ink: #d0c7ff;
-  --tone-bar: #9583f5;
-  --tone-line: #403874;
+  --tone: #4f4d70;
+  --tone-ink: #e2defe;
+  --tone-bar: #b9aef5;
+  --tone-line: rgb(226 221 255 / 0.26);
 }
 [data-theme='dark'] [data-tone='mint'],
 [data-theme='dark'][data-tone='mint'] {
-  --tone: #21392d;
-  --tone-ink: #9de6c2;
-  --tone-bar: #43c48b;
-  --tone-line: #23523f;
+  --tone: #5a6a3f;
+  --tone-ink: #eef6cf;
+  --tone-bar: #c2ec4a;
+  --tone-line: rgb(236 248 196 / 0.26);
 }
 [data-theme='dark'] [data-tone='lemon'],
 [data-theme='dark'][data-tone='lemon'] {
-  --tone: #3e371c;
-  --tone-ink: #f4d77c;
-  --tone-bar: #e4b52d;
-  --tone-line: #54461c;
+  --tone: #6a5d31;
+  --tone-ink: #fbedbd;
+  --tone-bar: #f0c264;
+  --tone-line: rgb(251 236 188 / 0.26);
 }
 [data-theme='dark'] [data-tone='slate'],
 [data-theme='dark'][data-tone='slate'] {
-  --tone: #262825;
-  --tone-ink: #c9cfe0;
-  --tone-bar: #8e97b2;
-  --tone-line: #353c52;
+  --tone: #5b5c57;
+  --tone-ink: #eceae3;
+  --tone-bar: #c4c2b8;
+  --tone-line: rgb(236 234 227 / 0.26);
 }
 
 @theme inline {
   --font-sans: var(--font-sans);
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
+  --color-surface-solid: var(--surface-solid);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
   --color-line: var(--line);
@@ -290,6 +334,13 @@
   --color-late-ink: var(--late-ink);
   --color-warn: var(--warn);
   --color-warn-ink: var(--warn-ink);
+  --color-plan-bar: var(--plan-bar);
+  --color-doing-bar: var(--doing-bar);
+  --color-on-bar: var(--on-bar);
+  --color-deep: var(--deep);
+  --color-deep-2: var(--deep-2);
+  --color-on-deep: var(--on-deep);
+  --color-on-deep-2: var(--on-deep-2);
   --color-done-bar: var(--done-bar);
   --color-warn-bar: var(--warn-bar);
   --color-late-bar: var(--late-bar);
@@ -301,7 +352,11 @@
   --color-field-line: var(--field-line);
   --shadow-card: var(--shadow-card);
   --shadow-float: var(--shadow-float);
-  --radius-card: 1.125rem;
+  --radius-card: 1.375rem;
+  /* Huruf acuan ringan: seluruh aplikasi turun satu tingkat dari satu tempat. */
+  --font-weight-semibold: 500;
+  --font-weight-bold: 600;
+  --font-weight-extrabold: 600;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   /* Pegas lembut (sedikit melewati lalu kembali) untuk menu dan palet yang muncul. */
   --ease-spring: cubic-bezier(0.34, 1.3, 0.64, 1);
@@ -316,6 +371,14 @@
   body {
     @apply bg-canvas font-sans text-[15px] leading-normal text-ink antialiased;
     font-feature-settings: 'ss01';
+  }
+  /* Latar buram satu lapis tetap: panel tembus tidak perlu backdrop-filter, jadi HP tetap ringan. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--ground);
   }
   ::selection {
     background: var(--accent);
@@ -384,6 +447,23 @@
     }
     body {
       background: #fff;
+    }
+    body::before {
+      display: none;
+    }
+    /* Laporan dicetak di kertas putih: tema gelap memakai warna teks tema terang saat dicetak. */
+    [data-theme='dark'] {
+      --surface: #ffffff;
+      --surface-solid: #ffffff;
+      --surface-2: #f2f4f5;
+      --surface-3: #e7eaec;
+      --line: #dfe3e5;
+      --line-strong: #c4cbce;
+      --ink: #14222a;
+      --ink-2: #3f4f58;
+      --ink-3: #566670;
+      --tone: #f2f4f5;
+      --tone-ink: #14222a;
     }
   }
 }
@@ -590,7 +670,7 @@
     padding: 6px;
     border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
     border-radius: 16px;
-    background: var(--surface);
+    background: var(--surface-solid);
     box-shadow: var(--shadow-float);
     color: var(--ink);
     transition:
@@ -692,4 +772,75 @@
 }
 .enter {
   animation: rise-in 0.45s var(--ease-out) backwards;
+}
+
+/*
+  Pindah halaman seperti acuan: latar diam, lalu bagian baru muncul berurutan dari buram. Blur hanya
+  di tablet dan laptop karena mahal di HP murah.
+*/
+@keyframes page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(var(--page-blur, 0));
+  }
+}
+.page-enter > * > * {
+  animation: page-rise 0.6s var(--ease-out) backwards;
+}
+.page-enter > * > :nth-child(2) {
+  animation-delay: 70ms;
+}
+.page-enter > * > :nth-child(3) {
+  animation-delay: 140ms;
+}
+.page-enter > * > :nth-child(4) {
+  animation-delay: 210ms;
+}
+.page-enter > * > :nth-child(n + 5) {
+  animation-delay: 280ms;
+}
+@media (min-width: 768px) {
+  .page-enter {
+    --page-blur: 8px;
+  }
+}
+
+/* Grafik: garis tergambar dari kiri, batang tumbuh dari dasar berurutan. */
+@keyframes line-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes bar-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+.chart-line {
+  stroke-dasharray: 1;
+  animation: line-draw 1.3s var(--ease-sheet) 0.15s backwards;
+}
+.chart-fill {
+  animation: fade-in 0.8s ease-out 0.7s backwards;
+}
+.chart-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: bar-grow 0.7s var(--ease-out) backwards;
+}
+
+/* Ganti tema: sapuan melingkar dari tombolnya; animasi bawaan dimatikan supaya tidak memudar ganda. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  z-index: 1;
 }

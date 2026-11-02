@@ -133,6 +133,10 @@ export const NAV_GROUPS: { label: string; pages: PageId[] }[] = [
   { label: 'Koperasi', pages: ['members', 'cash', 'team'] },
 ];
 export const NAV_FOOTER: PageId[] = ['world', 'settings', 'help'];
+
+/** Kelompok tempat sebuah halaman berada; Pengaturan dan Bantuan jatuh ke kelompok pertama. */
+export const navGroupOf = (page?: PageId) =>
+  NAV_GROUPS.find((group) => page && group.pages.includes(page)) ?? NAV_GROUPS[0];
 export const DOCK: PageId[] = ['home', 'tasks', 'agenda'];
 
 export const pageHref = (id: PageId, tab?: string) => `/${id}${tab ? `?tab=${tab}` : ''}`;

@@ -2,6 +2,19 @@
 
 Hanya perubahan besar (fitur, fase, migrasi). Entri baru di atas. Format dan aturan ada di [AGENTS.md](AGENTS.md).
 
+## Tampilan baru mengikuti tiga video acuan — 2 November 2026
+
+- Alasan: arahan pemilik untuk menulis ulang seluruh desain mengikuti tiga video: acuan desain (Solvik), konsep dashboard (Kinlo), dan konsep animasi (Crew). Desain sebelumnya disimpan di cabang `arsip/desain-oktober`.
+- Perubahan:
+  - Tema gelap menjadi bawaan: latar warna buram, panel hampir hitam, kartu biru batu/zaitun/karat per proyek, aksi hijau limau. Tema terang mengikuti Kinlo: latar aqua dan persik, aksi teal. Semua perangkat mulai dari tema gelap satu kali, lalu bebas mengganti. Gradasi hanya di latar halaman.
+  - Kerangka baru: pil kelompok menu di atas yang meregang saat pindah, rel ikon halaman di kiri, tombol tema di rel dengan sapuan melingkar.
+  - Beranda: sapaan besar dengan angka berikon, konstelasi kerja dari data asli (bisa diputar, titik membuka tugas), kartu progres gelap, grafik tugas selesai per minggu. Di HP urutannya rutin, tenggat, konstelasi.
+  - Angka ringkasan sebaris dengan judul halaman; kartu tugas dan catatan baru; kartu orang di Anggota, Kontak, dan Tim (baris ringkas di HP); grafik uang masuk dan keluar per bulan di Kas.
+  - Gerak: isi halaman muncul berurutan dari buram, garis dan batang grafik tergambar, angka menghitung naik.
+  - Perbaikan bug lama: Dunia 3D kosong datanya karena meminta 25 jenis catatan, sedangkan batas server 20.
+- Verifikasi: `npm run cek:penuh` lulus (33 berkas / 206 tes, build, JS awal 427–497 KB dari batas 500 KB). Lewat mode demo dan peramban tanpa antarmuka: 375, 768, 1024, 1440 px, tema gelap dan terang, tanpa luapan samping; pil menu meregang, tema tersimpan, kanvas diputar dan titik membuka laci, tautan `?task=` membuka laci, gerak berkurang tanpa galat. Kontras teks keterangan 4,62:1 di bagian latar paling terang. Satu tinjauan akhir independen dijalankan; temuannya diperbaiki, tetapi hasil perbaikannya belum ditinjau ulang oleh peninjau itu.
+- Belum: sapuan tema baru terlihat dari satu bingkai tangkapan, perlu dilihat pemilik di peramban. Belum diuji di HP sungguhan dan belum di basis data nyata (Supabase), hanya mode demo. Tes perilaku UI baru belum ditulis, hanya tes logika. JS awal `/tasks` tinggal 3 KB dari batas. Di HP, kepala halaman Anggota masih panjang (kartu mulai sekitar 640 px).
+
 ## Redesain total ala TaskTrack dan rutin harian di database — 23 Oktober 2026
 
 - Alasan: arahan pemilik untuk merombak seluruh tampilan tanpa terikat desain lama, dengan fitur dipertahankan, acuan TaskTrack (pastel, tanpa gradasi), dan tatanan proyek serta aturan AI yang seragam.

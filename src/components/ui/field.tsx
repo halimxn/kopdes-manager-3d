@@ -15,14 +15,14 @@ import type { ComponentProps, ReactNode } from 'react';
  * Galat ditandai garis dan pesan, bukan warna saja.
  */
 const CONTROL =
-  'w-full rounded-xl border border-field-line bg-field px-3.5 text-[15px] text-ink transition-[border-color,background-color,box-shadow] duration-200 ease-out outline-none placeholder:text-ink-3 hover:border-ink-3/50 focus:border-accent-strong focus:bg-surface focus:ring-4 focus:ring-accent disabled:cursor-not-allowed disabled:border-line disabled:bg-surface-3 disabled:text-ink-3 aria-invalid:border-late-ink aria-invalid:focus:ring-late [&[type=number]]:tabular-nums';
+  'w-full rounded-2xl border border-field-line bg-field px-4 text-[15px] text-ink transition-[border-color,background-color,box-shadow] duration-200 ease-out outline-none placeholder:text-ink-3 hover:border-ink-3/50 focus:border-accent-strong focus:ring-4 focus:ring-accent disabled:cursor-not-allowed disabled:border-line disabled:bg-surface-3 disabled:text-ink-3 aria-invalid:border-late-ink aria-invalid:focus:ring-late [&[type=number]]:tabular-nums';
 
-/** Kolom di bilah alat halaman (cari, saringan): kartu putih melayang di atas kanvas. */
-export const TOOLBAR_CONTROL = 'border-transparent bg-surface shadow-card hover:border-line-strong';
+/** Kolom di bilah alat halaman (cari, saringan): pil tipis langsung di atas latar. */
+export const TOOLBAR_CONTROL = 'rounded-full border-line-strong bg-surface-2 hover:border-ink-3/50';
 
 /** Ikon di kiri kolom; menyala bersama kolomnya saat aktif (kolom memakai kelas `peer`). */
 const LEAD_ICON =
-  'pointer-events-none absolute top-1/2 left-3.5 grid -translate-y-1/2 place-items-center text-ink-3 transition-colors peer-focus:text-accent-strong peer-disabled:opacity-50 [&_svg]:size-[18px]';
+  'pointer-events-none absolute top-1/2 left-4 grid -translate-y-1/2 place-items-center text-ink-3 transition-colors peer-focus:text-accent-strong peer-disabled:opacity-50 [&_svg]:size-[18px]';
 
 /** Kolom tanggal dan jam: ikon kalender/jam di kiri, dan seluruh kolom membuka pemilih bawaan. */
 const PICKERS: Partial<Record<string, LucideIcon>> = {
@@ -48,7 +48,7 @@ export function Input({
       className={cn(
         CONTROL,
         'h-11',
-        lead && 'peer pl-10',
+        lead && 'peer pl-11',
         // Ikon bawaan peramban diganti ikon di kiri; tanggal kosong tampil redup seperti petunjuk.
         Picker &&
           'cursor-pointer [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-date-and-time-value]:text-left',
@@ -98,7 +98,7 @@ export function Select({
         className={cn(
           CONTROL,
           'field-select peer h-11 appearance-none pr-10',
-          icon && 'pl-10',
+          icon && 'pl-11',
           className,
         )}
         {...props}
@@ -135,7 +135,7 @@ export function SearchField({
   return (
     <div className={cn('group relative min-w-0', className)}>
       <Search
-        className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-ink-3 transition-colors group-focus-within:text-accent-strong"
+        className="pointer-events-none absolute top-1/2 left-4 size-[18px] -translate-y-1/2 text-ink-3 transition-colors group-focus-within:text-accent-strong"
         aria-hidden="true"
       />
       <input
@@ -154,7 +154,7 @@ export function SearchField({
         className={cn(
           CONTROL,
           TOOLBAR_CONTROL,
-          'h-11 pr-11 pl-10 [&::-webkit-search-cancel-button]:appearance-none',
+          'h-11 pr-11 pl-11 [&::-webkit-search-cancel-button]:appearance-none',
         )}
       />
       {value && (
@@ -162,7 +162,7 @@ export function SearchField({
           type="button"
           onClick={() => onChange('')}
           aria-label="Hapus pencarian"
-          className="absolute top-1/2 right-2 grid size-8 -translate-y-1/2 animate-[item-in_0.2s_var(--ease-out)] place-items-center rounded-lg text-ink-3 transition-colors hover:bg-surface-3 hover:text-ink"
+          className="absolute top-1/2 right-2 grid size-8 -translate-y-1/2 animate-[item-in_0.2s_var(--ease-out)] place-items-center rounded-full text-ink-3 transition-colors hover:bg-surface-3 hover:text-ink"
         >
           <X className="size-4" />
         </button>

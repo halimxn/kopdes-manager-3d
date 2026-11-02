@@ -23,17 +23,13 @@ export function ViewMenu({
   const current = items.find((item) => item.id === value) || items[0];
   return (
     <DropdownMenu.Root>
-      {/* Laptop: "Papan — Ganti tampilan ⌄" seperti acuan; HP dan tablet: kapsul ringkas berikon. */}
       <DropdownMenu.Trigger
         aria-label={`${label}: ${current.label}`}
-        className="group flex h-11 shrink-0 items-center gap-2 rounded-full bg-surface-2 pr-3 pl-3.5 text-left ring-1 ring-line outline-none transition hover:bg-surface-3 focus-visible:ring-2 focus-visible:ring-accent-strong lg:gap-3 lg:rounded-xl lg:bg-transparent lg:px-1 lg:ring-0 lg:hover:bg-transparent [&>svg]:shrink-0"
+        className="group flex h-11 shrink-0 items-center gap-2 rounded-full bg-surface-2 pr-3 pl-3.5 text-left ring-1 ring-line-strong outline-none transition hover:bg-surface-3 focus-visible:ring-2 focus-visible:ring-accent-strong [&>svg]:shrink-0"
       >
-        <span className="text-accent-strong lg:hidden [&_svg]:size-[18px]">{current.icon}</span>
-        <span className="text-[15px] font-bold text-ink lg:text-[22px] lg:font-extrabold lg:tracking-tight">
-          {current.label}
-        </span>
-        <span className="hidden h-0.5 w-3 rounded-full bg-ink-2 lg:block" aria-hidden="true" />
-        <span className="hidden text-[13px] font-semibold text-ink-2 lg:inline">{caption}</span>
+        <span className="text-accent-strong [&_svg]:size-[18px]">{current.icon}</span>
+        <span className="text-sm font-medium text-ink">{current.label}</span>
+        <span className="hidden text-[13px] text-ink-3 xl:inline">{caption}</span>
         <ChevronDown className="size-4 text-ink-2 transition-transform duration-200 group-data-[state=open]:rotate-180" />
       </DropdownMenu.Trigger>
       <MenuContent align="start" className="w-56">

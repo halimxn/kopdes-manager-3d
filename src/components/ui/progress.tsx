@@ -149,37 +149,3 @@ export function Ring({
     </span>
   );
 }
-
-/** Setengah donat (acuan "69% of target"): busur atas terisi sesuai persen, angka di bawahnya. */
-export function HalfDonut({ value, label }: { value: number; label: string }) {
-  const r = 52;
-  const length = Math.PI * r;
-  const percent = Math.max(0, Math.min(100, Math.round(value)));
-  return (
-    <span
-      role="img"
-      aria-label={`${label}: ${percent}%`}
-      className="relative block w-full max-w-[220px]"
-    >
-      <svg viewBox="0 0 120 66" className="block w-full" aria-hidden="true">
-        <path
-          d="M8 60a52 52 0 0 1 104 0"
-          fill="none"
-          strokeWidth="12"
-          strokeLinecap="round"
-          className="stroke-surface-3"
-        />
-        <path
-          d="M8 60a52 52 0 0 1 104 0"
-          fill="none"
-          strokeWidth="12"
-          strokeLinecap="round"
-          strokeDasharray={length}
-          strokeDashoffset={length * (1 - percent / 100)}
-          className="animate-[ring-fill_1.1s_var(--ease-out)_0.15s_backwards] stroke-accent-strong"
-          style={{ ['--ring-length' as string]: `${length}` }}
-        />
-      </svg>
-    </span>
-  );
-}

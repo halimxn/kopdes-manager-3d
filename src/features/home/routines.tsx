@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/field';
 import { TimeField } from '@/components/ui/date-time-field';
 import { Notice } from '@/components/ui/states';
 import { SegmentBar } from '@/components/ui/progress';
-import { Wave } from '@/components/ui/wave';
 import { api } from '@/lib/client';
 import { today } from '@/lib/date';
 import { useJakartaClock } from '@/lib/clock';
@@ -194,7 +193,13 @@ function Confetti() {
           key={i}
           className="absolute top-1/3 left-1/2 size-2 rounded-[3px]"
           style={{
-            background: ['var(--accent-strong)', '#e8577a', '#2fa874', '#e8822f', '#4a86dc'][i % 5],
+            background: [
+              'var(--accent-strong)',
+              'var(--late-bar)',
+              'var(--done-bar)',
+              'var(--warn-bar)',
+              'var(--doing-bar)',
+            ][i % 5],
           }}
           initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
           animate={{
@@ -273,37 +278,32 @@ export function RoutinesCard({
   return (
     <section
       aria-labelledby="routines-title"
-      data-tone="lavender"
-      className="relative flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card"
+      data-tone="mint"
+      className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line"
     >
-      <header className="relative flex items-start gap-3 overflow-hidden bg-tone px-5 pt-5 pb-4 text-tone-ink">
-        <Wave />
-        <div className="relative flex-1">
-          <h2 id="routines-title" className="text-lg font-extrabold text-ink">
-            Rutin hari ini
-          </h2>
-          <p className="text-sm font-semibold">
-            {states.length
-              ? `${done} dari ${states.length} selesai`
-              : 'Belum ada rutin untuk hari ini'}
-          </p>
+      <header className="flex flex-col gap-3 px-5 pt-5 pb-3">
+        <div className="flex items-start gap-3">
+          <div className="flex-1">
+            <h2 id="routines-title" className="text-lg font-medium text-ink">
+              Rutin hari ini
+            </h2>
+            <p className="text-[13px] text-ink-3">
+              {states.length
+                ? `${done} dari ${states.length} selesai`
+                : 'Belum ada rutin untuk hari ini'}
+            </p>
+          </div>
+          {ready && (
+            <Button size="sm" onClick={() => setManaging(true)}>
+              <Settings2 />
+              Atur
+            </Button>
+          )}
         </div>
-        {ready && (
-          <Button
-            size="sm"
-            variant="secondary"
-            className="relative bg-surface/80"
-            onClick={() => setManaging(true)}
-          >
-            <Settings2 />
-            Atur
-          </Button>
-        )}
         {states.length > 0 && (
           <SegmentBar
             value={(done / states.length) * 100}
             segments={states.length}
-            className="absolute inset-x-5 bottom-0 h-1"
             label="Progres rutin"
           />
         )}

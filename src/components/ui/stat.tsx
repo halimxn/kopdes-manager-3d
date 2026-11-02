@@ -1,16 +1,19 @@
 'use client';
 import { cn } from '@/lib/utils';
 import type { Tone } from '@/lib/tones';
-import type { CSSProperties, ReactNode } from 'react';
-import { Wave } from './wave';
+import type { ReactNode } from 'react';
 import { AvatarStack } from './avatar';
 import { CountUp } from './count-up';
 
-/** Ubin angka pastel ala ringkasan TaskTrack; catatan kecil menjelaskan arti angkanya. */
+/**
+ * Angka ringkasan langsung di atas latar (acuan Solvik): ikon dalam lingkaran, angka yang menghitung
+ * naik, dan label di bawahnya. Catatan kecil menjelaskan arti angka; `badge` untuk lencana di sampingnya.
+ */
 export function StatTile({
   label,
   value,
   note,
+  badge,
   tone = 'slate',
   icon,
   onClick,
@@ -21,11 +24,12 @@ export function StatTile({
   label: string;
   value: ReactNode;
   note?: ReactNode;
+  badge?: ReactNode;
   tone?: Tone;
   icon?: ReactNode;
   onClick?: () => void;
   active?: boolean;
-  /** Orang yang terlibat; ditampilkan bertumpuk seperti ringkasan TaskTrack. */
+  /** Orang yang terlibat; ditampilkan bertumpuk. */
   people?: string[];
   className?: string;
 }) {
@@ -37,80 +41,39 @@ export function StatTile({
       aria-pressed={onClick ? active : undefined}
       data-tone={tone}
       className={cn(
-        'relative flex min-h-24 flex-col md:min-h-28 items-start gap-1 overflow-hidden rounded-[var(--radius-card)] bg-tone p-4 text-left text-tone-ink transition duration-300',
+        'flex min-w-0 items-center gap-3 rounded-[1.75rem] text-left',
         onClick &&
-          'hover:-translate-y-0.5 hover:shadow-card aria-pressed:ring-2 aria-pressed:ring-tone-bar',
+          '-m-1.5 p-1.5 pr-4 transition-colors hover:bg-surface-2 active:scale-[0.98] aria-pressed:bg-surface-3',
         className,
       )}
     >
-      <Wave />
-      <span className="relative flex items-center gap-2 text-[13px] font-bold [&_svg]:size-4">
-        {icon}
-        {label}
-      </span>
-      {people && people.length > 0 && (
-        <AvatarStack names={people} max={3} className="relative mt-2" />
-      )}
-      <span className="tabular relative mt-auto text-[26px] leading-tight font-extrabold tracking-tight text-ink">
-        {value}
-      </span>
-      {note && <span className="relative text-xs font-semibold opacity-80">{note}</span>}
-    </Tag>
-  );
-}
-
-/**
- * Ubin angka putih ringkas (acuan dashboard 25 Okt): ikon dalam kotak berwarna, label kecil,
- * angka besar yang menghitung naik. Terangkat sedikit saat disentuh kursor.
- */
-export function MetricTile({
-  label,
-  value,
-  note,
-  tone = 'slate',
-  icon,
-  onClick,
-  className,
-  style,
-}: {
-  label: string;
-  value: number;
-  note?: ReactNode;
-  tone?: Tone;
-  icon?: ReactNode;
-  onClick?: () => void;
-  className?: string;
-  style?: CSSProperties;
-}) {
-  const Tag = onClick ? 'button' : 'div';
-  return (
-    <Tag
-      type={onClick ? 'button' : undefined}
-      onClick={onClick}
-      style={style}
-      className={cn(
-        'enter flex min-w-0 items-center gap-3 max-sm:flex-col max-sm:items-start max-sm:gap-2.5 rounded-[var(--radius-card)] bg-surface p-3.5 text-left shadow-card ring-1 ring-line/60 transition duration-300 md:p-4',
-        onClick && 'hover:-translate-y-1 hover:shadow-float active:scale-[0.98]',
-        className,
-      )}
-    >
-      <span
-        data-tone={tone}
-        className="grid size-11 shrink-0 place-items-center rounded-2xl bg-tone text-tone-ink [&_svg]:size-5"
-      >
-        {icon}
+      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-surface-2 text-tone-bar ring-1 ring-line [&_svg]:size-[18px]">
+        {icon ?? <span className="size-2.5 rounded-full bg-tone-bar" />}
       </span>
       <span className="min-w-0">
-        <span className="block truncate text-xs font-bold text-ink-3">{label}</span>
-        <span className="block text-[24px] leading-tight font-extrabold tracking-tight text-ink">
-          <CountUp value={value} />
+        <span className="flex flex-wrap items-center gap-x-2">
+          <span className="tabular text-[21px] leading-tight font-medium tracking-tight text-ink">
+            {typeof value === 'number' ? <CountUp value={value} /> : value}
+          </span>
+          {badge}
         </span>
-        {note && <span className="block truncate text-xs font-semibold text-ink-3">{note}</span>}
+        <span className="block text-[13px] leading-snug text-ink-2">{label}</span>
+        {note && <span className="block text-xs leading-snug text-ink-3">{note}</span>}
       </span>
+      {people && people.length > 0 && <AvatarStack names={people} max={3} className="ml-1" />}
     </Tag>
   );
 }
 
 export function StatGrid({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn('grid grid-cols-2 gap-3 lg:grid-cols-4', className)}>{children}</div>;
+  return (
+    <div
+      className={cn(
+        'grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:flex sm:w-auto sm:flex-wrap sm:gap-x-8',
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
 }

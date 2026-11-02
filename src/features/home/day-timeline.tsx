@@ -68,8 +68,8 @@ export function DayTimeline({
   const laneCount = Math.max(1, lanes.length);
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-2xl bg-surface-2 p-2">
-        <p className="px-2 pt-1 pb-2 text-xs font-bold text-ink-3">
+      <div>
+        <p className="pb-2 text-xs font-medium text-ink-3">
           Tugas bertenggat hari ini ({tasks.length})
         </p>
         {tasks.length ? (
@@ -85,7 +85,7 @@ export function DayTimeline({
             ))}
           </div>
         ) : (
-          <p className="px-2 pb-2 text-sm text-ink-3">Tidak ada tugas bertenggat di hari ini.</p>
+          <p className="text-sm text-ink-3">Tidak ada tugas bertenggat di hari ini.</p>
         )}
       </div>
       <div
@@ -100,7 +100,7 @@ export function DayTimeline({
               className="absolute inset-x-0 flex gap-3 border-t border-line"
               style={{ top: index * HOUR }}
             >
-              <span className="tabular -mt-2.5 w-12 shrink-0 bg-surface pr-1 text-right text-xs font-semibold text-ink-3">
+              <span className="tabular -mt-2.5 w-12 shrink-0 pr-1 text-right text-xs font-medium text-ink-3">
                 {String(hour).padStart(2, '0')}.00
               </span>
             </div>
@@ -123,7 +123,8 @@ export function DayTimeline({
                 data-tone={TONE[kind]}
                 className={cn(
                   'absolute overflow-hidden rounded-2xl bg-tone p-3 text-tone-ink shadow-sm transition hover:shadow-card',
-                  past && 'opacity-60',
+                  // Warna dipudarkan, bukan teksnya: rapat yang sudah lewat tetap harus terbaca.
+                  past && 'saturate-[.35]',
                 )}
                 style={{
                   top: top + 2,
@@ -137,15 +138,15 @@ export function DayTimeline({
                   onClick={() => onOpenMeeting(meeting.id)}
                   className="block w-full text-left"
                 >
-                  <span className="flex items-center gap-1.5 text-[11px] font-bold">
+                  <span className="flex items-center gap-1.5 text-[11px] font-medium">
                     <Icon className="size-3.5" />
                     {start.replace(':', '.')}–{end.replace(':', '.')} · {MEETING_KINDS[kind].label}
                   </span>
-                  <span className="block truncate text-sm font-bold text-ink">
+                  <span className="block truncate text-sm font-medium text-ink">
                     {String(meeting.data.title)}
                   </span>
                   {height > 70 && (
-                    <span className="mt-0.5 flex items-center gap-1 truncate text-xs font-semibold">
+                    <span className="mt-0.5 flex items-center gap-1 truncate text-xs font-medium">
                       <MapPin className="size-3" />
                       {meeting.data.mode === 'online'
                         ? 'Rapat online'
@@ -158,7 +159,7 @@ export function DayTimeline({
                     href={join}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1.5 inline-flex h-7 items-center gap-1 rounded-lg bg-surface/80 px-2 text-xs font-bold"
+                    className="mt-1.5 inline-flex h-7 items-center gap-1 rounded-full bg-surface/80 px-2.5 text-xs font-medium"
                   >
                     <Video className="size-3.5" />
                     Gabung

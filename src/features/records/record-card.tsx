@@ -31,9 +31,8 @@ import { MEETING_KINDS, meetingKindOf, recordOutcomeHref } from '@/features/agen
 import { downloadMeeting, meetingJoinUrl } from '@/features/agenda/meeting';
 import { hasWorldPlace, worldHref } from '@/features/world/world-link';
 import { recordLink } from '@/components/layout/nav';
-import { Wave } from '@/components/ui/wave';
 import { Pill, statusTone } from '@/components/ui/pill';
-import { AvatarStack } from '@/components/ui/avatar';
+import { Avatar, AvatarStack } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Sheet } from '@/components/ui/sheet';
 import { useConfirm } from '@/components/ui/confirm';
@@ -130,20 +129,156 @@ function statusOf(entity: Entity, row: Item): string {
   return status ? formatChoiceLabel(String(status), `${entity}.status`) : '';
 }
 
-/** Kartu catatan pastel ala TaskTrack: label, judul, fakta penting, orang, dan tanggal. */
+/** Jenis catatan tentang orang: kartunya kartu orang, bukan kartu berwarna. */
+export const PEOPLE_ENTITIES: Entity[] = ['members', 'stakeholders', 'staff'];
+
+function personFacts(entity: Entity, row: Item, ws: Workspace): [string, string][] {
+  const d = row.data;
+  const show = (field: string, empty = '—') =>
+    d[field] ? displayValue(entity, field, d[field], ws) : empty;
+  if (entity === 'members')
+    return [
+      ['Nomor anggota', show('member_number')],
+      ['Bergabung', show('date')],
+    ];
+  if (entity === 'stakeholders')
+    return [
+      ['Kontak', show('contact')],
+      ['Terakhir dihubungi', show('last_contact', 'Belum')],
+    ];
+  return [
+    ['Peran', show('role')],
+    ['Tempat kerja', show('workplace')],
+  ];
+}
+
+/** Tombol bulat WhatsApp dan telepon; tidak membuka laci detail. */
+function ContactLinks({ contact, name }: { contact: unknown; name: string }) {
+  const links = phoneLinks(String(contact || ''));
+  if (!links) return null;
+  const className =
+    'grid size-11 place-items-center rounded-full text-ink-2 ring-1 ring-line-strong transition hover:bg-surface-3 hover:text-ink [&_svg]:size-4';
+  return (
+    <span className="flex shrink-0 gap-1.5">
+      <a
+        href={links.wa}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`WhatsApp ${name}`}
+        onClick={(event) => event.stopPropagation()}
+        className={className}
+      >
+        <MessageCircle />
+      </a>
+      <a
+        href={links.tel}
+        aria-label={`Telepon ${name}`}
+        onClick={(event) => event.stopPropagation()}
+        className={className}
+      >
+        <Phone />
+      </a>
+    </span>
+  );
+}
+
+/**
+ * Kartu orang (anggota, kontak, tim). Tablet dan laptop: avatar besar, nama, dua fakta. HP: satu baris
+ * ringkas, karena di lapangan yang dicari satu orang untuk dihubungi.
+ */
+function PersonCard({
+  entity,
+  row,
+  ws,
+  onOpen,
+  index,
+  extra,
+}: {
+  entity: Entity;
+  row: Item;
+  ws: Workspace;
+  onOpen: () => void;
+  index: number;
+  extra?: React.ReactNode;
+}) {
+  const name = String(row.data.title || entityTitle(entity));
+  const status = statusOf(entity, row);
+  const detail = summaryChips(entity, row, ws).slice(0, 2).join(' · ');
+  const pill = status ? <Pill tone={statusTone(row.data.status)}>{status}</Pill> : null;
+  const title = (
+    <button
+      type="button"
+      className="block max-w-full truncate text-left text-[16px] font-medium text-ink outline-none"
+      onClick={(event) => {
+        event.stopPropagation();
+        onOpen();
+      }}
+    >
+      {name}
+    </button>
+  );
+  return (
+    <motion.article
+      layout
+      style={{ animationDelay: `${Math.min(index, 10) * 35}ms` }}
+      className="enter flex h-full cursor-pointer flex-col gap-3 rounded-[var(--radius-card)] bg-surface p-3.5 shadow-card ring-1 ring-line transition-[background-color,translate] duration-300 hover:-translate-y-0.5 hover:bg-surface-solid sm:p-4"
+      onClick={onOpen}
+    >
+      <div className="flex items-center gap-3 sm:hidden">
+        <Avatar name={name} className="size-11 ring-0" />
+        <div className="min-w-0 flex-1">
+          {title}
+          {pill}
+        </div>
+        <ContactLinks contact={row.data.contact} name={name} />
+      </div>
+      <div className="flex items-start justify-between gap-2 max-sm:hidden">
+        <Avatar name={name} className="size-14 text-[15px] ring-0" />
+        {pill}
+      </div>
+      <div className="min-w-0 max-sm:hidden">
+        {title}
+        {detail && <p className="truncate text-[13px] text-ink-3">{detail}</p>}
+      </div>
+      <dl className="grid grid-cols-2 gap-2 rounded-2xl bg-surface-2 p-3 text-[13px] max-sm:hidden">
+        {personFacts(entity, row, ws).map(([label, value]) => (
+          <div key={label} className="min-w-0">
+            <dt className="truncate text-xs text-ink-3">{label}</dt>
+            <dd className="truncate font-medium text-ink">{value}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className="mt-auto flex items-center justify-between gap-2 empty:hidden">
+        {extra && <div onClick={(event) => event.stopPropagation()}>{extra}</div>}
+        <span className="ml-auto max-sm:hidden">
+          <ContactLinks contact={row.data.contact} name={name} />
+        </span>
+      </div>
+    </motion.article>
+  );
+}
+
+/** Kartu catatan berwarna menurut artinya: status, judul, fakta penting, orang, dan tanggal. */
 export function RecordCard({
   entity,
   row,
   ws,
   onOpen,
   index = 0,
+  extra,
 }: {
   entity: Entity;
   row: Item;
   ws: Workspace;
   onOpen: () => void;
   index?: number;
+  /** Tautan cepat per jenis catatan; berada di dalam kartu dan tidak membuka laci detail. */
+  extra?: React.ReactNode;
 }) {
+  if (PEOPLE_ENTITIES.includes(entity))
+    return (
+      <PersonCard entity={entity} row={row} ws={ws} onOpen={onOpen} index={index} extra={extra} />
+    );
   const chips = summaryChips(entity, row, ws).slice(0, 2);
   const facts = keyFacts(entity, row, ws);
   const status = statusOf(entity, row);
@@ -152,20 +287,19 @@ export function RecordCard({
       layout
       style={{ animationDelay: `${Math.min(index, 10) * 35}ms` }}
       data-tone={cardTone(entity, row, ws)}
-      className="enter group relative flex min-h-36 cursor-pointer flex-col gap-3 overflow-hidden rounded-[var(--radius-card)] bg-tone p-4 text-tone-ink transition-shadow hover:shadow-card"
+      className="enter group relative flex h-full min-h-36 cursor-pointer flex-col gap-2.5 rounded-[var(--radius-card)] bg-tone p-4 text-tone-ink ring-1 ring-tone-line ring-inset transition-[box-shadow,translate] duration-300 hover:-translate-y-0.5 hover:shadow-card"
       onClick={onOpen}
     >
-      <Wave />
-      <div className="relative flex flex-wrap items-center gap-1.5">
+      <div className="flex flex-wrap items-center gap-1.5">
         {status && (
-          <span className="rounded-full bg-surface/70 px-2.5 py-1 text-[11px] font-bold">
+          <span className="rounded-full bg-tone-ink px-2.5 py-1 text-[11px] font-semibold text-tone dark:text-on-bar">
             {status}
           </span>
         )}
         {chips.map((chip) => (
           <span
             key={chip}
-            className="max-w-[12rem] truncate rounded-full border border-tone-line px-2.5 py-0.5 text-[11px] font-semibold"
+            className="max-w-[12rem] truncate rounded-full px-1 py-0.5 text-[12px] font-medium"
           >
             {chip}
           </span>
@@ -173,7 +307,7 @@ export function RecordCard({
       </div>
       <button
         type="button"
-        className="relative text-left text-[16px] leading-snug font-bold text-ink outline-none after:absolute after:-inset-2"
+        className="relative text-left text-[16px] leading-snug font-medium text-ink outline-none"
         onClick={(e) => {
           e.stopPropagation();
           onOpen();
@@ -182,15 +316,16 @@ export function RecordCard({
         {String(row.data.title || entityTitle(entity))}
       </button>
       {facts.length > 0 && (
-        <ul className="relative flex flex-col gap-0.5 text-[13px] font-semibold opacity-90">
+        <ul className="flex flex-col gap-0.5 text-[13px]">
           {facts.map((fact) => (
             <li key={fact}>{fact}</li>
           ))}
         </ul>
       )}
-      <div className="relative mt-auto flex items-center justify-between gap-2">
+      {extra && <div onClick={(event) => event.stopPropagation()}>{extra}</div>}
+      <div className="mt-auto flex items-center justify-between gap-2">
         <AvatarStack names={people(entity, row)} />
-        <span className="ml-auto text-xs font-semibold opacity-75">
+        <span className="ml-auto text-xs font-medium">
           {formatDate(String(row.data.date || row.data.due_date || row.updated_at || ''))}
         </span>
       </div>

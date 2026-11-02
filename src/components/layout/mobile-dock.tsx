@@ -13,9 +13,9 @@ import { prefetchWorkspace } from '@/features/workspace/use-workspace';
 const CAPSULE = { type: 'spring', stiffness: 460, damping: 36 } as const;
 
 /**
- * Navigasi bawah HP: bilah putih melayang. Item aktif mengembang menjadi kapsul pastel berlabel
- * yang meluncur saat pindah tab; tombol tambah koral (warna logo) di tengah. Bilah minggir saat
- * menggulir ke bawah supaya tidak menutupi isi halaman.
+ * Navigasi bawah HP: kapsul padat melayang. Item aktif mengembang menjadi kapsul berlabel yang
+ * meluncur saat pindah tab; tombol tambah warna aksi di tengah. Bilah minggir saat menggulir ke
+ * bawah supaya tidak menutupi isi halaman.
  */
 export function MobileDock({
   onAdd,
@@ -44,7 +44,7 @@ export function MobileDock({
           <motion.span
             layoutId="dock-capsule"
             transition={CAPSULE}
-            className="absolute inset-0 rounded-[18px] bg-accent"
+            className="absolute inset-0 rounded-full bg-surface-3"
           />
         )}
         <span className="relative flex items-center gap-1.5">
@@ -53,7 +53,7 @@ export function MobileDock({
             <motion.span
               initial={{ opacity: 0, x: -4 }}
               animate={{ opacity: 1, x: 0 }}
-              className="text-[13px] font-bold"
+              className="text-[13px] font-medium"
             >
               {label}
             </motion.span>
@@ -62,8 +62,8 @@ export function MobileDock({
       </>
     );
     const className = cn(
-      'relative flex h-12 min-w-12 items-center justify-center rounded-[18px] px-3.5 transition-colors',
-      isActive ? 'text-accent-ink' : 'text-ink-3',
+      'relative flex h-12 min-w-12 items-center justify-center rounded-full px-3.5 transition-colors',
+      isActive ? 'text-ink' : 'text-ink-2',
     );
     return href ? (
       <Link
@@ -87,7 +87,7 @@ export function MobileDock({
     <nav
       aria-label="Navigasi utama"
       data-hidden={hidden || undefined}
-      className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto flex h-[68px] max-w-[26rem] items-center justify-between rounded-[26px] bg-surface/95 px-2 shadow-float ring-1 ring-line/70 backdrop-blur-md dark:bg-surface-2/95 dark:ring-line-strong transition-transform duration-300 ease-[var(--ease-out)] data-[hidden]:translate-y-[calc(100%+2rem)] md:hidden"
+      className="no-print fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto flex h-[68px] max-w-[26rem] items-center justify-between rounded-full bg-surface-solid px-2 shadow-float ring-1 ring-line-strong transition-transform duration-300 ease-[var(--ease-out)] data-[hidden]:translate-y-[calc(100%+2rem)] md:hidden"
     >
       {items
         .slice(0, 2)
@@ -105,7 +105,7 @@ export function MobileDock({
         onClick={onAdd}
         aria-label="Tambah catatan"
         aria-expanded={adding}
-        className="grid size-[52px] shrink-0 place-items-center rounded-[18px] bg-action text-on-action shadow-[0_10px_22px_-8px_var(--action)] transition hover:bg-action-hover active:scale-95"
+        className="grid size-[52px] shrink-0 place-items-center rounded-full bg-action text-on-action transition hover:bg-action-hover active:scale-95"
       >
         <Plus
           className={cn('size-6 transition-transform duration-300', adding && 'rotate-45')}

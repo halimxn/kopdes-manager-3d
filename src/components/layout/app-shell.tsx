@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Popover } from 'radix-ui';
 import { Toaster } from 'sonner';
 import { LazyMotion, MotionConfig } from 'motion/react';
@@ -11,9 +11,10 @@ import { Sheet } from '@/components/ui/sheet';
 import { PageIcon } from '@/components/ui/icon';
 import { PopoverContent } from '@/components/ui/menu';
 import { prefetchWorkspace } from '@/features/workspace/use-workspace';
-import { Kbd } from '@/components/ui/kbd';
 import { useTheme } from '@/lib/theme';
-import { Sidebar, activePage } from './sidebar';
+import { LogoMark } from '@/components/ui/logo';
+import { RAIL_BUTTON, Sidebar, activePage } from './sidebar';
+import { TopNav } from './top-nav';
 import { MobileDock } from './mobile-dock';
 import dynamic from 'next/dynamic';
 import { QuickActionsPanel } from './quick-actions';
@@ -21,7 +22,6 @@ import { ProfileMenu } from './profile-menu';
 import { NAV_FOOTER, NAV_GROUPS, PAGES } from './nav';
 import { NotificationBell } from '@/features/notifications/notification-bell';
 import { ShortcutList } from './shortcuts';
-import { Greeting } from './greeting';
 
 const CommandPalette = dynamic(
   () => import('./command-palette').then((module) => module.CommandPalette),
@@ -45,6 +45,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [menu, setMenu] = useState(false);
   const [help, setHelp] = useState(false);
   const page = activePage(pathname);
+  const header = useRef<HTMLElement>(null);
+
+  // Bilah atas menyatu dengan latar saat di puncak halaman dan berkabut hanya bila ada isi di bawahnya.
+  useEffect(() => {
+    const onScroll = () => header.current?.toggleAttribute('data-scrolled', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [pathname]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -84,13 +93,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           classNames: {
             // Toast di belakang tumpukan menyembunyikan isinya, seperti gaya bawaan sonner.
             toast:
-              'flex w-(--width) items-center gap-3 rounded-2xl bg-action py-2.5 pr-2.5 pl-4 font-sans text-sm font-semibold text-on-action shadow-float data-[expanded=false]:data-[front=false]:*:opacity-0',
+              'flex w-(--width) items-center gap-3 rounded-[1.5rem] bg-surface-solid py-2 pr-2 pl-5 font-sans text-sm font-medium text-ink shadow-float ring-1 ring-line-strong data-[expanded=false]:data-[front=false]:*:opacity-0',
             icon: 'flex shrink-0 [&_svg]:size-[18px]',
             content: 'flex min-w-0 flex-1 flex-col gap-0.5 py-1',
             title: 'leading-snug',
-            description: 'font-medium text-on-action/80',
+            description: 'font-medium text-ink-2',
             actionButton:
-              'h-9 shrink-0 cursor-pointer rounded-xl bg-on-action/15 px-3.5 text-[13px] font-bold text-on-action outline-none transition-colors hover:bg-on-action/25 focus-visible:ring-2 focus-visible:ring-on-action/60',
+              'h-9 shrink-0 cursor-pointer rounded-full bg-action px-4 text-[13px] font-semibold text-on-action outline-none transition-colors hover:bg-action-hover focus-visible:ring-2 focus-visible:ring-accent-strong',
           },
         }}
       />
@@ -113,62 +122,66 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Gerak berkurang di perangkat: Motion hanya memudar, tanpa geser dan pegas. */}
       <MotionConfig reducedMotion="user">
         <ConfirmProvider>
-          <div className="flex min-h-dvh">
-            <Suspense fallback={<div className="hidden w-[80px] md:block" />}>
-              <Sidebar />
+          <header
+            ref={header}
+            className="no-print sticky top-0 z-30 flex h-16 items-center gap-2 px-4 transition-[background-color,backdrop-filter] duration-300 data-[scrolled]:bg-canvas/70 data-[scrolled]:backdrop-blur-xl md:grid md:h-[72px] md:grid-cols-[1fr_auto_1fr] md:pr-6 md:pl-[88px]"
+          >
+            <Link
+              href="/home"
+              aria-label="Kopdes, ke Beranda"
+              className="flex min-w-0 flex-1 items-center gap-2.5 md:flex-none"
+            >
+              <LogoMark className="size-10 rounded-[13px]" />
+              <span className="text-[19px] font-medium tracking-tight text-ink max-lg:hidden md:max-lg:hidden">
+                Kopdes
+              </span>
+            </Link>
+            <Suspense fallback={<div className="h-12" />}>
+              <div className="hidden md:block">
+                <TopNav active={page} />
+              </div>
             </Suspense>
-            <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 flex items-center gap-3 bg-canvas/85 px-4 py-3 backdrop-blur-md md:px-6 md:py-4">
-                <div className="md:hidden">
-                  <ProfileMenu />
-                </div>
-                <Greeting className="flex min-w-0 flex-1" />
-                <button
-                  type="button"
-                  onClick={() => setPalette(true)}
-                  className="group hidden h-11 min-w-0 items-center gap-2 rounded-full bg-surface pr-1.5 pl-4 text-sm font-semibold text-ink-3 shadow-card ring-1 ring-line/70 transition hover:text-ink-2 hover:ring-line-strong md:flex md:w-[min(26rem,36vw)]"
-                  aria-label="Cari atau buka (Ctrl K)"
-                >
-                  <span className="truncate">Cari tugas, catatan, atau menu…</span>
-                  <span
-                    className="ml-auto flex shrink-0 items-center gap-1 max-lg:hidden"
-                    aria-hidden="true"
-                  >
-                    <Kbd>Ctrl</Kbd>
-                    <Kbd>K</Kbd>
-                  </span>
-                  {/* Tombol bulat gelap seperti kotak cari acuan. */}
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-action text-on-action transition-transform duration-200 group-hover:scale-105">
-                    <Search className="size-4" />
-                  </span>
-                </button>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 [&>button]:shadow-card [&>button]:ring-1 [&>button]:ring-line/70">
-                    <button
-                      type="button"
-                      onClick={() => setPalette(true)}
-                      aria-label="Cari"
-                      className="grid size-10 place-items-center rounded-full bg-surface text-ink transition hover:bg-surface-2 md:hidden"
-                    >
-                      <Search className="size-5" />
-                    </button>
-                    <NotificationBell />
-                    <Popover.Root open={quick} onOpenChange={setQuick}>
-                      <Popover.Trigger className="hidden h-11 items-center gap-1.5 rounded-full bg-action pr-4 pl-3 text-sm font-bold text-on-action shadow-[0_10px_20px_-10px_var(--action)] transition hover:bg-action-hover active:scale-[0.97] md:inline-flex">
-                        <Plus className="size-[18px]" strokeWidth={2.6} />
-                        Tambah
-                      </Popover.Trigger>
-                      <PopoverContent align="end" className="w-[min(36rem,calc(100vw-2rem))] p-4">
-                        <QuickActionsPanel onPick={() => setQuick(false)} />
-                      </PopoverContent>
-                    </Popover.Root>
-                  </div>
-                </div>
-              </header>
-              <main id="main" className="flex-1 px-4 pt-2 pb-32 md:px-6 md:pt-2 md:pb-10">
-                {children}
-              </main>
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setPalette(true)}
+                aria-label="Cari (Ctrl K)"
+                className="grid size-11 place-items-center rounded-full bg-surface-2 text-ink ring-1 ring-line transition hover:bg-surface-3"
+              >
+                <Search className="size-5" />
+              </button>
+              <NotificationBell />
+              <ProfileMenu />
             </div>
+          </header>
+          <div className="mx-auto flex w-full max-w-[1720px]">
+            <Suspense fallback={<div className="hidden w-[76px] md:block" />}>
+              <Sidebar
+                tools={(tip) => (
+                  <Popover.Root open={quick} onOpenChange={setQuick}>
+                    <Popover.Trigger {...tip} aria-label="Tambah" className={RAIL_BUTTON}>
+                      <Plus strokeWidth={2.4} />
+                    </Popover.Trigger>
+                    <PopoverContent
+                      side="right"
+                      align="start"
+                      className="w-[min(36rem,calc(100vw-6rem))] p-4"
+                    >
+                      <QuickActionsPanel onPick={() => setQuick(false)} />
+                    </PopoverContent>
+                  </Popover.Root>
+                )}
+              />
+            </Suspense>
+            <main
+              id="main"
+              className="min-w-0 flex-1 px-4 pt-2 pb-32 md:pt-1 md:pr-6 md:pb-10 md:pl-1"
+            >
+              {/* Dipasang ulang tiap pindah halaman: bagian baru muncul berurutan dari buram (.page-enter). */}
+              <div key={pathname} className="page-enter">
+                {children}
+              </div>
+            </main>
           </div>
           <MobileDock
             onAdd={() => setQuickSheet(true)}
@@ -198,7 +211,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         onClick={() => setMenu(false)}
                         onTouchStart={() => prefetchWorkspace(id)}
                         aria-current={page === id ? 'page' : undefined}
-                        className="flex flex-col items-center gap-2 rounded-2xl bg-surface-2 px-2 py-4 text-center text-[13px] font-bold text-ink-2 transition active:scale-[0.96] aria-[current=page]:bg-accent aria-[current=page]:text-accent-ink"
+                        className="flex flex-col items-center gap-2 rounded-[1.25rem] bg-surface-2 px-2 py-4 text-center text-[13px] font-medium text-ink-2 ring-1 ring-line transition active:scale-[0.96] aria-[current=page]:bg-action aria-[current=page]:text-on-action"
                       >
                         <PageIcon name={PAGES[id].icon} className="size-6" />
                         {PAGES[id].label}

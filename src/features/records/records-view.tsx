@@ -6,7 +6,7 @@ import { catalog, formatChoiceLabel } from './catalog';
 import type { Entity, Item } from './schemas';
 import { choicesFor, fieldKind } from './fields-meta';
 import { displayValue, entityTitle, fieldLabel } from './related';
-import { RecordCard, RecordDetailSheet } from './record-card';
+import { PEOPLE_ENTITIES, RecordCard, RecordDetailSheet } from './record-card';
 import { CsvImportSheet, RecordFormSheet } from './lazy';
 import { useRecordParams } from './use-record-params';
 import type { Workspace } from '@/features/workspace/use-workspace';
@@ -51,6 +51,8 @@ export function RecordsView({
   ready = true,
   notReadyText,
   metrics,
+  details,
+  header,
   quickFilters = [],
   columns,
   cardExtra,
@@ -66,6 +68,9 @@ export function RecordsView({
   ready?: boolean;
   notReadyText?: string;
   metrics?: (rows: Item[]) => ReactNode;
+  details?: (rows: Item[]) => ReactNode;
+  /** Kepala halaman; dibangun di sini karena angkanya mengikuti saringan. */
+  header?: (stats: ReactNode) => ReactNode;
   quickFilters?: QuickFilter[];
   columns?: string[];
   cardExtra?: (row: Item) => ReactNode;
@@ -83,7 +88,12 @@ export function RecordsView({
   const [month, setMonth] = useState('');
   // Tabel di layar lebar untuk buku yang punya kolom; kartu di HP dan tablet.
   const [view, setView] = useState<'cards' | 'table'>(() =>
-    typeof window !== 'undefined' && window.innerWidth >= 1280 && columns ? 'table' : 'cards',
+    typeof window !== 'undefined' &&
+    window.innerWidth >= 1280 &&
+    columns &&
+    !PEOPLE_ENTITIES.includes(entity)
+      ? 'table'
+      : 'cards',
   );
   const [form, setForm] = useState<{ item?: Item; prefill?: Record<string, unknown> } | null>(null);
   const [detail, setDetail] = useState<string | null>(null);
@@ -152,20 +162,22 @@ export function RecordsView({
 
   return (
     <section className="flex flex-col gap-5">
+      {header?.(metrics && ready ? metrics(filtered) : null)}
       {!ready && (
         <Notice>
           {notReadyText ||
             'Pencatatan ini belum aktif. Database perlu diperbarui (migrasi) sebelum data bisa dicatat.'}
         </Notice>
       )}
-      {metrics && ready && metrics(filtered)}
+      {!header && metrics && ready && metrics(filtered)}
+      {details && ready && details(filtered)}
       <div className="flex flex-wrap items-center gap-2">
         <SearchField
           value={search}
           onChange={setSearch}
           label={`Cari ${entityTitle(entity).toLowerCase()}`}
           placeholder={`Cari ${entityTitle(entity).toLowerCase()}…`}
-          className="flex-1 basis-60"
+          className="flex-1 basis-52"
         />
         {hasDate && entity !== 'inventory-items' && (
           <Select
@@ -184,7 +196,7 @@ export function RecordsView({
           </Select>
         )}
         <div
-          className="flex gap-1 rounded-2xl bg-surface p-1 shadow-card"
+          className="flex h-11 items-center gap-0.5 rounded-full bg-surface-2 p-1 ring-1 ring-line"
           role="group"
           aria-label="Cara melihat"
         >
@@ -192,7 +204,7 @@ export function RecordsView({
             type="button"
             aria-pressed={view === 'cards'}
             onClick={() => setView('cards')}
-            className="grid size-9 place-items-center rounded-xl text-ink-3 aria-pressed:bg-accent aria-pressed:text-accent-ink"
+            className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink"
             aria-label="Kartu"
           >
             <LayoutGrid className="size-4" />
@@ -201,7 +213,7 @@ export function RecordsView({
             type="button"
             aria-pressed={view === 'table'}
             onClick={() => setView('table')}
-            className="grid size-9 place-items-center rounded-xl text-ink-3 aria-pressed:bg-accent aria-pressed:text-accent-ink"
+            className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink"
             aria-label="Tabel"
           >
             <Rows3 className="size-4" />
@@ -210,7 +222,7 @@ export function RecordsView({
         <Button
           variant="secondary"
           size="icon"
-          className="size-11 shadow-card"
+          className="size-11"
           onClick={exportCsv}
           aria-label="Unduh CSV"
           title="Unduh CSV"
@@ -221,7 +233,7 @@ export function RecordsView({
           <Button
             variant="secondary"
             size="icon"
-            className="size-11 shadow-card"
+            className="size-11"
             onClick={() => setImporting(true)}
             disabled={!ready}
             aria-label="Impor CSV"
@@ -255,7 +267,7 @@ export function RecordsView({
                   setQuick(filter.id);
                   if (!filter.id) setStatus('');
                 }}
-                className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface px-3.5 text-[13px] font-semibold text-ink-2 shadow-card transition aria-pressed:bg-action aria-pressed:text-on-action"
+                className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 ring-1 ring-line transition aria-pressed:bg-action aria-pressed:text-on-action"
               >
                 {filter.label}
                 <span className="tabular text-xs opacity-70">{count}</span>
@@ -268,7 +280,7 @@ export function RecordsView({
               type="button"
               aria-pressed={status === choice}
               onClick={() => setStatus(status === choice ? '' : choice)}
-              className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface px-3.5 text-[13px] font-semibold text-ink-2 shadow-card transition aria-pressed:bg-action aria-pressed:text-on-action"
+              className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 ring-1 ring-line transition aria-pressed:bg-action aria-pressed:text-on-action"
             >
               {formatChoiceLabel(choice, `${entity}.${statusField}`)}
               <span className="tabular text-xs opacity-70">
@@ -312,29 +324,29 @@ export function RecordsView({
           />
         )
       ) : view === 'cards' ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
           <AnimatePresence initial={false}>
             {filtered.map((row, index) => (
-              <div key={row.id} className="flex flex-col gap-2">
+              <div key={row.id} className="flex flex-col">
                 <RecordCard
                   entity={entity}
                   row={row}
                   ws={ws}
                   index={index}
                   onOpen={() => setDetail(row.id)}
+                  extra={cardExtra?.(row)}
                 />
-                {cardExtra?.(row)}
               </div>
             ))}
           </AnimatePresence>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-[var(--radius-card)] bg-surface shadow-card">
+        <div className="overflow-x-auto rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line">
           <table className="w-full min-w-[40rem] text-left text-sm">
             <thead className="border-b border-line text-xs text-ink-3">
               <tr>
                 {tableColumns.map((field) => (
-                  <th key={field} scope="col" className="px-4 py-3 font-bold whitespace-nowrap">
+                  <th key={field} scope="col" className="px-4 py-3 font-medium whitespace-nowrap">
                     {fieldLabel(entity, field)}
                   </th>
                 ))}
