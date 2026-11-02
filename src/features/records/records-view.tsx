@@ -53,6 +53,7 @@ export function RecordsView({
   metrics,
   details,
   header,
+  tabs,
   quickFilters = [],
   columns,
   cardExtra,
@@ -71,6 +72,8 @@ export function RecordsView({
   details?: (rows: Item[]) => ReactNode;
   /** Kepala halaman; dibangun di sini karena angkanya mengikuti saringan. */
   header?: (stats: ReactNode) => ReactNode;
+  /** Tab halaman: satu baris dengan tombol aksi, supaya Tambah selalu di tempat yang sama. */
+  tabs?: ReactNode;
   quickFilters?: QuickFilter[];
   columns?: string[];
   cardExtra?: (row: Item) => ReactNode;
@@ -160,6 +163,90 @@ export function RecordsView({
       ),
     );
 
+  const finder = (
+    <>
+      <SearchField
+        value={search}
+        onChange={setSearch}
+        label={`Cari ${entityTitle(entity).toLowerCase()}`}
+        placeholder={`Cari ${entityTitle(entity).toLowerCase()}…`}
+        className="flex-1 basis-52"
+      />
+      {hasDate && entity !== 'inventory-items' && (
+        <Select
+          value={month}
+          onChange={(event) => setMonth(event.target.value)}
+          aria-label="Saring bulan"
+          className={`${TOOLBAR_CONTROL} w-44`}
+        >
+          <option value="">Semua bulan</option>
+          {monthOptions(rows).map((m) => (
+            <option key={m} value={m}>
+              {monthLabel(m)}
+              {m === today().slice(0, 7) ? ' (bulan ini)' : ''}
+            </option>
+          ))}
+        </Select>
+      )}
+    </>
+  );
+  const controls = (
+    <>
+      <div
+        className="flex h-11 items-center gap-0.5 rounded-full bg-surface-2 p-1 ring-1 ring-line"
+        role="group"
+        aria-label="Cara melihat"
+      >
+        <button
+          type="button"
+          aria-pressed={view === 'cards'}
+          onClick={() => setView('cards')}
+          className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink"
+          aria-label="Kartu"
+        >
+          <LayoutGrid className="size-4" />
+        </button>
+        <button
+          type="button"
+          aria-pressed={view === 'table'}
+          onClick={() => setView('table')}
+          className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink"
+          aria-label="Tabel"
+        >
+          <Rows3 className="size-4" />
+        </button>
+      </div>
+      <Button
+        variant="secondary"
+        size="icon"
+        className="size-11"
+        onClick={exportCsv}
+        aria-label="Unduh CSV"
+        title="Unduh CSV"
+      >
+        <Download />
+      </Button>
+      {entity !== 'stock-movements' && (
+        <Button
+          variant="secondary"
+          size="icon"
+          className="size-11"
+          onClick={() => setImporting(true)}
+          disabled={!ready}
+          aria-label="Impor CSV"
+          title="Impor CSV"
+        >
+          <FileUp />
+        </Button>
+      )}
+      {actions}
+      <Button variant="primary" onClick={() => setForm({})} disabled={!ready}>
+        <Plus />
+        Tambah
+      </Button>
+    </>
+  );
+
   return (
     <section className="flex flex-col gap-5">
       {header?.(metrics && ready ? metrics(filtered) : null)}
@@ -170,84 +257,20 @@ export function RecordsView({
         </Notice>
       )}
       {!header && metrics && ready && metrics(filtered)}
-      {details && ready && details(filtered)}
-      <div className="flex flex-wrap items-center gap-2">
-        <SearchField
-          value={search}
-          onChange={setSearch}
-          label={`Cari ${entityTitle(entity).toLowerCase()}`}
-          placeholder={`Cari ${entityTitle(entity).toLowerCase()}…`}
-          className="flex-1 basis-52"
-        />
-        {hasDate && entity !== 'inventory-items' && (
-          <Select
-            value={month}
-            onChange={(event) => setMonth(event.target.value)}
-            aria-label="Saring bulan"
-            className={`${TOOLBAR_CONTROL} w-44`}
-          >
-            <option value="">Semua bulan</option>
-            {monthOptions(rows).map((m) => (
-              <option key={m} value={m}>
-                {monthLabel(m)}
-                {m === today().slice(0, 7) ? ' (bulan ini)' : ''}
-              </option>
-            ))}
-          </Select>
-        )}
-        <div
-          className="flex h-11 items-center gap-0.5 rounded-full bg-surface-2 p-1 ring-1 ring-line"
-          role="group"
-          aria-label="Cara melihat"
-        >
-          <button
-            type="button"
-            aria-pressed={view === 'cards'}
-            onClick={() => setView('cards')}
-            className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink"
-            aria-label="Kartu"
-          >
-            <LayoutGrid className="size-4" />
-          </button>
-          <button
-            type="button"
-            aria-pressed={view === 'table'}
-            onClick={() => setView('table')}
-            className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:text-ink aria-pressed:bg-accent aria-pressed:text-accent-ink"
-            aria-label="Tabel"
-          >
-            <Rows3 className="size-4" />
-          </button>
+      {tabs ? (
+        <>
+          <div className="flex flex-wrap items-center gap-2">
+            {tabs}
+            <div className="flex flex-wrap items-center gap-2 sm:ml-auto">{controls}</div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">{finder}</div>
+        </>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          {finder}
+          {controls}
         </div>
-        <Button
-          variant="secondary"
-          size="icon"
-          className="size-11"
-          onClick={exportCsv}
-          aria-label="Unduh CSV"
-          title="Unduh CSV"
-        >
-          <Download />
-        </Button>
-        {entity !== 'stock-movements' && (
-          <Button
-            variant="secondary"
-            size="icon"
-            className="size-11"
-            onClick={() => setImporting(true)}
-            disabled={!ready}
-            aria-label="Impor CSV"
-            title="Impor CSV"
-          >
-            <FileUp />
-          </Button>
-        )}
-        {actions}
-        <Button variant="primary" onClick={() => setForm({})} disabled={!ready}>
-          <Plus />
-          Tambah
-        </Button>
-      </div>
+      )}
       {(statusChoices.length > 0 || quickFilters.length > 0) && (
         <div className="scrollbar-none -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
           {[
@@ -290,6 +313,7 @@ export function RecordsView({
           ))}
         </div>
       )}
+      {details && ready && details(filtered)}
       {filtered.length === 0 ? (
         rows.length ? (
           <EmptyState

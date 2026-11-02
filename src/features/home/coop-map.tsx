@@ -394,7 +394,7 @@ export function CoopMap({
     // Dasar panel mengikuti tema; isinya bertoken gelap karena titik bercahaya butuh latar malam.
     <section
       aria-labelledby="coop-map-title"
-      className="@container h-full overflow-hidden rounded-[var(--radius-card)] bg-deep shadow-card ring-1 ring-line"
+      className="@container isolate h-full overflow-hidden rounded-[var(--radius-card)] bg-deep shadow-card ring-1 ring-line"
       onKeyDown={(event) => {
         if (event.key === 'Escape' && selected) setSelected(null);
       }}

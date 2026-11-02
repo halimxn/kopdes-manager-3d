@@ -29,6 +29,9 @@ import { cn } from '@/lib/utils';
 
 type Values = Record<string, unknown>;
 
+/** Kolom yang diisi paling sering tampil besar di atas formulir. */
+const HERO_FIELDS = ['title', 'amount'];
+
 /** Kolom yang ditampilkan dulu; sisanya ada di "Rincian lainnya" agar formulir pendek. */
 const PRIMARY: Partial<Record<Entity, string[]>> = {
   'work-items': [
@@ -317,23 +320,32 @@ export function RecordFormSheet({
         </div>
       )}
       <form id={formId} onSubmit={submit} className="flex flex-col gap-4" noValidate>
-        {main.map(renderField)}
+        {main
+          .filter((field) => HERO_FIELDS.includes(field))
+          .map((field) => (
+            <div key={field} className="form-hero">
+              {renderField(field)}
+            </div>
+          ))}
+        {main.some((field) => !HERO_FIELDS.includes(field)) && (
+          <div className="form-group">
+            {main.filter((field) => !HERO_FIELDS.includes(field)).map(renderField)}
+          </div>
+        )}
         {more.length > 0 && (
-          <div className="rounded-2xl border border-line">
+          <div className="form-group">
             <button
               type="button"
               aria-expanded={showMore}
               onClick={() => setShowMore((open) => !open)}
-              className="flex w-full items-center justify-between px-4 py-3 text-sm font-bold text-ink-2"
+              className="flex min-h-13 w-full items-center justify-between px-4 text-sm font-medium text-ink-2 transition-colors hover:text-ink"
             >
               Rincian lainnya
               <ChevronDown
-                className={cn('size-4 transition-transform', showMore && 'rotate-180')}
+                className={cn('size-4 transition-transform duration-300', showMore && 'rotate-180')}
               />
             </button>
-            {showMore && (
-              <div className="flex flex-col gap-4 px-4 pb-4">{more.map(renderField)}</div>
-            )}
+            {showMore && more.map(renderField)}
           </div>
         )}
       </form>
@@ -386,7 +398,7 @@ function FieldControl({
     );
     return (
       <Field label={label} error={error} hint="Tugas yang harus selesai lebih dulu.">
-        <div className="max-h-44 overflow-y-auto rounded-xl border border-line p-1">
+        <div className="field-wide max-h-44 overflow-y-auto rounded-xl border border-line p-1">
           {!tasks.length && <p className="p-2 text-sm text-ink-3">Belum ada tugas lain.</p>}
           {tasks.map((task) => (
             <span
@@ -415,7 +427,7 @@ function FieldControl({
   }
   if (kind === 'boolean')
     return (
-      <span className="flex items-center gap-3 rounded-xl bg-surface-2 px-3 py-3 text-sm font-semibold">
+      <span className="flex min-h-13 items-center gap-3 px-4 text-sm font-medium text-ink-2">
         <Check checked={Boolean(value)} onChange={() => set(field, !value)} label={label} />
         {label}
       </span>
@@ -447,10 +459,10 @@ function FieldControl({
                 aria-checked={active}
                 onClick={() => set(field, person.name)}
                 className={cn(
-                  'flex h-13 min-w-0 items-center gap-2.5 rounded-2xl border pr-3 pl-2 text-left text-sm font-semibold transition active:scale-[0.98]',
+                  'flex h-13 min-w-0 items-center gap-2.5 rounded-full pr-3 pl-2 text-left text-sm font-medium ring-1 transition active:scale-[0.98]',
                   active
-                    ? 'border-transparent bg-accent text-accent-ink'
-                    : 'border-line bg-surface text-ink-2 hover:border-line-strong hover:bg-surface-2',
+                    ? 'bg-accent text-accent-ink ring-accent-strong'
+                    : 'text-ink-2 ring-line hover:bg-surface-2',
                 )}
               >
                 {person.name ? (
@@ -517,7 +529,7 @@ function FieldControl({
       return (
         <Field label={label} error={error} required={required}>
           <div
-            className="flex flex-wrap gap-1.5 rounded-2xl bg-surface-2 p-1"
+            className="flex flex-wrap gap-1 rounded-full bg-surface-2 p-1 ring-1 ring-line"
             role="radiogroup"
             aria-label={label}
           >
@@ -528,7 +540,7 @@ function FieldControl({
                 role="radio"
                 aria-checked={text === choice}
                 onClick={() => set(field, choice)}
-                className="h-9 flex-1 rounded-xl px-3 text-[13px] font-semibold whitespace-nowrap text-ink-2 transition aria-checked:bg-surface aria-checked:text-ink aria-checked:shadow-card"
+                className="h-9 flex-1 rounded-full px-3.5 text-[13px] font-medium whitespace-nowrap text-ink-2 transition aria-checked:bg-action aria-checked:text-on-action"
               >
                 {formatChoiceLabel(choice, `${entity}.${field}`)}
               </button>
@@ -588,12 +600,12 @@ function FieldControl({
         hint={Number(text) > 0 ? rupiah(Number(text)) : undefined}
       >
         <span className="relative block">
-          <span className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-sm font-semibold text-ink-3">
+          <span className="money-prefix pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-sm font-medium text-ink-3">
             Rp
           </span>
           <Input
             inputMode="numeric"
-            className="tabular pl-10"
+            className="money-input tabular pl-10"
             value={text === '0' ? '' : text}
             placeholder="0"
             onChange={(event) => set(field, event.target.value.replace(/\D/g, ''))}

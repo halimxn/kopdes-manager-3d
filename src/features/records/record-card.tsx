@@ -498,28 +498,28 @@ export function RecordDetailSheet({
         </>
       }
     >
-      <div className="flex flex-col gap-6">
-        {/* Label ringkas di bawah judul, seperti panel detail acuan. */}
+      <div className="flex flex-col gap-5">
+        {/* Label ringkas di bawah judul. */}
         <div data-tone={cardTone(entity, row, ws)} className="flex flex-col gap-2.5">
-          <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+          <div className="flex flex-wrap items-center gap-2 text-xs">
             {statusOf(entity, row) && (
               <Pill tone={statusTone(row.data.status)}>{statusOf(entity, row)}</Pill>
             )}
             {summaryChips(entity, row, ws).map((chip) => (
               <span
                 key={chip}
-                className="rounded-full border border-[color-mix(in_srgb,var(--tone-bar)_45%,transparent)] bg-tone px-2.5 py-1 text-tone-ink"
+                className="rounded-full bg-surface-2 px-2.5 py-1 font-medium text-ink-2 ring-1 ring-line"
               >
                 {chip}
               </span>
             ))}
           </div>
           {keyFacts(entity, row, ws).length > 0 && (
-            <p className="text-sm font-bold text-ink">{keyFacts(entity, row, ws).join(' · ')}</p>
+            <p className="text-sm font-medium text-ink">{keyFacts(entity, row, ws).join(' · ')}</p>
           )}
         </div>
         {longText.map((field) => (
-          <section key={field} className="flex flex-col gap-1.5">
+          <section key={field} className="form-group flex flex-col gap-1.5 p-4">
             <h3 className="text-[13px] font-semibold text-ink-3">
               {detailRows(entity, row, ws).find((d) => d.field === field)?.label || field}
             </h3>
@@ -530,11 +530,11 @@ export function RecordDetailSheet({
         ))}
         <EntityActions entity={entity} row={row} />
         {details.length > 0 && (
-          <dl className="grid grid-cols-[7.5rem_minmax(0,1fr)] gap-x-4 gap-y-3.5 text-sm sm:grid-cols-[8.5rem_minmax(0,1fr)]">
+          <dl className="form-group detail-rows text-sm">
             {details.map((detail) => (
-              <div key={detail.field} className="contents">
-                <dt className="font-semibold text-ink-3">{detail.label}</dt>
-                <dd className="min-w-0 font-semibold break-words text-ink">{detail.value}</dd>
+              <div key={detail.field}>
+                <dt className="text-ink-3">{detail.label}</dt>
+                <dd className="min-w-0 font-medium break-words text-ink">{detail.value}</dd>
               </div>
             ))}
           </dl>
@@ -546,10 +546,10 @@ export function RecordDetailSheet({
               <Link
                 key={idea.id}
                 href={idea.href}
-                className="rounded-2xl bg-accent px-4 py-3 text-accent-ink transition hover:brightness-[0.98]"
+                className="rounded-[1.25rem] bg-surface-2 px-4 py-3 ring-1 ring-line transition hover:bg-surface-3"
               >
-                <span className="block text-sm font-bold">{idea.label}</span>
-                <span className="block text-xs opacity-80">{idea.reason}</span>
+                <span className="block text-sm font-medium text-ink">{idea.label}</span>
+                <span className="block text-xs text-ink-3">{idea.reason}</span>
               </Link>
             ))}
           </section>

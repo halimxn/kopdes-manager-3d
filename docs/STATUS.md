@@ -21,6 +21,7 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 
 Daftar lengkap ada di [PRODUK](PRODUK.md). Yang paling baru:
 
+- 2 Nov 2026 (koreksi): modal ditulis ulang, bukan hanya diganti warna; kartu tidak boleh berwarna pekat atau kotor; tidak boleh ada yang tumpang tindih.
 - 2 Nov 2026 (koreksi): konstelasi diganti Peta koperasi agar berkaitan dengan koperasi dan memudahkan manajer: delapan bidang, rincian per bidang, tindakan langsung dari daftar. Panel Perlu perhatian dilebur ke daftar peta.
 - 2 Nov 2026 (koreksi setelah melihat hasil): buat lebih bersih dan hindari tabrakan warna, terutama di Beranda. Warna kuat hanya limau (aksi, progres) dan koral (terlambat); nada kartu redup, semua panel satu warna, ikon angka satu warna, baris rutin tanpa warna.
 - 2 Nov 2026: tampilan mengikuti tiga video acuan. Gradasi hanya di latar halaman; kartu, tombol, dan grafik solid. Pil menu atas dan rel ikon. Tema gelap bawaan, semua perangkat mulai dari gelap satu kali. Tema terang memakai teal dari acuan, untuk dilihat dulu di layar (cukup ubah token `--action` dan `--brand`). Peta dari data asli di Beranda, lebih lebar dari panel sebelahnya; di HP setelah tenggat dekat. Pil menu selalu membuka halaman pertama kelompok. Kartu orang ringkas di HP. Latar gelap dibuat lebih hidup. Angka ringkasan sebaris dengan judul. Perbaikan Dunia 3D ikut bersama desain baru. Rilis lewat pull request, digabung setelah pemilik setuju. Cadangan bernama `arsip/desain-oktober`.

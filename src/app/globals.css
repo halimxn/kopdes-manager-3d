@@ -213,99 +213,75 @@
 
 /*
   Nada kartu per proyek: isi kartu, teks, batang progres, dan garis. Dipasang lewat data-tone.
-  Sengaja redup dan setingkat terangnya: warna proyek hanya membedakan, tidak berebut perhatian.
-  Warna kuat disisakan untuk aksi (--action) dan terlambat (--late-bar).
+  Isi kartu dihitung dari warna nada dan warna panel, jadi kartu selalu menyatu dengan temanya dan
+  tidak pernah menjadi kotak cokelat atau ungu pekat. Warna kuat disisakan untuk aksi dan terlambat.
 */
+[data-tone] {
+  --tone: color-mix(in srgb, var(--tone-bar) 11%, var(--surface-solid));
+  --tone-line: color-mix(in srgb, var(--tone-bar) 22%, var(--line));
+}
 [data-tone='rose'] {
-  --tone: #f5e6e6;
   --tone-ink: #6f2b3a;
   --tone-bar: #c96f83;
-  --tone-line: #ecd3d6;
 }
 [data-tone='peach'] {
-  --tone: #f6e8de;
   --tone-ink: #6f4020;
   --tone-bar: #c98a62;
-  --tone-line: #ead3c2;
 }
 [data-tone='sky'] {
-  --tone: #dfedf0;
   --tone-ink: #134a5a;
   --tone-bar: #3d8a9c;
-  --tone-line: #c5dde2;
 }
 [data-tone='lavender'] {
-  --tone: #e9e7f4;
   --tone-ink: #40378c;
   --tone-bar: #8a80cf;
-  --tone-line: #d4d0ea;
 }
 [data-tone='mint'] {
-  --tone: #e0efe6;
   --tone-ink: #155a3f;
   --tone-bar: #4aa37f;
-  --tone-line: #c5e0d1;
 }
 [data-tone='lemon'] {
-  --tone: #f4efdc;
   --tone-ink: #5f4d10;
   --tone-bar: #bda24a;
-  --tone-line: #e5dcb8;
 }
 [data-tone='slate'] {
-  --tone: #e8ecee;
   --tone-ink: #36464f;
   --tone-bar: #7d8d96;
-  --tone-line: #d3dadd;
 }
 [data-theme='dark'] [data-tone='rose'],
 [data-theme='dark'][data-tone='rose'] {
-  --tone: #4d3f44;
   --tone-ink: #ecd9dd;
   --tone-bar: #d6a2ae;
-  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='peach'],
 [data-theme='dark'][data-tone='peach'] {
-  --tone: #4f433c;
   --tone-ink: #eddccf;
   --tone-bar: #d8a98f;
-  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='sky'],
 [data-theme='dark'][data-tone='sky'] {
-  --tone: #3c4853;
   --tone-ink: #d6e3ee;
   --tone-bar: #9dbcd8;
-  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='lavender'],
 [data-theme='dark'][data-tone='lavender'] {
-  --tone: #454452;
   --tone-ink: #dddbee;
   --tone-bar: #aca7df;
-  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='mint'],
 [data-theme='dark'][data-tone='mint'] {
-  --tone: #454c3b;
   --tone-ink: #e2e8cf;
   --tone-bar: #b6cc8c;
-  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='lemon'],
 [data-theme='dark'][data-tone='lemon'] {
-  --tone: #4c4739;
   --tone-ink: #ece4c6;
   --tone-bar: #d6c48b;
-  --tone-line: rgb(255 255 255 / 0.13);
 }
 [data-theme='dark'] [data-tone='slate'],
 [data-theme='dark'][data-tone='slate'] {
-  --tone: #45464a;
   --tone-ink: #e5e5e2;
   --tone-bar: #b9bab8;
-  --tone-line: rgb(255 255 255 / 0.13);
 }
 
 @theme inline {
@@ -562,20 +538,156 @@
 .sheet[data-state='closed'] {
   animation: slide-out-down 0.26s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
-@media (min-width: 768px) {
-  .sheet[data-state='open'] {
-    animation-name: slide-in-right;
-  }
-  .sheet[data-state='closed'] {
-    animation-name: slide-out-right;
+/* Tablet dan laptop: panel melayang muncul dari buram; halaman di belakangnya bergeser memberi ruang. */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(36px) scale(0.975);
+    filter: blur(8px);
   }
 }
-/* Isi laci menyusul panelnya: judul dulu, lalu formulir. */
+@keyframes panel-out {
+  to {
+    opacity: 0;
+    transform: translateX(24px) scale(0.985);
+  }
+}
+.shell {
+  transition: transform 0.5s var(--ease-sheet);
+}
+@media (min-width: 768px) {
+  .sheet[data-state='open'] {
+    animation: panel-in 0.5s var(--ease-sheet);
+  }
+  .sheet[data-state='closed'] {
+    animation: panel-out 0.2s ease-in forwards;
+  }
+  html[data-panel-open] .shell {
+    transform: translateX(-18px);
+  }
+}
+/* Isi panel menyusul berurutan: judul, lalu tiap kelompok. */
 .sheet[data-state='open'] .sheet-body > * {
   animation: item-in 0.42s var(--ease-out) 0.08s backwards;
 }
 .sheet[data-state='open'] .sheet-body > * + * {
   animation-delay: 0.14s;
+}
+
+/*
+  Formulir di panel: judul dan nominal besar (.form-hero), sisanya baris berkelompok (.form-group) dengan
+  label di kiri dan isian tanpa bingkai, seperti lembar pengaturan. Kolom bingkai hanya di luar panel.
+*/
+.form-hero .field {
+  gap: 0.125rem;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 0.375rem;
+  transition: border-color 0.2s;
+}
+.form-hero .field:focus-within {
+  border-color: var(--accent-strong);
+}
+.form-hero .field-label {
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+.form-hero input {
+  height: 2.75rem;
+  border-color: transparent;
+  background: transparent;
+  padding-inline: 0;
+  font-size: 1.625rem;
+  letter-spacing: -0.015em;
+  box-shadow: none;
+}
+.form-hero input:hover,
+.form-hero input:focus {
+  border-color: transparent;
+  box-shadow: none;
+}
+.form-hero .money-prefix {
+  left: 0;
+  font-size: 1.625rem;
+  letter-spacing: -0.015em;
+}
+.form-hero input.money-input {
+  padding-left: 2.75rem;
+}
+.form-group {
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.form-group > * + * {
+  border-top: 1px solid var(--line);
+}
+.form-group .field {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.75rem;
+  row-gap: 0.25rem;
+  min-height: 3.25rem;
+  padding: 0.375rem 0.5rem 0.375rem 1rem;
+  transition: background-color 0.2s;
+}
+.form-group .field:focus-within {
+  background: var(--surface-2);
+}
+.form-group .field > :nth-child(n + 3) {
+  grid-column: 2;
+}
+.form-group .field-label {
+  color: var(--ink-2);
+}
+.form-group .field :is(input, select, textarea, .field-trigger) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+.form-group .field :is(input, select, textarea, .field-trigger):hover {
+  border-color: transparent;
+}
+.form-group .field :is(input, select, textarea):focus {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+/* Kolom sempit (sisi kanan detail tugas): label lebih pendek agar nilainya muat. */
+.form-compact .field {
+  grid-template-columns: minmax(0, 4.75rem) minmax(0, 1fr);
+  padding-left: 0.75rem;
+}
+/* Isian lebar menempati baris penuh di bawah labelnya. */
+.form-group .field:has(textarea, [role='radiogroup'], .field-wide) {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0.75rem 1rem;
+}
+.form-group .field:has(textarea, [role='radiogroup'], .field-wide) > :nth-child(n + 2) {
+  grid-column: 1;
+}
+.form-group .field:has(textarea) textarea {
+  padding-inline: 0;
+}
+@media (max-width: 639px) {
+  .form-group .field {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0.625rem 1rem;
+  }
+  .form-group .field > :nth-child(n + 2) {
+    grid-column: 1;
+  }
+  .form-group .field :is(input:not(.peer), select:not(.peer)) {
+    padding-left: 0;
+  }
+}
+/* Baris rincian: label dan nilai dalam kelompok yang sama dengan formulir. */
+.detail-rows > div {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
 }
 .pop[data-state='open'] {
   animation: pop-in 0.36s var(--ease-spring);

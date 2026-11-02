@@ -54,7 +54,7 @@ export function DateField({
         type="button"
         disabled={disabled}
         aria-label={rest['aria-label']}
-        className={cn(TRIGGER, className)}
+        className={cn('field-trigger', TRIGGER, className)}
       >
         <CalendarDays className="text-ink-3 transition-colors group-data-[state=open]:text-accent-strong" />
         <span className={cn('flex-1 truncate', !value && 'text-ink-3')}>
@@ -164,7 +164,7 @@ export function TimeField({
         type="button"
         disabled={disabled}
         aria-label={rest['aria-label']}
-        className={cn(TRIGGER, className)}
+        className={cn('field-trigger', TRIGGER, className)}
       >
         <Clock className="text-ink-3 transition-colors group-data-[state=open]:text-accent-strong" />
         <span className={cn('tabular flex-1 truncate', !value && 'text-ink-3')}>

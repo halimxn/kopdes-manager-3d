@@ -191,8 +191,34 @@ export function ProjectsPage() {
               ]
             : undefined
         }
-        actions={
-          <>
+      />
+      {tab === 'list' && (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Tabs
+            label="Bagian proyek"
+            items={(PAGES.projects.tabs || []).map((t) => ({
+              id: t.id,
+              label: t.label,
+              count:
+                !loading && t.entity && t.id !== 'list' ? (data[t.entity] || []).length : undefined,
+            }))}
+            value={tab}
+            onChange={(id) => setParam('tab', id === 'list' ? null : id)}
+          />
+          {tab === 'list' && !history && (
+            <Button variant="primary" onClick={() => setCreating(true)}>
+              <Plus />
+              Proyek baru
+            </Button>
+          )}
+        </div>
+      )}
+      {loading ? (
+        <PageLoading />
+      ) : tab !== 'list' ? (
+        <RecordsView
+          key={tab}
+          tabs={
             <Tabs
               label="Bagian proyek"
               items={(PAGES.projects.tabs || []).map((t) => ({
@@ -206,20 +232,7 @@ export function ProjectsPage() {
               value={tab}
               onChange={(id) => setParam('tab', id === 'list' ? null : id)}
             />
-            {tab === 'list' && !history && (
-              <Button variant="primary" onClick={() => setCreating(true)}>
-                <Plus />
-                Proyek baru
-              </Button>
-            )}
-          </>
-        }
-      />
-      {loading ? (
-        <PageLoading />
-      ) : tab !== 'list' ? (
-        <RecordsView
-          key={tab}
+          }
           entity={tab === 'risks' ? 'risks' : 'issues'}
           ws={data}
           refresh={refresh}

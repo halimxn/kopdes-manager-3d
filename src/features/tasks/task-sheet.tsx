@@ -71,10 +71,10 @@ const RECURRENCE = [
 ] as const;
 
 const ICON_BUTTON =
-  'grid size-9 place-items-center rounded-xl text-ink-2 transition hover:bg-surface-2 hover:text-ink [&_svg]:size-[18px]';
+  'grid size-10 place-items-center rounded-full text-ink-2 transition hover:bg-surface-2 hover:text-ink [&_svg]:size-[18px]';
 /** Nilai sifat tugas: kolom lunak berikon yang jelas bisa diubah; menyala saat dipilih. */
 const PROPERTY =
-  'h-10 border-transparent bg-surface-2 font-semibold hover:border-transparent hover:bg-surface-3';
+  'h-10 rounded-full border-transparent bg-surface-2 font-medium hover:border-transparent hover:bg-surface-3';
 const BADGE = 'tabular shrink-0 rounded-md px-1.5 py-0.5 text-xs font-semibold';
 
 /** Ikon status seperti lingkaran "Started" pada acuan: kosong untuk rencana, setengah untuk dikerjakan, centang untuk selesai. */
@@ -194,7 +194,8 @@ export function TaskSheet({
           ) : undefined
         }
       >
-        <div className="flex flex-col gap-6">
+        {/* Dua kolom di layar lebar: isi kerja di kiri, sifat dan jadwal tugas di kanan. */}
+        <div className="flex flex-col gap-5">
           {/* Kepala detail seperti panel acuan: judul besar, lalu deretan ikon aksi kecil. */}
           <div className="flex flex-col gap-1.5">
             <textarea
@@ -216,7 +217,7 @@ export function TaskSheet({
                 void save({ title: title.trim() }, 'mengubah judul')
               }
               className={cn(
-                'field-sizing-content -mx-2 w-[calc(100%+1rem)] resize-none rounded-xl bg-transparent px-2 py-1 text-[26px] leading-tight font-bold tracking-tight text-ink outline-none transition-[background-color,box-shadow] hover:bg-surface-2 focus:bg-surface-2 focus:ring-2 focus:ring-accent',
+                'field-sizing-content -mx-2 w-[calc(100%+1rem)] resize-none rounded-xl bg-transparent px-2 py-1 text-[30px] leading-tight font-normal tracking-[-0.02em] text-ink outline-none transition-[background-color,box-shadow] hover:bg-surface-2 focus:bg-surface-2 focus:ring-2 focus:ring-accent',
                 d.status === 'selesai' && 'text-ink-3 line-through',
               )}
             />
@@ -282,420 +283,441 @@ export function TaskSheet({
             </div>
           </div>
 
-          <section className="flex flex-col gap-1">
-            <h3 className="text-[13px] font-medium text-ink-3">Uraian</h3>
-            <Textarea
-              value={description}
-              rows={2}
-              placeholder="Tulis uraian singkat tugas ini"
-              aria-label="Uraian"
-              onChange={(event) => setDescription(event.target.value)}
-              onBlur={() =>
-                description !== String(d.description || '') &&
-                void save({ description }, 'mengubah uraian')
-              }
-              className={cn(PROPERTY, 'field-sizing-content min-h-20 resize-none text-sm')}
-            />
-          </section>
-
-          {/* Sifat tugas: label di kiri, nilai berikon di kanan, seperti panel detail acuan. */}
-          <dl className="grid grid-cols-1 items-center gap-x-3 gap-y-1.5 text-sm sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-y-2 [&>dt]:text-[13px] max-sm:[&>dt:not(:first-child)]:mt-2 [&>dd]:flex [&>dd]:min-w-0 [&>dd]:items-center [&>dd]:gap-2 [&>dd>span.block]:flex-1">
-            <dt className="text-ink-3">Penanggung jawab</dt>
-            <dd>
-              <Select
-                value={String(d.assignee || '')}
-                aria-label="Penanggung jawab"
-                icon={
-                  d.assignee ? (
-                    <Avatar name={String(d.assignee)} className="size-6 text-[9px] ring-0" />
-                  ) : (
-                    <UserRound />
-                  )
-                }
-                onChange={(event) =>
-                  void save(
-                    { assignee: event.target.value },
-                    event.target.value
-                      ? `menugaskan ke ${event.target.value}`
-                      : 'mengosongkan penanggung jawab',
-                  )
-                }
-                className={cn(PROPERTY, Boolean(d.assignee) && 'pl-11')}
-              >
-                <option value="">Belum ada</option>
-                {people.map((person) => (
-                  <option key={person.name} value={person.name}>
-                    {person.name}
-                  </option>
-                ))}
-              </Select>
-            </dd>
-            <dt className="text-ink-3">Status</dt>
-            <dd>
-              <Select
-                value={String(d.status)}
-                aria-label="Status"
-                icon={<StatusIcon status={String(d.status)} />}
-                onChange={(event) =>
-                  void setTaskStatus(task, event.target.value as TaskStatus, refresh, manager)
-                }
-                className={PROPERTY}
-              >
-                {STATUSES.map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-                {d.status === 'dibatalkan' && <option value="dibatalkan">Dibatalkan</option>}
-              </Select>
-              {subtasks.length > 0 && (
-                <span className={cn(BADGE, 'bg-accent text-accent-ink')}>
-                  {taskProgress(d as unknown as Task)}%
-                </span>
-              )}
-            </dd>
-            <dt className="text-ink-3">Prioritas</dt>
-            <dd>
-              <Select
-                value={String(d.priority || 'normal')}
-                aria-label="Prioritas"
-                icon={
-                  <Flag
-                    className={
-                      ['tinggi', 'mendesak'].includes(String(d.priority))
-                        ? 'text-late-ink'
-                        : undefined
+          <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_19rem]">
+            <aside className="flex flex-col gap-4 lg:sticky lg:top-0 lg:order-last">
+              {/* Sifat tugas: label di kiri, nilai berikon di kanan, seperti panel detail acuan. */}
+              <dl className="flex flex-col gap-1 rounded-[1.25rem] bg-surface-2 p-3 text-sm ring-1 ring-line [&>dt]:mt-1.5 [&>dt]:px-1 [&>dt]:text-xs [&>dt:first-child]:mt-0 [&>dd]:flex [&>dd]:min-w-0 [&>dd]:items-center [&>dd]:gap-2 [&>dd>span.block]:flex-1">
+                <dt className="text-ink-3">Penanggung jawab</dt>
+                <dd>
+                  <Select
+                    value={String(d.assignee || '')}
+                    aria-label="Penanggung jawab"
+                    icon={
+                      d.assignee ? (
+                        <Avatar name={String(d.assignee)} className="size-6 text-[9px] ring-0" />
+                      ) : (
+                        <UserRound />
+                      )
                     }
-                  />
-                }
-                onChange={(event) =>
-                  void save(
-                    { priority: event.target.value },
-                    `mengubah prioritas menjadi ${PRIORITIES.find(([v]) => v === event.target.value)?.[1]}`,
-                  )
-                }
-                className={PROPERTY}
-              >
-                {PRIORITIES.map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </Select>
-            </dd>
-            <dt className="text-ink-3">Tenggat</dt>
-            <dd>
-              <DateField
-                aria-label="Tenggat"
-                value={String(d.due_date || '')}
-                onChange={(value) =>
-                  value && void save({ due_date: value }, `memindah tenggat ke ${value}`)
-                }
-                className={cn(PROPERTY, 'flex-1')}
-              />
-              {due.late && <span className={cn(BADGE, 'bg-late text-late-ink')}>{due.text}</span>}
-            </dd>
-            <dt className="text-ink-3">Proyek</dt>
-            <dd data-tone={projectTone(project)}>
-              <Select
-                value={String(d.workstream_id || '')}
-                aria-label="Proyek"
-                icon={<span className="block size-3 rounded-[4px] bg-tone-bar" />}
-                onChange={(event) =>
-                  void save(
-                    { workstream_id: event.target.value, milestone_id: '' },
-                    'mengubah proyek',
-                  )
-                }
-                className={PROPERTY}
-              >
-                <option value="">Tugas mandiri (tanpa proyek)</option>
-                {projects.map((row) => (
-                  <option key={row.id} value={row.id}>
-                    {String(row.data.title)}
-                  </option>
-                ))}
-              </Select>
-            </dd>
-          </dl>
-
-          <section className="flex flex-col gap-2">
-            <h3 className="flex justify-between text-[13px] font-semibold text-ink-3">
-              Subtugas{' '}
-              <span className="tabular">
-                {subtasks.filter((s) => s.done).length}/{subtasks.length}
-              </span>
-            </h3>
-            {/* Subtugas berupa kapsul dengan centang di kanan, seperti acuan. */}
-            <ul
-              className="flex flex-col gap-2"
-              style={{ ['--tone-bar' as string]: 'var(--accent-strong)' }}
-            >
-              {subtasks.map((item, i) => (
-                <li
-                  key={i}
-                  className={cn(
-                    'group flex min-h-11 items-center gap-2 rounded-full border py-1 pr-1.5 pl-4 transition',
-                    item.done ? 'border-transparent bg-accent' : 'border-line hover:bg-surface-2',
+                    onChange={(event) =>
+                      void save(
+                        { assignee: event.target.value },
+                        event.target.value
+                          ? `menugaskan ke ${event.target.value}`
+                          : 'mengosongkan penanggung jawab',
+                      )
+                    }
+                    className={cn(PROPERTY, Boolean(d.assignee) && 'pl-11')}
+                  >
+                    <option value="">Belum ada</option>
+                    {people.map((person) => (
+                      <option key={person.name} value={person.name}>
+                        {person.name}
+                      </option>
+                    ))}
+                  </Select>
+                </dd>
+                <dt className="text-ink-3">Status</dt>
+                <dd>
+                  <Select
+                    value={String(d.status)}
+                    aria-label="Status"
+                    icon={<StatusIcon status={String(d.status)} />}
+                    onChange={(event) =>
+                      void setTaskStatus(task, event.target.value as TaskStatus, refresh, manager)
+                    }
+                    className={PROPERTY}
+                  >
+                    {STATUSES.map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                    {d.status === 'dibatalkan' && <option value="dibatalkan">Dibatalkan</option>}
+                  </Select>
+                  {subtasks.length > 0 && (
+                    <span className={cn(BADGE, 'bg-accent text-accent-ink')}>
+                      {taskProgress(d as unknown as Task)}%
+                    </span>
                   )}
-                >
-                  <span
-                    className={cn(
-                      'flex-1 text-sm font-semibold',
-                      item.done ? 'text-accent-ink' : 'text-ink',
-                    )}
-                  >
-                    {item.title}
-                  </span>
-                  <button
-                    type="button"
-                    aria-label={`Hapus subtugas ${item.title}`}
-                    onClick={() =>
+                </dd>
+                <dt className="text-ink-3">Prioritas</dt>
+                <dd>
+                  <Select
+                    value={String(d.priority || 'normal')}
+                    aria-label="Prioritas"
+                    icon={
+                      <Flag
+                        className={
+                          ['tinggi', 'mendesak'].includes(String(d.priority))
+                            ? 'text-late-ink'
+                            : undefined
+                        }
+                      />
+                    }
+                    onChange={(event) =>
                       void save(
-                        { subtasks: subtasks.filter((_, j) => j !== i) },
-                        `menghapus subtugas "${item.title}"`,
+                        { priority: event.target.value },
+                        `mengubah prioritas menjadi ${PRIORITIES.find(([v]) => v === event.target.value)?.[1]}`,
                       )
                     }
-                    className="grid size-8 place-items-center rounded-full text-ink-3 opacity-0 transition group-hover:opacity-100 hover:bg-late hover:text-late-ink focus:opacity-100 max-md:opacity-100"
+                    className={PROPERTY}
                   >
-                    <Trash2 className="size-4" />
-                  </button>
-                  <Check
-                    size="sm"
-                    checked={item.done}
-                    label={item.title}
-                    onChange={() =>
-                      void save(
-                        {
-                          subtasks: subtasks.map((s, j) => (j === i ? { ...s, done: !s.done } : s)),
-                        },
-                        `${item.done ? 'membuka' : 'menyelesaikan'} subtugas "${item.title}"`,
-                      )
+                    {PRIORITIES.map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </Select>
+                </dd>
+                <dt className="text-ink-3">Tenggat</dt>
+                <dd>
+                  <DateField
+                    aria-label="Tenggat"
+                    value={String(d.due_date || '')}
+                    onChange={(value) =>
+                      value && void save({ due_date: value }, `memindah tenggat ke ${value}`)
                     }
-                    className="mr-1"
+                    className={cn(PROPERTY, 'flex-1')}
                   />
-                </li>
-              ))}
-            </ul>
-            <form
-              className="flex gap-2"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (!subtask.trim()) return;
-                void save(
-                  { subtasks: [...subtasks, { title: subtask.trim().slice(0, 200), done: false }] },
-                  `menambah subtugas "${subtask.trim()}"`,
-                );
-                setSubtask('');
-              }}
-            >
-              <Input
-                value={subtask}
-                onChange={(event) => setSubtask(event.target.value)}
-                placeholder="Tambah subtugas"
-                aria-label="Subtugas baru"
-                icon={<Plus />}
-                wrapperClassName="flex-1"
-                className="rounded-full"
-              />
-              <Button
-                type="submit"
-                variant="secondary"
-                disabled={!subtask.trim()}
-                className="rounded-full"
-              >
-                Tambah
-              </Button>
-            </form>
-          </section>
+                  {due.late && (
+                    <span className={cn(BADGE, 'bg-late text-late-ink')}>{due.text}</span>
+                  )}
+                </dd>
+                <dt className="text-ink-3">Proyek</dt>
+                <dd data-tone={projectTone(project)}>
+                  <Select
+                    value={String(d.workstream_id || '')}
+                    aria-label="Proyek"
+                    icon={<span className="block size-3 rounded-[4px] bg-tone-bar" />}
+                    onChange={(event) =>
+                      void save(
+                        { workstream_id: event.target.value, milestone_id: '' },
+                        'mengubah proyek',
+                      )
+                    }
+                    className={PROPERTY}
+                  >
+                    <option value="">Tugas mandiri (tanpa proyek)</option>
+                    {projects.map((row) => (
+                      <option key={row.id} value={row.id}>
+                        {String(row.data.title)}
+                      </option>
+                    ))}
+                  </Select>
+                </dd>
+              </dl>
+              <section className="flex flex-col gap-2">
+                <h3 className="text-[13px] font-semibold text-ink-3">Jadwal berulang</h3>
+                <div className="form-group form-compact">
+                  <Field label="Ulangi">
+                    <Select
+                      value={String(d.recurrence || 'tidak')}
+                      icon={<Repeat />}
+                      onChange={(event) =>
+                        void save(
+                          {
+                            recurrence: event.target.value,
+                            ...(event.target.value === 'tidak'
+                              ? { recurrence_time: '09:00', recurrence_end_date: '' }
+                              : {}),
+                          },
+                          'mengubah jadwal berulang',
+                        )
+                      }
+                    >
+                      {RECURRENCE.map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </Select>
+                  </Field>
+                  <Field label="Jam">
+                    <TimeField
+                      aria-label="Jam"
+                      disabled={d.recurrence === 'tidak'}
+                      value={String(d.recurrence_time || '09:00')}
+                      onChange={(value) =>
+                        void save({ recurrence_time: value }, 'mengubah jam pengulangan')
+                      }
+                    />
+                  </Field>
+                  <Field label="Sampai tanggal">
+                    <DateField
+                      aria-label="Berulang sampai"
+                      placeholder="Tanpa batas"
+                      clearable
+                      disabled={d.recurrence === 'tidak'}
+                      value={String(d.recurrence_end_date || '')}
+                      onChange={(value) =>
+                        void save({ recurrence_end_date: value }, 'mengubah batas pengulangan')
+                      }
+                    />
+                  </Field>
+                </div>
+                <p className="text-xs text-ink-3">
+                  Saat tugas berulang ditandai selesai, tugas berikutnya dibuat otomatis. Jam bukan
+                  pengingat.
+                </p>
+              </section>
+            </aside>
+            <div className="flex min-w-0 flex-col gap-6">
+              <section className="flex flex-col gap-1">
+                <h3 className="text-[13px] font-medium text-ink-3">Uraian</h3>
+                <Textarea
+                  value={description}
+                  rows={2}
+                  placeholder="Tulis uraian singkat tugas ini"
+                  aria-label="Uraian"
+                  onChange={(event) => setDescription(event.target.value)}
+                  onBlur={() =>
+                    description !== String(d.description || '') &&
+                    void save({ description }, 'mengubah uraian')
+                  }
+                  className={cn(
+                    PROPERTY,
+                    'field-sizing-content min-h-20 resize-none rounded-[1.25rem] text-sm',
+                  )}
+                />
+              </section>
 
-          <section className="flex flex-col gap-2">
-            <h3 className="text-[13px] font-semibold text-ink-3">Jadwal berulang</h3>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <Field label="Ulangi">
-                <Select
-                  value={String(d.recurrence || 'tidak')}
-                  icon={<Repeat />}
-                  onChange={(event) =>
+              <section className="flex flex-col gap-2">
+                <h3 className="flex justify-between text-[13px] font-semibold text-ink-3">
+                  Subtugas{' '}
+                  <span className="tabular">
+                    {subtasks.filter((s) => s.done).length}/{subtasks.length}
+                  </span>
+                </h3>
+                {/* Subtugas berupa kapsul dengan centang di kanan, seperti acuan. */}
+                <ul
+                  className="flex flex-col gap-2"
+                  style={{ ['--tone-bar' as string]: 'var(--accent-strong)' }}
+                >
+                  {subtasks.map((item, i) => (
+                    <li
+                      key={i}
+                      className={cn(
+                        'group flex min-h-11 items-center gap-2 rounded-full border py-1 pr-1.5 pl-4 transition',
+                        item.done
+                          ? 'border-transparent bg-accent'
+                          : 'border-line hover:bg-surface-2',
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'flex-1 text-sm font-semibold',
+                          item.done ? 'text-accent-ink' : 'text-ink',
+                        )}
+                      >
+                        {item.title}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label={`Hapus subtugas ${item.title}`}
+                        onClick={() =>
+                          void save(
+                            { subtasks: subtasks.filter((_, j) => j !== i) },
+                            `menghapus subtugas "${item.title}"`,
+                          )
+                        }
+                        className="grid size-8 place-items-center rounded-full text-ink-3 opacity-0 transition group-hover:opacity-100 hover:bg-late hover:text-late-ink focus:opacity-100 max-md:opacity-100"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                      <Check
+                        size="sm"
+                        checked={item.done}
+                        label={item.title}
+                        onChange={() =>
+                          void save(
+                            {
+                              subtasks: subtasks.map((s, j) =>
+                                j === i ? { ...s, done: !s.done } : s,
+                              ),
+                            },
+                            `${item.done ? 'membuka' : 'menyelesaikan'} subtugas "${item.title}"`,
+                          )
+                        }
+                        className="mr-1"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <form
+                  className="flex gap-2"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    if (!subtask.trim()) return;
                     void save(
                       {
-                        recurrence: event.target.value,
-                        ...(event.target.value === 'tidak'
-                          ? { recurrence_time: '09:00', recurrence_end_date: '' }
-                          : {}),
+                        subtasks: [
+                          ...subtasks,
+                          { title: subtask.trim().slice(0, 200), done: false },
+                        ],
                       },
-                      'mengubah jadwal berulang',
-                    )
-                  }
+                      `menambah subtugas "${subtask.trim()}"`,
+                    );
+                    setSubtask('');
+                  }}
                 >
-                  {RECURRENCE.map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </Select>
-              </Field>
-              <Field label="Jam">
-                <TimeField
-                  aria-label="Jam"
-                  disabled={d.recurrence === 'tidak'}
-                  value={String(d.recurrence_time || '09:00')}
-                  onChange={(value) =>
-                    void save({ recurrence_time: value }, 'mengubah jam pengulangan')
-                  }
-                />
-              </Field>
-              <Field label="Sampai tanggal">
-                <DateField
-                  aria-label="Berulang sampai"
-                  placeholder="Tanpa batas"
-                  clearable
-                  disabled={d.recurrence === 'tidak'}
-                  value={String(d.recurrence_end_date || '')}
-                  onChange={(value) =>
-                    void save({ recurrence_end_date: value }, 'mengubah batas pengulangan')
-                  }
-                />
-              </Field>
-            </div>
-            <p className="text-xs text-ink-3">
-              Saat tugas berulang ditandai selesai, tugas berikutnya dibuat otomatis. Jam bukan
-              pengingat.
-            </p>
-          </section>
-
-          <section className="flex flex-col gap-2">
-            <h3 className="text-[13px] font-semibold text-ink-3">Tautan hasil kerja</h3>
-            <div className="flex gap-2">
-              <Input
-                type="url"
-                placeholder="https://"
-                aria-label="Tautan hasil kerja"
-                icon={<Link2 />}
-                wrapperClassName="flex-1"
-                value={link}
-                onChange={(event) => setLink(event.target.value)}
-                onBlur={() =>
-                  link !== String(d.link || '') &&
-                  void save({ link }, link ? 'memperbarui tautan hasil' : 'menghapus tautan hasil')
-                }
-              />
-              {Boolean(d.link) && (
-                <>
+                  <Input
+                    value={subtask}
+                    onChange={(event) => setSubtask(event.target.value)}
+                    placeholder="Tambah subtugas"
+                    aria-label="Subtugas baru"
+                    icon={<Plus />}
+                    wrapperClassName="flex-1"
+                    className="rounded-full"
+                  />
                   <Button
-                    size="icon"
-                    className="size-11"
-                    aria-label="Salin tautan"
-                    onClick={() =>
-                      void navigator.clipboard
-                        .writeText(String(d.link))
-                        .then(() => toast('Tautan tersalin'))
+                    type="submit"
+                    variant="secondary"
+                    disabled={!subtask.trim()}
+                    className="rounded-full"
+                  >
+                    Tambah
+                  </Button>
+                </form>
+              </section>
+
+              <section className="flex flex-col gap-2">
+                <h3 className="text-[13px] font-semibold text-ink-3">Tautan hasil kerja</h3>
+                <div className="flex gap-2">
+                  <Input
+                    type="url"
+                    placeholder="https://"
+                    aria-label="Tautan hasil kerja"
+                    icon={<Link2 />}
+                    wrapperClassName="flex-1"
+                    value={link}
+                    onChange={(event) => setLink(event.target.value)}
+                    onBlur={() =>
+                      link !== String(d.link || '') &&
+                      void save(
+                        { link },
+                        link ? 'memperbarui tautan hasil' : 'menghapus tautan hasil',
+                      )
                     }
-                  >
-                    <Copy />
-                  </Button>
-                  <Button size="icon" className="size-11" asChild>
-                    <a
-                      href={String(d.link)}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="Buka tautan"
-                    >
-                      <ExternalLink />
-                    </a>
-                  </Button>
-                </>
-              )}
-            </div>
-          </section>
-
-          {(meeting || document || groups.length > 0) && (
-            <section className="flex flex-col gap-2">
-              <h3 className="text-[13px] font-semibold text-ink-3">Terkait</h3>
-              <div className="flex flex-wrap gap-2">
-                {join && (
-                  <Button asChild size="sm" variant="primary">
-                    <a href={join} target="_blank" rel="noreferrer">
-                      <Video />
-                      Gabung rapat
-                    </a>
-                  </Button>
-                )}
-                {document && (
-                  <Button asChild size="sm">
-                    <Link href={recordLink('documents', document.id)}>
-                      <FileText />
-                      {String(document.data.title)}
-                    </Link>
-                  </Button>
-                )}
-              </div>
-              <ul className="flex flex-col gap-1">
-                {groups.flatMap((group) =>
-                  group.rows.slice(0, 6).map((row) => (
-                    <li key={group.entity + row.id}>
-                      <Link
-                        href={recordLink(group.entity, row.id)}
-                        className="flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-3 py-2 text-sm font-semibold hover:bg-surface-3"
+                  />
+                  {Boolean(d.link) && (
+                    <>
+                      <Button
+                        size="icon"
+                        className="size-11"
+                        aria-label="Salin tautan"
+                        onClick={() =>
+                          void navigator.clipboard
+                            .writeText(String(d.link))
+                            .then(() => toast('Tautan tersalin'))
+                        }
                       >
-                        <span className="truncate">
-                          {String(row.data.title || entityTitle(group.entity))}
-                        </span>
-                        <span className="shrink-0 text-xs text-ink-3">{group.title}</span>
-                      </Link>
-                    </li>
-                  )),
-                )}
-              </ul>
-            </section>
-          )}
+                        <Copy />
+                      </Button>
+                      <Button size="icon" className="size-11" asChild>
+                        <a
+                          href={String(d.link)}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="Buka tautan"
+                        >
+                          <ExternalLink />
+                        </a>
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </section>
 
-          <section className="flex flex-col gap-3">
-            <h3 className="text-[13px] font-semibold text-ink-3">Catatan & riwayat</h3>
-            <form
-              className="flex gap-2"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (!comment.trim()) return;
-                void save({}, `menambahkan catatan: "${comment.trim()}"`);
-                setComment('');
-              }}
-            >
-              <Input
-                value={comment}
-                onChange={(event) => setComment(event.target.value)}
-                placeholder="Tulis catatan untuk tugas ini"
-              />
-              <Button
-                type="submit"
-                size="icon"
-                variant="primary"
-                className="size-11"
-                aria-label="Kirim catatan"
-                disabled={!comment.trim()}
-              >
-                <Send />
-              </Button>
-            </form>
-            <ol className="flex flex-col gap-3 border-l-2 border-line pl-4">
-              {activities.slice(0, 30).map((entry) => (
-                <li key={entry.id} className="text-sm">
-                  <span
-                    className={cn(
-                      'font-semibold',
-                      entry.type === 'comment' ? 'text-ink' : 'text-ink-2',
+              {(meeting || document || groups.length > 0) && (
+                <section className="flex flex-col gap-2">
+                  <h3 className="text-[13px] font-semibold text-ink-3">Terkait</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {join && (
+                      <Button asChild size="sm" variant="primary">
+                        <a href={join} target="_blank" rel="noreferrer">
+                          <Video />
+                          Gabung rapat
+                        </a>
+                      </Button>
                     )}
+                    {document && (
+                      <Button asChild size="sm">
+                        <Link href={recordLink('documents', document.id)}>
+                          <FileText />
+                          {String(document.data.title)}
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                  <ul className="flex flex-col gap-1">
+                    {groups.flatMap((group) =>
+                      group.rows.slice(0, 6).map((row) => (
+                        <li key={group.entity + row.id}>
+                          <Link
+                            href={recordLink(group.entity, row.id)}
+                            className="flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-3 py-2 text-sm font-semibold hover:bg-surface-3"
+                          >
+                            <span className="truncate">
+                              {String(row.data.title || entityTitle(group.entity))}
+                            </span>
+                            <span className="shrink-0 text-xs text-ink-3">{group.title}</span>
+                          </Link>
+                        </li>
+                      )),
+                    )}
+                  </ul>
+                </section>
+              )}
+
+              <section className="flex flex-col gap-3">
+                <h3 className="text-[13px] font-semibold text-ink-3">Catatan & riwayat</h3>
+                <form
+                  className="flex gap-2"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    if (!comment.trim()) return;
+                    void save({}, `menambahkan catatan: "${comment.trim()}"`);
+                    setComment('');
+                  }}
+                >
+                  <Input
+                    value={comment}
+                    onChange={(event) => setComment(event.target.value)}
+                    placeholder="Tulis catatan untuk tugas ini"
+                  />
+                  <Button
+                    type="submit"
+                    size="icon"
+                    variant="primary"
+                    className="size-11"
+                    aria-label="Kirim catatan"
+                    disabled={!comment.trim()}
                   >
-                    {entry.user} {entry.text}
-                  </span>
-                  <span className="block text-xs text-ink-3">
-                    {formatDateTime(entry.created_at)}
-                  </span>
-                </li>
-              ))}
-              <li className="text-xs text-ink-3">Dibuat {formatDateTime(task.created_at)}</li>
-            </ol>
-          </section>
+                    <Send />
+                  </Button>
+                </form>
+                <ol className="flex flex-col gap-3 border-l-2 border-line pl-4">
+                  {activities.slice(0, 30).map((entry) => (
+                    <li key={entry.id} className="text-sm">
+                      <span
+                        className={cn(
+                          'font-semibold',
+                          entry.type === 'comment' ? 'text-ink' : 'text-ink-2',
+                        )}
+                      >
+                        {entry.user} {entry.text}
+                      </span>
+                      <span className="block text-xs text-ink-3">
+                        {formatDateTime(entry.created_at)}
+                      </span>
+                    </li>
+                  ))}
+                  <li className="text-xs text-ink-3">Dibuat {formatDateTime(task.created_at)}</li>
+                </ol>
+              </section>
+            </div>
+          </div>
         </div>
       </Sheet>
       <RecordFormSheet

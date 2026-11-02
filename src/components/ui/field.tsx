@@ -188,8 +188,8 @@ export function Field({
   className?: string;
 }) {
   return (
-    <label className={cn('flex flex-col gap-1.5', className)}>
-      <span className="text-[13px] font-semibold text-ink-2">
+    <label className={cn('field flex flex-col gap-1.5', className)}>
+      <span className="field-label text-[13px] font-medium text-ink-2">
         {label}
         {required && (
           <>

@@ -73,25 +73,24 @@ export function RecordsPage({
   const entity = current?.entity;
   const view = entity ? ENTITY_VIEWS[entity] : undefined;
   const blocked = entity ? entityReady(entity, caps) : '';
+  const tabBar =
+    tabs.length > 1 ? (
+      <Tabs
+        label={`Bagian ${info.label}`}
+        items={tabs.map((tab) => ({
+          id: tab.id,
+          label: tab.label,
+          count: tab.entity && !loading ? (data[tab.entity] || []).length : undefined,
+        }))}
+        value={current.id}
+        onChange={(id) => setParam('tab', id === tabs[0].id ? null : id)}
+      />
+    ) : null;
   const header = (stats?: ReactNode) => (
     <PageHeader
       title={info.label}
       sections={stats || undefined}
       subtitle={subtitle ?? (entity ? catalog[entity].description : undefined)}
-      actions={
-        tabs.length > 1 ? (
-          <Tabs
-            label={`Bagian ${info.label}`}
-            items={tabs.map((tab) => ({
-              id: tab.id,
-              label: tab.label,
-              count: tab.entity && !loading ? (data[tab.entity] || []).length : undefined,
-            }))}
-            value={current.id}
-            onChange={(id) => setParam('tab', id === tabs[0].id ? null : id)}
-          />
-        ) : undefined
-      }
     />
   );
   return (
@@ -99,16 +98,19 @@ export function RecordsPage({
       {error ? (
         <>
           {header()}
+          {tabBar}
           <ErrorState message={error} onRetry={() => void refresh()} />
         </>
       ) : loading ? (
         <>
           {header()}
+          {tabBar}
           <PageLoading />
         </>
       ) : current && extraTabs[current.id] ? (
         <>
           {header()}
+          {tabBar}
           {extraTabs[current.id]}
         </>
       ) : entity ? (
@@ -122,6 +124,7 @@ export function RecordsPage({
           metrics={view?.metrics ? (rows) => view.metrics!(rows, data) : undefined}
           details={view?.details ? (rows) => view.details!(rows, data) : undefined}
           header={header}
+          tabs={tabBar}
           quickFilters={view?.quickFilters}
           columns={view?.columns}
           cardExtra={view?.cardExtra ? (row) => view.cardExtra!(row, data) : undefined}

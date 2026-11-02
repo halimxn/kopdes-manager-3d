@@ -27,8 +27,9 @@ export function cardTone(entity: Entity, row: Item, ws: Workspace): Tone {
   switch (entity) {
     case 'work-items':
     case 'milestones':
-    case 'checklist':
       return d.workstream_id ? projectTone(project(d.workstream_id)) : 'slate';
+    case 'checklist':
+      return d.status === 'selesai' ? 'mint' : d.status === 'proses' ? 'sky' : 'slate';
     case 'workstreams':
       return projectTone(row);
     case 'cash-entries':

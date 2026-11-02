@@ -27,7 +27,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 | Logo | `brand`, `on-brand` | tanda Kopdes, warnanya sama dengan aksi |
 | Sorotan | `accent`, `accent-ink`, `accent-strong` | tab, fokus, cincin; bawaan mengikuti tema, 5 pilihan lain (lavender, langit, mint, peach, mawar) |
 | Status | `plan`, `doing`, `done`, `late`, `warn` (+ `-ink`, `-bar`), `on-bar` | isi lembut, teks, dan warna penuh. `Pill` lembut, kecuali terlambat yang penuh di tema gelap |
-| Nada kartu | `tone`, `tone-ink`, `tone-bar`, `tone-line` | dipasang lewat `data-tone="rose\|peach\|sky\|lavender\|mint\|lemon\|slate"`. Redup dan setingkat terangnya agar tidak saling bertabrakan |
+| Nada kartu | `tone`, `tone-ink`, `tone-bar`, `tone-line` | dipasang lewat `data-tone="rose\|peach\|sky\|lavender\|mint\|lemon\|slate"`. Hanya `tone-bar` dan `tone-ink` yang berbeda per nada; isi kartu dihitung dari `tone-bar` 11% dan warna panel, jadi kartu selalu menyatu dengan temanya |
 | Kolom isian | `field`, `field-line` | latar dan garis kolom yang terlihat saat diam; saat diketik menyala warna sorotan |
 | Contoh sorotan | `swatch-lime`, `swatch-lavender`, `swatch-sky`, `swatch-mint`, `swatch-peach`, `swatch-rose` | bulatan pemilih warna di Pengaturan |
 
@@ -45,14 +45,16 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 | Angka ringkasan | `components/ui/stat.tsx` | `StatTile` langsung di atas latar: ikon satu warna dalam lingkaran (koral bila nada `rose`), angka menghitung naik, label. Tanpa ubin |
 | Grafik | `components/ui/charts.tsx` | `AreaChart` (mengisi tinggi induk, warna dari `data-tone`), `BarChart` (batang berdampingan), `StackBar` (satu baris bertumpuk). Digambar sesuai piksel asli |
 | Peta koperasi | `features/home/coop-map.tsx`, `coop-map-data.ts` | Koperasi di pusat, delapan bidang mengelilingi (tugas dan proyek, agenda, gerai, barang dan stok, kas, anggota, tim, dokumen dan risiko). Bidang berupa tombol sungguhan dengan lencana jumlah; titik di sekitarnya catatan aslinya, koral untuk yang mendesak. Memilih bidang memutarnya ke depan dan membuka rincian: angka, daftar tindakan, Tambah, Buka, dan Dunia 3D. Daftar di samping menampung semua yang perlu ditangani dengan tindakan langsung (centang, tunda, opname, beli stok). Aturan "perlu ditangani" hanya dari `getFollowUps`, sama dengan lonceng. Berhenti menggambar saat tidak terlihat; dimuat belakangan |
-| Laci / lembar bawah | `components/ui/sheet.tsx` | Semua formulir dan detail. Panel penuh tinggi di kanan (tablet/laptop), dari bawah di HP dan bisa ditarik turun untuk menutup |
+| Panel kerja | `components/ui/sheet.tsx` | Semua formulir dan detail. Tablet/laptop: panel melayang berjarak dari tepi, halaman di belakangnya bergeser memberi ruang, tombol tutup di kanan atas, aksi di bilah kapsul bawah. HP: lembar bawah yang bisa ditarik turun. Formulir langsung fokus ke kolom judul (kecuali di HP) |
+| Isi formulir | `features/records/record-form.tsx`, `.form-hero`, `.form-group` | Judul dan nominal besar tanpa bingkai di atas; kolom lain berupa baris berkelompok, label kiri dan isian tanpa bingkai. Pilihan pendek berupa kapsul tersegmen. HP: label di atas isian |
+| Detail tugas | `features/tasks/task-sheet.tsx` | Dua kolom di layar lebar: isi kerja di kiri, sifat dan jadwal di kanan. HP: sifat tugas lebih dulu |
 | Kolom isian | `components/ui/field.tsx` | `Input`, `Select`, `Textarea`, `Field`, `SearchField`. Kolom di bilah alat memakai `TOOLBAR_CONTROL` (pil tipis di atas latar) |
 | Menu dan popover | `components/ui/menu.tsx` | Satu bentuk untuk semua menu tarik-turun dan popover |
 | Palet Ctrl K | `components/layout/command-palette.tsx` | Setiap hasil bertanda jenis, kata yang dicari ditandai |
 | Petunjuk tombol | `components/ui/kbd.tsx` | Satu bentuk tombol papan ketik |
 | Linimasa (Gantt) | `features/tasks/task-timeline.tsx` | Satu baris per proyek, batang kapsul berisi avatar |
 | Pengaturan | `features/settings/settings-page.tsx` | Satu halaman: kartu profil, tema lewat pratinjau mini, warna sorotan, keamanan, data |
-| Konfirmasi | `components/ui/confirm.tsx` | Satu-satunya dialog di tengah, hanya untuk tindakan yang tak bisa diurungkan |
+| Konfirmasi | `components/ui/confirm.tsx` | Satu-satunya dialog di tengah, hanya untuk tindakan yang tak bisa diurungkan: ikon bulat, judul, dua tombol sama lebar |
 | Toast + Urungkan | `sonner` di kerangka | Hasil aksi; gaya bawaan dimatikan, semua kelas dari token |
 | Pemilih tampilan | `components/ui/view-menu.tsx` | Satu kapsul di bilah alat Tugas (Daftar, Papan, Kalender, Linimasa) |
 | Tab | `components/ui/tabs.tsx` | Kapsul tersegmen, penanda meluncur |
@@ -62,6 +64,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 
 ## Kerangka
 
+- Susunan halaman catatan selalu sama: judul dan angka, lalu tab di kiri dengan tombol aksi dan Tambah di kanan, lalu pencarian, saringan, panel rincian, dan daftar.
 - Tablet dan laptop (≥ 768 px): bilah atas (logo, pil menu di tengah, cari, lonceng, profil) dan rel ikon di kiri. Bilah atas tanpa latar di puncak halaman, berkabut saat digulir.
 - HP (< 768 px): bilah atas ringkas + navigasi bawah melayang. Item aktif mengembang menjadi kapsul berlabel; tombol tambah warna aksi di tengah. Bilah bawah minggir saat menggulir ke bawah (`lib/use-hide-on-scroll.ts`). Semua halaman ada di menu lengkap.
 - Beranda (urut baca): sapaan dan angka → tugas cepat → rutin hari ini, peta koperasi (paling lebar), progres tugas → tugas selesai per minggu, tenggat dekat (empat kartu dan tautan semua) → hari ini, proyek berjalan. Di HP: rutin → tenggat → peta koperasi → progres → grafik → hari ini.
@@ -76,7 +79,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 - Pil menu meregang dan bergerak saat diklik; klik selalu membuka halaman pertama kelompok. Penanda rel dan tab meluncur.
 - Ganti tema: sapuan melingkar 0,48 detik dari tombolnya (View Transitions, `lib/theme.ts`). Peramban tanpa fitur itu langsung berganti.
 - Kurva di `globals.css`: `--ease-out` (masuk biasa), `--ease-spring` (menu, popover, palet, dialog), `--ease-sheet` (laci).
-- Menu tumbuh dari tombol pemicunya; butirnya naik berurutan 25 ms. Palet turun dengan pegas; baris berurutan hanya saat dibuka. Laci meluncur, judul lalu isinya menyusul.
+- Menu tumbuh dari tombol pemicunya; butirnya naik berurutan 25 ms. Palet turun dengan pegas; baris berurutan hanya saat dibuka. Panel kerja muncul dari buram sambil meluncur dan halaman bergeser (tablet/laptop) atau naik dari bawah (HP); judul lalu isinya menyusul.
 - Gerak berkurang (`prefers-reduced-motion`): lapisan hanya memudar, animasi tanpa jeda, Motion ikut (`MotionConfig reducedMotion="user"`), peta diam tetapi tetap bisa diputar, tema langsung berganti.
 - Animasi dimuat lewat `LazyMotion`, peta koperasi dan laci tugas lewat `next/dynamic` agar tidak memperbesar unduhan awal.
 

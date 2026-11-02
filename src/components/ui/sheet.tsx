@@ -1,14 +1,17 @@
 'use client';
 import { Dialog } from 'radix-ui';
 import { X } from 'lucide-react';
-import { useRef, type PointerEvent, type ReactNode } from 'react';
+import { useEffect, useRef, type PointerEvent, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 const PHONE = '(max-width: 767px)';
+// Panel bisa bertumpuk (detail lalu formulir): halaman kembali ke tempatnya saat panel terakhir tutup.
+let openPanels = 0;
 
 /**
- * Laci untuk membuat dan mengubah data: panel kanan di tablet/laptop, lembar bawah di HP.
- * Menggantikan semua modal formulir lama; konteks halaman tetap terlihat di belakangnya.
+ * Panel kerja untuk membuat, mengubah, dan melihat data: panel melayang di kanan pada tablet/laptop
+ * dengan halaman yang bergeser memberi ruang, lembar bawah di HP. Tombol aksi berada di bilah kapsul
+ * yang selalu terlihat. Konteks halaman tetap tampak di belakangnya.
  */
 export function Sheet({
   open,
@@ -29,6 +32,15 @@ export function Sheet({
   headerExtra?: ReactNode;
   wide?: boolean;
 }) {
+  useEffect(() => {
+    if (!open) return;
+    openPanels += 1;
+    document.documentElement.setAttribute('data-panel-open', '');
+    return () => {
+      openPanels -= 1;
+      if (!openPanels) document.documentElement.removeAttribute('data-panel-open');
+    };
+  }, [open]);
   const panel = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
   const drag = useRef<{
@@ -95,16 +107,20 @@ export function Sheet({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay
-          ref={overlay}
-          className="overlay fixed inset-0 z-50 bg-[var(--scrim)] backdrop-blur-[2px]"
-        />
+        <Dialog.Overlay ref={overlay} className="overlay fixed inset-0 z-50 bg-[var(--scrim)]" />
         <Dialog.Content
           ref={panel}
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            const first = panel.current?.querySelector<HTMLElement>('.form-hero input');
+            // Di HP keyboard tidak langsung dibuka: lembar harus terlihat utuh dulu.
+            if (first && !window.matchMedia(PHONE).matches) first.focus();
+            else panel.current?.focus();
+          }}
           className={cn(
             'sheet fixed inset-x-0 bottom-0 z-50 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-[1.75rem] bg-surface shadow-float ring-1 ring-line-strong outline-none',
-            'md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-[min(30rem,100vw)] md:rounded-none md:rounded-l-[1.75rem]',
-            wide && 'md:w-[min(44rem,100vw)]',
+            'md:inset-y-3 md:right-3 md:left-auto md:max-h-none md:w-[min(35rem,calc(100vw-1.5rem))] md:rounded-[1.75rem]',
+            wide && 'md:w-[min(64rem,calc(100vw-7rem))]',
           )}
         >
           <div
@@ -118,25 +134,23 @@ export function Sheet({
               className="mx-auto mt-2.5 block h-1.5 w-11 rounded-full bg-line-strong md:hidden"
               aria-hidden="true"
             />
-            {/* Hanya baris tutup yang tetap; judul ikut bergulir agar isi tidak tertutup di layar pendek. */}
-            <header className="flex items-center gap-2 px-5 pt-2 pb-1 md:px-7 md:pt-4">
+            <header className="flex items-center justify-end gap-1 px-4 pt-3 md:px-5 md:pt-4">
+              {headerExtra}
               <Dialog.Close
-                className="-ml-2 grid size-10 shrink-0 place-items-center rounded-full text-ink-2 transition hover:bg-surface-2 hover:text-ink active:scale-95"
+                className="grid size-10 shrink-0 place-items-center rounded-full bg-surface-2 text-ink-2 ring-1 ring-line transition hover:bg-surface-3 hover:text-ink active:scale-95 max-md:size-11"
                 aria-label="Tutup"
               >
-                <X className="size-5" />
+                <X className="size-[18px]" />
               </Dialog.Close>
-              <span className="flex-1" />
-              {headerExtra}
             </header>
           </div>
-          <div className="sheet-body min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 md:px-7">
-            <div className="pt-1 pb-4">
-              <Dialog.Title className="text-[24px] leading-tight font-normal tracking-[-0.02em] text-ink md:text-[28px]">
+          <div className="sheet-body scrollbar-none flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-5 pb-5 md:px-7">
+            <div>
+              <Dialog.Title className="text-[26px] leading-tight font-normal tracking-[-0.02em] text-balance text-ink md:text-[30px]">
                 {title}
               </Dialog.Title>
               {description ? (
-                <Dialog.Description className="mt-1 text-sm text-ink-3">
+                <Dialog.Description className="mt-1 max-w-md text-[13px] text-ink-3">
                   {description}
                 </Dialog.Description>
               ) : (
@@ -146,7 +160,7 @@ export function Sheet({
             {children}
           </div>
           {footer && (
-            <footer className="flex items-center gap-2 border-t border-line px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-7">
+            <footer className="m-3 mt-0 flex items-center gap-2 rounded-full bg-surface-2 p-1.5 ring-1 ring-line mb-[max(0.75rem,env(safe-area-inset-bottom))]">
               {footer}
             </footer>
           )}

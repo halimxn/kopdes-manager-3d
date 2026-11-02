@@ -122,66 +122,69 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Gerak berkurang di perangkat: Motion hanya memudar, tanpa geser dan pegas. */}
       <MotionConfig reducedMotion="user">
         <ConfirmProvider>
-          <header
-            ref={header}
-            className="no-print sticky top-0 z-30 flex h-16 items-center gap-2 px-4 transition-[background-color,backdrop-filter] duration-300 data-[scrolled]:bg-canvas/70 data-[scrolled]:backdrop-blur-xl md:grid md:h-[72px] md:grid-cols-[1fr_auto_1fr] md:pr-6 md:pl-[88px]"
-          >
-            <Link
-              href="/home"
-              aria-label="Kopdes, ke Beranda"
-              className="flex min-w-0 flex-1 items-center gap-2.5 md:flex-none"
+          {/* Bergeser sedikit saat panel kerja terbuka (.shell di globals.css). */}
+          <div className="shell">
+            <header
+              ref={header}
+              className="no-print sticky top-0 z-30 flex h-16 items-center gap-2 px-4 transition-[background-color,backdrop-filter] duration-300 data-[scrolled]:bg-canvas/70 data-[scrolled]:backdrop-blur-xl md:grid md:h-[72px] md:grid-cols-[1fr_auto_1fr] md:pr-6 md:pl-[88px]"
             >
-              <LogoMark className="size-10 rounded-[13px]" />
-              <span className="text-[19px] font-medium tracking-tight text-ink max-lg:hidden md:max-lg:hidden">
-                Kopdes
-              </span>
-            </Link>
-            <Suspense fallback={<div className="h-12" />}>
-              <div className="hidden md:block">
-                <TopNav active={page} />
-              </div>
-            </Suspense>
-            <div className="flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setPalette(true)}
-                aria-label="Cari (Ctrl K)"
-                className="grid size-11 place-items-center rounded-full bg-surface-2 text-ink ring-1 ring-line transition hover:bg-surface-3"
+              <Link
+                href="/home"
+                aria-label="Kopdes, ke Beranda"
+                className="flex min-w-0 flex-1 items-center gap-2.5 md:flex-none"
               >
-                <Search className="size-5" />
-              </button>
-              <NotificationBell />
-              <ProfileMenu />
-            </div>
-          </header>
-          <div className="mx-auto flex w-full max-w-[1720px]">
-            <Suspense fallback={<div className="hidden w-[76px] md:block" />}>
-              <Sidebar
-                tools={(tip) => (
-                  <Popover.Root open={quick} onOpenChange={setQuick}>
-                    <Popover.Trigger {...tip} aria-label="Tambah" className={RAIL_BUTTON}>
-                      <Plus strokeWidth={2.4} />
-                    </Popover.Trigger>
-                    <PopoverContent
-                      side="right"
-                      align="start"
-                      className="w-[min(36rem,calc(100vw-6rem))] p-4"
-                    >
-                      <QuickActionsPanel onPick={() => setQuick(false)} />
-                    </PopoverContent>
-                  </Popover.Root>
-                )}
-              />
-            </Suspense>
-            <main
-              id="main"
-              className="min-w-0 flex-1 px-4 pt-2 pb-32 md:pt-1 md:pr-6 md:pb-10 md:pl-1"
-            >
-              {/* Dipasang ulang tiap pindah halaman: bagian baru muncul berurutan dari buram (.page-enter). */}
-              <div key={pathname} className="page-enter">
-                {children}
+                <LogoMark className="size-10 rounded-[13px]" />
+                <span className="text-[19px] font-medium tracking-tight text-ink max-lg:hidden md:max-lg:hidden">
+                  Kopdes
+                </span>
+              </Link>
+              <Suspense fallback={<div className="h-12" />}>
+                <div className="hidden md:block">
+                  <TopNav active={page} />
+                </div>
+              </Suspense>
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPalette(true)}
+                  aria-label="Cari (Ctrl K)"
+                  className="grid size-11 place-items-center rounded-full bg-surface-2 text-ink ring-1 ring-line transition hover:bg-surface-3"
+                >
+                  <Search className="size-5" />
+                </button>
+                <NotificationBell />
+                <ProfileMenu />
               </div>
-            </main>
+            </header>
+            <div className="mx-auto flex w-full max-w-[1720px]">
+              <Suspense fallback={<div className="hidden w-[76px] md:block" />}>
+                <Sidebar
+                  tools={(tip) => (
+                    <Popover.Root open={quick} onOpenChange={setQuick}>
+                      <Popover.Trigger {...tip} aria-label="Tambah" className={RAIL_BUTTON}>
+                        <Plus strokeWidth={2.4} />
+                      </Popover.Trigger>
+                      <PopoverContent
+                        side="right"
+                        align="start"
+                        className="w-[min(36rem,calc(100vw-6rem))] p-4"
+                      >
+                        <QuickActionsPanel onPick={() => setQuick(false)} />
+                      </PopoverContent>
+                    </Popover.Root>
+                  )}
+                />
+              </Suspense>
+              <main
+                id="main"
+                className="min-w-0 flex-1 px-4 pt-2 pb-32 md:pt-1 md:pr-6 md:pb-10 md:pl-1"
+              >
+                {/* Dipasang ulang tiap pindah halaman: bagian baru muncul berurutan dari buram (.page-enter). */}
+                <div key={pathname} className="page-enter">
+                  {children}
+                </div>
+              </main>
+            </div>
           </div>
           <MobileDock
             onAdd={() => setQuickSheet(true)}

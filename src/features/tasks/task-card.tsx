@@ -160,8 +160,9 @@ export function TaskCard({
       >
         {String(task.data.title)}
       </button>
-      <p className="-mt-1 truncate text-[13px]">
-        {project ? String(project.data.title) : 'Tanpa proyek'}
+      <p className="-mt-1 flex items-center gap-1.5 text-[13px]">
+        <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
+        <span className="truncate">{project ? String(project.data.title) : 'Tanpa proyek'}</span>
       </p>
       {note && !compact && <p className="line-clamp-1 text-[12px]">{note}</p>}
       {subtasks.length > 0 && (

@@ -536,10 +536,15 @@ function RiskMatrix({ rows }: { rows: Item[] }) {
               {[0, 1, 2].map((i) => {
                 const cell = rowsOf(p, i);
                 return (
+                  // Kotak kosong tanpa warna: yang menonjol hanya kotak yang berisi risiko.
                   <div
                     key={i}
-                    data-tone={tone(p, i)}
-                    className="min-h-20 rounded-2xl bg-tone p-2.5 text-tone-ink ring-1 ring-tone-line ring-inset"
+                    data-tone={cell.length ? tone(p, i) : undefined}
+                    className={
+                      cell.length
+                        ? 'min-h-20 rounded-2xl bg-tone p-2.5 text-tone-ink ring-1 ring-tone-line ring-inset'
+                        : 'min-h-20 rounded-2xl bg-surface-2 p-2.5 text-ink-3'
+                    }
                   >
                     <span className="tabular text-lg font-extrabold">{cell.length}</span>
                     {cell.slice(0, 2).map((row) => (
