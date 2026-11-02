@@ -8,19 +8,22 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 - **Tampilan baru mengikuti tiga video acuan**: tema gelap bawaan (Solvik), tema terang dan isi Beranda (Kinlo), gerak dan peta koperasi (Crew). Rincian di [TAMPILAN](TAMPILAN.md).
 - **Cadangan desain sebelumnya**: cabang `arsip/desain-oktober` di GitHub. Untuk kembali ke desain itu, jangan gabungkan cabang kerja; bila sudah telanjur digabung, kembalikan `main` lewat revert.
 - Perbaikan bug ikut di cabang kerja: Dunia 3D meminta 25 jenis catatan sedangkan batas server 20, jadi datanya kosong. Dari kode, `main` masih terkena bug ini sampai digabung; di produksi belum diperiksa.
-- Pemeriksaan terakhir (2 Nov): `npm run cek:penuh` lulus (34 berkas tes / 211 tes, build, JS awal 426–495 KB dari batas 500 KB). `/tasks` tinggal 5 KB dari batas.
+- Daftar tugas, kalender, linimasa, menu tambah, palet cari, lonceng, Pengaturan, Bantuan, dan PIN sudah ditulis ulang strukturnya. Panel Dunia 3D baru mengikuti latar dan token, belum ditulis ulang strukturnya.
+- Penempatan kartu dirancang ulang: tinggi kartu sama dalam satu baris, kartu netral dengan titik warna, satu bilah tab di Proyek, Beranda mendahulukan pekerjaan. Label rel tidak lagi tertutup isi halaman.
+- Pemeriksaan terakhir (2 Nov): `npm run cek:penuh` lulus (34 berkas / 211 tes, build, JS awal 427–484 KB dari batas 500 KB).
 - Rutin harian di database (migrasi 11) dan penanda versi data (migrasi 12): lihat Langkah berikut.
 
 ## Langkah berikut
 
 1. Pemilik meninjau tampilan di `npm run dev:demo -- -p 3200`, terutama warna teal tema terang dan sapuan ganti tema, lalu membuka dan memutuskan pull request.
 2. Pemilik menjalankan `supabase/upgrade/UPGRADE_KE_TERBARU.sql` sekali di Supabase (memasang migrasi 9–12 yang belum ada), lalu seed contoh bila perlu (`docs/DATABASE.md`).
-3. Belum dikerjakan: uji di HP sungguhan dan basis data nyata, termasuk waktu muat Beranda yang kini memuat 21 jenis catatan untuk peta; halaman Agenda masih tampilan daftar umum (belum kalender pekan khusus); tes perilaku UI baru belum ditulis (hanya tes logika); kepala halaman Anggota di HP masih panjang.
+3. Belum dikerjakan: uji di HP sungguhan dan basis data nyata, termasuk waktu muat Beranda yang kini memuat 21 jenis catatan untuk peta; halaman Agenda masih tampilan daftar umum (belum kalender pekan khusus); tes perilaku UI baru belum ditulis (hanya tes logika); kepala halaman Anggota di HP masih panjang; panel Dunia 3D belum ditulis ulang strukturnya.
 
 ## Keputusan pemilik yang berlaku
 
 Daftar lengkap ada di [PRODUK](PRODUK.md). Yang paling baru:
 
+- 2 Nov 2026 (koreksi): label rel tidak boleh tertutup; penempatan kartu dirancang ulang agar rapi dan bersih. Kartu dibuat netral, warna hanya sebagai titik (keputusan AI atas arahan "rapi dan bersih", bisa dikembalikan bila pemilik lebih suka kartu berwarna).
 - 2 Nov 2026 (koreksi): modal ditulis ulang, bukan hanya diganti warna; kartu tidak boleh berwarna pekat atau kotor; tidak boleh ada yang tumpang tindih.
 - 2 Nov 2026 (koreksi): konstelasi diganti Peta koperasi agar berkaitan dengan koperasi dan memudahkan manajer: delapan bidang, rincian per bidang, tindakan langsung dari daftar. Panel Perlu perhatian dilebur ke daftar peta.
 - 2 Nov 2026 (koreksi setelah melihat hasil): buat lebih bersih dan hindari tabrakan warna, terutama di Beranda. Warna kuat hanya limau (aksi, progres) dan koral (terlambat); nada kartu redup, semua panel satu warna, ikon angka satu warna, baris rutin tanpa warna.

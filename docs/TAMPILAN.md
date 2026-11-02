@@ -32,7 +32,8 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 | Contoh sorotan | `swatch-lime`, `swatch-lavender`, `swatch-sky`, `swatch-mint`, `swatch-peach`, `swatch-rose` | bulatan pemilih warna di Pengaturan |
 
 - Tema dan sorotan: `data-theme` dan `data-accent` di `<html>`, pilihan tersimpan di `localStorage` (`kopdes-theme-v2`, `kopdes-accent-v3`), diterapkan sebelum halaman tampil. Bawaan tema gelap.
-- Warna kartu tugas dan proyek mengikuti **proyek** (`lib/tones.ts`, kolom `color` proyek). Kartu catatan lain mengikuti artinya: kas masuk mint, keluar mawar; stok habis mawar, menipis peach (`features/records/card-tone.ts`).
+- Permukaan kartu netral. Warna proyek (`lib/tones.ts`, kolom `color` proyek) dan warna arti catatan (kas masuk mint, keluar mawar; stok habis mawar, menipis peach, `features/records/card-tone.ts`) hanya tampil sebagai titik kecil, batang progres, dan cincin.
+- Penempatan kartu: tinggi kartu sama dalam satu baris, isi panjang bergulir di dalam kartu (kartu tidak meregang), sela antarkartu seragam, dan tidak ada dua bilah tab bertumpuk.
 - Huruf: Urbanist (`@fontsource-variable/urbanist`), satu token `--font-sans`. Ketebalan diturunkan satu tingkat di `@theme` (`--font-weight-semibold/bold/extrabold`) agar seluruh aplikasi ringan seperti acuan; judul halaman `font-normal`.
 
 ## Komponen
@@ -58,18 +59,18 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 | Toast + Urungkan | `sonner` di kerangka | Hasil aksi; gaya bawaan dimatikan, semua kelas dari token |
 | Pemilih tampilan | `components/ui/view-menu.tsx` | Satu kapsul di bilah alat Tugas (Daftar, Papan, Kalender, Linimasa) |
 | Tab | `components/ui/tabs.tsx` | Kapsul tersegmen, penanda meluncur |
-| Kartu tugas | `features/tasks/task-card.tsx` | Kartu warna proyek: tenggat dan tombol bulat di atas, judul, nama proyek, progres, avatar di bawah |
-| Kartu catatan | `features/records/record-card.tsx` | Kartu warna menurut arti, tautan cepat di dalam kartu. Anggota, Kontak, dan Tim memakai kartu orang: avatar besar, nama, dua fakta, tombol WhatsApp dan telepon bila ada nomor. Di HP kartu orang menjadi baris ringkas |
+| Kartu tugas | `features/tasks/task-card.tsx` | Kartu netral dengan titik warna proyek: tenggat dan tombol bulat di atas, judul, nama proyek, progres, avatar di bawah |
+| Kartu catatan | `features/records/record-card.tsx` | Kartu netral dengan titik warna menurut arti: status dan tanggal, judul, fakta penting, tautan cepat, orang. Anggota, Kontak, dan Tim memakai kartu orang: avatar besar, nama, dua fakta, tombol WhatsApp dan telepon bila ada nomor. Di HP kartu orang menjadi baris ringkas |
 | Logo | `components/ui/logo.tsx`, `app/icon.svg` | Ubin warna aksi dengan atap gerai dan centang |
 
 ## Kerangka
 
-- Susunan halaman catatan selalu sama: judul dan angka, lalu tab di kiri dengan tombol aksi dan Tambah di kanan, lalu pencarian, saringan, panel rincian, dan daftar.
+- Susunan halaman catatan selalu sama: judul dan angka, lalu tab di kiri dengan tombol aksi dan Tambah di kanan, lalu pencarian dan saringan sebaris, panel rincian, dan daftar. Halaman Proyek memakai satu bilah tab: Berjalan, Riwayat & arsip, Risiko, Kendala.
 - Tablet dan laptop (≥ 768 px): bilah atas (logo, pil menu di tengah, cari, lonceng, profil) dan rel ikon di kiri. Bilah atas tanpa latar di puncak halaman, berkabut saat digulir.
 - HP (< 768 px): bilah atas ringkas + navigasi bawah melayang. Item aktif mengembang menjadi kapsul berlabel; tombol tambah warna aksi di tengah. Bilah bawah minggir saat menggulir ke bawah (`lib/use-hide-on-scroll.ts`). Semua halaman ada di menu lengkap.
-- Beranda (urut baca): sapaan dan angka → tugas cepat → rutin hari ini, peta koperasi (paling lebar), progres tugas → tugas selesai per minggu, tenggat dekat (empat kartu dan tautan semua) → hari ini, proyek berjalan. Di HP: rutin → tenggat → peta koperasi → progres → grafik → hari ini.
+- Beranda (urut baca, pekerjaan dulu, angka tinjauan terakhir): sapaan dan angka → tugas cepat → rutin hari ini dan peta koperasi sama tinggi → tenggat dekat (empat kartu sebaris) → hari ini (tugas dan jadwal berdampingan) → progres tugas, tugas selesai per minggu, proyek berjalan. Di HP: rutin → tenggat → peta koperasi → hari ini → progres → grafik → proyek.
 - Kas: angka ringkasan, grafik uang masuk dan keluar per bulan, lalu daftar. Tidak pernah disebut saldo atau laba.
-- Halaman PIN: satu kartu di tengah di atas latar buram. Kotak per angka yang terisi titik, tombol terisi bertahap.
+- Halaman PIN: tanpa kartu, langsung di atas latar buram: logo, judul, titik per angka, papan angka 3×4. Di perangkat sentuh keyboard bawaan tidak ikut muncul.
 - Dunia 3D punya bilahnya sendiri dan membaca token yang sama.
 
 ## Gerak
