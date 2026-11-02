@@ -8,7 +8,6 @@ import {
   ArrowUpRight,
   CalendarDays,
   ChevronRight,
-  CircleAlert,
   ClipboardCopy,
   Globe2,
   ListPlus,
@@ -48,14 +47,11 @@ import { DayTimeline } from './day-timeline';
 import { buildDailyReport, parseQuickAdd } from './quick-add';
 import { weeklyDone } from './weekly-done';
 
-// Kanvas konstelasi dimuat sesudah halaman tampil agar tidak memperbesar unduhan awal.
-const Constellation = dynamic(
-  () => import('./constellation').then((module) => module.Constellation),
-  {
-    ssr: false,
-    loading: () => <Skeleton className="h-full min-h-[25rem] rounded-[var(--radius-card)]" />,
-  },
-);
+// Peta dengan kanvas dimuat sesudah halaman tampil agar tidak memperbesar unduhan awal.
+const CoopMap = dynamic(() => import('./coop-map').then((module) => module.CoopMap), {
+  ssr: false,
+  loading: () => <Skeleton className="h-full min-h-[25rem] rounded-[var(--radius-card)]" />,
+});
 
 const PANEL = 'rounded-[var(--radius-card)] bg-surface p-5 shadow-card ring-1 ring-line';
 const ROUND_LINK =
@@ -71,7 +67,21 @@ const longDate = (date: string) =>
   }).format(new Date(date + 'T12:00:00Z'));
 
 export function HomePage() {
-  const { data, loading, error, refresh, routines: routinesReady } = useWorkspace('home');
+  const {
+    data,
+    loading,
+    error,
+    refresh,
+    routines: routinesReady,
+    operations,
+    logistics,
+    administration,
+    more,
+  } = useWorkspace('home');
+  const caps = useMemo(
+    () => ({ operations, logistics, administration }),
+    [operations, logistics, administration],
+  );
   const { checks, setChecks, reload } = useRoutineChecks(routinesReady);
   const now = useJakartaClock();
   const date = today();
@@ -104,10 +114,6 @@ export function HomePage() {
         .sort((a, b) => String(a.data.due_date).localeCompare(String(b.data.due_date))),
     [tasks, date],
   );
-  const followUps = getFollowUps(data, date).filter(
-    (item) => !item.id.startsWith('work-items') && !item.id.startsWith('meetings'),
-  );
-  const attention = followUps.slice(0, 4);
   const projects = (data.workstreams || []).filter((p) => !isProjectHistory(p)).slice(0, 4);
   const week = weekDays(day);
   const dayTasks = tasks.filter(
@@ -162,7 +168,8 @@ export function HomePage() {
   const active = counts.rencana + counts.proses;
   const doneRate = active + counts.selesai ? (counts.selesai / (active + counts.selesai)) * 100 : 0;
   const todayMeetings = meetings.filter((m) => m.data.date === date).length;
-  const needed = late + followUps.length;
+  // Sumbernya sama dengan Peta koperasi, supaya tidak ada dua angka berbeda di satu layar.
+  const needed = getFollowUps(data, date).length;
   const weeks = weeklyDone(tasks, date, Number(span));
   const weekTotal = weeks.reduce((total, week) => total + week.value, 0);
 
@@ -265,7 +272,7 @@ export function HomePage() {
       </form>
 
       {/* Baris utama: yang dicentang pagi hari, peta kerja, lalu ringkasan progres. */}
-      <div className="grid gap-4 max-md:contents lg:grid-cols-12 xl:grid-cols-[minmax(0,3.3fr)_minmax(0,6fr)_minmax(0,2.7fr)]">
+      <div className="grid gap-4 max-md:contents lg:grid-cols-12 xl:grid-cols-[minmax(0,3.1fr)_minmax(0,6.5fr)_minmax(0,2.4fr)]">
         <div className="max-md:order-1 lg:col-span-5 xl:col-auto">
           <RoutinesCard
             routines={data.routines || []}
@@ -277,12 +284,14 @@ export function HomePage() {
           />
         </div>
         <div className="max-md:order-3 lg:col-span-7 xl:col-auto">
-          <Constellation
-            projects={data.workstreams || []}
-            tasks={tasks}
+          <CoopMap
+            ws={data}
             date={date}
+            caps={caps}
+            more={more}
+            coop={coop}
+            refresh={refresh}
             onOpenTask={setOpenTask}
-            onOpenProject={(id) => router.push(id ? `/projects/${id}` : '/tasks')}
           />
         </div>
         {/* Panel gelap seperti kartu rekening acuan: dasar mengikuti tema, isinya bertoken gelap. */}
@@ -345,7 +354,7 @@ export function HomePage() {
               >
                 <span className="text-xs text-on-deep-2">Tim aktif</span>
                 <span className="tabular text-xl leading-none font-medium">{team.length}</span>
-                {team.length > 0 && <AvatarStack names={team} max={3} />}
+                {team.length > 0 && <AvatarStack names={team} max={2} />}
               </Link>
               <Link
                 href="/projects"
@@ -516,51 +525,6 @@ export function HomePage() {
         </section>
 
         <div className="flex flex-col gap-4 lg:col-span-5">
-          <section aria-labelledby="attention-title" className={PANEL}>
-            <h2 id="attention-title" className="mb-3 text-[15px] font-medium">
-              Perlu perhatian
-            </h2>
-            {attention.length ? (
-              <ul className="flex flex-col gap-1">
-                {attention.map((item, index) => (
-                  <li key={item.id} className="enter" style={{ animationDelay: `${index * 50}ms` }}>
-                    <Link
-                      href={item.href}
-                      className="group -mx-2 flex items-center gap-3 rounded-2xl px-2 py-2 transition hover:bg-surface-2"
-                    >
-                      <span
-                        className={cn(
-                          'grid size-10 shrink-0 place-items-center rounded-full',
-                          item.urgent
-                            ? 'bg-late text-late-ink'
-                            : 'bg-surface-2 text-ink-2 ring-1 ring-line',
-                        )}
-                      >
-                        {item.urgent ? (
-                          <CircleAlert className="size-4" />
-                        ) : (
-                          <AlarmClock className="size-4" />
-                        )}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium text-ink">
-                          {item.title}
-                        </span>
-                        <span className="block truncate text-xs text-ink-3">
-                          {item.kind} · {item.reason}
-                        </span>
-                      </span>
-                      <ChevronRight className="size-4 shrink-0 text-ink-3 transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="rounded-2xl bg-done px-4 py-3 text-sm font-medium text-done-ink">
-                Dokumen, stok, risiko, dan kendala aman.
-              </p>
-            )}
-          </section>
           <section aria-labelledby="projects-title" className={cn(PANEL, 'flex flex-1 flex-col')}>
             <div className="mb-3 flex items-center justify-between gap-2">
               <h2 id="projects-title" className="text-[15px] font-medium">

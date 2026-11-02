@@ -36,7 +36,8 @@ import type { Workspace } from '@/features/workspace/use-workspace';
 import { StatGrid, StatTile } from '@/components/ui/stat';
 import { Bar } from '@/components/ui/progress';
 import { BarChart } from '@/components/ui/charts';
-import { cashSummary, monthlyCash, rupiah, stockDifference } from '@/lib/ledger';
+import { cashSummary, monthlyCash, shortRupiah, stockDifference } from '@/lib/ledger';
+import { buyStockHref, stockCountHref } from './quick-links';
 import { addDays, today } from '@/lib/date';
 import { readiness } from '@/lib/progress';
 import type { Checklist } from './schemas';
@@ -54,15 +55,7 @@ type View = {
 
 const sum = (rows: Item[], field: string) =>
   rows.reduce((total, row) => total + Number(row.data[field] || 0), 0);
-// Tanda minus menempel pada angka (spasi tak terputus) agar "−Rp 1,6 jt" tidak pecah baris.
-const short = (value: number) => {
-  const amount = Math.abs(value);
-  const text =
-    amount >= 1_000_000
-      ? `Rp ${(amount / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} jt`
-      : rupiah(amount);
-  return value < 0 ? `−${text}` : text;
-};
+const short = shortRupiah;
 
 const QUICK_LINK =
   'flex h-9 items-center gap-1.5 rounded-full bg-surface-2 px-3.5 text-xs font-medium text-ink ring-1 ring-line-strong transition hover:bg-surface-3 [&_svg]:size-3.5';
@@ -227,14 +220,11 @@ export const ENTITY_VIEWS: Partial<Record<Entity, View>> = {
         .sort((a, b) => String(b.data.date).localeCompare(String(a.data.date)))[0];
       return (
         <div data-tone="peach" className="flex flex-wrap items-center gap-2">
-          <Link className={QUICK_LINK} href={`/goods?tab=counts&new=1&item=${row.id}`}>
+          <Link className={QUICK_LINK} href={stockCountHref(row)}>
             <ClipboardCheck />
             Opname
           </Link>
-          <Link
-            className={QUICK_LINK}
-            href={`/cash?new=1&direction=keluar&fill.item_id=${row.id}&fill.unit_id=${String(row.data.unit_id || '')}&fill.title=${encodeURIComponent(`Beli stok: ${String(row.data.title)}`)}&fill.account=${encodeURIComponent('Pengadaan Barang & Persediaan')}&fill.amount=${Number(row.data.price || 0) * 10}`}
-          >
+          <Link className={QUICK_LINK} href={buyStockHref(row)}>
             <ShoppingCart />
             Beli stok
           </Link>

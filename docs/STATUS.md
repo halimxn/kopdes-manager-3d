@@ -5,24 +5,25 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 ## Sekarang (2 November 2026)
 
 - Cabang kerja: `tampilan/redesain-total`, sudah di-push dan **belum digabung**. `main` masih berisi desain lama. Pull request dibuka lewat halaman GitHub karena `gh` tidak terpasang di komputer ini.
-- **Tampilan baru mengikuti tiga video acuan**: tema gelap bawaan (Solvik), tema terang dan isi Beranda (Kinlo), gerak dan konstelasi (Crew). Rincian di [TAMPILAN](TAMPILAN.md).
+- **Tampilan baru mengikuti tiga video acuan**: tema gelap bawaan (Solvik), tema terang dan isi Beranda (Kinlo), gerak dan peta koperasi (Crew). Rincian di [TAMPILAN](TAMPILAN.md).
 - **Cadangan desain sebelumnya**: cabang `arsip/desain-oktober` di GitHub. Untuk kembali ke desain itu, jangan gabungkan cabang kerja; bila sudah telanjur digabung, kembalikan `main` lewat revert.
 - Perbaikan bug ikut di cabang kerja: Dunia 3D meminta 25 jenis catatan sedangkan batas server 20, jadi datanya kosong. Dari kode, `main` masih terkena bug ini sampai digabung; di produksi belum diperiksa.
-- Pemeriksaan terakhir (2 Nov): `npm run cek:penuh` lulus (33 berkas tes / 206 tes, build, JS awal 427–497 KB dari batas 500 KB). `/tasks` tinggal 3 KB dari batas.
+- Pemeriksaan terakhir (2 Nov): `npm run cek:penuh` lulus (34 berkas tes / 211 tes, build, JS awal 426–495 KB dari batas 500 KB). `/tasks` tinggal 5 KB dari batas.
 - Rutin harian di database (migrasi 11) dan penanda versi data (migrasi 12): lihat Langkah berikut.
 
 ## Langkah berikut
 
 1. Pemilik meninjau tampilan di `npm run dev:demo -- -p 3200`, terutama warna teal tema terang dan sapuan ganti tema, lalu membuka dan memutuskan pull request.
 2. Pemilik menjalankan `supabase/upgrade/UPGRADE_KE_TERBARU.sql` sekali di Supabase (memasang migrasi 9–12 yang belum ada), lalu seed contoh bila perlu (`docs/DATABASE.md`).
-3. Belum dikerjakan: uji di HP sungguhan dan basis data nyata; halaman Agenda masih tampilan daftar umum (belum kalender pekan khusus); tes perilaku UI baru belum ditulis (hanya tes logika); kepala halaman Anggota di HP masih panjang.
+3. Belum dikerjakan: uji di HP sungguhan dan basis data nyata, termasuk waktu muat Beranda yang kini memuat 21 jenis catatan untuk peta; halaman Agenda masih tampilan daftar umum (belum kalender pekan khusus); tes perilaku UI baru belum ditulis (hanya tes logika); kepala halaman Anggota di HP masih panjang.
 
 ## Keputusan pemilik yang berlaku
 
 Daftar lengkap ada di [PRODUK](PRODUK.md). Yang paling baru:
 
+- 2 Nov 2026 (koreksi): konstelasi diganti Peta koperasi agar berkaitan dengan koperasi dan memudahkan manajer: delapan bidang, rincian per bidang, tindakan langsung dari daftar. Panel Perlu perhatian dilebur ke daftar peta.
 - 2 Nov 2026 (koreksi setelah melihat hasil): buat lebih bersih dan hindari tabrakan warna, terutama di Beranda. Warna kuat hanya limau (aksi, progres) dan koral (terlambat); nada kartu redup, semua panel satu warna, ikon angka satu warna, baris rutin tanpa warna.
-- 2 Nov 2026: tampilan mengikuti tiga video acuan. Gradasi hanya di latar halaman; kartu, tombol, dan grafik solid. Pil menu atas dan rel ikon. Tema gelap bawaan, semua perangkat mulai dari gelap satu kali. Tema terang memakai teal dari acuan, untuk dilihat dulu di layar (cukup ubah token `--action` dan `--brand`). Konstelasi dari data asli di Beranda, lebih lebar dari panel sebelahnya; di HP setelah tenggat dekat. Pil menu selalu membuka halaman pertama kelompok. Kartu orang ringkas di HP. Latar gelap dibuat lebih hidup. Angka ringkasan sebaris dengan judul. Perbaikan Dunia 3D ikut bersama desain baru. Rilis lewat pull request, digabung setelah pemilik setuju. Cadangan bernama `arsip/desain-oktober`.
+- 2 Nov 2026: tampilan mengikuti tiga video acuan. Gradasi hanya di latar halaman; kartu, tombol, dan grafik solid. Pil menu atas dan rel ikon. Tema gelap bawaan, semua perangkat mulai dari gelap satu kali. Tema terang memakai teal dari acuan, untuk dilihat dulu di layar (cukup ubah token `--action` dan `--brand`). Peta dari data asli di Beranda, lebih lebar dari panel sebelahnya; di HP setelah tenggat dekat. Pil menu selalu membuka halaman pertama kelompok. Kartu orang ringkas di HP. Latar gelap dibuat lebih hidup. Angka ringkasan sebaris dengan judul. Perbaikan Dunia 3D ikut bersama desain baru. Rilis lewat pull request, digabung setelah pemilik setuju. Cadangan bernama `arsip/desain-oktober`.
 - 25 Okt 2026: asisten AI acuan dilewati dulu (tanpa layanan berbayar).
 - 23–24 Okt 2026: satu gaya kode untuk seluruh proyek, termasuk Dunia 3D (bahasa Inggris, Tailwind, token warna aplikasi); kode lama dirapikan sebelum fitur baru.
 - 23 Okt 2026: semua modal formulir diganti laci/lembar bawah; Beranda mendahulukan rutin; rutin di database dengan hari aktif per rutin; warna kartu per proyek; huruf Urbanist.

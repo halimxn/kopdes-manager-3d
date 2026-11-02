@@ -2,7 +2,9 @@ import type { Entity, Item } from '../records/schemas';
 import type { Workspace } from '@/features/workspace/use-workspace';
 import { catalog } from '../records/catalog';
 import { recordLink } from '@/components/layout/nav';
-import { addDays } from '@/lib/date';
+import { addDays, formatDate } from '@/lib/date';
+import { readiness } from '@/lib/progress';
+import type { Checklist } from '../records/schemas';
 
 export function recordHref(entity: Entity, row: Item) {
   return recordLink(entity, row.id);
@@ -51,10 +53,10 @@ export type FollowUp = {
 };
 export function getFollowUps(data: Workspace, date: string): FollowUp[] {
   const result: FollowUp[] = [];
-  const add = (entity: Entity, row: Item, reason: string, urgent = false) =>
+  const add = (entity: Entity, row: Item, reason: string, urgent = false, title?: string) =>
     result.push({
       id: `${entity}:${row.id}`,
-      title: String(row.data.title),
+      title: title ?? String(row.data.title),
       reason,
       kind: catalog[entity].title,
       href: recordHref(entity, row),
@@ -80,7 +82,11 @@ export function getFollowUps(data: Workspace, date: string): FollowUp[] {
       meetingDate <= addDays(date, 7) &&
       !['selesai', 'dibatalkan'].includes(String(row.data.status))
     )
-      add('meetings', row, meetingDate === date ? 'Rapat hari ini' : `Rapat pada ${meetingDate}`);
+      add(
+        'meetings',
+        row,
+        meetingDate === date ? 'Rapat hari ini' : `Rapat pada ${formatDate(meetingDate)}`,
+      );
   }
   for (const row of data.documents || []) {
     const expiry = String(row.data.expires_date || '');
@@ -127,6 +133,39 @@ export function getFollowUps(data: Workspace, date: string): FollowUp[] {
   for (const row of latest.values())
     if (Number(row.data.counted_quantity) !== Number(row.data.book_quantity))
       add('stock-counts', row, 'Opname terakhir memiliki selisih; periksa catatannya');
+  for (const row of data.deliveries || []) {
+    const planned = String(row.data.planned_date || '');
+    if (planned && planned <= date && !['selesai', 'dibatalkan'].includes(String(row.data.status)))
+      add(
+        'deliveries',
+        row,
+        planned === date ? 'Pengiriman dijadwalkan hari ini' : 'Pengiriman lewat jadwal',
+        planned < date,
+      );
+  }
+  // Gerai yang belum buka: kesiapan dihitung dari butir wajibnya, sama dengan halaman Gerai.
+  for (const row of data.units || []) {
+    if (['aktif', 'tutup', 'ditutup'].includes(String(row.data.status))) continue;
+    const score = readiness(
+      (data.checklist || [])
+        .filter((item) => item.data.unit_id === row.id)
+        .map((item) => item.data as unknown as Checklist),
+    );
+    if (score !== null && score < 100) add('units', row, `Kesiapan buka ${score}%`);
+  }
+  const staffName = (id: unknown) =>
+    String(data.staff?.find((row) => row.id === id)?.data.title || 'Petugas');
+  for (const row of data.attendance || []) {
+    if (row.data.date !== date) continue;
+    if (row.data.status === 'alpa')
+      add('attendance', row, 'Alpa hari ini', true, staffName(row.data.staff_id));
+    else if (row.data.status === 'terjadwal')
+      add('attendance', row, 'Belum absen hari ini', false, staffName(row.data.staff_id));
+  }
+  for (const row of data.trainings || []) {
+    if (row.data.required && row.data.status !== 'selesai' && String(row.data.date) <= date)
+      add('trainings', row, 'Pelatihan wajib lewat jadwal');
+  }
   return result.sort(
     (a, b) => Number(b.urgent) - Number(a.urgent) || a.title.localeCompare(b.title, 'id'),
   );

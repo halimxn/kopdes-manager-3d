@@ -5,6 +5,16 @@ export const rupiah = (value: number) =>
     currency: 'IDR',
     maximumFractionDigits: 0,
   }).format(value);
+/** Rupiah ringkas untuk angka ringkasan; tanda minus menempel pada angka agar tidak pecah baris. */
+export const shortRupiah = (value: number) => {
+  const amount = Math.abs(value);
+  const text =
+    amount >= 1_000_000
+      ? `Rp\u00a0${(amount / 1_000_000).toLocaleString('id-ID', { maximumFractionDigits: 1 })}\u00a0jt`
+      : rupiah(amount);
+  return value < 0 ? `−${text}` : text;
+};
+
 export function cashSummary(rows: Item[]) {
   const incoming = rows
     .filter((row) => row.data.direction === 'masuk')

@@ -17,6 +17,15 @@ const PAGE_ENTITIES: Record<string, Entity[]> = {
     'risks',
     'inventory-items',
     'stock-counts',
+    // Bidang lain untuk Peta koperasi.
+    'units',
+    'checklist',
+    'sales',
+    'deliveries',
+    'cash-entries',
+    'members',
+    'attendance',
+    'trainings',
   ],
   tasks: [
     'work-items',

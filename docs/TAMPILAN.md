@@ -1,6 +1,6 @@
 # Tampilan
 
-Gaya yang berlaku sekarang (arahan pemilik 2 November 2026) mengikuti tiga acuan video: **tema gelap** mengikuti Solvik (latar warna buram, panel hampir hitam, kartu berwarna, aksi hijau limau, pil menu di atas, rel ikon di kiri), **tema terang dan isi Beranda** mengikuti Kinlo (latar aqua dan persik, aksi teal, sapaan besar, kartu ringkasan gelap), dan **gerak** mengikuti Crew (isi muncul berurutan dari buram, grafik tergambar, konstelasi yang hidup). Ini bukan aturan permanen. Mengganti tampilan cukup dengan mengubah token; komponen tidak boleh berisi warna mentah.
+Gaya yang berlaku sekarang (arahan pemilik 2 November 2026) mengikuti tiga acuan video: **tema gelap** mengikuti Solvik (latar warna buram, panel hampir hitam, kartu berwarna, aksi hijau limau, pil menu di atas, rel ikon di kiri), **tema terang dan isi Beranda** mengikuti Kinlo (latar aqua dan persik, aksi teal, sapaan besar, kartu ringkasan gelap), dan **gerak** mengikuti Crew (isi muncul berurutan dari buram, grafik tergambar, peta koperasi yang hidup). Ini bukan aturan permanen. Mengganti tampilan cukup dengan mengubah token; komponen tidak boleh berisi warna mentah.
 
 Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 
@@ -21,7 +21,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 |---|---|---|
 | Latar | `canvas`, `ground` | warna dasar dan latar buram satu lapis tetap (`body::before`) |
 | Permukaan | `surface`, `surface-solid`, `surface-2`, `surface-3`, `line`, `line-strong` | panel tembus, panel padat, isian tipis di atas panel, garis. Laci, menu, palet, dan dialog otomatis padat (`--surface` ditimpa di `.sheet`, `.menu`, `.pop`, `.palette`) |
-| Panel gelap | `deep`, `deep-2`, `on-deep`, `on-deep-2` | kartu ringkasan dan konstelasi; tetap gelap di kedua tema, isinya memakai `data-theme="dark"` |
+| Panel gelap | `deep`, `deep-2`, `on-deep`, `on-deep-2` | kartu ringkasan dan peta koperasi; tetap gelap di kedua tema, isinya memakai `data-theme="dark"` |
 | Teks | `ink`, `ink-2`, `ink-3` | utama, kedua, keterangan (kontras ≥ 4.5:1 di atas latar dan panel) |
 | Aksi | `action`, `action-hover`, `on-action` | tombol utama dan menu aktif di rel: limau di tema gelap, teal di tema terang |
 | Logo | `brand`, `on-brand` | tanda Kopdes, warnanya sama dengan aksi |
@@ -44,7 +44,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 | Kepala halaman | `components/layout/page-header.tsx` | Judul besar ringan, angka berikon bulat sebaris (`sections`), aksi di kanan. HP dan tablet: angka di baris sendiri. Di halaman catatan kepala dibangun `RecordsView` karena angkanya mengikuti saringan; panel di bawahnya lewat `details` (`entity-views.tsx`) |
 | Angka ringkasan | `components/ui/stat.tsx` | `StatTile` langsung di atas latar: ikon satu warna dalam lingkaran (koral bila nada `rose`), angka menghitung naik, label. Tanpa ubin |
 | Grafik | `components/ui/charts.tsx` | `AreaChart` (mengisi tinggi induk, warna dari `data-tone`), `BarChart` (batang berdampingan), `StackBar` (satu baris bertumpuk). Digambar sesuai piksel asli |
-| Konstelasi kerja | `features/home/constellation.tsx`, `constellation-data.ts` | Kanvas 2D perspektif: proyek jadi gugus, tugas jadi titik (maks. 7 gugus, 14 titik per gugus, yang mendesak didahulukan). Berputar pelan, digeser untuk memutar, klik membuka tugas atau proyek, saringan Semua/Terlambat/Hari ini. Label digambar paling akhir dan menghindari tabrakan; area sentuh 44 px di perangkat sentuh. Selesai 30 hari terakhir tampil redup; yang terlambat berdenyut koral. Berhenti menggambar saat tidak terlihat. Dimuat belakangan |
+| Peta koperasi | `features/home/coop-map.tsx`, `coop-map-data.ts` | Koperasi di pusat, delapan bidang mengelilingi (tugas dan proyek, agenda, gerai, barang dan stok, kas, anggota, tim, dokumen dan risiko). Bidang berupa tombol sungguhan dengan lencana jumlah; titik di sekitarnya catatan aslinya, koral untuk yang mendesak. Memilih bidang memutarnya ke depan dan membuka rincian: angka, daftar tindakan, Tambah, Buka, dan Dunia 3D. Daftar di samping menampung semua yang perlu ditangani dengan tindakan langsung (centang, tunda, opname, beli stok). Aturan "perlu ditangani" hanya dari `getFollowUps`, sama dengan lonceng. Berhenti menggambar saat tidak terlihat; dimuat belakangan |
 | Laci / lembar bawah | `components/ui/sheet.tsx` | Semua formulir dan detail. Panel penuh tinggi di kanan (tablet/laptop), dari bawah di HP dan bisa ditarik turun untuk menutup |
 | Kolom isian | `components/ui/field.tsx` | `Input`, `Select`, `Textarea`, `Field`, `SearchField`. Kolom di bilah alat memakai `TOOLBAR_CONTROL` (pil tipis di atas latar) |
 | Menu dan popover | `components/ui/menu.tsx` | Satu bentuk untuk semua menu tarik-turun dan popover |
@@ -64,7 +64,7 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 
 - Tablet dan laptop (≥ 768 px): bilah atas (logo, pil menu di tengah, cari, lonceng, profil) dan rel ikon di kiri. Bilah atas tanpa latar di puncak halaman, berkabut saat digulir.
 - HP (< 768 px): bilah atas ringkas + navigasi bawah melayang. Item aktif mengembang menjadi kapsul berlabel; tombol tambah warna aksi di tengah. Bilah bawah minggir saat menggulir ke bawah (`lib/use-hide-on-scroll.ts`). Semua halaman ada di menu lengkap.
-- Beranda (urut baca): sapaan dan angka → tugas cepat → rutin hari ini, konstelasi (paling lebar), progres tugas → tugas selesai per minggu, tenggat dekat (empat kartu dan tautan semua) → hari ini, perlu perhatian, proyek berjalan. Di HP: rutin → tenggat → konstelasi → progres → grafik → hari ini.
+- Beranda (urut baca): sapaan dan angka → tugas cepat → rutin hari ini, peta koperasi (paling lebar), progres tugas → tugas selesai per minggu, tenggat dekat (empat kartu dan tautan semua) → hari ini, proyek berjalan. Di HP: rutin → tenggat → peta koperasi → progres → grafik → hari ini.
 - Kas: angka ringkasan, grafik uang masuk dan keluar per bulan, lalu daftar. Tidak pernah disebut saldo atau laba.
 - Halaman PIN: satu kartu di tengah di atas latar buram. Kotak per angka yang terisi titik, tombol terisi bertahap.
 - Dunia 3D punya bilahnya sendiri dan membaca token yang sama.
@@ -77,8 +77,8 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 - Ganti tema: sapuan melingkar 0,48 detik dari tombolnya (View Transitions, `lib/theme.ts`). Peramban tanpa fitur itu langsung berganti.
 - Kurva di `globals.css`: `--ease-out` (masuk biasa), `--ease-spring` (menu, popover, palet, dialog), `--ease-sheet` (laci).
 - Menu tumbuh dari tombol pemicunya; butirnya naik berurutan 25 ms. Palet turun dengan pegas; baris berurutan hanya saat dibuka. Laci meluncur, judul lalu isinya menyusul.
-- Gerak berkurang (`prefers-reduced-motion`): lapisan hanya memudar, animasi tanpa jeda, Motion ikut (`MotionConfig reducedMotion="user"`), konstelasi diam tetapi tetap bisa diputar, tema langsung berganti.
-- Animasi dimuat lewat `LazyMotion`, konstelasi dan laci tugas lewat `next/dynamic` agar tidak memperbesar unduhan awal.
+- Gerak berkurang (`prefers-reduced-motion`): lapisan hanya memudar, animasi tanpa jeda, Motion ikut (`MotionConfig reducedMotion="user"`), peta diam tetapi tetap bisa diputar, tema langsung berganti.
+- Animasi dimuat lewat `LazyMotion`, peta koperasi dan laci tugas lewat `next/dynamic` agar tidak memperbesar unduhan awal.
 
 ## Kata-kata di layar
 
