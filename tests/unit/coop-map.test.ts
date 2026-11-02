@@ -47,8 +47,7 @@ describe('buildCoopMap', () => {
     expect(work.urgent).toBe(1);
     expect(work.soon).toBe(1);
     expect(work.actions.find((item) => item.id === 't2')?.today).toBe(true);
-    // Tugas yang belum mendekat tetap jadi titik peta, tetapi tidak masuk daftar tindakan.
-    expect(work.records.map((item) => item.id)).toContain('t3');
+    // Tugas yang belum mendekat tidak masuk daftar tindakan.
     expect(work.actions.map((item) => item.id)).not.toContain('t3');
     expect(domain(map, 'barang').urgent).toBe(1);
     expect(domain(map, 'dokumen').urgent).toBe(1);
@@ -80,15 +79,14 @@ describe('buildCoopMap', () => {
       'kas',
     );
     expect(kas.stats[0]).toEqual({
-      label: 'Uang masuk',
+      label: 'Masuk 7 hari',
       value: expect.stringContaining('200.000'),
     });
     expect(kas.stats[1]).toEqual({
-      label: 'Uang keluar',
+      label: 'Keluar 7 hari',
       value: expect.stringContaining('50.000'),
     });
     expect(kas.note).toContain('bukan saldo');
-    expect(kas.records).toHaveLength(2);
   });
 
   it('modul yang belum aktif tidak diberi angka nol', () => {
@@ -111,16 +109,6 @@ describe('buildCoopMap', () => {
       'barang',
     );
     expect(barang.stats[0].value).toBe('1+');
-  });
-
-  it('memberi posisi tetap dan membatasi jumlah titik', () => {
-    const tasks = Array.from({ length: 30 }, (_, index) =>
-      row(`t${index}`, { title: `T${index}`, status: 'rencana', due_date: '2026-12-01' }),
-    );
-    const first = domain(buildCoopMap({ 'work-items': tasks }, DATE, ALL), 'kerja');
-    const second = domain(buildCoopMap({ 'work-items': tasks }, DATE, ALL), 'kerja');
-    expect(first.records).toHaveLength(14);
-    expect(first.records).toEqual(second.records);
   });
 });
 

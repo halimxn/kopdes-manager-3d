@@ -1,11 +1,11 @@
 'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
   CalendarClock,
+  Check as CheckIcon,
   ClipboardCheck,
   Globe2,
   Plus,
@@ -33,22 +33,105 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: 'urgent', label: 'Mendesak' },
   { id: 'today', label: 'Hari ini' },
 ];
-const CAMERA = 3.4;
-// Dilihat dari atas seperti meja: yang lebih dekat berada di bawah dan lebih besar.
-const PITCH = 0.95;
-// Sangat pelan: peta terasa hidup, tetapi tombol bidang tidak lari dari jari.
-const AUTO_SPIN = 0.00004;
-const INTRO_MS = 1200;
+// Letak tiap bidang tetap, supaya manajer hafal tempatnya seperti denah. Baris atas usaha, tengah
+// pekerjaan harian, bawah orang dan berkas. `null` adalah koperasi di pusat.
+const LAYOUT = ['gerai', 'barang', 'kas', 'agenda', null, 'kerja', 'anggota', 'tim', 'dokumen'];
 
 const matchesFilter = (record: MapRecord, filter: Filter) =>
-  filter === 'all' ||
-  (filter === 'urgent' ? record.level === 'urgent' : record.today && record.level !== 'calm');
+  filter === 'all' || (filter === 'urgent' ? record.level === 'urgent' : record.today);
+
+/** Satu petak bidang: angka yang perlu ditangani paling besar, lalu nama dan satu fakta nyata. */
+function Plot({
+  domain,
+  filter,
+  pressed,
+  lit,
+  dimmed,
+  index,
+  onToggle,
+  onHover,
+}: {
+  domain: CoopDomain;
+  filter: Filter;
+  pressed: boolean;
+  lit: boolean;
+  dimmed: boolean;
+  index: number;
+  onToggle: () => void;
+  onHover: (id: string | null) => void;
+}) {
+  const scoped = domain.actions.filter((record) => matchesFilter(record, filter));
+  const urgent = scoped.filter((record) => record.level === 'urgent').length;
+  const stat = domain.stats[0];
+  const muted = pressed ? 'text-on-action/75' : 'text-on-deep-2';
+  return (
+    <button
+      type="button"
+      aria-pressed={pressed}
+      aria-label={`${domain.label}: ${
+        !domain.active
+          ? 'belum aktif'
+          : scoped.length
+            ? `${scoped.length} perlu ditangani${urgent ? `, ${urgent} mendesak` : ''}`
+            : 'aman'
+      }`}
+      onClick={onToggle}
+      onPointerEnter={() => onHover(domain.id)}
+      onPointerLeave={() => onHover(null)}
+      onFocus={() => onHover(domain.id)}
+      onBlur={() => onHover(null)}
+      style={{ animationDelay: `${index * 40}ms` }}
+      className={cn(
+        'enter flex min-w-0 flex-col rounded-[1.25rem] p-3 text-left ring-1 transition-[background-color,opacity,box-shadow] duration-200',
+        pressed
+          ? 'bg-action text-on-action ring-transparent'
+          : 'bg-deep-2 text-on-deep hover:bg-surface-3',
+        !pressed && (urgent ? 'ring-late-bar/70' : lit ? 'ring-on-deep-2' : 'ring-line'),
+        dimmed && 'opacity-55',
+        filter !== 'all' && !scoped.length && !pressed && 'opacity-40',
+      )}
+    >
+      <span className="flex items-start justify-between gap-1">
+        <span className={cn('grid size-8 place-items-center [&_svg]:size-5', pressed || muted)}>
+          <PageIcon name={domain.icon} />
+        </span>
+        {!domain.active ? null : scoped.length ? (
+          <span
+            className={cn(
+              'tabular text-[24px] leading-8 font-medium tracking-tight',
+              !pressed && urgent > 0 && 'text-late-bar',
+            )}
+          >
+            {scoped.length}
+          </span>
+        ) : (
+          filter === 'all' && (
+            <span className={cn('grid size-8 place-items-center [&_svg]:size-4', muted)}>
+              <CheckIcon aria-hidden="true" />
+            </span>
+          )
+        )}
+      </span>
+      <span className="mt-auto line-clamp-2 pt-1 text-[13.5px] leading-tight font-medium">
+        {domain.label}
+      </span>
+      {!domain.active ? (
+        <span className={cn('truncate text-xs', muted)}>Belum aktif</span>
+      ) : (
+        stat && (
+          <span className={cn('hidden truncate pt-0.5 text-xs @md/map:block', muted)}>
+            {stat.value} {stat.label.toLowerCase()}
+          </span>
+        )
+      )}
+    </button>
+  );
+}
 
 /**
- * Peta koperasi di Beranda: koperasi di pusat, bidang kerjanya mengelilingi, dan titik-titik di
- * sekitar tiap bidang adalah catatan aslinya. Menjawab "bagian mana yang perlu saya urus sekarang?"
- * dan langsung bisa ditindak dari daftar di sampingnya. Bidang berupa tombol sungguhan agar bisa
- * dipakai dengan papan ketik dan jari; hanya garis dan titik yang digambar di kanvas.
+ * Peta koperasi di Beranda: denah dengan koperasi di pusat dan delapan bidang kerja di sekelilingnya.
+ * Menjawab "bagian mana yang perlu saya urus sekarang?" dalam sekali lihat, lalu langsung bisa ditindak
+ * dari daftar di sampingnya.
  */
 export function CoopMap({
   ws,
@@ -67,312 +150,11 @@ export function CoopMap({
   refresh: () => Promise<void> | void;
   onOpenTask: (id: string) => void;
 }) {
-  const router = useRouter();
   const domains = useMemo(() => buildCoopMap(ws, date, caps, more), [ws, date, caps, more]);
   const [selected, setSelected] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>('all');
-  const panel = useRef<HTMLDivElement>(null);
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const tooltip = useRef<HTMLDivElement>(null);
-  const hub = useRef<HTMLButtonElement>(null);
-  const nodes = useRef<(HTMLButtonElement | null)[]>([]);
-  // Kamera dan waktu masuk disimpan di luar efek: mencentang tugas tidak mengulang animasi masuk.
-  const camera = useRef({ yaw: 0.35, spin: 0, began: 0 });
-  const focus = useRef<{ domain: string | null; record: string | null; filter: Filter }>({
-    domain: null,
-    record: null,
-    filter: 'all',
-  });
-  const hoveredDomain = useRef<string | null>(null);
-  const openRecord = useRef<(record: MapRecord) => void>(() => undefined);
-
-  useEffect(() => {
-    focus.current.domain = selected;
-    focus.current.filter = filter;
-    openRecord.current = (record) => {
-      if (record.entity === 'work-items') onOpenTask(record.id);
-      else router.push(record.href);
-    };
-  });
-
-  useEffect(() => {
-    const element = canvas.current;
-    const root = panel.current;
-    const context = element?.getContext('2d');
-    if (!element || !root || !context) return;
-    const style = getComputedStyle(root);
-    const read = (name: string) => style.getPropertyValue(name).trim();
-    const colors = { ink: read('--on-deep'), muted: read('--on-deep-2'), late: read('--late-bar') };
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const touch = window.matchMedia('(pointer: coarse)').matches;
-    const cam = camera.current;
-    const count = domains.length;
-    let width = 0;
-    let height = 0;
-    let scale = 1;
-    let frame = 0;
-    let last = 0;
-    let visible = true;
-    let inside = false;
-    let hits: { record: MapRecord; domain: CoopDomain; x: number; y: number }[] = [];
-    let hovered: string | null = null;
-    let drag: { x: number; moved: boolean } | null = null;
-
-    const resize = () => {
-      const box = element.getBoundingClientRect();
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      width = box.width;
-      height = box.height;
-      // Sisakan ruang untuk tombol bidang di tepi kanvas.
-      scale = Math.min(width * 0.39, (height * 0.3) / Math.sin(PITCH));
-      element.width = Math.round(width * ratio);
-      element.height = Math.round(height * ratio);
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    };
-    const project = (x: number, y: number, z: number) => {
-      const cosYaw = Math.cos(cam.yaw);
-      const sinYaw = Math.sin(cam.yaw);
-      const x1 = x * cosYaw + z * sinYaw;
-      const z1 = -x * sinYaw + z * cosYaw;
-      const y2 = y * Math.cos(PITCH) - z1 * Math.sin(PITCH);
-      const z2 = y * Math.sin(PITCH) + z1 * Math.cos(PITCH);
-      const k = CAMERA / (z2 + CAMERA);
-      return {
-        x: width / 2 + x1 * k * scale, // Pusat sedikit di atas tengah: label bidang terdepan butuh ruang di bawah.
-        y: height * 0.44 + y2 * k * scale,
-        k,
-        z: z2,
-      };
-    };
-    const dot = (x: number, y: number, r: number, color: string, alpha: number) => {
-      context.globalAlpha = alpha;
-      context.fillStyle = color;
-      context.beginPath();
-      context.arc(x, y, r, 0, Math.PI * 2);
-      context.fill();
-    };
-
-    const draw = (now: number) => {
-      frame = requestAnimationFrame(draw);
-      if (!visible || !width) return;
-      if (!cam.began) cam.began = now;
-      const delta = Math.min(now - last || 16, 48);
-      last = now;
-      const { domain: selectedId, record: focusRecord, filter: activeFilter } = focus.current;
-      const selectedIndex = domains.findIndex((domain) => domain.id === selectedId);
-      if (selectedIndex >= 0) {
-        // Bidang terpilih diputar ke depan lewat jalan terpendek.
-        const target = (selectedIndex / count) * Math.PI * 2 + Math.PI / 2;
-        const gap = Math.atan2(Math.sin(target - cam.yaw), Math.cos(target - cam.yaw));
-        cam.yaw += reduced ? gap : gap * 0.09;
-      } else if (!drag) {
-        if (!reduced && !inside) cam.yaw += AUTO_SPIN * delta;
-        cam.yaw += cam.spin;
-        cam.spin *= 0.94;
-      }
-      const elapsed = reduced ? INTRO_MS * 2 : now - cam.began;
-      const intro = (offset: number) => {
-        const t = Math.min(1, Math.max(0, (elapsed - offset * 380) / INTRO_MS));
-        return 1 - (1 - t) ** 4;
-      };
-      context.clearRect(0, 0, width, height);
-      const center = project(0, 0, 0);
-      const nextHits: typeof hits = [];
-
-      domains.forEach((domain, index) => {
-        const angle = (index / count) * Math.PI * 2;
-        const grow = intro(index / count);
-        const nx = Math.cos(angle) * grow;
-        const nz = Math.sin(angle) * grow;
-        const point = project(nx, 0, nz);
-        const isSelected = domain.id === selectedId;
-        const isHovered = domain.id === hoveredDomain.current;
-        const dimmed = selectedId !== null && !isSelected;
-        const fits =
-          activeFilter === 'all' ||
-          domain.records.some((record) => matchesFilter(record, activeFilter));
-        const presence = dimmed ? 0.3 : fits ? 1 : 0.32;
-        const depth = 0.6 + 0.4 * Math.min(1, Math.max(0, (point.k - 0.78) / 0.44));
-
-        // Garis pusat ke bidang; bidang yang mendesak punya denyut yang berjalan menuju pusat.
-        context.globalAlpha = (isSelected || isHovered ? 0.8 : 0.28) * presence * grow;
-        context.strokeStyle = domain.urgent ? colors.late : colors.muted;
-        context.lineWidth = isSelected || isHovered ? 1.5 : 1;
-        context.beginPath();
-        context.moveTo(center.x, center.y);
-        context.lineTo(point.x, point.y);
-        context.stroke();
-        context.lineWidth = 1;
-        if (domain.urgent && !reduced && presence === 1) {
-          const t = (now / 2100 + index * 0.17) % 1;
-          dot(
-            point.x + (center.x - point.x) * t,
-            point.y + (center.y - point.y) * t,
-            2.2,
-            colors.late,
-            0.9 * (1 - t) * grow,
-          );
-        }
-
-        domain.records.forEach((record, recordIndex) => {
-          const spread = intro(0.4 + (recordIndex / domain.records.length) * 0.6);
-          const reach = isSelected ? 1.6 : 1;
-          const at = project(
-            nx + record.x * spread * reach,
-            record.y * spread * reach,
-            nz + record.z * spread * reach,
-          );
-          const on = matchesFilter(record, activeFilter);
-          const fade = (on ? presence : 0.12) * spread * depth;
-          const size =
-            (record.level === 'urgent' ? 3.3 : record.level === 'soon' ? 2.7 : 1.7) * at.k;
-          const color = record.level === 'urgent' ? colors.late : colors.ink;
-          if (record.level === 'calm') dot(at.x, at.y, size, colors.muted, fade * 0.55);
-          else {
-            dot(at.x, at.y, size * 2.3, color, 0.16 * fade);
-            dot(at.x, at.y, size, color, fade);
-          }
-          if (record.level === 'urgent' && on && !reduced && !dimmed) {
-            const pulse = (now / 1500 + record.phase) % 1;
-            context.globalAlpha = (1 - pulse) * 0.55 * fade;
-            context.strokeStyle = colors.late;
-            context.beginPath();
-            context.arc(at.x, at.y, size + pulse * 8, 0, Math.PI * 2);
-            context.stroke();
-          }
-          if (record.key === focusRecord || record.key === hovered) {
-            context.globalAlpha = 1;
-            context.strokeStyle = colors.ink;
-            context.lineWidth = 1.5;
-            context.beginPath();
-            context.arc(at.x, at.y, size + 4.5, 0, Math.PI * 2);
-            context.stroke();
-            context.lineWidth = 1;
-          }
-          if (on && !dimmed && spread > 0.9) nextHits.push({ record, domain, x: at.x, y: at.y });
-        });
-
-        // Tombol bidang mengikuti proyeksi; yang di depan lebih besar dan menutupi yang di belakang.
-        const node = nodes.current[index];
-        if (node) {
-          const size = 0.82 + 0.26 * Math.min(1, Math.max(0, (point.k - 0.78) / 0.44));
-          node.style.transform = `translate(${point.x - node.offsetWidth / 2}px, ${point.y - 22}px) scale(${size})`;
-          node.style.opacity = String(grow * (dimmed ? 0.55 : fits ? 0.72 + 0.28 * depth : 0.45));
-          node.style.zIndex = String(Math.round(100 - point.z * 40));
-        }
-      });
-      context.globalAlpha = 1;
-      if (hub.current) {
-        hub.current.style.transform = `translate(${center.x - hub.current.offsetWidth / 2}px, ${center.y - 22}px)`;
-        hub.current.style.opacity = String(intro(0));
-      }
-      hits = nextHits;
-    };
-
-    const position = (event: PointerEvent) => {
-      const box = element.getBoundingClientRect();
-      return { x: event.clientX - box.left, y: event.clientY - box.top };
-    };
-    const pick = (x: number, y: number) => {
-      const radius = touch ? 22 : 11;
-      let best: (typeof hits)[number] | null = null;
-      let distance = Infinity;
-      for (const hit of hits) {
-        const gap = Math.hypot(hit.x - x, hit.y - y);
-        if (gap <= radius && gap < distance) {
-          best = hit;
-          distance = gap;
-        }
-      }
-      return best;
-    };
-    const showTip = (hit: ReturnType<typeof pick>, x: number, y: number) => {
-      const tip = tooltip.current;
-      if (!tip) return;
-      if (!hit) {
-        tip.hidden = true;
-        return;
-      }
-      const [title, note] = tip.children as unknown as [HTMLElement, HTMLElement];
-      title.textContent = hit.record.title;
-      note.textContent =
-        hit.record.level === 'calm' ? hit.domain.label : `${hit.record.note} · ${hit.domain.label}`;
-      tip.hidden = false;
-      const left = Math.min(width - tip.offsetWidth - 8, Math.max(8, x + 14));
-      tip.style.transform = `translate(${left}px, ${Math.max(8, y - tip.offsetHeight - 10)}px)`;
-    };
-    const onDown = (event: PointerEvent) => {
-      drag = { x: event.clientX, moved: false };
-      element.setPointerCapture(event.pointerId);
-    };
-    const onMove = (event: PointerEvent) => {
-      if (drag) {
-        const dx = event.clientX - drag.x;
-        if (Math.abs(dx) > 3) drag.moved = true;
-        // Saat ada bidang terpilih kamera mengunci bidang itu, jadi geseran diabaikan.
-        if (!focus.current.domain) {
-          cam.yaw -= dx * 0.006;
-          cam.spin = -dx * 0.0012;
-        }
-        drag.x = event.clientX;
-        element.style.cursor = 'grabbing';
-        showTip(null, 0, 0);
-        return;
-      }
-      const { x, y } = position(event);
-      const hit = pick(x, y);
-      hovered = hit?.record.key ?? null;
-      element.style.cursor = hit ? 'pointer' : 'grab';
-      showTip(hit, x, y);
-    };
-    const onUp = (event: PointerEvent) => {
-      const moved = drag?.moved;
-      drag = null;
-      element.style.cursor = 'grab';
-      if (moved) return;
-      const { x, y } = position(event);
-      const hit = pick(x, y);
-      if (hit) openRecord.current(hit.record);
-    };
-    const onEnter = () => {
-      inside = true;
-    };
-    const onLeave = () => {
-      inside = false;
-      hovered = null;
-      showTip(null, 0, 0);
-    };
-    const onCancel = () => {
-      drag = null;
-    };
-
-    resize();
-    const sizes = new ResizeObserver(resize);
-    sizes.observe(element);
-    const seen = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-    });
-    seen.observe(element);
-    const wrap = element.parentElement;
-    wrap?.addEventListener('pointerenter', onEnter);
-    wrap?.addEventListener('pointerleave', onLeave);
-    element.addEventListener('pointerdown', onDown);
-    element.addEventListener('pointermove', onMove);
-    element.addEventListener('pointerup', onUp);
-    element.addEventListener('pointercancel', onCancel);
-    frame = requestAnimationFrame(draw);
-    return () => {
-      cancelAnimationFrame(frame);
-      sizes.disconnect();
-      seen.disconnect();
-      wrap?.removeEventListener('pointerenter', onEnter);
-      wrap?.removeEventListener('pointerleave', onLeave);
-      element.removeEventListener('pointerdown', onDown);
-      element.removeEventListener('pointermove', onMove);
-      element.removeEventListener('pointerup', onUp);
-      element.removeEventListener('pointercancel', onCancel);
-    };
-  }, [domains]);
+  const [lit, setLit] = useState<string | null>(null);
+  const details = useRef<HTMLElement>(null);
 
   const allActions = domains
     .flatMap((domain) => domain.actions.map((record) => ({ record, domain })))
@@ -389,9 +171,15 @@ export function CoopMap({
     urgent: scoped.filter(({ record }) => matchesFilter(record, 'urgent')).length,
     today: scoped.filter(({ record }) => matchesFilter(record, 'today')).length,
   };
+  const toggle = (id: string) => {
+    setSelected(selected === id ? null : id);
+    // HP: rincian ada di bawah denah; tanpa ini ketukan terasa tidak berbuat apa-apa.
+    if (window.matchMedia('(max-width: 767px)').matches)
+      details.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
 
   return (
-    // Dasar panel mengikuti tema; isinya bertoken gelap karena titik bercahaya butuh latar malam.
+    // Dasar panel mengikuti tema; isinya bertoken gelap seperti kartu ringkasan lain.
     <section
       aria-labelledby="coop-map-title"
       className="@container isolate h-full overflow-hidden rounded-[var(--radius-card)] bg-deep shadow-card ring-1 ring-line"
@@ -399,7 +187,7 @@ export function CoopMap({
         if (event.key === 'Escape' && selected) setSelected(null);
       }}
     >
-      <div ref={panel} data-theme="dark" className="flex h-full flex-col text-on-deep">
+      <div data-theme="dark" className="flex h-full flex-col text-on-deep">
         <header className="flex flex-wrap items-start gap-x-4 gap-y-2 px-5 pt-5">
           <div className="min-w-0 flex-1 basis-48">
             <h2 id="coop-map-title" className="text-lg font-medium">
@@ -432,114 +220,47 @@ export function CoopMap({
         </header>
 
         <div className="flex min-h-0 flex-1 flex-col @xl:flex-row">
-          <div className="flex min-w-0 flex-1 flex-col">
-            <div className="relative min-h-[23rem] flex-1 overflow-hidden">
-              <canvas
-                ref={canvas}
-                aria-hidden="true"
-                className="absolute inset-0 size-full cursor-grab touch-pan-y"
-              />
-              <button
-                ref={hub}
-                type="button"
-                onClick={() => setSelected(null)}
-                aria-label={`${coop || 'Koperasi'}: tampilkan semua bidang`}
-                className="absolute top-0 left-0 z-[100] flex w-24 flex-col items-center gap-1 opacity-0"
-              >
-                <LogoMark className="size-11 rounded-[14px]" />
-                <span className="line-clamp-1 max-w-full rounded-full bg-surface-solid/80 px-2 text-[11px] text-on-deep-2">
-                  {coop || 'Koperasi'}
-                </span>
-              </button>
-              {domains.map((domain, index) => {
-                const need = domain.urgent + domain.soon;
-                const pressed = selected === domain.id;
+          <div className="@container/map flex min-w-0 flex-1 flex-col p-4 @xl:p-5">
+            <div className="grid min-h-[22rem] flex-1 grid-cols-3 grid-rows-3 gap-2.5 @md/map:gap-3.5">
+              {LAYOUT.map((id, index) => {
+                const domain = domains.find((item) => item.id === id);
+                if (domain)
+                  return (
+                    <Plot
+                      key={domain.id}
+                      domain={domain}
+                      filter={filter}
+                      pressed={selected === domain.id}
+                      lit={lit === domain.id}
+                      dimmed={selected !== null && selected !== domain.id}
+                      index={index}
+                      onToggle={() => toggle(domain.id)}
+                      onHover={setLit}
+                    />
+                  );
                 return (
                   <button
-                    key={domain.id}
-                    ref={(element) => {
-                      nodes.current[index] = element;
-                    }}
+                    key="hub"
                     type="button"
-                    aria-pressed={pressed}
-                    aria-label={`${domain.label}: ${
-                      !domain.active
-                        ? 'belum aktif'
-                        : need
-                          ? `${need} perlu ditangani${domain.urgent ? `, ${domain.urgent} mendesak` : ''}`
-                          : 'aman'
-                    }`}
-                    onClick={() => setSelected(pressed ? null : domain.id)}
-                    onPointerEnter={() => {
-                      hoveredDomain.current = domain.id;
-                    }}
-                    onPointerLeave={() => {
-                      hoveredDomain.current = null;
-                    }}
-                    onFocus={() => {
-                      hoveredDomain.current = domain.id;
-                    }}
-                    onBlur={() => {
-                      hoveredDomain.current = null;
-                    }}
-                    className="group absolute top-0 left-0 flex w-[5.25rem] origin-top flex-col items-center gap-1 rounded-2xl opacity-0"
+                    onClick={() => setSelected(null)}
+                    aria-label={`${coop || 'Koperasi'}: tampilkan semua bidang`}
+                    style={{ animationDelay: `${index * 40}ms` }}
+                    className="enter flex min-w-0 flex-col items-center justify-center gap-1.5 rounded-[1.25rem] p-2 text-center"
                   >
-                    <span
-                      className={cn(
-                        'relative grid size-11 place-items-center rounded-full ring-1 transition-colors [&_svg]:size-[19px]',
-                        pressed
-                          ? 'bg-action text-on-action ring-transparent'
-                          : 'bg-surface-solid text-on-deep ring-line-strong group-hover:bg-surface-3',
-                        !pressed && domain.urgent > 0 && 'ring-2 ring-late-bar',
-                        !domain.active && 'text-on-deep-2',
-                      )}
-                    >
-                      <PageIcon name={domain.icon} />
-                      {need > 0 && (
-                        <span
-                          className={cn(
-                            'tabular absolute -top-1 -right-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full px-1 text-[10.5px] font-semibold',
-                            domain.urgent ? 'bg-late-bar text-on-bar' : 'bg-on-deep text-on-bar',
-                          )}
-                        >
-                          {need}
-                        </span>
-                      )}
-                    </span>
-                    <span className="rounded-full bg-surface-solid/80 px-2 text-center text-[11.5px] leading-[1.35] font-medium">
-                      {domain.label}
+                    <LogoMark className="size-11 rounded-[14px]" />
+                    <span className="line-clamp-2 text-xs leading-tight text-on-deep-2">
+                      {coop || 'Koperasi'}
                     </span>
                   </button>
                 );
               })}
-              <div
-                ref={tooltip}
-                hidden
-                className="pointer-events-none absolute top-0 left-0 z-[300] max-w-64 rounded-2xl bg-surface-solid px-3 py-2 text-ink shadow-float ring-1 ring-line-strong"
-              >
-                <p className="line-clamp-2 text-[13px] leading-snug font-medium" />
-                <p className="truncate text-xs text-ink-2" />
-              </div>
             </div>
-            <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 pt-1 pb-4 text-xs text-on-deep-2">
-              <span className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-late-bar" aria-hidden="true" />
-                Mendesak
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-on-deep" aria-hidden="true" />
-                Perlu ditangani
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-on-deep-2/60" aria-hidden="true" />
-                Catatan lain
-              </span>
-            </footer>
           </div>
 
           <aside
+            ref={details}
             aria-label={current ? `Rincian ${current.label}` : 'Yang perlu ditangani'}
-            className="relative min-h-0 border-t border-line @xl:w-[19rem] @xl:border-t-0 @xl:border-l"
+            className="relative min-h-0 scroll-mb-24 border-t border-line @xl:w-[19rem] @xl:border-t-0 @xl:border-l"
           >
             <div className="flex max-h-[28rem] flex-col @xl:absolute @xl:inset-0 @xl:max-h-none">
               {current ? (
@@ -552,9 +273,7 @@ export function CoopMap({
               )}
               <ul
                 className="scrollbar-none flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2"
-                onPointerLeave={() => {
-                  focus.current.record = null;
-                }}
+                onPointerLeave={() => setLit(null)}
               >
                 {list.map(({ record, domain }) => (
                   <ActionRow
@@ -564,9 +283,7 @@ export function CoopMap({
                     ws={ws}
                     refresh={refresh}
                     onOpenTask={onOpenTask}
-                    onHover={(key) => {
-                      focus.current.record = key;
-                    }}
+                    onHover={() => setLit(domain.id)}
                   />
                 ))}
                 {!list.length && (
@@ -663,7 +380,7 @@ function ActionRow({
   ws: Workspace;
   refresh: () => Promise<void> | void;
   onOpenTask: (id: string) => void;
-  onHover: (key: string) => void;
+  onHover: () => void;
 }) {
   const task: Item | undefined =
     record.entity === 'work-items'
@@ -689,7 +406,7 @@ function ActionRow({
   );
   return (
     <li
-      onPointerEnter={() => onHover(record.key)}
+      onPointerEnter={onHover}
       className="flex items-center gap-2 rounded-2xl py-1.5 pr-1 pl-2 transition-colors hover:bg-deep-2"
     >
       {task ? (

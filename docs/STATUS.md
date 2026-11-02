@@ -10,7 +10,7 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 - Perbaikan bug ikut di cabang kerja: Dunia 3D meminta 25 jenis catatan sedangkan batas server 20, jadi datanya kosong. Dari kode, `main` masih terkena bug ini sampai digabung; di produksi belum diperiksa.
 - Daftar tugas, kalender, linimasa, menu tambah, palet cari, lonceng, Pengaturan, Bantuan, dan PIN sudah ditulis ulang strukturnya. Panel Dunia 3D baru mengikuti latar dan token, belum ditulis ulang strukturnya.
 - Penempatan kartu dirancang ulang: tinggi kartu sama dalam satu baris, kartu netral dengan titik warna, satu bilah tab di Proyek, Beranda mendahulukan pekerjaan. Label rel tidak lagi tertutup isi halaman.
-- Pemeriksaan terakhir (2 Nov): `npm run cek:penuh` lulus (34 berkas / 211 tes, build, JS awal 427–484 KB dari batas 500 KB).
+- Pemeriksaan terakhir (2 Nov): `npm run cek:penuh` lulus (34 berkas / 210 tes, build, JS awal 427–484 KB dari batas 500 KB).
 - Rutin harian di database (migrasi 11) dan penanda versi data (migrasi 12): lihat Langkah berikut.
 
 ## Langkah berikut
@@ -23,6 +23,7 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 
 Daftar lengkap ada di [PRODUK](PRODUK.md). Yang paling baru:
 
+- 2 Nov 2026 (koreksi): Peta koperasi dirancang ulang atas permintaan pemilik. Bentuknya denah tetap berisi delapan petak berangka, tanpa kanvas putar dan titik (pilihan AI karena pemilik meminta langsung dikerjakan; bisa diubah setelah dilihat).
 - 2 Nov 2026 (koreksi): label rel tidak boleh tertutup; penempatan kartu dirancang ulang agar rapi dan bersih. Kartu dibuat netral, warna hanya sebagai titik (keputusan AI atas arahan "rapi dan bersih", bisa dikembalikan bila pemilik lebih suka kartu berwarna).
 - 2 Nov 2026 (koreksi): modal ditulis ulang, bukan hanya diganti warna; kartu tidak boleh berwarna pekat atau kotor; tidak boleh ada yang tumpang tindih.
 - 2 Nov 2026 (koreksi): konstelasi diganti Peta koperasi agar berkaitan dengan koperasi dan memudahkan manajer: delapan bidang, rincian per bidang, tindakan langsung dari daftar. Panel Perlu perhatian dilebur ke daftar peta.

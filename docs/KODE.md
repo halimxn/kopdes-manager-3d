@@ -41,7 +41,7 @@ src/
   features/
     records/              katalog, skema Zod, layanan server, formulir otomatis, daftar umum, kartu, laci detail
     workspace/            pemuat data per halaman (use-workspace, scope)
-    home/                 Beranda, rutin harian, konstelasi kerja, linimasa hari, tambah cepat, laporan harian
+    home/                 Beranda, rutin harian, peta koperasi, linimasa hari, tambah cepat, laporan harian
     tasks/                halaman tugas, papan, daftar, kalender, linimasa, laci tugas, aksi tugas
     projects/             daftar dan detail proyek
     notes/                laporan kerja
@@ -89,4 +89,4 @@ Jenis catatan `routines` (judul, jam, hari aktif 1–7, aktif) dan `routine-chec
 
 ## Ukuran unduhan
 
-`npm run ukur:bundel` memeriksa JS awal halaman utama (batas 500 KB mentah). Komponen berat (formulir, laci tugas, palet, konstelasi, dunia 3D) dimuat dengan `next/dynamic`; animasi memakai `LazyMotion`.
+`npm run ukur:bundel` memeriksa JS awal halaman utama (batas 500 KB mentah). Komponen berat (formulir, laci tugas, palet, peta koperasi, dunia 3D) dimuat dengan `next/dynamic`; animasi memakai `LazyMotion`.
