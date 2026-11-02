@@ -29,7 +29,7 @@ import { isProjectHistory } from './lifecycle';
 
 const RUNNING = ['aktif', 'rencana', 'ditunda'];
 
-/** Kartu proyek pastel: kode, status, progres, kendala, target, dan langkah berikutnya. */
+/** Kartu proyek: kode, status, progres, kendala, target, dan langkah berikutnya. */
 export function ProjectCard({
   project,
   ws,
@@ -63,51 +63,50 @@ export function ProjectCard({
       <Link
         href={`/projects/${project.id}`}
         data-tone={projectTone(project)}
-        className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink ring-1 ring-tone-line ring-inset transition duration-300 hover:-translate-y-0.5 hover:shadow-card"
+        className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] bg-surface p-5 text-ink-2 shadow-card ring-1 ring-line transition duration-300 hover:-translate-y-0.5 hover:bg-surface-solid"
       >
-        <span className="relative flex flex-wrap items-center gap-1.5">
-          <span className="rounded-full border border-tone-line px-2.5 py-0.5 text-[11px] font-semibold">
-            #{String(project.data.code || 'PRJ')}
+        <span className="flex items-center gap-2 text-xs">
+          <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
+          <span className="min-w-0 truncate text-ink-3">#{String(project.data.code || 'PRJ')}</span>
+          <span className="ml-auto flex shrink-0 items-center gap-2">
+            {['tinggi', 'mendesak'].includes(String(project.data.priority)) && (
+              <span className="text-late-bar">Prioritas {String(project.data.priority)}</span>
+            )}
+            <span>{formatChoiceLabel(String(project.data.status || 'rencana'))}</span>
           </span>
-          <span className="rounded-full bg-surface/75 px-2.5 py-0.5 text-[11px] font-bold">
-            {formatChoiceLabel(String(project.data.status || 'rencana'))}
+        </span>
+        <span className="flex flex-col gap-1">
+          <span className="line-clamp-2 text-[17px] leading-snug font-medium text-ink">
+            {String(project.data.title)}
           </span>
-          {['tinggi', 'mendesak'].includes(String(project.data.priority)) && (
-            <span className="rounded-full bg-surface/75 px-2 py-0.5 text-[11px] font-bold text-late-ink">
-              Prioritas {String(project.data.priority)}
+          {project.data.description ? (
+            <span className="line-clamp-2 text-[13px] text-ink-3">
+              {String(project.data.description)}
             </span>
-          )}
+          ) : null}
         </span>
-        <span className="relative text-lg leading-snug font-extrabold text-ink">
-          {String(project.data.title)}
-        </span>
-        {project.data.description ? (
-          <span className="relative line-clamp-2 text-sm">{String(project.data.description)}</span>
-        ) : null}
-        <span className="relative flex flex-col gap-1.5">
-          <span className="flex justify-between text-xs font-bold">
-            Progres <span className="tabular">{progress}%</span>
+        <span className="mt-auto flex flex-col gap-1.5">
+          <span className="flex justify-between text-xs">
+            {done}/{live.length} tugas selesai{' '}
+            <span className="tabular font-medium text-ink">{progress}%</span>
           </span>
           <SegmentBar
             value={progress}
             segments={10}
             label={`Progres ${String(project.data.title)}`}
-            onTone
           />
         </span>
-        <span className="relative text-xs font-semibold">
-          {done}/{live.length} tugas selesai · {openIssues ? `${openIssues} kendala` : 'Terkendali'}
-          {project.data.target_date
-            ? ` · Target ${formatDate(String(project.data.target_date))}`
-            : ''}
+        <span className="truncate text-xs text-ink-3">
+          {next ? `Berikutnya: ${String(next.data.title)}` : 'Tidak ada tugas mendatang'}
         </span>
-        {next && (
-          <span className="relative truncate rounded-xl bg-surface/70 px-3 py-2 text-xs font-semibold">
-            Berikutnya: {String(next.data.title)}
+        <span className="flex min-h-8 items-center justify-between gap-3 border-t border-line pt-3 text-xs">
+          <span className="min-w-0 truncate">
+            {openIssues ? `${openIssues} kendala` : 'Terkendali'}
+            {project.data.target_date
+              ? ` · Target ${formatDate(String(project.data.target_date))}`
+              : ''}
           </span>
-        )}
-        <span className="relative mt-auto flex items-center justify-between">
-          <AvatarStack names={people} />
+          <AvatarStack names={people} max={3} className="shrink-0" />
         </span>
       </Link>
     </div>
@@ -115,14 +114,9 @@ export function ProjectCard({
 }
 
 export function ProjectsPage() {
-  const { params, setParam, isNew } = useRecordParams();
-  const tab =
-    params.get('tab') ||
-    (params.get('bagian') === 'risks'
-      ? 'risks'
-      : params.get('bagian') === 'issues'
-        ? 'issues'
-        : 'list');
+  const { params, isNew } = useRecordParams();
+  const requested = params.get('tab') || params.get('bagian');
+  const tab = requested === 'risks' || requested === 'issues' ? requested : 'list';
   const history = params.get('view') === 'history' || params.get('tab') === 'riwayat';
   const { data, loading, error, refresh } = useWorkspace('projects', { scope: 'all' });
   const [search, setSearch] = useState('');
@@ -152,6 +146,41 @@ export function ProjectsPage() {
   );
   const tasks = data['work-items'] || [];
   const statuses = history ? ['selesai', 'diarsipkan'] : RUNNING;
+  const allProjects = data.workstreams || [];
+  // Satu bilah tab untuk semua bagian, supaya tidak ada dua bilah bertumpuk.
+  const tabBar = (
+    <Tabs
+      label="Bagian proyek"
+      items={[
+        {
+          id: 'list',
+          label: 'Berjalan',
+          count: loading ? undefined : allProjects.filter((p) => !isProjectHistory(p)).length,
+        },
+        {
+          id: 'history',
+          label: 'Riwayat & arsip',
+          count: loading ? undefined : allProjects.filter(isProjectHistory).length,
+        },
+        ...(PAGES.projects.tabs || [])
+          .filter((t) => t.id !== 'list')
+          .map((t) => ({
+            id: t.id,
+            label: t.label,
+            count: !loading && t.entity ? (data[t.entity] || []).length : undefined,
+          })),
+      ]}
+      value={tab === 'list' && history ? 'history' : tab}
+      onChange={(id) => {
+        const next = new URLSearchParams(params.toString());
+        for (const key of ['tab', 'view', 'bagian']) next.delete(key);
+        if (id === 'history') next.set('view', 'history');
+        else if (id !== 'list') next.set('tab', id);
+        setStatus('');
+        router.replace(`/projects${next.size ? `?${next}` : ''}`, { scroll: false });
+      }}
+    />
+  );
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
@@ -194,18 +223,8 @@ export function ProjectsPage() {
       />
       {tab === 'list' && (
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <Tabs
-            label="Bagian proyek"
-            items={(PAGES.projects.tabs || []).map((t) => ({
-              id: t.id,
-              label: t.label,
-              count:
-                !loading && t.entity && t.id !== 'list' ? (data[t.entity] || []).length : undefined,
-            }))}
-            value={tab}
-            onChange={(id) => setParam('tab', id === 'list' ? null : id)}
-          />
-          {tab === 'list' && !history && (
+          {tabBar}
+          {!history && (
             <Button variant="primary" onClick={() => setCreating(true)}>
               <Plus />
               Proyek baru
@@ -218,21 +237,7 @@ export function ProjectsPage() {
       ) : tab !== 'list' ? (
         <RecordsView
           key={tab}
-          tabs={
-            <Tabs
-              label="Bagian proyek"
-              items={(PAGES.projects.tabs || []).map((t) => ({
-                id: t.id,
-                label: t.label,
-                count:
-                  !loading && t.entity && t.id !== 'list'
-                    ? (data[t.entity] || []).length
-                    : undefined,
-              }))}
-              value={tab}
-              onChange={(id) => setParam('tab', id === 'list' ? null : id)}
-            />
-          }
+          tabs={tabBar}
           entity={tab === 'risks' ? 'risks' : 'issues'}
           ws={data}
           refresh={refresh}
@@ -245,15 +250,6 @@ export function ProjectsPage() {
       ) : (
         <>
           <div className="flex flex-wrap items-center gap-2">
-            <Tabs
-              label="Proyek berjalan atau riwayat"
-              items={[
-                { id: 'running', label: 'Berjalan' },
-                { id: 'history', label: 'Riwayat & arsip' },
-              ]}
-              value={history ? 'history' : 'running'}
-              onChange={(id) => setParam('view', id === 'history' ? 'history' : null)}
-            />
             <label className="relative min-w-0 flex-1 basis-52">
               <span className="sr-only">Cari proyek</span>
               <Search className="pointer-events-none absolute top-1/2 left-4 z-10 size-[18px] -translate-y-1/2 text-ink-3" />
@@ -264,14 +260,14 @@ export function ProjectsPage() {
                 className="rounded-full border-line-strong bg-surface-2 pl-11"
               />
             </label>
-            <div className="scrollbar-none flex gap-2 overflow-x-auto">
+            <div className="scrollbar-none flex max-w-full gap-2 overflow-x-auto p-px">
               {['', ...statuses].map((value) => (
                 <button
                   key={value || 'all'}
                   type="button"
                   aria-pressed={status === value}
                   onClick={() => setStatus(value)}
-                  className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 shadow-card aria-pressed:bg-action aria-pressed:text-on-action"
+                  className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 ring-1 ring-line transition aria-pressed:bg-action aria-pressed:text-on-action"
                 >
                   {value ? formatChoiceLabel(value) : 'Semua'}
                   <span className="tabular text-xs opacity-70">
@@ -284,7 +280,7 @@ export function ProjectsPage() {
             </div>
           </div>
           {visible.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid auto-rows-fr gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {visible.map((project, index) => (
                 <ProjectCard key={project.id} project={project} ws={data} index={index} />
               ))}

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import * as motion from 'motion/react-m';
-import { ChevronRight, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { Item } from '@/features/records/schemas';
 import type { Workspace } from '@/features/workspace/use-workspace';
 import type { TaskStatus } from '@/lib/task-status';
@@ -51,7 +51,7 @@ export function TaskBoard({
     <div className="flex flex-col gap-3">
       <div
         data-board
-        className="scrollbar-none -mx-4 grid snap-x snap-mandatory auto-cols-[min(21rem,86vw)] grid-flow-col gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-[repeat(var(--cols),minmax(0,1fr))] lg:px-0 md:-mx-8 md:px-8 xl:gap-5"
+        className="scrollbar-none -mx-4 grid snap-x snap-mandatory auto-cols-[min(21rem,86vw)] grid-flow-col gap-4 overflow-x-auto px-4 pb-3 md:mr-[-1.5rem] md:ml-0 md:pr-6 md:pl-0 lg:mx-0 lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-[repeat(var(--cols),minmax(0,1fr))] lg:px-0 xl:gap-5"
         style={{ '--cols': columns.length } as React.CSSProperties}
       >
         {columns.map((column) => {
@@ -62,24 +62,13 @@ export function TaskBoard({
               data-drop={column.status}
               aria-label={`Kolom ${column.label}`}
               className={cn(
-                'flex min-h-80 snap-start flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-surface-2 p-3 transition-colors',
-                over === column.status && dragging && 'border-accent-strong bg-accent/40',
+                'flex min-h-80 snap-start flex-col gap-3 rounded-[var(--radius-card)] bg-surface p-3 shadow-card ring-1 ring-line transition-colors',
+                over === column.status && dragging && 'bg-accent ring-accent-strong',
               )}
             >
-              <header
-                data-tone={column.tone}
-                className="flex items-center gap-2.5 border-b border-line px-1 pt-1 pb-3"
-              >
-                <span
-                  className="grid size-5 place-items-center rounded-full bg-tone text-tone-bar"
-                  aria-hidden="true"
-                >
-                  <ChevronRight className="size-3.5" strokeWidth={2.6} />
-                </span>
-                <h2 className="flex-1 text-[17px] font-extrabold">{column.label}</h2>
-                <span className="tabular rounded-full bg-surface-3 px-2 py-0.5 text-xs font-bold text-ink-2">
-                  {items.length}
-                </span>
+              <header className="flex items-center gap-2 px-1.5 pt-0.5">
+                <h2 className="flex-1 text-[15px] font-medium">{column.label}</h2>
+                <span className="tabular text-xs text-ink-3">{items.length}</span>
                 {column.status !== 'dibatalkan' && (
                   <Button
                     size="icon-sm"

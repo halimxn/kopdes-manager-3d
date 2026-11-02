@@ -67,8 +67,8 @@ export function DayTimeline({
   });
   const laneCount = Math.max(1, lanes.length);
   return (
-    <div className="flex flex-col gap-3">
-      <div>
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-6">
+      <div className="scrollbar-none min-w-0 lg:max-h-[20rem] lg:overflow-y-auto">
         <p className="pb-2 text-xs font-medium text-ink-3">
           Tugas bertenggat hari ini ({tasks.length})
         </p>

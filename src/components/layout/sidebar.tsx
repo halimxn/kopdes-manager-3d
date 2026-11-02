@@ -87,7 +87,7 @@ export function Sidebar({ tools }: { tools: (tip: TipHandlers) => ReactNode }) {
   const nextTheme = theme === 'dark' ? 'light' : 'dark';
   const themeLabel = nextTheme === 'dark' ? 'Tema gelap' : 'Tema terang';
   return (
-    <aside className="no-print sticky top-[72px] hidden h-[calc(100dvh-72px)] w-[76px] shrink-0 pb-3 pl-3 md:block">
+    <aside className="no-print sticky top-[72px] z-20 hidden h-[calc(100dvh-72px)] w-[76px] shrink-0 pb-3 pl-3 md:block">
       <div className="flex h-full w-14 flex-col items-center gap-1 rounded-full bg-surface-2 py-2 ring-1 ring-line">
         <nav
           aria-label={`Halaman ${group.label}`}

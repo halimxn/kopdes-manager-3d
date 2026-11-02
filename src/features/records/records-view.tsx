@@ -1,4 +1,5 @@
 'use client';
+import { Pill, statusTone } from '@/components/ui/pill';
 import { useMemo, useState, type ReactNode } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Download, FileUp, LayoutGrid, Plus, Rows3, X } from 'lucide-react';
@@ -44,6 +45,9 @@ const monthLabel = (month: string) =>
  * Daftar umum untuk satu jenis catatan: cari, saring, kartu atau tabel, ekspor/impor CSV,
  * laci detail, dan formulir. Halaman khusus (tugas, proyek) memakai komponen sendiri.
  */
+/** Kolom yang nilainya status: tampil sebagai lencana agar bisa dipindai sekilas. */
+const STATUS_FIELDS = ['status', 'condition'];
+
 export function RecordsView({
   entity,
   ws,
@@ -247,6 +251,48 @@ export function RecordsView({
     </>
   );
 
+  const filters = (statusChoices.length > 0 || quickFilters.length > 0) && (
+    <div className="scrollbar-none flex max-w-full gap-2 overflow-x-auto p-px">
+      {[{ id: '', label: 'Semua' }, ...quickFilters.map((f) => ({ id: f.id, label: f.label }))].map(
+        (filter) => {
+          const count = filter.id
+            ? rows.filter(quickFilters.find((f) => f.id === filter.id)!.test).length
+            : rows.length;
+          const active = quick === filter.id && (filter.id !== '' || !status);
+          return (
+            <button
+              key={filter.id || 'all'}
+              type="button"
+              aria-pressed={active}
+              onClick={() => {
+                setQuick(filter.id);
+                if (!filter.id) setStatus('');
+              }}
+              className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 ring-1 ring-line transition aria-pressed:bg-action aria-pressed:text-on-action"
+            >
+              {filter.label}
+              <span className="tabular text-xs opacity-70">{count}</span>
+            </button>
+          );
+        },
+      )}
+      {statusChoices.map((choice) => (
+        <button
+          key={choice}
+          type="button"
+          aria-pressed={status === choice}
+          onClick={() => setStatus(status === choice ? '' : choice)}
+          className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 ring-1 ring-line transition aria-pressed:bg-action aria-pressed:text-on-action"
+        >
+          {formatChoiceLabel(choice, `${entity}.${statusField}`)}
+          <span className="tabular text-xs opacity-70">
+            {rows.filter((row) => row.data[statusField] === choice).length}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <section className="flex flex-col gap-5">
       {header?.(metrics && ready ? metrics(filtered) : null)}
@@ -263,55 +309,19 @@ export function RecordsView({
             {tabs}
             <div className="flex flex-wrap items-center gap-2 sm:ml-auto">{controls}</div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">{finder}</div>
+          <div className="flex flex-wrap items-center gap-2">
+            {finder}
+            {filters}
+          </div>
         </>
       ) : (
-        <div className="flex flex-wrap items-center gap-2">
-          {finder}
-          {controls}
-        </div>
-      )}
-      {(statusChoices.length > 0 || quickFilters.length > 0) && (
-        <div className="scrollbar-none -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-          {[
-            { id: '', label: 'Semua' },
-            ...quickFilters.map((f) => ({ id: f.id, label: f.label })),
-          ].map((filter) => {
-            const count = filter.id
-              ? rows.filter(quickFilters.find((f) => f.id === filter.id)!.test).length
-              : rows.length;
-            const active = quick === filter.id && (filter.id !== '' || !status);
-            return (
-              <button
-                key={filter.id || 'all'}
-                type="button"
-                aria-pressed={active}
-                onClick={() => {
-                  setQuick(filter.id);
-                  if (!filter.id) setStatus('');
-                }}
-                className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 ring-1 ring-line transition aria-pressed:bg-action aria-pressed:text-on-action"
-              >
-                {filter.label}
-                <span className="tabular text-xs opacity-70">{count}</span>
-              </button>
-            );
-          })}
-          {statusChoices.map((choice) => (
-            <button
-              key={choice}
-              type="button"
-              aria-pressed={status === choice}
-              onClick={() => setStatus(status === choice ? '' : choice)}
-              className="flex h-9 shrink-0 items-center gap-2 rounded-full bg-surface-2 px-3.5 text-[13px] font-medium text-ink-2 ring-1 ring-line transition aria-pressed:bg-action aria-pressed:text-on-action"
-            >
-              {formatChoiceLabel(choice, `${entity}.${statusField}`)}
-              <span className="tabular text-xs opacity-70">
-                {rows.filter((row) => row.data[statusField] === choice).length}
-              </span>
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="flex flex-wrap items-center gap-2">
+            {finder}
+            {controls}
+          </div>
+          {filters}
+        </>
       )}
       {details && ready && details(filtered)}
       {filtered.length === 0 ? (
@@ -348,10 +358,10 @@ export function RecordsView({
           />
         )
       ) : view === 'cards' ? (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
           <AnimatePresence initial={false}>
             {filtered.map((row, index) => (
-              <div key={row.id} className="flex flex-col">
+              <div key={row.id} className="min-w-0">
                 <RecordCard
                   entity={entity}
                   row={row}
@@ -370,45 +380,59 @@ export function RecordsView({
             <thead className="border-b border-line text-xs text-ink-3">
               <tr>
                 {tableColumns.map((field) => (
-                  <th key={field} scope="col" className="px-4 py-3 font-medium whitespace-nowrap">
+                  <th
+                    key={field}
+                    scope="col"
+                    className={cn(
+                      'px-4 py-3 font-normal whitespace-nowrap',
+                      fieldKind(entity, field) === 'money' && 'text-right',
+                    )}
+                  >
                     {fieldLabel(entity, field)}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-line">
               {filtered.map((row) => (
                 <tr
                   key={row.id}
                   onClick={() => setDetail(row.id)}
-                  className="cursor-pointer border-b border-line/70 transition last:border-0 hover:bg-surface-2"
+                  className="cursor-pointer transition-colors hover:bg-surface-2"
                 >
-                  {tableColumns.map((field, index) => (
-                    <td
-                      key={field}
-                      className={cn(
-                        'px-4 py-3',
-                        index === 0 ? 'font-bold text-ink' : 'text-ink-2',
-                        fieldKind(entity, field) === 'money' &&
-                          'tabular text-right whitespace-nowrap',
-                      )}
-                    >
-                      {index === 0 ? (
-                        <button
-                          type="button"
-                          className="text-left font-bold"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setDetail(row.id);
-                          }}
-                        >
-                          {displayValue(entity, field, row.data[field], ws) || '—'}
-                        </button>
-                      ) : (
-                        displayValue(entity, field, row.data[field], ws) || '—'
-                      )}
-                    </td>
-                  ))}
+                  {tableColumns.map((field, index) => {
+                    const value = displayValue(entity, field, row.data[field], ws);
+                    return (
+                      <td
+                        key={field}
+                        className={cn(
+                          'px-4 py-3',
+                          index === 0 ? 'text-ink' : 'text-ink-2',
+                          !value && 'text-ink-3',
+                          fieldKind(entity, field) === 'money' &&
+                            'tabular text-right whitespace-nowrap',
+                          fieldKind(entity, field) === 'date' && 'tabular whitespace-nowrap',
+                        )}
+                      >
+                        {index === 0 ? (
+                          <button
+                            type="button"
+                            className="text-left font-medium"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDetail(row.id);
+                            }}
+                          >
+                            {value || '—'}
+                          </button>
+                        ) : STATUS_FIELDS.includes(field) && value ? (
+                          <Pill tone={statusTone(row.data[field])}>{value}</Pill>
+                        ) : (
+                          value || '—'
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>

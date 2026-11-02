@@ -89,7 +89,7 @@ export function TaskCard({
         if (event.key === 'Enter' && event.target === event.currentTarget) onOpen();
       }}
       className={cn(
-        'group relative flex flex-col gap-2 rounded-[var(--radius-card)] bg-tone p-4 text-tone-ink ring-1 ring-tone-line ring-inset outline-none transition duration-300 hover:-translate-y-0.5 hover:shadow-card focus-visible:ring-2 focus-visible:ring-tone-bar',
+        'group relative flex flex-col gap-2 rounded-[var(--radius-card)] bg-surface-2 p-4 text-ink-2 ring-1 ring-line ring-inset outline-none transition duration-300 hover:-translate-y-0.5 hover:shadow-card focus-visible:ring-2 focus-visible:ring-accent-strong',
         draggable && 'cursor-grab touch-pan-y select-none active:cursor-grabbing',
         className,
       )}
@@ -119,7 +119,7 @@ export function TaskCard({
         <span className="flex shrink-0 items-center gap-1.5">
           <DropdownMenu.Root>
             <DropdownMenu.Trigger
-              className="grid size-8 place-items-center rounded-full ring-1 ring-tone-line transition hover:bg-surface/40"
+              className="grid size-8 place-items-center rounded-full ring-1 ring-line-strong transition hover:bg-surface-3"
               aria-label={`Aksi untuk ${String(task.data.title)}`}
               onClick={(event) => event.stopPropagation()}
               onPointerDown={(event) => event.stopPropagation()}
@@ -170,7 +170,7 @@ export function TaskCard({
           <span className="flex justify-between text-[12px] font-medium">
             Progres <span className="tabular font-semibold text-ink">{progress}%</span>
           </span>
-          <SegmentBar value={progress} segments={7} label="Progres subtugas" onTone />
+          <SegmentBar value={progress} segments={7} label="Progres subtugas" />
         </div>
       )}
       <div className="mt-auto flex items-center gap-3 pt-1 text-[12px] font-medium">

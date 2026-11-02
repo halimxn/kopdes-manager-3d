@@ -307,7 +307,7 @@ export function RoutinesCard({
           />
         )}
       </header>
-      <div className="relative p-3">
+      <div className="scrollbar-none relative min-h-0 flex-1 overflow-y-auto p-3">
         {party > 0 && <Confetti key={party} />}
         {!ready ? (
           <div className="p-2">
@@ -319,7 +319,7 @@ export function RoutinesCard({
         ) : !routines.length ? (
           <EmptyRoutines refresh={refresh} />
         ) : (
-          <ol className="flex flex-col">
+          <ol className="flex flex-col md:grid md:grid-cols-2 md:gap-x-2 xl:flex">
             <AnimatePresence initial={false}>
               {states.map((item) => (
                 <motion.li
@@ -361,7 +361,7 @@ export function RoutinesCard({
               ))}
             </AnimatePresence>
             {states.length > 0 && done === states.length && (
-              <li className="mt-2 flex items-center gap-2 rounded-2xl bg-done px-4 py-3 text-sm font-bold text-done-ink">
+              <li className="mt-2 flex items-center gap-2 rounded-2xl bg-done md:col-span-2 px-4 py-3 text-sm font-bold text-done-ink">
                 <PartyPopper className="size-4" />
                 Semua rutin hari ini selesai.
               </li>

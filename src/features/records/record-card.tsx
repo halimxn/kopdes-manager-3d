@@ -258,7 +258,7 @@ function PersonCard({
   );
 }
 
-/** Kartu catatan berwarna menurut artinya: status, judul, fakta penting, orang, dan tanggal. */
+/** Kartu catatan: titik warna menurut artinya, status, tanggal, judul, fakta penting, dan orang. */
 export function RecordCard({
   entity,
   row,
@@ -282,32 +282,27 @@ export function RecordCard({
   const chips = summaryChips(entity, row, ws).slice(0, 2);
   const facts = keyFacts(entity, row, ws);
   const status = statusOf(entity, row);
+  const names = people(entity, row);
   return (
     <motion.article
       layout
       style={{ animationDelay: `${Math.min(index, 10) * 35}ms` }}
       data-tone={cardTone(entity, row, ws)}
-      className="enter group relative flex h-full min-h-36 cursor-pointer flex-col gap-2.5 rounded-[var(--radius-card)] bg-tone p-4 text-tone-ink ring-1 ring-tone-line ring-inset transition-[box-shadow,translate] duration-300 hover:-translate-y-0.5 hover:shadow-card"
+      className="enter group relative flex h-full min-h-36 cursor-pointer flex-col gap-2 rounded-[var(--radius-card)] bg-surface p-4 text-ink-2 shadow-card ring-1 ring-line transition-[background-color,translate] duration-300 hover:-translate-y-0.5 hover:bg-surface-solid"
       onClick={onOpen}
     >
-      <div className="flex flex-wrap items-center gap-1.5">
-        {status && (
-          <span className="rounded-full bg-surface/50 px-2.5 py-1 text-[11px] font-medium text-ink">
-            {status}
-          </span>
-        )}
-        {chips.map((chip) => (
-          <span
-            key={chip}
-            className="max-w-[12rem] truncate rounded-full px-1 py-0.5 text-[12px] font-medium"
-          >
-            {chip}
-          </span>
-        ))}
+      <div className="flex items-center justify-between gap-3 text-xs">
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
+          <span className="truncate">{status || entityTitle(entity)}</span>
+        </span>
+        <span className="tabular shrink-0 text-ink-3">
+          {formatDate(String(row.data.date || row.data.due_date || row.updated_at || ''))}
+        </span>
       </div>
       <button
         type="button"
-        className="relative text-left text-[16px] leading-snug font-medium text-ink outline-none"
+        className="line-clamp-2 text-left text-[16px] leading-snug font-medium text-ink outline-none"
         onClick={(e) => {
           e.stopPropagation();
           onOpen();
@@ -318,17 +313,19 @@ export function RecordCard({
       {facts.length > 0 && (
         <ul className="flex flex-col gap-0.5 text-[13px]">
           {facts.map((fact) => (
-            <li key={fact}>{fact}</li>
+            <li key={fact} className="truncate">
+              {fact}
+            </li>
           ))}
         </ul>
       )}
+      {chips.length > 0 && <p className="truncate text-xs text-ink-3">{chips.join(' · ')}</p>}
       {extra && <div onClick={(event) => event.stopPropagation()}>{extra}</div>}
-      <div className="mt-auto flex items-center justify-between gap-2">
-        <AvatarStack names={people(entity, row)} />
-        <span className="ml-auto text-xs font-medium">
-          {formatDate(String(row.data.date || row.data.due_date || row.updated_at || ''))}
-        </span>
-      </div>
+      {names.length > 0 && (
+        <div className="mt-auto flex justify-end pt-1">
+          <AvatarStack names={names} />
+        </div>
+      )}
     </motion.article>
   );
 }
