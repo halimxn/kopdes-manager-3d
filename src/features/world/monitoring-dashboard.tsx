@@ -109,7 +109,7 @@ import { Kbd } from '@/components/ui/kbd';
 import { QuickActionsPanel } from '@/components/layout/quick-actions';
 
 const ROOT =
-  'group/root fixed inset-0 z-30 overflow-hidden bg-canvas font-sans text-[13px] leading-[1.4] text-ink antialiased [--mt-gap:20px] [--mt-top:64px] max-xl:[--mt-gap:14px] max-md:[--mt-gap:12px] max-md:[--mt-top:56px] [&_:focus-visible]:outline-[3px] [&_:focus-visible]:outline-offset-2 [&_:focus-visible]:outline-accent-strong [&_:is(small,em)]:not-italic [:where(&)_button]:cursor-pointer [:where(&)_button]:touch-manipulation';
+  'group/root fixed inset-0 z-30 overflow-hidden [background:var(--ground)] font-sans text-[13px] leading-[1.4] text-ink antialiased [--mt-gap:20px] [--mt-top:64px] max-xl:[--mt-gap:14px] max-md:[--mt-gap:12px] max-md:[--mt-top:56px] [&_:focus-visible]:outline-[3px] [&_:focus-visible]:outline-offset-2 [&_:focus-visible]:outline-accent-strong [&_:is(small,em)]:not-italic [:where(&)_button]:cursor-pointer [:where(&)_button]:touch-manipulation';
 const TOP_BAR =
   'group/top absolute top-0 right-0 left-0 z-5 flex h-(--mt-top) items-center gap-3.5 border-b border-line bg-[color-mix(in_srgb,var(--surface)_90%,transparent)] px-(--mt-gap) max-xl:gap-2.5 max-md:gap-1.5 max-md:pr-[max(10px,env(safe-area-inset-right))] max-md:pl-[max(10px,env(safe-area-inset-left))]';
 /** Kotak cari; di ponsel tersembunyi sampai tombol cari dibuka, lalu menutupi bilah atas. */

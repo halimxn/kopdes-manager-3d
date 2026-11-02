@@ -1,4 +1,5 @@
 'use client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -40,7 +41,7 @@ import { AvatarStack } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input, SearchField, Select, TOOLBAR_CONTROL } from '@/components/ui/field';
 import { StatGrid, StatTile } from '@/components/ui/stat';
-import { EmptyState, ErrorState, Notice } from '@/components/ui/states';
+import { EmptyState, ErrorState, Notice, Skeleton } from '@/components/ui/states';
 import { Sheet } from '@/components/ui/sheet';
 import { MenuContent, MenuItem, PopoverContent } from '@/components/ui/menu';
 import { DateField } from '@/components/ui/date-time-field';
@@ -54,8 +55,22 @@ import { catalog } from '@/features/records/catalog';
 import { countTaskStates } from './status-counts';
 import { TaskBoard } from './task-board';
 import { TaskList } from './task-list';
-import { TaskCalendar } from './task-calendar';
-import { TaskTimeline } from './task-timeline';
+
+// Hanya dibuka bila tampilannya dipilih; dimuat terpisah agar unduhan awal halaman tetap kecil.
+const TaskCalendar = dynamic(
+  () => import('./task-calendar').then((module) => module.TaskCalendar),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[34rem] rounded-[var(--radius-card)]" />,
+  },
+);
+const TaskTimeline = dynamic(
+  () => import('./task-timeline').then((module) => module.TaskTimeline),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-[34rem] rounded-[var(--radius-card)]" />,
+  },
+);
 import { TaskSheet } from './lazy';
 import { TaskRow } from './task-card';
 import { saveTask } from './task-actions';

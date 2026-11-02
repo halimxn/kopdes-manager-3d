@@ -18,7 +18,7 @@ import { useJakartaClock } from '@/lib/clock';
 
 const SCALES = { day: 56, week: 20, month: 7 } as const;
 // Satu baris per proyek; tugas yang bertumpuk waktunya turun ke lajur berikutnya.
-const LANE = 44;
+const LANE = 38;
 const GAP = 8;
 const WEEKDAY = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 type Schedule = { start_date: string; due_date: string };
@@ -94,6 +94,7 @@ export function TaskTimeline({
       return {
         id,
         title: project ? String(project.data.title) : 'Tanpa proyek',
+        tone: projectTone(project),
         items: placed.map(({ item, lane }) => ({ task: item, lane })),
         height: count * LANE + GAP * 2 - (LANE - 36),
       };
@@ -161,7 +162,7 @@ export function TaskTimeline({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="min-w-0 flex-1 text-lg font-extrabold lg:mr-auto lg:flex-none lg:text-xl">
+        <h2 className="min-w-0 flex-1 text-lg font-medium lg:mr-auto lg:flex-none">
           {formatDate(start)} – {formatDate(end)}
         </h2>
         <Button onClick={fit} aria-label="Lihat semua jadwal" className="lg:order-last">
@@ -214,43 +215,35 @@ export function TaskTimeline({
         </p>
       )}
       {changed > 0 && (
-        <div className="sticky top-20 z-20 flex flex-wrap items-center gap-3 rounded-[1.5rem] bg-action px-4 py-3 text-on-action shadow-float">
-          <span className="flex-1 text-sm font-bold">
+        <div className="sticky top-20 z-20 flex flex-wrap items-center gap-3 rounded-full bg-surface-solid py-2 pr-2 pl-5 shadow-float ring-1 ring-line-strong max-sm:rounded-[1.5rem]">
+          <span className="flex-1 text-sm text-ink">
             {changed} perubahan jadwal belum disimpan. Jadwal tugas lain tidak digeser otomatis.
           </span>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="text-on-action hover:bg-on-action/10"
-            onClick={() => setPending({})}
-          >
+          <Button size="sm" variant="ghost" onClick={() => setPending({})}>
             Batal
           </Button>
-          <Button
-            size="sm"
-            className="bg-surface text-ink"
-            busy={saving}
-            onClick={() => void savePending()}
-          >
+          <Button size="sm" variant="primary" busy={saving} onClick={() => void savePending()}>
             Simpan jadwal
           </Button>
         </div>
       )}
-      <div className="hidden overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line/60 md:block">
+      <div className="hidden overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line md:block">
         <div className="flex">
-          <div className="w-52 shrink-0">
-            <div className="h-20" />
+          <div className="w-48 shrink-0 border-r border-line">
+            <div className="flex h-16 items-end px-5 pb-2.5 text-xs text-ink-3">Proyek</div>
             {milestones.length > 0 && (
-              <div className="flex h-9 items-center border-t border-line px-5 text-[13px] font-medium text-ink-3">
+              <div className="flex h-9 items-center border-t border-line px-5 text-[13px] text-ink-2">
                 Milestone
               </div>
             )}
             {lanes.map((group) => (
               <div
                 key={group.id}
-                className="flex items-center border-t border-line px-5 text-[13px] font-medium text-ink-3"
+                data-tone={group.tone}
+                className="flex items-center gap-2 border-t border-line px-5 text-[13px] text-ink-2"
                 style={{ height: group.height }}
               >
+                <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
                 {group.id ? (
                   <Link href={`/projects/${group.id}`} className="truncate hover:text-ink">
                     {group.title}
@@ -265,18 +258,25 @@ export function TaskTimeline({
             <div className="relative" style={{ width: span * px }}>
               {/* Kisi kolom hari dan bayangan kolom hari ini, di belakang batang. */}
               <div className="pointer-events-none absolute inset-0 flex" aria-hidden="true">
-                {days.map((day) => (
-                  <span
-                    key={day}
-                    className={cn(
-                      'h-full shrink-0 border-l border-line',
-                      day === date && 'bg-[color-mix(in_srgb,var(--accent-strong)_7%,transparent)]',
-                    )}
-                    style={{ width: px }}
-                  />
-                ))}
+                {days.map((day) => {
+                  const weekday = new Date(day + 'T12:00:00Z').getUTCDay();
+                  return (
+                    <span
+                      key={day}
+                      className={cn(
+                        'h-full shrink-0',
+                        // Garis hanya di awal pekan agar batang tidak tenggelam dalam kisi.
+                        weekday === 1 && 'border-l border-line',
+                        scale === 'day' && [0, 6].includes(weekday) && 'bg-surface-2',
+                        day === date &&
+                          'bg-[color-mix(in_srgb,var(--accent-strong)_8%,transparent)]',
+                      )}
+                      style={{ width: px }}
+                    />
+                  );
+                })}
               </div>
-              <div className="relative flex h-20">
+              <div className="relative flex h-16">
                 {days.map((day) => {
                   const weekday = new Date(day + 'T12:00:00Z').getUTCDay();
                   const show =
@@ -294,11 +294,11 @@ export function TaskTimeline({
                     >
                       {show &&
                         (scale === 'day' ? (
-                          <span className="absolute inset-x-0 bottom-2.5 flex flex-col items-center leading-tight">
-                            <span className="text-[11px] font-medium">{WEEKDAY[weekday]}</span>
+                          <span className="absolute inset-x-0 bottom-2 flex flex-col items-center leading-tight">
+                            <span className="text-[11px]">{WEEKDAY[weekday]}</span>
                             <span
                               className={cn(
-                                'tabular text-[15px] font-bold',
+                                'tabular text-sm font-medium',
                                 day === date ? 'text-accent-strong' : 'text-ink',
                               )}
                             >
@@ -306,7 +306,7 @@ export function TaskTimeline({
                             </span>
                           </span>
                         ) : (
-                          <span className="absolute bottom-3 left-1.5 text-[11px] font-bold whitespace-nowrap">
+                          <span className="absolute bottom-2.5 left-1.5 text-xs whitespace-nowrap">
                             {scale === 'month'
                               ? formatDate(day).replace(/^\d+ /, '')
                               : formatDate(day)}
@@ -391,28 +391,17 @@ export function TaskTimeline({
                         onPointerUp={() => (drag.current = null)}
                         onDoubleClick={() => onOpen(task.id)}
                         className={cn(
-                          // Batang kapsul seperti acuan; batang terpilih berwarna penuh dengan teks putih.
-                          'absolute flex h-9 cursor-grab items-center gap-2 overflow-hidden rounded-full border pr-4 pl-1 text-[13px] font-medium whitespace-nowrap outline-none transition-colors active:cursor-grabbing',
+                          // Batang kapsul; batang terpilih berwarna penuh.
+                          'absolute z-[2] flex h-[30px] cursor-grab items-center gap-1.5 overflow-hidden rounded-full border pr-3.5 pl-[3px] text-[12.5px] whitespace-nowrap outline-none transition-colors active:cursor-grabbing',
                           solid
-                            ? 'z-10 border-transparent bg-tone-bar text-on-bar shadow-[0_10px_20px_-10px_var(--tone-bar)]'
-                            : 'border-[color-mix(in_srgb,var(--tone-bar)_22%,transparent)] bg-tone text-ink hover:border-[color-mix(in_srgb,var(--tone-bar)_45%,transparent)]',
-                          done && !solid && 'opacity-60',
+                            ? 'z-10 border-transparent bg-tone-bar text-on-bar'
+                            : 'border-tone-line bg-tone text-ink hover:border-tone-bar',
+                          done && !solid && 'text-ink-3 line-through',
                         )}
                         style={{ left, width: Math.max(px, right - left), top: GAP + lane * LANE }}
                       >
                         {people.length ? (
-                          <span className="flex shrink-0">
-                            {people.slice(0, 2).map((name, index) => (
-                              <Avatar
-                                key={name}
-                                name={name}
-                                className={cn(
-                                  'size-7 text-[9px] ring-2 ring-canvas/70',
-                                  index && '-ml-1.5',
-                                )}
-                              />
-                            ))}
-                          </span>
+                          <Avatar name={people[0]} className="size-6 text-[9px] ring-0" />
                         ) : (
                           <span className="w-2 shrink-0" />
                         )}
@@ -429,7 +418,7 @@ export function TaskTimeline({
               ))}
               {date >= start && date <= end && (
                 <span
-                  className="pointer-events-none absolute top-[30px] bottom-0 z-20 w-px -translate-x-1/2 bg-accent-strong"
+                  className="pointer-events-none absolute top-[64px] bottom-0 z-[1] w-px -translate-x-1/2 bg-accent-strong"
                   style={{
                     left:
                       (daysBetween(start, date) +
@@ -440,10 +429,7 @@ export function TaskTimeline({
                   }}
                   aria-hidden="true"
                 >
-                  <span className="absolute -top-1 left-1/2 -translate-x-1/2 -translate-y-full rounded-md bg-surface-2 px-1.5 py-0.5 text-[10px] font-semibold whitespace-nowrap text-ink-3 ring-1 ring-line">
-                    {now || 'Hari ini'}
-                  </span>
-                  <span className="absolute top-0 left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-accent-strong" />
+                  <span className="absolute top-0 left-1/2 size-2 -translate-x-1/2 rounded-full bg-accent-strong" />
                 </span>
               )}
             </div>
@@ -458,7 +444,7 @@ export function TaskTimeline({
       <div className="flex flex-col gap-2 md:hidden">
         {rows.map((task) => (
           <div key={task.id} className="flex flex-col gap-1">
-            <span className="px-1 text-xs font-bold text-ink-3">
+            <span className="tabular px-1 text-xs text-ink-3">
               {formatDate(schedule(task).start_date)} – {formatDate(schedule(task).due_date)}
             </span>
             <TaskRow task={task} ws={ws} refresh={refresh} onOpen={() => onOpen(task.id)} />

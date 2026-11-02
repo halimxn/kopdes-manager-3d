@@ -1,8 +1,8 @@
 'use client';
-import { useRef, useState } from 'react';
-import { ArrowRight, Check, CircleAlert, LockKeyhole, LoaderCircle } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Check, CircleAlert, Delete, LoaderCircle } from 'lucide-react';
 import { api, resetAuthNavigation } from '@/lib/client';
-import { Logo } from '@/components/ui/logo';
+import { LogoMark } from '@/components/ui/logo';
 import { Field, Input } from '@/components/ui/field';
 import { useTheme } from '@/lib/theme';
 import { cn } from '@/lib/utils';
@@ -10,10 +10,12 @@ import { cn } from '@/lib/utils';
 const MIN = 6;
 const MAX = 12;
 type Phase = 'idle' | 'checking' | 'success' | 'error';
+const KEY =
+  'grid size-[4.5rem] place-items-center rounded-full bg-surface-2 text-2xl font-normal text-ink ring-1 ring-line transition hover:bg-surface-3 active:scale-95 disabled:pointer-events-none';
 
 /**
- * Masuk dengan PIN, bergaya kartu verifikasi kode: kotak per angka yang terisi satu per satu,
- * cincin gembok mengikuti jumlah angka, tombol terisi bertahap, getar bila salah, hijau bila benar.
+ * Layar kunci seperti di HP: titik per angka dan papan angka sendiri, tanpa kartu. Papan ketik biasa,
+ * tempel, dan pengelola sandi tetap bekerja lewat kolom tak terlihat di atas titik.
  */
 export default function PinPage() {
   useTheme();
@@ -22,11 +24,13 @@ export default function PinPage() {
   const [token, setToken] = useState('');
   const [phase, setPhase] = useState<Phase>('idle');
   const [message, setMessage] = useState('');
-  const [focused, setFocused] = useState(true);
   const input = useRef<HTMLInputElement>(null);
-  // Enam kotak; PIN lebih panjang (sampai 12) menambah kotak yang menyempit dalam satu baris.
+  useEffect(() => {
+    if (input.current && window.matchMedia('(pointer: coarse)').matches)
+      input.current.inputMode = 'none';
+  }, []);
+  // Enam titik; PIN lebih panjang (sampai 12) menambah titik.
   const boxes = Math.min(MAX, Math.max(MIN, pin.length));
-  const progress = Math.min(1, pin.length / MIN);
   const ready = pin.length >= MIN && (!setup || token.length >= 32);
   const busy = phase === 'checking' || phase === 'success';
 
@@ -72,225 +76,172 @@ export default function PinPage() {
         ? 'Pilih PIN 6–12 angka, lalu isi token pengaturan awal dari server.'
         : 'Masukkan PIN ruang kerja manajer koperasi.';
 
+  const press = (digit: string) => {
+    if (busy || pin.length >= MAX) return;
+    if (phase === 'error') setPhase('idle');
+    setPin(pin + digit);
+    input.current?.focus({ preventScroll: true });
+  };
+
   return (
-    <main className="grid min-h-dvh place-items-center px-4 py-10">
-      <div className="flex w-full max-w-[25rem] flex-col items-center gap-6">
-        <Logo className="animate-[item-in_0.5s_var(--ease-out)]" />
-        <form
-          noValidate
-          onSubmit={(event) => {
-            event.preventDefault();
-            void submit();
-          }}
-          className={cn(
-            'flex w-full animate-[pop-in_0.55s_var(--ease-spring)] flex-col items-center rounded-[1.75rem] bg-surface px-6 pt-8 pb-6 text-center shadow-float ring-1 ring-line/70 sm:px-8',
-            phase === 'error' && 'animate-[pin-shake_0.45s_ease-in-out]',
-          )}
+    <main className="grid min-h-dvh place-items-center px-4 py-8">
+      <form
+        noValidate
+        onSubmit={(event) => {
+          event.preventDefault();
+          void submit();
+        }}
+        className={cn(
+          'flex w-full max-w-[21rem] animate-[item-in_0.5s_var(--ease-out)] flex-col items-center text-center',
+          phase === 'error' && 'animate-[pin-shake_0.45s_ease-in-out]',
+        )}
+      >
+        <LogoMark className="size-12 rounded-2xl" />
+        <h1
+          key={title}
+          className="mt-5 animate-[item-in_0.35s_var(--ease-out)] text-[32px] leading-tight font-normal tracking-[-0.02em] text-ink"
         >
-          <LockBadge progress={progress} phase={phase} />
-          <h1
-            key={title}
-            className="mt-5 animate-[item-in_0.35s_var(--ease-out)] text-[26px] font-normal tracking-[-0.02em] text-ink"
+          {title}
+        </h1>
+        <p className="mt-1 text-[13px] text-ink-3">{subtitle}</p>
+
+        <label className="relative mt-6 block w-full cursor-text" htmlFor="pin">
+          <span className="sr-only">{setup ? 'PIN baru' : 'PIN'}</span>
+          {/* Kolom sungguhan tak terlihat di atas titik: papan ketik, tempel, dan pengelola sandi tetap bekerja. */}
+          <input
+            ref={input}
+            id="pin"
+            name="pin"
+            type="password"
+            inputMode="numeric"
+            autoComplete={setup ? 'new-password' : 'current-password'}
+            autoFocus
+            value={pin}
+            disabled={busy}
+            maxLength={MAX}
+            aria-describedby="pin-hint"
+            onChange={(event) => {
+              if (phase === 'error') setPhase('idle');
+              setPin(event.target.value.replace(/\D/g, '').slice(0, MAX));
+            }}
+            className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0"
+          />
+          <span className="flex h-6 items-center justify-center gap-3" aria-hidden="true">
+            {Array.from({ length: boxes }, (_, index) => {
+              const filled = index < pin.length;
+              return (
+                <span
+                  key={index}
+                  style={{ transitionDelay: phase === 'success' ? `${index * 45}ms` : undefined }}
+                  className={cn(
+                    'size-3.5 rounded-full ring-1 ring-line-strong transition-[background-color,transform] duration-200',
+                    filled && 'scale-110 bg-action ring-transparent',
+                    phase === 'success' && 'bg-done-bar ring-transparent',
+                    phase === 'error' && filled && 'bg-late-bar',
+                  )}
+                />
+              );
+            })}
+          </span>
+        </label>
+        <p id="pin-hint" className="mt-2 text-xs text-ink-3">
+          {phase === 'success'
+            ? 'PIN benar'
+            : pin.length < MIN
+              ? `${MIN - pin.length} angka lagi`
+              : `${pin.length} angka`}
+        </p>
+
+        {setup && (
+          <Field
+            label="Token pengaturan awal"
+            hint="Dari HUB_SETUP_TOKEN di server, minimal 32 karakter."
+            className="mt-4 w-full text-left"
           >
-            {title}
-          </h1>
-          <p className="mt-1.5 max-w-xs text-sm text-ink-3">{subtitle}</p>
-
-          <label className="relative mt-6 block w-full cursor-text" htmlFor="pin">
-            <span className="sr-only">{setup ? 'PIN baru' : 'PIN'}</span>
-            {/* Kolom sungguhan tak terlihat di atas kotak: papan ketik HP, tempel, dan pengelola sandi tetap bekerja. */}
-            <input
-              ref={input}
-              id="pin"
-              name="pin"
+            <Input
+              name="token"
               type="password"
-              inputMode="numeric"
-              autoComplete={setup ? 'new-password' : 'current-password'}
-              autoFocus
-              value={pin}
-              disabled={busy}
-              maxLength={MAX}
-              aria-describedby="pin-hint"
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
-              onChange={(event) => {
-                if (phase === 'error') setPhase('idle');
-                setPin(event.target.value.replace(/\D/g, '').slice(0, MAX));
-              }}
-              className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0"
+              autoComplete="off"
+              value={token}
+              onChange={(event) => setToken(event.target.value)}
             />
-            <span className="flex justify-center gap-1.5 sm:gap-2" aria-hidden="true">
-              {Array.from({ length: boxes }, (_, index) => {
-                const filled = index < pin.length;
-                const active = focused && !busy && index === pin.length;
-                return (
-                  <span
-                    key={index}
-                    style={{ transitionDelay: phase === 'success' ? `${index * 45}ms` : undefined }}
-                    className={cn(
-                      'relative grid h-14 max-w-12 min-w-0 flex-1 animate-[item-in_0.35s_var(--ease-out)_backwards] place-items-center rounded-2xl bg-surface-2 ring-1 ring-line-strong transition-[background-color,box-shadow,transform] duration-300',
-                      filled && 'bg-surface ring-2 ring-accent-strong/60',
-                      active &&
-                        'scale-105 bg-surface ring-2 ring-accent-strong shadow-[0_0_0_5px_var(--accent)]',
-                      phase === 'success' && 'bg-done-bar ring-transparent',
-                      phase === 'error' && filled && 'bg-late ring-late-ink/50',
-                    )}
-                  >
-                    {filled && (
-                      <span
-                        className={cn(
-                          'size-3 animate-[pin-dot_0.35s_var(--ease-spring)] rounded-full bg-ink',
-                          phase === 'success' && 'bg-on-action',
-                          phase === 'error' &&
-                            'animate-[pin-drop_0.45s_ease-in_forwards] bg-late-ink',
-                        )}
-                      />
-                    )}
-                    {active && (
-                      <span className="h-6 w-0.5 animate-[pin-caret_1s_steps(1)_infinite] rounded-full bg-accent-strong" />
-                    )}
-                  </span>
-                );
-              })}
-            </span>
-          </label>
-          <p id="pin-hint" className="mt-3 text-xs text-ink-3">
-            {phase === 'success'
-              ? 'PIN benar'
-              : pin.length < MIN
-                ? `${MIN - pin.length} angka lagi`
-                : `${pin.length} angka · tekan Enter atau tombol di bawah`}
+          </Field>
+        )}
+
+        {message && (
+          <p
+            role="alert"
+            className={cn(
+              'mt-3 flex animate-[item-in_0.3s_var(--ease-out)] items-center gap-1.5 text-sm',
+              phase === 'error' || !message.includes('tersimpan')
+                ? 'text-late-ink'
+                : 'text-done-ink',
+            )}
+          >
+            <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
+            {message}
           </p>
+        )}
 
-          {setup && (
-            <Field
-              label="Token pengaturan awal"
-              hint="Dari HUB_SETUP_TOKEN di server, minimal 32 karakter."
-              className="mt-5 w-full text-left"
-            >
-              <Input
-                name="token"
-                type="password"
-                autoComplete="off"
-                value={token}
-                onChange={(event) => setToken(event.target.value)}
-              />
-            </Field>
-          )}
-
-          {message && (
-            <p
-              role="alert"
-              className={cn(
-                'mt-4 flex animate-[item-in_0.3s_var(--ease-out)] items-center gap-1.5 text-sm font-semibold',
-                phase === 'error' || !message.includes('tersimpan')
-                  ? 'text-late-ink'
-                  : 'text-done-ink',
-              )}
-            >
-              <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
-              {message}
-            </p>
-          )}
-
+        <div className="mt-5 grid grid-cols-3 gap-3">
+          {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((digit) => (
+            <button key={digit} type="button" onClick={() => press(digit)} className={KEY}>
+              {digit}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => {
+              setPin(pin.slice(0, -1));
+              input.current?.focus({ preventScroll: true });
+            }}
+            disabled={busy || !pin}
+            aria-label="Hapus satu angka"
+            className={cn(KEY, 'bg-transparent ring-0 disabled:opacity-40')}
+          >
+            <Delete className="size-5" />
+          </button>
+          <button type="button" onClick={() => press('0')} className={KEY}>
+            0
+          </button>
           <button
             type="submit"
             disabled={!ready || busy}
+            aria-label={setup ? 'Simpan PIN awal' : 'Buka ruang kerja'}
             className={cn(
-              'relative mt-6 h-12 w-full overflow-hidden rounded-full bg-surface-3 text-[15px] font-medium transition-colors duration-300',
-              ready ? 'text-on-action' : 'text-ink-3',
-              phase === 'success' && 'bg-done-bar',
+              KEY,
+              'bg-action text-on-action ring-0 hover:bg-action-hover disabled:bg-surface-2 disabled:text-ink-3',
+              phase === 'success' && 'disabled:bg-done-bar disabled:text-on-bar',
             )}
           >
-            {/* Isi tombol bertambah per angka; penuh = siap dikirim. */}
-            <span
-              aria-hidden="true"
-              className={cn(
-                'absolute inset-y-0 left-0 rounded-full transition-[width,background-color] duration-500 ease-[var(--ease-out)]',
-                // Sebelum cukup angka isi berwarna sorotan muda (label tetap terbaca); siap = hitam penuh.
-                ready ? 'bg-action' : 'bg-accent',
-                phase === 'success' && 'bg-done-bar',
-              )}
-              style={{ width: `${(phase === 'success' ? 1 : progress) * 100}%` }}
-            />
-            <span className="relative flex items-center justify-center gap-2">
-              {phase === 'checking' ? (
-                <>
-                  <LoaderCircle className="size-[18px] animate-spin" /> Memeriksa…
-                </>
-              ) : phase === 'success' ? (
-                <>
-                  <Check className="size-[18px]" /> Masuk
-                </>
-              ) : (
-                <>
-                  {setup ? 'Simpan PIN awal' : 'Buka ruang kerja'}
-                  <ArrowRight className="size-[18px]" />
-                </>
-              )}
-            </span>
+            {phase === 'checking' ? (
+              <LoaderCircle className="size-5 animate-spin" />
+            ) : phase === 'success' ? (
+              <Check className="size-5" />
+            ) : (
+              <ArrowRight className="size-5" />
+            )}
           </button>
+        </div>
 
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => {
-              setSetup(!setup);
-              setMessage('');
-              setPin('');
-              setPhase('idle');
-              input.current?.focus();
-            }}
-            className="mt-4 text-sm font-semibold text-ink-3 transition-colors hover:text-ink"
-          >
-            {setup ? 'Kembali ke masuk' : 'Pengaturan PIN pertama kali'}
-          </button>
-        </form>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            setSetup(!setup);
+            setMessage('');
+            setPin('');
+            setPhase('idle');
+            input.current?.focus();
+          }}
+          className="mt-5 min-h-11 text-[13px] text-ink-2 transition-colors hover:text-ink"
+        >
+          {setup ? 'Kembali ke masuk' : 'Pengaturan PIN pertama kali'}
+        </button>
         <p className="text-xs text-ink-3">
           Sesi berlaku 12 jam. Lima kali salah mengunci 15 menit.
         </p>
-      </div>
+      </form>
     </main>
-  );
-}
-
-/** Gembok dalam cincin: cincin terisi mengikuti jumlah angka, berubah centang hijau saat berhasil. */
-function LockBadge({ progress, phase }: { progress: number; phase: Phase }) {
-  const r = 34;
-  const length = 2 * Math.PI * r;
-  const done = phase === 'success';
-  return (
-    <span className="relative grid size-20 place-items-center">
-      <svg viewBox="0 0 80 80" className="absolute inset-0 -rotate-90" aria-hidden="true">
-        <circle cx="40" cy="40" r={r} fill="none" strokeWidth="3" className="stroke-line" />
-        <circle
-          cx="40"
-          cy="40"
-          r={r}
-          fill="none"
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray={length}
-          strokeDashoffset={length * (1 - (done ? 1 : progress))}
-          className={cn(
-            'transition-[stroke-dashoffset,stroke] duration-500 ease-[var(--ease-out)]',
-            done
-              ? 'stroke-done-bar'
-              : phase === 'error'
-                ? 'stroke-late-ink'
-                : 'stroke-accent-strong',
-          )}
-        />
-      </svg>
-      <span
-        key={done ? 'done' : 'lock'}
-        className={cn(
-          'grid size-14 animate-[pop-in_0.45s_var(--ease-spring)] place-items-center rounded-full',
-          done ? 'bg-done-bar text-on-action' : 'bg-accent text-accent-ink',
-        )}
-      >
-        {done ? <Check className="size-6" strokeWidth={3} /> : <LockKeyhole className="size-6" />}
-      </span>
-    </span>
   );
 }

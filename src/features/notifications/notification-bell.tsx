@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Popover } from 'radix-ui';
-import { Bell, CircleAlert, Clock } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { apiBatch } from '@/lib/client';
 import { addDays, today } from '@/lib/date';
@@ -110,40 +110,36 @@ export function NotificationBell() {
         collisionPadding={12}
         className="w-[min(24rem,calc(100vw-1.5rem))] p-2"
       >
-        <p className="px-3 pt-2 pb-1 text-base font-bold">Pengingat</p>
-        <div className="max-h-[60vh] overflow-y-auto">
-          {error && <p className="m-2 rounded-2xl bg-late p-3 text-sm text-late-ink">{error}</p>}
+        <header className="flex items-baseline justify-between px-3 pt-2 pb-1.5">
+          <p className="text-[15px] font-medium">Pengingat</p>
+          {items.length > 0 && <span className="tabular text-xs text-ink-3">{items.length}</span>}
+        </header>
+        <div className="scrollbar-none max-h-[60vh] overflow-y-auto">
+          {error && <p className="m-1 rounded-2xl bg-late p-3 text-sm text-late-ink">{error}</p>}
           {!error && !groups.length && (
-            <p className="m-2 rounded-2xl bg-surface-2 p-4 text-sm text-ink-3">
+            <p className="px-3 py-4 text-sm text-ink-3">
               Tidak ada pengingat. Semua tenggat dan stok aman.
             </p>
           )}
           {groups.map((group) => (
             <section key={group.label} className="py-1">
-              <h3 className="px-3 py-1.5 text-xs font-bold text-ink-3 uppercase">{group.label}</h3>
+              <h3 className="px-3 py-1 text-xs text-ink-3">{group.label}</h3>
               {group.rows.map((item) => (
                 <Link
                   key={item.id}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="flex gap-3 rounded-2xl px-3 py-2.5 transition hover:bg-surface-2"
+                  className="flex items-start gap-2.5 rounded-2xl px-3 py-2 transition-colors hover:bg-surface-2"
                 >
                   <span
                     className={cn(
-                      'mt-0.5 grid size-8 shrink-0 place-items-center rounded-xl',
-                      item.urgent ? 'bg-late text-late-ink' : 'bg-warn text-warn-ink',
+                      'mt-1.5 size-2 shrink-0 rounded-full',
+                      item.urgent ? 'bg-late-bar' : 'bg-ink-3',
                     )}
-                  >
-                    {item.urgent ? (
-                      <CircleAlert className="size-4" />
-                    ) : (
-                      <Clock className="size-4" />
-                    )}
-                  </span>
+                    aria-hidden="true"
+                  />
                   <span className="min-w-0">
-                    <span className="block truncate text-sm font-semibold text-ink">
-                      {item.title}
-                    </span>
+                    <span className="block truncate text-[13.5px] text-ink">{item.title}</span>
                     <span className="block text-xs text-ink-3">
                       {item.kind} · {item.reason}
                     </span>

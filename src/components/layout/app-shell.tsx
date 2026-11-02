@@ -167,7 +167,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       <PopoverContent
                         side="right"
                         align="start"
-                        className="w-[min(36rem,calc(100vw-6rem))] p-4"
+                        className="w-[min(40rem,calc(100vw-6rem))] p-3"
                       >
                         <QuickActionsPanel onPick={() => setQuick(false)} />
                       </PopoverContent>

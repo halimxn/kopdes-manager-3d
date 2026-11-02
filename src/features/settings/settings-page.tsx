@@ -25,9 +25,8 @@ import { useConfirm } from '@/components/ui/confirm';
 import { ACCENTS, useTheme } from '@/lib/theme';
 import { api, resetAuthNavigation } from '@/lib/client';
 import { formatDate } from '@/lib/date';
-import type { Tone } from '@/lib/tones';
 
-const CARD = 'rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line/60';
+const CARD = 'rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line';
 
 /**
  * Pengaturan dalam satu halaman, tanpa tab: kartu profil di atas, tampilan dipilih lewat pratinjau
@@ -49,21 +48,17 @@ export function SettingsPage() {
       ) : (
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
           <div className="flex flex-col gap-5">
-            <section
-              data-tone="sky"
-              aria-label="Profil"
-              className="relative overflow-hidden rounded-[var(--radius-card)] bg-tone p-5 text-tone-ink ring-1 ring-tone-line ring-inset md:p-6"
-            >
-              <div className="relative flex flex-wrap items-center gap-4">
-                <Avatar name={manager} className="size-16 text-lg ring-4" />
+            <section aria-label="Profil" className={`${CARD} flex flex-col gap-4 p-5 md:p-6`}>
+              <div className="flex flex-wrap items-center gap-4">
+                <Avatar name={manager} className="size-14 text-base ring-0" />
                 <div className="min-w-0 flex-1">
-                  <h2 className="truncate text-xl font-extrabold text-ink">{manager}</h2>
-                  <p className="truncate text-sm font-semibold">
+                  <h2 className="truncate text-[19px] font-medium text-ink">{manager}</h2>
+                  <p className="truncate text-[13px] text-ink-2">
                     Manajer ·{' '}
                     {organization ? String(organization.data.title) : 'Profil koperasi belum diisi'}
                   </p>
                   {organization && (
-                    <p className="truncate text-xs font-semibold opacity-80">
+                    <p className="truncate text-xs text-ink-3">
                       {[
                         organization.data.village,
                         organization.data.district,
@@ -75,25 +70,25 @@ export function SettingsPage() {
                     </p>
                   )}
                 </div>
-                <Button className="bg-surface/85" onClick={() => setEditing(true)}>
+                <Button onClick={() => setEditing(true)}>
                   <Pencil />
                   {organization ? 'Ubah' : 'Isi profil'}
                 </Button>
               </div>
               {organization && (
-                <dl className="relative mt-5 grid grid-cols-2 gap-2.5">
+                <dl className="form-group detail-rows text-sm">
                   {[
                     ['Mulai bekerja', formatDate(String(organization.data.start_date || ''))],
                     ['Target pembukaan', formatDate(String(organization.data.target_date || ''))],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-xl bg-surface/70 px-3.5 py-2.5">
-                      <dt className="text-xs font-bold opacity-80">{label}</dt>
-                      <dd className="font-bold text-ink">{value}</dd>
+                    <div key={label}>
+                      <dt className="text-ink-3">{label}</dt>
+                      <dd className="font-medium text-ink">{value}</dd>
                     </div>
                   ))}
                 </dl>
               )}
-              <p className="relative mt-4 text-xs font-semibold opacity-80">
+              <p className="text-xs text-ink-3">
                 Nama manajer dipakai di sapaan, laporan, dan pilihan penanggung jawab.
               </p>
             </section>
@@ -103,14 +98,12 @@ export function SettingsPage() {
             <SettingsGroup title="Keamanan">
               <SettingsRow
                 icon={<KeyRound />}
-                tone="rose"
                 title="Ganti PIN"
                 description="PIN 6–12 digit untuk membuka aplikasi"
                 onClick={() => setPinOpen(true)}
               />
               <SettingsRow
                 icon={<LockKeyhole />}
-                tone="lavender"
                 title="Kunci aplikasi sekarang"
                 description="Keluar dan minta PIN lagi"
                 onClick={async () => {
@@ -157,7 +150,7 @@ function SettingsGroup({
 }) {
   return (
     <section aria-label={title} className="flex flex-col gap-2">
-      <h2 className="px-1 text-[13px] font-bold tracking-[0.06em] text-ink-3 uppercase">{title}</h2>
+      <h2 className="px-1 text-[15px] font-medium text-ink">{title}</h2>
       <div className={`${CARD} divide-y divide-line overflow-hidden`}>{children}</div>
       {note && <p className="px-1 text-xs text-ink-3">{note}</p>}
     </section>
@@ -166,14 +159,12 @@ function SettingsGroup({
 
 function SettingsRow({
   icon,
-  tone,
   title,
   description,
   onClick,
   busy,
 }: {
   icon: ReactNode;
-  tone: Tone;
   title: string;
   description: string;
   onClick?: () => void;
@@ -186,17 +177,14 @@ function SettingsRow({
       disabled={busy}
       className="flex min-h-16 w-full items-center gap-3.5 px-4 py-3 text-left transition hover:bg-surface-2 disabled:opacity-60"
     >
-      <span
-        data-tone={tone}
-        className="grid size-10 shrink-0 place-items-center rounded-xl bg-tone text-tone-bar [&_svg]:size-5"
-      >
+      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-surface-2 text-ink-2 ring-1 ring-line [&_svg]:size-[18px]">
         {icon}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-bold text-ink">{title}</span>
+        <span className="block text-[14.5px] text-ink">{title}</span>
         <span className="block truncate text-[13px] text-ink-3">{description}</span>
       </span>
-      <ChevronRight className="size-5 shrink-0 text-ink-3" />
+      <ChevronRight className="size-4 shrink-0 text-ink-3" />
     </button>
   );
 }
@@ -231,7 +219,7 @@ function Appearance() {
   return (
     <section aria-label="Tampilan" className={`${CARD} flex flex-col gap-5 p-5 md:p-6`}>
       <div>
-        <h2 className="text-lg font-extrabold">Tema</h2>
+        <h2 className="text-[15px] font-medium">Tema</h2>
         <div className="mt-3 grid grid-cols-2 gap-3">
           {(['light', 'dark'] as const).map((value) => (
             <button
@@ -239,14 +227,14 @@ function Appearance() {
               type="button"
               aria-pressed={theme === value}
               onClick={(event) => setTheme(value, event.currentTarget)}
-              className="flex flex-col gap-2.5 rounded-2xl p-2 text-left ring-2 ring-transparent transition hover:bg-surface-2 aria-pressed:bg-accent aria-pressed:ring-accent-strong"
+              className="flex flex-col gap-2.5 rounded-[1.25rem] p-2 text-left ring-1 ring-line transition hover:bg-surface-2 aria-pressed:ring-2 aria-pressed:ring-accent-strong"
             >
               <ThemePreview value={value} />
-              <span className="flex items-center gap-2 px-1 pb-0.5 text-sm font-bold">
+              <span className="flex items-center gap-2 px-1 pb-0.5 text-sm">
                 {value === 'light' ? <Sun className="size-4" /> : <Moon className="size-4" />}
                 {value === 'light' ? 'Terang' : 'Gelap'}
                 {theme === value && (
-                  <Check className="ml-auto size-4 text-accent-ink" strokeWidth={3} />
+                  <Check className="ml-auto size-4 text-accent-strong" strokeWidth={3} />
                 )}
               </span>
             </button>
@@ -254,8 +242,8 @@ function Appearance() {
         </div>
       </div>
       <div>
-        <h2 className="text-lg font-extrabold">Warna sorotan</h2>
-        <p className="text-sm text-ink-3">
+        <h2 className="text-[15px] font-medium">Warna sorotan</h2>
+        <p className="text-[13px] text-ink-3">
           Untuk menu aktif, tab, hari terpilih, dan fokus. Warna kartu tetap mengikuti proyek.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -265,10 +253,10 @@ function Appearance() {
               type="button"
               aria-pressed={accent === option.id}
               onClick={() => setAccent(option.id)}
-              className="flex h-10 items-center gap-2 rounded-full pr-3.5 pl-1.5 text-sm font-semibold text-ink-2 ring-1 ring-line transition hover:bg-surface-2 aria-pressed:font-bold aria-pressed:text-ink aria-pressed:ring-2 aria-pressed:ring-accent-strong"
+              className="flex h-10 items-center gap-2 rounded-full pr-3.5 pl-1.5 text-sm text-ink-2 ring-1 ring-line transition hover:bg-surface-2 aria-pressed:text-ink aria-pressed:ring-2 aria-pressed:ring-accent-strong"
             >
               <span
-                className="grid size-7 place-items-center rounded-full text-white"
+                className="grid size-7 place-items-center rounded-full text-on-bar"
                 style={{ background: `var(--swatch-${option.id})` }}
               >
                 {accent === option.id && <Check className="size-4" strokeWidth={3} />}
@@ -355,14 +343,12 @@ function Backup({ refresh }: { refresh: () => Promise<void> | void }) {
       >
         <SettingsRow
           icon={<Download />}
-          tone="mint"
           title="Unduh cadangan"
           description="Semua catatan dan laporan sebagai berkas JSON"
           onClick={() => download.current?.click()}
         />
         <SettingsRow
           icon={<Upload />}
-          tone="peach"
           title="Pulihkan dari berkas"
           description="Ganti semua catatan dengan isi cadangan"
           busy={busy}

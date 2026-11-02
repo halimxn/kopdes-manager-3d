@@ -18,30 +18,27 @@ import {
   UserCheck,
   type LucideIcon,
 } from 'lucide-react';
-import type { Tone } from '@/lib/tones';
 
-type Action = { label: string; href: string; icon: LucideIcon; tone: Tone; key?: string };
+type Action = { label: string; href: string; icon: LucideIcon; key?: string };
 
 /** Pintasan membuat catatan; semuanya hanya membuka formulir di halaman tujuan, tidak menulis data. */
 export const QUICK_ACTIONS: { group: string; items: Action[] }[] = [
   {
     group: 'Pekerjaan',
     items: [
-      { label: 'Tugas', href: '/tasks?new=1', icon: ListPlus, tone: 'lavender', key: '1' },
-      { label: 'Agenda', href: '/agenda?new=1', icon: CalendarPlus, tone: 'sky', key: '2' },
-      { label: 'Kegiatan', href: '/notes?new=1', icon: NotebookPen, tone: 'mint', key: '3' },
+      { label: 'Tugas', href: '/tasks?new=1', icon: ListPlus, key: '1' },
+      { label: 'Agenda', href: '/agenda?new=1', icon: CalendarPlus, key: '2' },
+      { label: 'Kegiatan', href: '/notes?new=1', icon: NotebookPen, key: '3' },
       {
         label: 'Laporan kerja',
         href: '/notes?tab=reports&new=1',
         icon: FilePlus2,
-        tone: 'peach',
         key: '4',
       },
       {
         label: 'Risiko',
         href: '/projects?tab=risks&new=1',
         icon: ShieldAlert,
-        tone: 'rose',
         key: '5',
       },
     ],
@@ -53,32 +50,29 @@ export const QUICK_ACTIONS: { group: string; items: Action[] }[] = [
         label: 'Kas masuk',
         href: '/cash?new=1&direction=masuk',
         icon: ArrowDownLeft,
-        tone: 'mint',
         key: '6',
       },
       {
         label: 'Kas keluar',
         href: '/cash?new=1&direction=keluar',
         icon: ArrowUpRight,
-        tone: 'rose',
         key: '7',
       },
-      { label: 'Anggota', href: '/members?new=1', icon: UserPlus, tone: 'sky', key: '8' },
-      { label: 'Barang', href: '/goods?new=1', icon: PackagePlus, tone: 'peach', key: '9' },
+      { label: 'Anggota', href: '/members?new=1', icon: UserPlus, key: '8' },
+      { label: 'Barang', href: '/goods?new=1', icon: PackagePlus, key: '9' },
       {
         label: 'Stok opname',
         href: '/goods?tab=counts&new=1',
         icon: ClipboardCheck,
-        tone: 'lemon',
       },
     ],
   },
   {
     group: 'Usaha harian',
     items: [
-      { label: 'Penjualan', href: '/store?tab=sales&new=1', icon: ReceiptText, tone: 'lavender' },
-      { label: 'Simpanan', href: '/members?tab=savings&new=1', icon: PiggyBank, tone: 'mint' },
-      { label: 'Absensi', href: '/team?tab=attendance&new=1', icon: UserCheck, tone: 'sky' },
+      { label: 'Penjualan', href: '/store?tab=sales&new=1', icon: ReceiptText },
+      { label: 'Simpanan', href: '/members?tab=savings&new=1', icon: PiggyBank },
+      { label: 'Absensi', href: '/team?tab=attendance&new=1', icon: UserCheck },
     ],
   },
 ];
@@ -100,33 +94,34 @@ export function QuickActionsPanel({ onPick }: { onPick: () => void }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onPick, router]);
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid gap-x-4 gap-y-3 sm:grid-cols-3">
       {QUICK_ACTIONS.map((group, groupIndex) => (
         <section key={group.group}>
-          <h3 className="mb-2 text-xs font-bold tracking-wide text-ink-3 uppercase">
-            {group.group}
-          </h3>
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+          <h3 className="mb-1 px-2 text-xs text-ink-3">{group.group}</h3>
+          <ul>
             {group.items.map((item, index) => (
-              <Link
+              <li
                 key={item.label}
-                href={item.href}
-                onClick={onPick}
-                data-tone={item.tone}
-                // Ubin naik berurutan lintas kelompok (5 ubin per kelompok).
+                // Baris naik berurutan lintas kelompok.
                 style={{ animationDelay: `${(groupIndex * 5 + index) * 22}ms` }}
-                className="group relative flex animate-[item-in_0.36s_var(--ease-out)_backwards] flex-col items-start gap-2 rounded-2xl bg-tone p-3 text-tone-ink transition duration-300 hover:-translate-y-0.5 hover:shadow-card active:scale-[0.97]"
+                className="animate-[item-in_0.36s_var(--ease-out)_backwards]"
               >
-                <item.icon className="size-5" aria-hidden="true" />
-                <span className="text-[13px] leading-tight font-bold">{item.label}</span>
-                {item.key && (
-                  <kbd className="absolute top-2 right-2 hidden rounded-md bg-surface/70 px-1.5 text-[10px] font-bold sm:block">
-                    {item.key}
-                  </kbd>
-                )}
-              </Link>
+                <Link
+                  href={item.href}
+                  onClick={onPick}
+                  className="group flex min-h-11 items-center gap-2.5 rounded-2xl px-2 text-[13.5px] text-ink transition-colors hover:bg-surface-2"
+                >
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-surface-2 text-ink-2 ring-1 ring-line transition-colors group-hover:bg-action group-hover:text-on-action group-hover:ring-transparent">
+                    <item.icon className="size-4" aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                  {item.key && (
+                    <kbd className="hidden text-[11px] text-ink-3 sm:block">{item.key}</kbd>
+                  )}
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       ))}
     </div>

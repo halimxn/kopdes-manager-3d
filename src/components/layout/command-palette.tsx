@@ -22,21 +22,17 @@ const ITEM =
 const GROUP =
   '[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:pt-3 [&_[cmdk-group-heading]]:pb-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-bold [&_[cmdk-group-heading]]:text-ink-3';
 /** Ubin ikon di kiri hasil; warnanya membedakan catatan, menu, dan perintah. */
-const TILE = 'grid size-9 shrink-0 place-items-center rounded-xl [&_svg]:size-[18px]';
+const TILE = 'grid size-9 shrink-0 place-items-center rounded-full [&_svg]:size-[18px]';
 /** Label jenis di kanan hasil: Tugas, Proyek, Menu, Perintah. */
-const KIND = 'shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold';
+const KIND = 'shrink-0 text-xs text-ink-3';
 const NEUTRAL_TILE = 'bg-surface-2 text-ink-2 ring-1 ring-line ring-inset';
 // Label Perintah/Menu hanya saat mencari: tanpa kata kunci, judul kelompok sudah cukup.
-const NEUTRAL_KIND = 'hidden bg-surface-3 text-ink-2 group-data-[searching]/palette:inline';
-/** Warna catatan mengikuti kelompok menunya: Kerja, Catatan, Usaha, Koperasi. */
-const AREA_TONES = ['lavender', 'sky', 'peach', 'mint'];
+const NEUTRAL_KIND = 'hidden group-data-[searching]/palette:inline';
 
 function recordMarker(entity: Entity, kind: string) {
   const { page } = entityHome(entity);
-  const area = NAV_GROUPS.findIndex((group) => group.pages.includes(page));
   return {
     icon: PAGES[page].icon,
-    tone: AREA_TONES[area] ?? 'slate',
     // Nama tab lebih pendek dari judul katalog ("Proyek", bukan "Proyek & bidang kerja").
     label: PAGES[page].tabs?.find((tab) => tab.entity === entity)?.label ?? kind,
   };
@@ -98,35 +94,35 @@ export function CommandPalette({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="overlay fixed inset-0 z-50 bg-[var(--scrim)] backdrop-blur-[2px]" />
+        <Dialog.Overlay className="overlay fixed inset-0 z-50 bg-[var(--scrim)]" />
         <Dialog.Content
           data-searching={query ? '' : undefined}
-          className="group/palette palette fixed top-[10vh] left-1/2 z-50 w-[min(40rem,calc(100vw-1.5rem))] -translate-x-1/2 overflow-hidden rounded-3xl bg-surface shadow-float ring-1 ring-line/70 outline-none max-md:top-3"
+          className="group/palette palette fixed top-[10vh] left-1/2 z-50 w-[min(42rem,calc(100vw-1.5rem))] -translate-x-1/2 overflow-hidden rounded-[1.75rem] bg-surface shadow-float ring-1 ring-line-strong outline-none max-md:top-3"
         >
           <Dialog.Title className="sr-only">Cari dan buka</Dialog.Title>
           <Dialog.Description className="sr-only">
             Cari halaman, perintah, atau catatan
           </Dialog.Description>
           <Command label="Cari dan buka" loop>
-            <div className="flex items-center gap-3 border-b border-line px-4">
-              <Search className="size-5 shrink-0 text-accent-strong" aria-hidden="true" />
+            <div className="flex items-center gap-3 border-b border-line px-5">
+              <Search className="size-5 shrink-0 text-ink-3" aria-hidden="true" />
               <Command.Input
                 value={query}
                 onValueChange={setQuery}
                 placeholder="Cari tugas, menu, atau tulis tugas baru…"
-                className="h-14 min-w-0 flex-1 bg-transparent text-base font-semibold text-ink outline-none placeholder:font-medium placeholder:text-ink-3"
+                className="h-16 min-w-0 flex-1 bg-transparent text-[17px] text-ink outline-none placeholder:text-ink-3"
               />
               {query && (
                 <button
                   type="button"
                   onClick={() => setQuery('')}
                   aria-label="Hapus pencarian"
-                  className="grid size-8 shrink-0 animate-[item-in_0.2s_var(--ease-out)] place-items-center rounded-lg text-ink-3 transition-colors hover:bg-surface-3 hover:text-ink"
+                  className="grid size-8 shrink-0 animate-[item-in_0.2s_var(--ease-out)] place-items-center rounded-full text-ink-3 transition-colors hover:bg-surface-3 hover:text-ink"
                 >
                   <X className="size-4" />
                 </button>
               )}
-              <Dialog.Close className="-mr-1 h-9 shrink-0 rounded-lg px-2 text-sm font-bold text-accent-strong md:hidden">
+              <Dialog.Close className="-mr-1 h-11 shrink-0 rounded-full px-2 text-sm text-ink-2 md:hidden">
                 Batal
               </Dialog.Close>
             </div>
@@ -145,7 +141,7 @@ export function CommandPalette({
                         onSelect={() => go(recordLink(result.entity, result.id.split(':')[1]))}
                         className={ITEM}
                       >
-                        <span data-tone={marker.tone} className={cn(TILE, 'bg-tone text-tone-ink')}>
+                        <span className={cn(TILE, NEUTRAL_TILE)}>
                           <PageIcon name={marker.icon} />
                         </span>
                         <span className="min-w-0 flex-1">
@@ -153,14 +149,12 @@ export function CommandPalette({
                             <Highlight text={result.title} query={query} />
                           </span>
                           {result.context && (
-                            <span className="block truncate text-xs font-medium text-ink-3">
+                            <span className="block truncate text-xs text-ink-3">
                               {result.context}
                             </span>
                           )}
                         </span>
-                        <span data-tone={marker.tone} className={cn(KIND, 'bg-tone text-tone-ink')}>
-                          {marker.label}
-                        </span>
+                        <span className={KIND}>{marker.label}</span>
                       </Command.Item>
                     );
                   })}
@@ -231,7 +225,7 @@ export function CommandPalette({
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-ink">{page.label}</span>
                         {tabs.length > 0 && (
-                          <span className="block truncate text-xs font-medium text-ink-3">
+                          <span className="block truncate text-xs text-ink-3">
                             {tabs.map((tab) => tab.label).join(' · ')}
                           </span>
                         )}
@@ -258,9 +252,7 @@ export function CommandPalette({
                         Buat tugas: <span className="text-ink">{draft.title || '…'}</span>
                       </span>
                       {draftDetails && (
-                        <span className="block truncate text-xs font-medium text-ink-3">
-                          {draftDetails}
-                        </span>
+                        <span className="block truncate text-xs text-ink-3">{draftDetails}</span>
                       )}
                     </span>
                     <span className={cn(KIND, NEUTRAL_KIND)}>Baru</span>
@@ -268,7 +260,7 @@ export function CommandPalette({
                 </Command.Group>
               )}
             </Command.List>
-            <div className="hidden items-center gap-4 border-t border-line px-4 py-2.5 text-xs font-semibold text-ink-3 md:flex">
+            <div className="hidden items-center gap-4 border-t border-line px-5 py-2.5 text-xs text-ink-3 md:flex">
               <span className="flex items-center gap-1.5">
                 <Kbd>↑</Kbd>
                 <Kbd>↓</Kbd>
