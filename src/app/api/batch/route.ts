@@ -9,9 +9,9 @@ import { listQuerySchema } from '@/features/records/query';
 /**
  * Beberapa daftar catatan dalam satu permintaan: satu pemeriksaan sesi dan satu perjalanan
  * jaringan per halaman, bukan satu per jenis catatan. Setiap butir `r` berbentuk sama dengan
- * alamat GET /api/<entity>?<query>.
+ * alamat GET /api/<entity>?<query>. Batasnya di atas halaman terbesar (Dunia 3D: 25 jenis catatan).
  */
-const requestsSchema = z.array(z.string().min(1).max(400)).min(1).max(20);
+const requestsSchema = z.array(z.string().min(1).max(400)).min(1).max(30);
 
 export async function GET(request: Request) {
   try {
