@@ -4,16 +4,16 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 
 ## Sekarang (2 November 2026)
 
-- Cabang kerja: `tampilan/redesain-total`, pull request ke `main` terbuka dan **belum digabung**. `main` masih berisi desain lama.
+- Cabang kerja: `tampilan/redesain-total`, sudah di-push dan **belum digabung**. `main` masih berisi desain lama. Pull request dibuka lewat halaman GitHub karena `gh` tidak terpasang di komputer ini.
 - **Tampilan baru mengikuti tiga video acuan**: tema gelap bawaan (Solvik), tema terang dan isi Beranda (Kinlo), gerak dan konstelasi (Crew). Rincian di [TAMPILAN](TAMPILAN.md).
-- **Cadangan desain sebelumnya**: cabang `arsip/desain-oktober` di GitHub. Untuk kembali ke desain itu, jangan gabungkan pull request ini; bila sudah telanjur digabung, kembalikan `main` lewat revert.
-- Perbaikan bug ikut di pull request ini: Dunia 3D meminta 25 jenis catatan sedangkan batas server 20, jadi datanya kosong. Dari kode, `main` masih terkena bug ini sampai digabung; di produksi belum diperiksa.
+- **Cadangan desain sebelumnya**: cabang `arsip/desain-oktober` di GitHub. Untuk kembali ke desain itu, jangan gabungkan cabang kerja; bila sudah telanjur digabung, kembalikan `main` lewat revert.
+- Perbaikan bug ikut di cabang kerja: Dunia 3D meminta 25 jenis catatan sedangkan batas server 20, jadi datanya kosong. Dari kode, `main` masih terkena bug ini sampai digabung; di produksi belum diperiksa.
 - Pemeriksaan terakhir (2 Nov): `npm run cek:penuh` lulus (33 berkas tes / 206 tes, build, JS awal 427–497 KB dari batas 500 KB). `/tasks` tinggal 3 KB dari batas.
 - Rutin harian di database (migrasi 11) dan penanda versi data (migrasi 12): lihat Langkah berikut.
 
 ## Langkah berikut
 
-1. Pemilik meninjau tampilan di `npm run dev:demo -- -p 3200`, terutama warna teal tema terang dan sapuan ganti tema, lalu memutuskan pull request.
+1. Pemilik meninjau tampilan di `npm run dev:demo -- -p 3200`, terutama warna teal tema terang dan sapuan ganti tema, lalu membuka dan memutuskan pull request.
 2. Pemilik menjalankan `supabase/upgrade/UPGRADE_KE_TERBARU.sql` sekali di Supabase (memasang migrasi 9–12 yang belum ada), lalu seed contoh bila perlu (`docs/DATABASE.md`).
 3. Belum dikerjakan: uji di HP sungguhan dan basis data nyata; halaman Agenda masih tampilan daftar umum (belum kalender pekan khusus); tes perilaku UI baru belum ditulis (hanya tes logika); kepala halaman Anggota di HP masih panjang.
 
