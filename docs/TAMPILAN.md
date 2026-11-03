@@ -1,12 +1,12 @@
 # Tampilan
 
-Gaya yang berlaku sekarang (arahan pemilik 2 November 2026) mengikuti tiga acuan video: **tema gelap** mengikuti Solvik (latar warna buram, panel hampir hitam, kartu berwarna, aksi hijau limau, pil menu di atas, rel ikon di kiri), **tema terang dan isi Beranda** mengikuti Kinlo (latar aqua dan persik, aksi teal, sapaan besar, kartu ringkasan gelap), dan **gerak** mengikuti Crew (isi muncul berurutan dari buram, grafik tergambar, peta koperasi yang hidup). Ini bukan aturan permanen. Mengganti tampilan cukup dengan mengubah token; komponen tidak boleh berisi warna mentah.
+Gaya yang berlaku sekarang (arahan pemilik 2 November 2026) mengikuti tiga acuan video: **tema gelap** mengikuti Solvik (latar warna buram, panel hampir hitam, kartu berwarna, aksi hijau limau, pil menu di atas, rel ikon di kiri), **tema terang dan isi Beranda** mengikuti Kinlo (latar aqua dan persik, aksi teal, sapaan besar), dan **gerak** mengikuti Crew (isi muncul berurutan dari buram, grafik tergambar, peta koperasi yang hidup). Ini bukan aturan permanen. Mengganti tampilan cukup dengan mengubah token; komponen tidak boleh berisi warna mentah.
 
 Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 
 ## Aturan tetap
 
-- Semua warna di blok token `src/app/globals.css`. Komponen memakai kelas token: `bg-surface`, `text-ink-2`, `bg-action`, `bg-tone`, `bg-deep`, dan seterusnya.
+- Semua warna di blok token `src/app/globals.css`. Komponen memakai kelas token: `bg-surface`, `text-ink-2`, `bg-action`, `bg-tone`, dan seterusnya.
 - **Gradasi hanya di latar halaman** (token `--ground`, keputusan pemilik 2 Nov 2026). Kartu, tombol, dan grafik tetap warna solid; isian grafik memakai warna tembus datar, bukan gradasi. Titik paling terang latar gelap dijaga agar `ink-3` tetap ≥ 4,5:1 (saat ini 4,62:1); ukur ulang bila `--ground` diubah.
 - **Warna kuat hanya dua:** warna aksi (limau di tema gelap, teal di tema terang) untuk aksi dan progres, koral (`late-bar`) khusus terlambat. Nada kartu sengaja redup dan setingkat terangnya; ikon angka satu warna; status lain cukup kata atau lencana lembut. Semua panel Beranda satu warna (arahan pemilik 2 Nov 2026: hindari tabrakan warna).
 - Tidak ada `!important` kecuali pengaturan `prefers-reduced-motion` dan cetak.
@@ -21,7 +21,6 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 |---|---|---|
 | Latar | `canvas`, `ground` | warna dasar dan latar buram satu lapis tetap (`body::before`) |
 | Permukaan | `surface`, `surface-solid`, `surface-2`, `surface-3`, `line`, `line-strong` | panel tembus, panel padat, isian tipis di atas panel, garis. Laci, menu, palet, dan dialog otomatis padat (`--surface` ditimpa di `.sheet`, `.menu`, `.pop`, `.palette`) |
-| Panel gelap | `deep`, `deep-2`, `on-deep`, `on-deep-2` | kartu ringkasan; tetap gelap di kedua tema, isinya memakai `data-theme="dark"` |
 | Teks | `ink`, `ink-2`, `ink-3` | utama, kedua, keterangan (kontras ≥ 4.5:1 di atas latar dan panel) |
 | Aksi | `action`, `action-hover`, `on-action` | tombol utama dan menu aktif di rel: limau di tema gelap, teal di tema terang |
 | Logo | `brand`, `on-brand` | tanda Kopdes, warnanya sama dengan aksi |
@@ -68,7 +67,8 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 - Susunan halaman catatan selalu sama: judul dan angka, lalu tab di kiri dengan tombol aksi dan Tambah di kanan, lalu pencarian dan saringan sebaris, panel rincian, dan daftar. Halaman Proyek memakai satu bilah tab: Berjalan, Riwayat & arsip, Risiko, Kendala.
 - Tablet dan laptop (≥ 768 px): bilah atas (logo, pil menu di tengah, cari, lonceng, profil) dan rel ikon di kiri. Bilah atas tanpa latar di puncak halaman, berkabut saat digulir.
 - HP (< 768 px): bilah atas ringkas + navigasi bawah melayang. Item aktif mengembang menjadi kapsul berlabel; tombol tambah warna aksi di tengah. Bilah bawah minggir saat menggulir ke bawah (`lib/use-hide-on-scroll.ts`). Semua halaman ada di menu lengkap.
-- Beranda (urut baca, pekerjaan dulu, angka tinjauan terakhir): sapaan dan angka → tugas cepat → rutin hari ini dan peta koperasi sama tinggi → tenggat dekat (empat kartu sebaris) → hari ini (tugas dan jadwal berdampingan) → progres tugas, tugas selesai per minggu, proyek berjalan. Di HP: rutin → tenggat → peta koperasi → hari ini → progres → grafik → proyek.
+- Beranda (urut baca, pekerjaan dulu, angka tinjauan terakhir): sapaan dengan tiga angka tautan → tugas cepat → rutin hari ini dan peta koperasi sama tinggi → hari ini (jadwal dan tugas bertenggat, dua daftar) dan tenggat berikutnya → tinjauan (progres tugas, tugas selesai per minggu, proyek berjalan dalam satu panel berkolom). Urutan di HP sama.
+- Aturan Beranda (arahan pemilik 3 Nov 2026: bersih, simpel, tetap informatif): satu fakta tampil sekali. Yang terlambat dan jatuh hari ini ada di daftar peta, tenggat berikutnya hanya yang akan datang. Di dalam panel dipakai baris polos, bukan kartu di dalam kartu. Warna penuh hanya di petak peta.
 - Kas: angka ringkasan, grafik uang masuk dan keluar per bulan, lalu daftar. Tidak pernah disebut saldo atau laba.
 - Halaman PIN: tanpa kartu, langsung di atas latar buram: logo, judul, titik per angka, papan angka 3×4. Di perangkat sentuh keyboard bawaan tidak ikut muncul.
 - Dunia 3D punya bilahnya sendiri dan membaca token yang sama.

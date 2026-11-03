@@ -392,8 +392,9 @@ function DomainActions({ domain }: { domain: CoopDomain }) {
   );
 }
 
+// Perangkat berpenunjuk: ikon muncul saat baris disentuh, supaya daftar panjang tetap tenang.
 const ROW_ICON =
-  'grid size-9 shrink-0 place-items-center rounded-full text-ink-3 transition hover:bg-surface-2 hover:text-ink [&_svg]:size-4 max-sm:size-11';
+  'grid size-9 shrink-0 place-items-center rounded-full text-ink-3 transition group-focus-within:opacity-100 group-hover:opacity-100 hover:bg-surface-2 hover:text-ink [@media(hover:hover)]:opacity-0 [&_svg]:size-4 max-sm:size-11';
 
 /** Satu hal yang perlu ditangani: tindakan tersering langsung di barisnya, tanpa pindah halaman. */
 function ActionRow({
@@ -436,7 +437,7 @@ function ActionRow({
   return (
     <li
       onPointerEnter={onHover}
-      className="flex items-center gap-2 rounded-2xl py-1.5 pr-1 pl-2 transition-colors hover:bg-surface-2"
+      className="group flex items-center gap-2 rounded-2xl py-1.5 pr-1 pl-2 transition-colors hover:bg-surface-2"
     >
       {task ? (
         <Check

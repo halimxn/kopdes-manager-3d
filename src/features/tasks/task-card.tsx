@@ -51,7 +51,6 @@ export function TaskCard({
   className,
   draggable,
   style,
-  compact,
 }: {
   task: Item;
   ws: Workspace;
@@ -60,8 +59,6 @@ export function TaskCard({
   className?: string;
   draggable?: boolean;
   style?: React.CSSProperties;
-  /** Tanpa catatan singkat, untuk daftar pendek seperti Tenggat dekat di Beranda. */
-  compact?: boolean;
 }) {
   const project = ws.workstreams?.find((row) => row.id === task.data.workstream_id);
   const subtasks = (task.data.subtasks as { done: boolean }[]) || [];
@@ -164,7 +161,7 @@ export function TaskCard({
         <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
         <span className="truncate">{project ? String(project.data.title) : 'Tanpa proyek'}</span>
       </p>
-      {note && !compact && <p className="line-clamp-1 text-[12px]">{note}</p>}
+      {note && <p className="line-clamp-1 text-[12px]">{note}</p>}
       {subtasks.length > 0 && (
         <div className="mt-1 flex flex-col gap-1.5">
           <span className="flex justify-between text-[12px] font-medium">
@@ -200,11 +197,17 @@ export function TaskRow({
   ws,
   onOpen,
   refresh,
+  plain,
+  hideDue,
 }: {
   task: Item;
   ws: Workspace;
   onOpen: () => void;
   refresh: () => Promise<void> | void;
+  /** Di dalam panel: tanpa bingkai agar tidak menjadi kartu di dalam kartu, tenggat selalu tampak. */
+  plain?: boolean;
+  /** Daftar yang sudah dikelompokkan per hari tidak perlu mengulang tanggalnya di tiap baris. */
+  hideDue?: boolean;
 }) {
   const project = ws.workstreams?.find((row) => row.id === task.data.workstream_id);
   const done = task.data.status === 'selesai';
@@ -219,7 +222,12 @@ export function TaskRow({
       onKeyDown={(event) => {
         if (event.key === 'Enter' && event.target === event.currentTarget) onOpen();
       }}
-      className="flex items-center gap-3 rounded-[1.25rem] bg-surface px-3 py-2.5 ring-1 ring-line outline-none transition hover:bg-surface-3 focus-visible:ring-2 focus-visible:ring-accent-strong"
+      className={cn(
+        'flex items-center gap-3 outline-none transition focus-visible:ring-2 focus-visible:ring-accent-strong',
+        plain
+          ? 'rounded-xl px-2 py-1.5 hover:bg-surface-2'
+          : 'rounded-[1.25rem] bg-surface px-3 py-2.5 ring-1 ring-line hover:bg-surface-3',
+      )}
     >
       <Check
         checked={done}
@@ -238,22 +246,30 @@ export function TaskRow({
         </span>
         <span className="flex items-center gap-2 text-xs text-ink-3">
           <span className="truncate">{project ? String(project.data.title) : 'Tanpa proyek'}</span>
-          {subtasks.length > 0 && (
+          {!plain && subtasks.length > 0 && (
             <span className="tabular">
               · {subtasks.filter((s) => s.done).length}/{subtasks.length} subtugas
             </span>
           )}
         </span>
       </button>
-      <span
-        className={cn(
-          'hidden shrink-0 text-xs font-medium sm:block',
-          due.late ? 'text-late-ink' : 'text-ink-3',
-        )}
-      >
-        {due.text}
-      </span>
-      <AvatarStack names={[String(task.data.assignee || '')]} className="hidden shrink-0 sm:flex" />
+      {!hideDue && (
+        <span
+          className={cn(
+            'shrink-0 text-xs font-medium',
+            !plain && 'hidden sm:block',
+            due.late ? 'text-late-ink' : 'text-ink-3',
+          )}
+        >
+          {due.text}
+        </span>
+      )}
+      {!plain && (
+        <AvatarStack
+          names={[String(task.data.assignee || '')]}
+          className="hidden shrink-0 sm:flex"
+        />
+      )}
     </motion.div>
   );
 }

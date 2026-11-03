@@ -46,12 +46,6 @@
   --accent-ink: #0b5062;
   --accent-strong: #0f7d94;
 
-  /* Panel gelap di kedua tema: kartu ringkasan. */
-  --deep: #1f3e46;
-  --deep-2: rgb(255 255 255 / 0.08);
-  --on-deep: #f3f8f8;
-  --on-deep-2: #bcd0d4;
-
   --plan: #e8e6fb;
   --plan-ink: #43379f;
   --doing: #d9ecf6;
@@ -146,11 +140,6 @@
   --on-action: #182009;
   --brand: #c2ec4a;
   --on-brand: #182009;
-  /* Tema gelap: semua panel satu warna, tidak ada panel biru di samping panel hitam. */
-  --deep: rgb(22 23 25 / 0.7);
-  --deep-2: rgb(255 255 255 / 0.07);
-  --on-deep: #f3f1ea;
-  --on-deep-2: #c2bfb6;
   --plan: #2f2d45;
   --plan-ink: #cfc7ff;
   --doing: #223244;
@@ -322,10 +311,6 @@
   --color-plan-bar: var(--plan-bar);
   --color-doing-bar: var(--doing-bar);
   --color-on-bar: var(--on-bar);
-  --color-deep: var(--deep);
-  --color-deep-2: var(--deep-2);
-  --color-on-deep: var(--on-deep);
-  --color-on-deep-2: var(--on-deep-2);
   --color-done-bar: var(--done-bar);
   --color-warn-bar: var(--warn-bar);
   --color-late-bar: var(--late-bar);

@@ -23,6 +23,7 @@ Satu-satunya catatan keadaan untuk semua AI dan manusia. Timpa bagian yang berub
 
 Daftar lengkap ada di [PRODUK](PRODUK.md). Yang paling baru:
 
+- 3 Nov 2026 (koreksi): Beranda disederhanakan atas permintaan pemilik (bersih, simpel, tetap informatif): tiap fakta tampil sekali, kartu Tenggat dekat diganti daftar Tenggat berikutnya, linimasa per jam diganti daftar jadwal, kartu progres gelap dan dua kartu tinjauan dilebur jadi satu panel, cincin proyek diganti batang, baris Tim aktif dibuang karena sudah ada di petak Tim. Karena yang terlambat kini ada di daftar peta, urutan HP menjadi rutin, peta, hari ini (menggantikan keputusan sebelumnya: tenggat sebelum peta). Pilihan AI; bisa diubah setelah dilihat.
 - 3 Nov 2026 (koreksi): warna Peta koperasi dirancang ulang atas permintaan pemilik. Warna petak kini berarti keadaan (koral mendesak, biru perlu ditangani, hijau aman) dan panelnya mengikuti tema, tidak lagi gelap di tema terang. Biru dipilih AI karena kuning di tema gelap menjadi kotak cokelat; bisa diubah setelah dilihat.
 - 2 Nov 2026 (koreksi): Peta koperasi dirancang ulang atas permintaan pemilik. Bentuknya denah tetap berisi delapan petak berangka, tanpa kanvas putar dan titik (pilihan AI karena pemilik meminta langsung dikerjakan; bisa diubah setelah dilihat).
 - 2 Nov 2026 (koreksi): label rel tidak boleh tertutup; penempatan kartu dirancang ulang agar rapi dan bersih. Kartu dibuat netral, warna hanya sebagai titik (keputusan AI atas arahan "rapi dan bersih", bisa dikembalikan bila pemilik lebih suka kartu berwarna).

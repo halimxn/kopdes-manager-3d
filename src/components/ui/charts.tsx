@@ -134,7 +134,8 @@ export function AreaChart({
                   key={point.label + index}
                   x={placed[index].x}
                   y={height - 6}
-                  textAnchor="middle"
+                  // Label terakhir rata kanan agar tidak terpotong tepi grafik.
+                  textAnchor={index === points.length - 1 ? 'end' : 'middle'}
                   className="fill-ink-3 text-[11px]"
                 >
                   {point.label}
