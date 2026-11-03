@@ -169,18 +169,22 @@ export function BarChart({
   const chart = height - PAD.top - PAD.bottom;
   const slot = rows.length ? (width - PAD.left - PAD.right) / rows.length : 0;
   const barWidth = Math.min(20, (slot * 0.68) / series.length);
+  // Label dijarangkan bila sempit agar tidak saling menimpa; yang terakhir selalu tampil.
+  const every = Math.max(1, Math.ceil(44 / (slot || 44)));
   return (
     <div className={className}>
-      <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-2">
-        {series.map((item) => (
-          <span key={item.label} className="flex items-center gap-1.5">
-            <svg className="size-2.5" viewBox="0 0 10 10" aria-hidden="true">
-              <rect width="10" height="10" rx="3" className={item.className} />
-            </svg>
-            {item.label}
-          </span>
-        ))}
-      </div>
+      {series.length > 1 && (
+        <div className="mb-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-2">
+          {series.map((item) => (
+            <span key={item.label} className="flex items-center gap-1.5">
+              <svg className="size-2.5" viewBox="0 0 10 10" aria-hidden="true">
+                <rect width="10" height="10" rx="3" className={item.className} />
+              </svg>
+              {item.label}
+            </span>
+          ))}
+        </div>
+      )}
       <div ref={box} className="w-full" style={{ height }}>
         {width > 0 && (
           <svg width={width} height={height} role="img" aria-label={label}>
@@ -207,14 +211,16 @@ export function BarChart({
                       )
                     );
                   })}
-                  <text
-                    x={PAD.left + slot * rowIndex + slot / 2}
-                    y={height - 6}
-                    textAnchor="middle"
-                    className="fill-ink-3 text-[11px]"
-                  >
-                    {row.label}
-                  </text>
+                  {(rows.length - 1 - rowIndex) % every === 0 && (
+                    <text
+                      x={PAD.left + slot * rowIndex + slot / 2}
+                      y={height - 6}
+                      textAnchor="middle"
+                      className="fill-ink-3 text-[11px]"
+                    >
+                      {row.label}
+                    </text>
+                  )}
                 </g>
               );
             })}

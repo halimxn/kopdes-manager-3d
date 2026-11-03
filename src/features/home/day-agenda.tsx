@@ -11,7 +11,10 @@ import { cn } from '@/lib/utils';
 
 const hasTime = (meeting: Item) => /^\d{2}:\d{2}$/.test(String(meeting.data.time));
 
-/** Satu hari dalam dua daftar: jadwal urut jam dan tugas bertenggat. Jam kosong tidak ikut memakan tempat. */
+/**
+ * Satu hari: jadwal urut jam. Tugas hanya untuk hari lain, karena tugas hari ini sudah ada di daftar
+ * Peta koperasi dan satu hal tidak perlu tampil dua kali.
+ */
 export function DayAgenda({
   date,
   meetings,
@@ -37,7 +40,7 @@ export function DayAgenda({
     String(hasTime(a) ? a.data.time : '').localeCompare(String(hasTime(b) ? b.data.time : '')),
   );
   return (
-    <div className="grid gap-x-8 gap-y-5 md:grid-cols-2">
+    <div className="flex flex-col gap-4">
       <div className="min-w-0">
         <h3 className="pb-1.5 text-xs font-medium text-ink-3">Jadwal ({sorted.length})</h3>
         {sorted.length ? (
@@ -102,26 +105,29 @@ export function DayAgenda({
           <p className="py-2 text-sm text-ink-3">Tidak ada rapat atau kunjungan.</p>
         )}
       </div>
-      <div className="min-w-0">
-        <h3 className="pb-1.5 text-xs font-medium text-ink-3">Tugas bertenggat ({tasks.length})</h3>
-        {tasks.length ? (
-          <div className="-mx-2 flex flex-col">
-            {tasks.map((task) => (
-              <TaskRow
-                key={task.id}
-                plain
-                hideDue={isToday}
-                task={task}
-                ws={ws}
-                onOpen={() => onOpenTask(task.id)}
-                refresh={refresh}
-              />
-            ))}
-          </div>
-        ) : (
-          <p className="py-2 text-sm text-ink-3">Tidak ada tugas bertenggat.</p>
-        )}
-      </div>
+      {!isToday && (
+        <div className="min-w-0">
+          <h3 className="pb-1.5 text-xs font-medium text-ink-3">
+            Tugas bertenggat ({tasks.length})
+          </h3>
+          {tasks.length ? (
+            <div className="-mx-2 flex flex-col">
+              {tasks.map((task) => (
+                <TaskRow
+                  key={task.id}
+                  plain
+                  task={task}
+                  ws={ws}
+                  onOpen={() => onOpenTask(task.id)}
+                  refresh={refresh}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="py-2 text-sm text-ink-3">Tidak ada tugas bertenggat.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

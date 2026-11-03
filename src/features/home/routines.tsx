@@ -278,20 +278,13 @@ export function RoutinesCard({
   return (
     <section
       aria-labelledby="routines-title"
-      className="relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line"
+      className="panel-deep relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] shadow-card ring-1 ring-line"
     >
       <header className="flex flex-col gap-3 px-5 pt-5 pb-3">
-        <div className="flex items-start gap-3">
-          <div className="flex-1">
-            <h2 id="routines-title" className="text-lg font-medium text-ink">
-              Rutin hari ini
-            </h2>
-            <p className="text-[13px] text-ink-3">
-              {states.length
-                ? `${done} dari ${states.length} selesai`
-                : 'Belum ada rutin untuk hari ini'}
-            </p>
-          </div>
+        <div className="flex items-center justify-between gap-3">
+          <h2 id="routines-title" className="text-lg font-medium text-ink">
+            Rutin hari ini
+          </h2>
           {ready && (
             <Button size="sm" onClick={() => setManaging(true)}>
               <Settings2 />
@@ -299,6 +292,17 @@ export function RoutinesCard({
             </Button>
           )}
         </div>
+        {states.length > 0 ? (
+          <p className="flex items-baseline gap-2.5">
+            <span className="tabular text-[44px] leading-none font-normal tracking-tight">
+              {done}
+              <span className="text-ink-3">/{states.length}</span>
+            </span>
+            <span className="text-[13px] text-ink-3">selesai</span>
+          </p>
+        ) : (
+          <p className="text-[13px] text-ink-3">Belum ada rutin untuk hari ini</p>
+        )}
         {states.length > 0 && (
           <SegmentBar
             value={(done / states.length) * 100}

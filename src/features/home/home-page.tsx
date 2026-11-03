@@ -3,7 +3,15 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowUpRight, ClipboardCopy, Globe2, ListPlus } from 'lucide-react';
+import {
+  AlarmClock,
+  ArrowUpRight,
+  CalendarDays,
+  ClipboardCopy,
+  Globe2,
+  ListPlus,
+  ListTodo,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { useWorkspace } from '@/features/workspace/use-workspace';
 import { organizationInfo } from '@/features/workspace/use-loaded-workspace';
@@ -17,8 +25,9 @@ import { isProjectHistory } from '@/features/projects/lifecycle';
 import { PageHeader } from '@/components/layout/page-header';
 import { PageLoading } from '@/features/records/records-page';
 import { Button } from '@/components/ui/button';
-import { AreaChart, StackBar } from '@/components/ui/charts';
+import { BarChart, StackBar } from '@/components/ui/charts';
 import { Input } from '@/components/ui/field';
+import { StatGrid, StatTile } from '@/components/ui/stat';
 import { CountUp } from '@/components/ui/count-up';
 import { ErrorState, EmptyState, Skeleton } from '@/components/ui/states';
 import { Bar } from '@/components/ui/progress';
@@ -159,6 +168,49 @@ export function HomePage() {
   const weeks = weeklyDone(tasks, date, Number(span));
   const weekTotal = weeks.reduce((total, week) => total + week.value, 0);
 
+  const quickAddForm = (
+    <form
+      className="relative"
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (!quick.trim()) return;
+        const parsed = parseQuickAdd(quick, {
+          today: date,
+          staff: (data.staff || []).map((row) => String(row.data.title)),
+          projects: (data.workstreams || []).map((row) => ({
+            id: row.id,
+            title: String(row.data.title),
+          })),
+        });
+        setDraft({ due_date: date, ...parsed });
+        setQuick('');
+      }}
+    >
+      <label className="sr-only" htmlFor="quick-add">
+        Tambah tugas cepat
+      </label>
+      <Input
+        id="quick-add"
+        value={quick}
+        onChange={(event) => setQuick(event.target.value)}
+        maxLength={200}
+        icon={<ListPlus />}
+        placeholder="Tugas cepat: Cek stok @Budi besok"
+        className={cn('h-11 rounded-full border-line-strong bg-surface-2', quick.trim() && 'pr-28')}
+      />
+      {quick.trim() && (
+        <Button
+          type="submit"
+          size="sm"
+          variant="primary"
+          className="absolute top-1/2 right-1.5 -translate-y-1/2"
+        >
+          Tambah
+        </Button>
+      )}
+    </form>
+  );
+
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
@@ -169,33 +221,33 @@ export function HomePage() {
             {coop && <span className="max-sm:hidden"> · {coop}</span>}
           </>
         }
-        sections={
-          <div className="flex flex-wrap items-baseline gap-x-6">
-            {(
-              [
-                [todayCount, 'tugas hari ini', '/tasks', false],
-                [late, 'terlambat', '/tasks?status=terlambat', late > 0],
-                [todayMeetings, 'agenda', '/agenda', false],
-              ] as const
-            ).map(([value, label, href, alert]) => (
-              <Link
-                key={label}
-                href={href}
-                className="flex items-baseline gap-1.5 text-[13px] text-ink-3 transition-colors hover:text-ink max-sm:py-2"
-              >
-                <span
-                  className={cn(
-                    'tabular text-[22px] leading-none tracking-tight',
-                    alert ? 'text-late-ink' : 'text-ink',
-                  )}
-                >
-                  {value}
-                </span>
-                {label}
-              </Link>
-            ))}
-          </div>
-        }
+        sections={[
+          // HP: tiga kolom agar angka ketiga tidak sendirian di barisnya.
+          <StatGrid
+            key="stats"
+            className="max-sm:grid-cols-3 max-sm:[&>*]:flex-col max-sm:[&>*]:items-start max-sm:[&>*]:gap-2"
+          >
+            <StatTile
+              label="Tugas hari ini"
+              value={todayCount}
+              icon={<ListTodo />}
+              onClick={() => router.push('/tasks')}
+            />
+            <StatTile
+              label="Terlambat"
+              value={late}
+              tone={late > 0 ? 'rose' : 'slate'}
+              icon={<AlarmClock />}
+              onClick={() => router.push('/tasks?status=terlambat')}
+            />
+            <StatTile
+              label="Agenda hari ini"
+              value={todayMeetings}
+              icon={<CalendarDays />}
+              onClick={() => router.push('/agenda')}
+            />
+          </StatGrid>,
+        ]}
         actions={
           <>
             <Button onClick={() => void copyReport()} aria-label="Salin laporan hari ini">
@@ -212,53 +264,20 @@ export function HomePage() {
         }
       />
 
-      <form
-        className="relative"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!quick.trim()) return;
-          const parsed = parseQuickAdd(quick, {
-            today: date,
-            staff: (data.staff || []).map((row) => String(row.data.title)),
-            projects: (data.workstreams || []).map((row) => ({
-              id: row.id,
-              title: String(row.data.title),
-            })),
-          });
-          setDraft({ due_date: date, ...parsed });
-          setQuick('');
-        }}
-      >
-        <label className="sr-only" htmlFor="quick-add">
-          Tambah tugas cepat
-        </label>
-        <Input
-          id="quick-add"
-          value={quick}
-          onChange={(event) => setQuick(event.target.value)}
-          maxLength={200}
-          icon={<ListPlus />}
-          placeholder="Tugas cepat: Cek stok gula @Budi besok"
-          className={cn(
-            'h-12 rounded-full border-line-strong bg-surface-2',
-            quick.trim() && 'pr-28',
-          )}
-        />
-        {quick.trim() && (
-          <Button
-            type="submit"
-            size="sm"
-            variant="primary"
-            className="absolute top-1/2 right-1.5 -translate-y-1/2"
-          >
-            Tambah
-          </Button>
-        )}
-      </form>
-
-      {/* Baris kerja: rutin dan peta sama tinggi; daftar rutin bergulir di dalam kartunya. */}
-      <div className="grid gap-5 xl:grid-cols-12 xl:grid-rows-[32rem]">
-        <div className="min-h-0 xl:col-span-4">
+      {/* Satu panel utama dan satu kartu ringkasan seperti acuan; di bawah xl rutin didahulukan. */}
+      <div className="grid gap-5 xl:grid-cols-12 xl:grid-rows-[35rem]">
+        <div className="min-h-0 xl:col-span-8">
+          <CoopMap
+            ws={data}
+            date={date}
+            caps={caps}
+            more={more}
+            refresh={refresh}
+            onOpenTask={setOpenTask}
+            quickAdd={quickAddForm}
+          />
+        </div>
+        <div className="min-h-0 max-xl:order-first xl:col-span-4">
           <RoutinesCard
             routines={data.routines || []}
             checks={checks}
@@ -268,23 +287,12 @@ export function HomePage() {
             ready={routinesReady}
           />
         </div>
-        <div className="min-h-0 md:h-[30rem] xl:col-span-8 xl:h-full">
-          <CoopMap
-            ws={data}
-            date={date}
-            caps={caps}
-            more={more}
-            coop={coop}
-            refresh={refresh}
-            onOpenTask={setOpenTask}
-          />
-        </div>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-12">
         <section
           aria-labelledby="today-title"
-          className={cn(PANEL, 'flex flex-col gap-4 xl:col-span-8')}
+          className={cn(PANEL, 'flex flex-col gap-4 xl:col-span-6')}
         >
           <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
             <h2 id="today-title" className="mr-auto text-lg font-medium">
@@ -346,7 +354,7 @@ export function HomePage() {
 
         <section
           aria-labelledby="deadline-title"
-          className={cn(PANEL, 'flex flex-col gap-2 xl:col-span-4')}
+          className={cn(PANEL, 'flex flex-col gap-2 xl:col-span-6')}
         >
           <div className="flex items-center justify-between gap-2">
             <h2 id="deadline-title" className="text-lg font-medium">
@@ -424,8 +432,7 @@ export function HomePage() {
           </dl>
         </div>
 
-        {/* Garis grafik memakai warna sorotan, bukan warna yang mirip tanda terlambat. */}
-        <div className="flex min-w-0 flex-col gap-3 border-line [--tone-bar:var(--accent-strong)] max-md:border-t max-md:pt-5 md:border-l md:pl-8">
+        <div className="flex min-w-0 flex-col gap-3 border-line max-md:border-t max-md:pt-5 md:border-l md:pl-8">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-[15px] font-medium">Tugas selesai</h2>
             <div className="flex items-center gap-1">
@@ -458,9 +465,11 @@ export function HomePage() {
             </span>
           </p>
           {weekTotal ? (
-            <AreaChart
+            <BarChart
               key={span}
-              points={weeks}
+              rows={weeks.map((week) => ({ label: week.label, values: [week.value] }))}
+              series={[{ label: 'Tugas selesai', className: 'fill-action' }]}
+              height={190}
               label={`Tugas selesai per minggu, ${weekTotal} dalam ${span} minggu terakhir`}
             />
           ) : (

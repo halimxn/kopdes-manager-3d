@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Check } from '@/components/ui/check';
 import { PageIcon } from '@/components/ui/icon';
-import { LogoMark } from '@/components/ui/logo';
+import { Tabs } from '@/components/ui/tabs';
 import { buyStockHref, stockCountHref } from '@/features/records/quick-links';
 import type { Entity, Item } from '@/features/records/schemas';
 import { postponeTask, toggleTaskDone } from '@/features/tasks/task-actions';
@@ -33,60 +33,34 @@ const FILTERS: { id: Filter; label: string }[] = [
   { id: 'urgent', label: 'Mendesak' },
   { id: 'today', label: 'Hari ini' },
 ];
-// Letak tiap bidang tetap, supaya manajer hafal tempatnya seperti denah. Baris atas usaha, tengah
-// pekerjaan harian, bawah orang dan berkas. `null` adalah koperasi di pusat.
-const LAYOUT = ['gerai', 'barang', 'kas', 'agenda', null, 'kerja', 'anggota', 'tim', 'dokumen'];
 
 const matchesFilter = (record: MapRecord, filter: Filter) =>
   filter === 'all' || (filter === 'urgent' ? record.level === 'urgent' : record.today);
 
-type PlotState = 'urgent' | 'soon' | 'safe' | 'quiet' | 'off';
-// Warna petak hanya berarti keadaan, jadi kondisi koperasi terbaca sebelum angkanya dibaca.
-const PLOT_STATE: Record<PlotState, string> = {
-  urgent: 'bg-late-solid text-on-late-solid',
-  soon: 'bg-doing text-doing-ink',
-  safe: 'bg-done text-done-ink',
-  quiet: 'bg-surface-2 text-ink-3',
-  off: 'border border-dashed border-line-strong text-ink-3',
-};
-const LEGEND = [
-  { label: 'Mendesak', swatch: 'bg-late-solid' },
-  { label: 'Perlu ditangani', swatch: 'bg-doing' },
-  { label: 'Aman', swatch: 'bg-done' },
-];
-
-/** Satu petak bidang: warna keadaan, angka yang perlu ditangani paling besar, lalu nama bidangnya. */
-function Plot({
+/** Satu bidang: batang menunjukkan banyaknya urusan, koral untuk yang mendesak. */
+function DomainBar({
   domain,
+  records,
+  max,
   filter,
   pressed,
   lit,
-  dimmed,
-  index,
   onToggle,
   onHover,
 }: {
   domain: CoopDomain;
+  records: MapRecord[];
+  max: number;
   filter: Filter;
   pressed: boolean;
   lit: boolean;
-  dimmed: boolean;
-  index: number;
   onToggle: () => void;
   onHover: (id: string | null) => void;
 }) {
-  const scoped = domain.actions.filter((record) => matchesFilter(record, filter));
-  const urgent = scoped.filter((record) => record.level === 'urgent').length;
+  const urgent = records.filter((record) => record.level === 'urgent').length;
+  const soon = records.length - urgent;
   const stat = domain.stats[0];
-  const state: PlotState = !domain.active
-    ? 'off'
-    : urgent
-      ? 'urgent'
-      : scoped.length
-        ? 'soon'
-        : filter === 'all'
-          ? 'safe'
-          : 'quiet';
+  const fact = stat ? `${stat.value} ${stat.label.toLowerCase()}` : '';
   return (
     <button
       type="button"
@@ -94,8 +68,8 @@ function Plot({
       aria-label={`${domain.label}: ${
         !domain.active
           ? 'belum aktif'
-          : scoped.length
-            ? `${scoped.length} perlu ditangani${urgent ? `, ${urgent} mendesak` : ''}`
+          : records.length
+            ? `${records.length} perlu ditangani${urgent ? `, ${urgent} mendesak` : ''}`
             : 'aman'
       }`}
       onClick={onToggle}
@@ -103,59 +77,62 @@ function Plot({
       onPointerLeave={() => onHover(null)}
       onFocus={() => onHover(domain.id)}
       onBlur={() => onHover(null)}
-      style={{ animationDelay: `${index * 40}ms` }}
       className={cn(
-        'enter flex min-w-0 flex-col p-2.5 text-left ring-current transition-[background-color,color,opacity,box-shadow] duration-300 ring-inset -outline-offset-4 hover:ring-1 focus-visible:outline-current @md/map:p-3.5',
-        PLOT_STATE[state],
-        pressed ? 'ring-[3px] hover:ring-[3px]' : lit && 'ring-1',
-        dimmed && 'opacity-55',
+        'grid min-h-11 w-full grid-cols-[1.25rem_minmax(0,9rem)_minmax(0,1fr)_1.75rem] items-center gap-x-2.5 rounded-xl px-2 py-1 text-left transition-colors @md/map:grid-cols-[1.25rem_minmax(0,12rem)_minmax(0,1fr)_2rem] @md/map:gap-x-3',
+        pressed ? 'bg-accent text-accent-ink' : lit ? 'bg-surface-2' : 'hover:bg-surface-2',
       )}
     >
-      <span className="flex items-start gap-1">
-        {state === 'urgent' || state === 'soon' ? (
-          <span className="tabular text-[30px] leading-9 font-normal tracking-tight @md/map:text-[40px] @md/map:leading-[2.75rem]">
-            {scoped.length}
-          </span>
-        ) : (
-          state === 'safe' && (
-            <span className="-ml-0.5 grid size-9 place-items-center [&_svg]:size-6">
-              <CheckIcon aria-hidden="true" />
-            </span>
-          )
-        )}
-        <span className="ml-auto grid size-6 shrink-0 place-items-center [&_svg]:size-[18px] @md/map:[&_svg]:size-5">
-          <PageIcon name={domain.icon} />
+      <span className={cn('[&_svg]:size-[18px]', !pressed && 'text-ink-3')}>
+        <PageIcon name={domain.icon} />
+      </span>
+      <span className="min-w-0">
+        <span className="block truncate text-sm leading-tight font-medium">{domain.label}</span>
+        <span className={cn('block truncate text-xs', !pressed && 'text-ink-3')}>
+          {!domain.active ? 'Belum aktif' : urgent ? `${urgent} mendesak` : fact}
         </span>
       </span>
-      <span className="mt-auto line-clamp-2 pt-1 text-[13.5px] leading-tight font-medium">
-        {domain.label}
+      <span className="flex h-2 gap-0.5 overflow-hidden rounded-full bg-surface-2">
+        {urgent > 0 && (
+          <span
+            className="rounded-full bg-late-bar transition-[width] duration-500 ease-out"
+            style={{ width: `${(urgent / max) * 100}%` }}
+          />
+        )}
+        {soon > 0 && (
+          <span
+            className="rounded-full bg-action transition-[width] duration-500 ease-out"
+            style={{ width: `${(soon / max) * 100}%` }}
+          />
+        )}
       </span>
-      {state === 'off' ? (
-        <span className="truncate text-xs">Belum aktif</span>
-      ) : state === 'urgent' ? (
-        <span className="truncate pt-0.5 text-xs">{urgent} mendesak</span>
-      ) : (
-        stat && (
-          <span className="hidden truncate pt-0.5 text-xs @md/map:block">
-            {stat.value} {stat.label.toLowerCase()}
-          </span>
-        )
-      )}
+      <span
+        className={cn(
+          'tabular text-right text-[15px] font-medium',
+          !pressed && urgent > 0 && 'text-late-ink',
+        )}
+      >
+        {!domain.active ? null : records.length ? (
+          records.length
+        ) : filter === 'all' ? (
+          <CheckIcon aria-label="Aman" className="ml-auto size-4 text-ink-3" />
+        ) : (
+          <span className="text-ink-3">0</span>
+        )}
+      </span>
     </button>
   );
 }
 
 /**
- * Peta koperasi di Beranda: denah dengan koperasi di pusat dan delapan bidang kerja di sekelilingnya.
- * Menjawab "bagian mana yang perlu saya urus sekarang?" dalam sekali lihat, lalu langsung bisa ditindak
- * dari daftar di sampingnya.
+ * Peta koperasi, panel utama Beranda: satu angka besar, delapan bidang dengan batangnya, dan daftar
+ * yang bisa langsung ditindak. Menjawab "bagian mana yang perlu saya urus sekarang?" dalam sekali lihat.
  */
 export function CoopMap({
   ws,
   date,
   caps,
   more,
-  coop,
+  quickAdd,
   refresh,
   onOpenTask,
 }: {
@@ -163,7 +140,8 @@ export function CoopMap({
   date: string;
   caps: MapCapabilities;
   more: Partial<Record<Entity, unknown>>;
-  coop: string;
+  /** Kolom tugas cepat: tugas baru langsung masuk ke daftar yang sama. */
+  quickAdd?: ReactNode;
   refresh: () => Promise<void> | void;
   onOpenTask: (id: string) => void;
 }) {
@@ -176,8 +154,6 @@ export function CoopMap({
   const allActions = domains
     .flatMap((domain) => domain.actions.map((record) => ({ record, domain })))
     .sort((a, b) => Number(b.record.level === 'urgent') - Number(a.record.level === 'urgent'));
-  const needing = domains.filter((domain) => domain.actions.length > 0).length;
-  const urgentCount = allActions.filter(({ record }) => record.level === 'urgent').length;
   const current = domains.find((domain) => domain.id === selected);
   const scoped = current
     ? current.actions.map((record) => ({ record, domain: current }))
@@ -195,142 +171,109 @@ export function CoopMap({
       details.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
+  const scopedOf = (domain: CoopDomain) =>
+    domain.actions.filter((record) => matchesFilter(record, filter));
+  const max = Math.max(1, ...domains.map((domain) => scopedOf(domain).length));
+  const needing = domains.filter((domain) => scopedOf(domain).length > 0).length;
+  const listUrgent = list.filter(({ record }) => record.level === 'urgent').length;
+
   return (
     <section
       aria-labelledby="coop-map-title"
-      className="@container isolate h-full overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line"
+      className="@container isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface shadow-card ring-1 ring-line"
       onKeyDown={(event) => {
         if (event.key === 'Escape' && selected) setSelected(null);
       }}
     >
-      <div className="flex h-full flex-col">
-        <header className="flex flex-wrap items-start gap-x-4 gap-y-2 px-5 pt-5">
-          <div className="min-w-0 flex-1 basis-48">
-            <h2 id="coop-map-title" className="text-lg font-medium">
-              Peta koperasi
-            </h2>
-            <p className="text-[13px] text-ink-3">
-              {needing
-                ? `${needing} dari ${domains.length} bidang perlu ditangani`
-                : 'Semua bidang aman'}
-              {urgentCount > 0 && ` · ${urgentCount} mendesak`}
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 pt-5">
+        <h2 id="coop-map-title" className="text-lg font-medium">
+          Peta koperasi
+        </h2>
+        <Tabs
+          label="Saring peta"
+          value={filter}
+          onChange={(id) => setFilter(id as Filter)}
+          // HP: ketiga tab harus muat tanpa digulir. "Semua" tanpa angka: angkanya sudah angka besar.
+          className="max-sm:[&_button]:px-3"
+          items={FILTERS.map((item) => ({
+            ...item,
+            count: item.id === 'all' ? undefined : counts[item.id],
+          }))}
+        />
+      </header>
+
+      <div className="flex min-h-0 flex-1 flex-col @2xl:flex-row">
+        <div className="@container/map flex min-w-0 flex-1 flex-col px-3 pt-3 pb-3">
+          <div className="px-2 pb-3">
+            <p className="flex flex-wrap items-baseline gap-x-2.5">
+              <span className="tabular text-[44px] leading-none font-normal tracking-tight">
+                {list.length}
+              </span>
+              <span className="text-[13px] text-ink-3">
+                perlu ditangani{current && ` di ${current.label}`}
+                {filter !== 'urgent' && listUrgent > 0 && ` · ${listUrgent} mendesak`}
+                {!current && ` · ${needing} dari ${domains.length} bidang`}
+              </span>
             </p>
           </div>
-          <div role="group" aria-label="Saring peta" className="flex flex-wrap gap-1.5">
-            {FILTERS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                aria-pressed={filter === item.id}
-                onClick={() => setFilter(item.id)}
-                className={cn(
-                  'flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium transition-colors',
-                  filter === item.id
-                    ? 'bg-accent text-accent-ink'
-                    : 'text-ink-2 ring-1 ring-line-strong hover:bg-surface-2',
-                )}
-              >
-                {item.label}
-                <span className="tabular opacity-70">{counts[item.id]}</span>
-              </button>
+          <div className="flex flex-1 flex-col justify-between">
+            {domains.map((domain) => (
+              <DomainBar
+                key={domain.id}
+                domain={domain}
+                records={scopedOf(domain)}
+                max={max}
+                filter={filter}
+                pressed={selected === domain.id}
+                lit={lit === domain.id}
+                onToggle={() => toggle(domain.id)}
+                onHover={setLit}
+              />
             ))}
           </div>
-        </header>
-
-        <div className="flex min-h-0 flex-1 flex-col @xl:flex-row">
-          <div className="@container/map flex min-w-0 flex-1 flex-col p-4 @xl:p-5">
-            <div className="grid min-h-[22rem] flex-1 grid-cols-3 grid-rows-3 gap-[3px] overflow-hidden rounded-[1.25rem]">
-              {LAYOUT.map((id, index) => {
-                const domain = domains.find((item) => item.id === id);
-                if (domain)
-                  return (
-                    <Plot
-                      key={domain.id}
-                      domain={domain}
-                      filter={filter}
-                      pressed={selected === domain.id}
-                      lit={lit === domain.id}
-                      dimmed={selected !== null && selected !== domain.id}
-                      index={index}
-                      onToggle={() => toggle(domain.id)}
-                      onHover={setLit}
-                    />
-                  );
-                return (
-                  <button
-                    key="hub"
-                    type="button"
-                    onClick={() => setSelected(null)}
-                    aria-label={`${coop || 'Koperasi'}: tampilkan semua bidang`}
-                    style={{ animationDelay: `${index * 40}ms` }}
-                    className="enter flex min-w-0 flex-col items-center justify-center gap-1.5 bg-surface-2 p-2 text-center -outline-offset-4"
-                  >
-                    <LogoMark className="size-11 rounded-[14px]" />
-                    <span className="line-clamp-2 text-xs leading-tight text-ink-2">
-                      {coop || 'Koperasi'}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <ul className="flex flex-wrap gap-x-4 gap-y-1 pt-3 text-xs text-ink-2">
-              {LEGEND.map((item) => (
-                <li key={item.label} className="flex items-center gap-1.5">
-                  <span
-                    aria-hidden="true"
-                    className={cn('size-2.5 rounded-[3px] ring-1 ring-line', item.swatch)}
-                  />
-                  {item.label}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <aside
-            ref={details}
-            aria-label={current ? `Rincian ${current.label}` : 'Yang perlu ditangani'}
-            className="relative min-h-0 scroll-mb-24 border-t border-line @xl:w-[19rem] @xl:border-t-0 @xl:border-l"
-          >
-            <div className="flex max-h-[28rem] flex-col @xl:absolute @xl:inset-0 @xl:max-h-none">
-              {current ? (
-                <DomainHeader domain={current} onBack={() => setSelected(null)} />
-              ) : (
-                <div className="flex items-center justify-between px-4 pt-4 pb-2">
-                  <h3 className="text-sm font-medium">Perlu ditangani</h3>
-                  <span className="tabular text-xs text-ink-3">{list.length}</span>
-                </div>
-              )}
-              <ul
-                className="scrollbar-none flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2"
-                onPointerLeave={() => setLit(null)}
-              >
-                {list.map(({ record, domain }) => (
-                  <ActionRow
-                    key={record.key}
-                    record={record}
-                    domain={current ? undefined : domain}
-                    ws={ws}
-                    refresh={refresh}
-                    onOpenTask={onOpenTask}
-                    onHover={() => setLit(domain.id)}
-                  />
-                ))}
-                {!list.length && (
-                  <li className="px-2 py-3 text-[13px] text-ink-3">
-                    {filter !== 'all'
-                      ? 'Tidak ada yang cocok dengan saringan ini.'
-                      : current && !current.active
-                        ? 'Bidang ini belum aktif.'
-                        : current
-                          ? 'Tidak ada yang perlu ditangani di bidang ini.'
-                          : 'Tidak ada yang perlu ditangani hari ini.'}
-                  </li>
-                )}
-              </ul>
-              {current && <DomainActions domain={current} />}
-            </div>
-          </aside>
         </div>
+
+        <aside
+          ref={details}
+          aria-label={current ? `Rincian ${current.label}` : 'Yang perlu ditangani'}
+          className="relative min-h-0 scroll-mb-24 border-t border-line @2xl:w-[21rem] @2xl:border-t-0 @2xl:border-l"
+        >
+          <div className="flex max-h-[28rem] flex-col @2xl:absolute @2xl:inset-0 @2xl:max-h-none">
+            {current ? (
+              <DomainHeader domain={current} onBack={() => setSelected(null)} />
+            ) : (
+              quickAdd && <div className="px-4 pt-3 pb-2">{quickAdd}</div>
+            )}
+            <ul
+              className="scrollbar-none flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2"
+              onPointerLeave={() => setLit(null)}
+            >
+              {list.map(({ record, domain }) => (
+                <ActionRow
+                  key={record.key}
+                  record={record}
+                  domain={current ? undefined : domain}
+                  ws={ws}
+                  refresh={refresh}
+                  onOpenTask={onOpenTask}
+                  onHover={() => setLit(domain.id)}
+                />
+              ))}
+              {!list.length && (
+                <li className="px-2 py-3 text-[13px] text-ink-3">
+                  {filter !== 'all'
+                    ? 'Tidak ada yang cocok dengan saringan ini.'
+                    : current && !current.active
+                      ? 'Bidang ini belum aktif.'
+                      : current
+                        ? 'Tidak ada yang perlu ditangani di bidang ini.'
+                        : 'Tidak ada yang perlu ditangani hari ini.'}
+                </li>
+              )}
+            </ul>
+            {current && <DomainActions domain={current} />}
+          </div>
+        </aside>
       </div>
     </section>
   );
@@ -449,7 +392,7 @@ function ActionRow({
         <span
           className={cn(
             'mx-1.5 size-2 shrink-0 rounded-full',
-            record.level === 'urgent' ? 'bg-late-bar' : 'bg-doing-bar',
+            record.level === 'urgent' ? 'bg-late-bar' : 'bg-action',
           )}
           aria-hidden="true"
         />

@@ -198,7 +198,6 @@ export function TaskRow({
   onOpen,
   refresh,
   plain,
-  hideDue,
 }: {
   task: Item;
   ws: Workspace;
@@ -206,8 +205,6 @@ export function TaskRow({
   refresh: () => Promise<void> | void;
   /** Di dalam panel: tanpa bingkai agar tidak menjadi kartu di dalam kartu, tenggat selalu tampak. */
   plain?: boolean;
-  /** Daftar yang sudah dikelompokkan per hari tidak perlu mengulang tanggalnya di tiap baris. */
-  hideDue?: boolean;
 }) {
   const project = ws.workstreams?.find((row) => row.id === task.data.workstream_id);
   const done = task.data.status === 'selesai';
@@ -253,17 +250,15 @@ export function TaskRow({
           )}
         </span>
       </button>
-      {!hideDue && (
-        <span
-          className={cn(
-            'shrink-0 text-xs font-medium',
-            !plain && 'hidden sm:block',
-            due.late ? 'text-late-ink' : 'text-ink-3',
-          )}
-        >
-          {due.text}
-        </span>
-      )}
+      <span
+        className={cn(
+          'shrink-0 text-xs font-medium',
+          !plain && 'hidden sm:block',
+          due.late ? 'text-late-ink' : 'text-ink-3',
+        )}
+      >
+        {due.text}
+      </span>
       {!plain && (
         <AvatarStack
           names={[String(task.data.assignee || '')]}
