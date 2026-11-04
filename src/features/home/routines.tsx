@@ -281,8 +281,8 @@ export function RoutinesCard({
       className="panel-deep relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] shadow-card ring-1 ring-line"
     >
       <header className="flex flex-col gap-3 px-5 pt-5 pb-3">
-        <div className="flex items-center justify-between gap-3">
-          <h2 id="routines-title" className="text-lg font-medium text-ink">
+        <div className="panel-head">
+          <h2 id="routines-title" className="text-base font-medium text-ink">
             Rutin hari ini
           </h2>
           {ready && (
@@ -294,14 +294,14 @@ export function RoutinesCard({
         </div>
         {states.length > 0 ? (
           <p className="flex items-baseline gap-2.5">
-            <span className="tabular text-[44px] leading-none font-normal tracking-tight">
+            <span className="big-number">
               {done}
               <span className="text-ink-3">/{states.length}</span>
             </span>
-            <span className="text-[13px] text-ink-3">selesai</span>
+            <span className="text-sm text-ink-3">selesai</span>
           </p>
         ) : (
-          <p className="text-[13px] text-ink-3">Belum ada rutin untuk hari ini</p>
+          <p className="text-sm text-ink-3">Belum ada rutin untuk hari ini</p>
         )}
         {states.length > 0 && (
           <SegmentBar
@@ -330,7 +330,7 @@ export function RoutinesCard({
                   key={item.routine.id}
                   layout
                   className={cn(
-                    'flex items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors',
+                    'flex min-h-12 items-center gap-3 rounded-xl px-2 py-1.5 transition-colors',
                     item.state === 'next' && 'bg-surface-2 ring-1 ring-line',
                   )}
                 >
@@ -343,20 +343,21 @@ export function RoutinesCard({
                     {String(item.routine.data.time).replace(':', '.')}
                   </span>
                   <Check
+                    size="sm"
                     checked={item.done}
                     onChange={() => void toggle(item)}
                     label={String(item.routine.data.title)}
                   />
                   <span
                     className={cn(
-                      'min-w-0 flex-1 text-[14.5px] font-normal',
+                      'min-w-0 flex-1 text-sm leading-5 font-medium',
                       item.done ? 'text-ink-3 line-through' : 'text-ink',
                     )}
                   >
                     {String(item.routine.data.title)}
                   </span>
                   {item.state === 'next' && (
-                    <span className="shrink-0 text-xs font-medium text-accent-ink">Berikutnya</span>
+                    <span className="shrink-0 text-xs text-accent-ink">Berikutnya</span>
                   )}
                   {item.state === 'missed' && (
                     <span className="shrink-0 text-xs text-ink-3">Terlewat</span>

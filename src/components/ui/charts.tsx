@@ -66,7 +66,7 @@ function Axis({
               strokeDasharray={share === 1 ? '4 5' : undefined}
               className="stroke-line"
             />
-            <text x={0} y={y + 4} className="fill-ink-3 text-[11px]">
+            <text x={0} y={y + 4} className="fill-ink-3 text-xs">
               {format(max * share)}
             </text>
           </g>
@@ -136,7 +136,7 @@ export function AreaChart({
                   y={height - 6}
                   // Label terakhir rata kanan agar tidak terpotong tepi grafik.
                   textAnchor={index === points.length - 1 ? 'end' : 'middle'}
-                  className="fill-ink-3 text-[11px]"
+                  className="fill-ink-3 text-xs"
                 >
                   {point.label}
                 </text>
@@ -216,7 +216,7 @@ export function BarChart({
                       x={PAD.left + slot * rowIndex + slot / 2}
                       y={height - 6}
                       textAnchor="middle"
-                      className="fill-ink-3 text-[11px]"
+                      className="fill-ink-3 text-xs"
                     >
                       {row.label}
                     </text>

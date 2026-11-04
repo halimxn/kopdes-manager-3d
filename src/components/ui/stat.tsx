@@ -57,12 +57,12 @@ export function StatTile({
       </span>
       <span className="min-w-0">
         <span className="flex flex-wrap items-center gap-x-2">
-          <span className="tabular text-[21px] leading-tight font-medium tracking-tight text-ink">
+          <span className="tabular text-xl leading-tight font-medium tracking-tight text-ink">
             {typeof value === 'number' ? <CountUp value={value} /> : value}
           </span>
           {badge}
         </span>
-        <span className="block text-[13px] leading-snug text-ink-2">{label}</span>
+        <span className="block text-sm leading-snug text-ink-2">{label}</span>
         {note && <span className="block text-xs leading-snug text-ink-3">{note}</span>}
       </span>
       {people && people.length > 0 && <AvatarStack names={people} max={3} className="ml-1" />}

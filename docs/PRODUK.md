@@ -181,7 +181,7 @@ Keputusan tentang gaya tampilan lama tidak dicatat lagi. Riwayatnya ada di Git d
 - **22–23 Okt 2026**: tampilan web dirombak total.
   - Acuan rasa (pemilik, 2 Nov 2026): tiga video acuan, rinciannya di [TAMPILAN](TAMPILAN.md).
   - Gradasi hanya di latar halaman; kartu, tombol, dan grafik warna solid.
-  - Huruf Urbanist.
+  - Huruf Figtree.
   - Warna aksi biru tua, ditambah lima aksen sorotan.
   - Rutin harian disimpan di database lewat migrasi 11, dengan hari aktif per rutin.
   - Kode dan alamat halaman memakai bahasa Inggris. Alamat lama dialihkan.

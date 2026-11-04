@@ -22,9 +22,7 @@ export function PageHeader({
         <h1 className="text-[30px] leading-[1.1] font-normal tracking-[-0.02em] text-balance text-ink md:text-[36px]">
           {title}
         </h1>
-        {subtitle && (
-          <p className="mt-1 line-clamp-2 max-w-sm text-[13px] text-ink-3">{subtitle}</p>
-        )}
+        {subtitle && <p className="mt-1 line-clamp-2 max-w-sm text-sm text-ink-3">{subtitle}</p>}
       </div>
       {/* HP dan tablet: judul dan aksi sebaris, angka di baris sendiri; laptop: semua sebaris. */}
       {sections && (

@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/urbanist';
+@import '@fontsource-variable/figtree';
 
 /*
   Sistem tampilan Kopdes. Semua warna mentah hanya di blok token ini; komponen memakai kelas
@@ -13,7 +13,7 @@
 
 :root,
 [data-theme='light'] {
-  --font-sans: 'Urbanist Variable', 'Urbanist', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Figtree Variable', 'Figtree', ui-sans-serif, system-ui, sans-serif;
 
   --canvas: #e8eff0;
   /* Latar buram aqua dan persik; satu-satunya tempat gradasi boleh dipakai. */
@@ -360,7 +360,6 @@
   }
   body {
     @apply bg-canvas font-sans text-[15px] leading-normal text-ink antialiased;
-    font-feature-settings: 'ss01';
   }
   /* Latar buram satu lapis tetap: panel tembus tidak perlu backdrop-filter, jadi HP tetap ringan. */
   body::before {
@@ -458,6 +457,23 @@
   }
 }
 
+/* Skala huruf Beranda: angka besar 40, judul panel 16, isi baris 14, keterangan 12. */
+@utility big-number {
+  font-size: 2.5rem;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+/* Kepala panel setinggi tombol di dalamnya, supaya judul panel sebaris selalu sejajar. */
+@utility panel-head {
+  display: flex;
+  min-height: 2.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 0.75rem;
+  row-gap: 0.5rem;
+}
 @utility tabular {
   font-variant-numeric: tabular-nums;
 }

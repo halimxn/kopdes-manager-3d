@@ -33,7 +33,8 @@ Tampilan sebelumnya tersimpan utuh di cabang `arsip/desain-oktober` di GitHub.
 - Tema dan sorotan: `data-theme` dan `data-accent` di `<html>`, pilihan tersimpan di `localStorage` (`kopdes-theme-v2`, `kopdes-accent-v3`), diterapkan sebelum halaman tampil. Bawaan tema gelap.
 - Permukaan kartu netral. Warna proyek (`lib/tones.ts`, kolom `color` proyek) dan warna arti catatan (kas masuk mint, keluar mawar; stok habis mawar, menipis peach, `features/records/card-tone.ts`) hanya tampil sebagai titik kecil, batang progres, dan cincin.
 - Penempatan kartu: tinggi kartu sama dalam satu baris, isi panjang bergulir di dalam kartu (kartu tidak meregang), sela antarkartu seragam, dan tidak ada dua bilah tab bertumpuk.
-- Huruf: Urbanist (`@fontsource-variable/urbanist`), satu token `--font-sans`. Ketebalan diturunkan satu tingkat di `@theme` (`--font-weight-semibold/bold/extrabold`) agar seluruh aplikasi ringan seperti acuan; judul halaman `font-normal`.
+- Huruf: Figtree (`@fontsource-variable/figtree`), satu token `--font-sans`. Dipilih karena jarak huruf dan katanya paling rapi dibanding Urbanist dan Plus Jakarta Sans (arahan pemilik 3 Nov 2026: huruf kurang rapi).
+- Skala huruf Beranda hanya: judul halaman 36, angka besar 40 (`big-number`), angka kepala 20, judul panel 16, isi baris 14, keterangan 12. Ketebalan hanya 400 dan 500. Kepala panel memakai `panel-head` agar judul sebaris selalu sejajar; isi panel sejajar dengan judulnya; baris daftar setinggi 48 px dengan centang 20 px. Ketebalan diturunkan satu tingkat di `@theme` (`--font-weight-semibold/bold/extrabold`) agar seluruh aplikasi ringan seperti acuan; judul halaman `font-normal`.
 
 ## Komponen
 

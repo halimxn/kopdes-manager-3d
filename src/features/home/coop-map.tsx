@@ -86,8 +86,8 @@ function DomainBar({
         <PageIcon name={domain.icon} />
       </span>
       <span className="min-w-0">
-        <span className="block truncate text-sm leading-tight font-medium">{domain.label}</span>
-        <span className={cn('block truncate text-xs', !pressed && 'text-ink-3')}>
+        <span className="block truncate text-sm leading-5 font-medium">{domain.label}</span>
+        <span className={cn('block truncate text-xs leading-4', !pressed && 'text-ink-3')}>
           {!domain.active ? 'Belum aktif' : urgent ? `${urgent} mendesak` : fact}
         </span>
       </span>
@@ -107,7 +107,7 @@ function DomainBar({
       </span>
       <span
         className={cn(
-          'tabular text-right text-[15px] font-medium',
+          'tabular text-right text-sm font-medium',
           !pressed && urgent > 0 && 'text-late-ink',
         )}
       >
@@ -185,8 +185,8 @@ export function CoopMap({
         if (event.key === 'Escape' && selected) setSelected(null);
       }}
     >
-      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 pt-5">
-        <h2 id="coop-map-title" className="text-lg font-medium">
+      <header className="panel-head mx-5 mt-5">
+        <h2 id="coop-map-title" className="text-base font-medium">
           Peta koperasi
         </h2>
         <Tabs
@@ -206,10 +206,8 @@ export function CoopMap({
         <div className="@container/map flex min-w-0 flex-1 flex-col px-3 pt-3 pb-3">
           <div className="px-2 pb-3">
             <p className="flex flex-wrap items-baseline gap-x-2.5">
-              <span className="tabular text-[44px] leading-none font-normal tracking-tight">
-                {list.length}
-              </span>
-              <span className="text-[13px] text-ink-3">
+              <span className="big-number">{list.length}</span>
+              <span className="text-sm text-ink-3">
                 perlu ditangani{current && ` di ${current.label}`}
                 {filter !== 'urgent' && listUrgent > 0 && ` · ${listUrgent} mendesak`}
                 {!current && ` · ${needing} dari ${domains.length} bidang`}
@@ -242,10 +240,10 @@ export function CoopMap({
             {current ? (
               <DomainHeader domain={current} onBack={() => setSelected(null)} />
             ) : (
-              quickAdd && <div className="px-4 pt-3 pb-2">{quickAdd}</div>
+              quickAdd && <div className="pt-3 pr-5 pb-2 pl-4">{quickAdd}</div>
             )}
             <ul
-              className="scrollbar-none flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-2"
+              className="scrollbar-none flex min-h-0 flex-1 flex-col overflow-y-auto pr-3 pb-2 pl-2"
               onPointerLeave={() => setLit(null)}
             >
               {list.map(({ record, domain }) => (
@@ -260,7 +258,7 @@ export function CoopMap({
                 />
               ))}
               {!list.length && (
-                <li className="px-2 py-3 text-[13px] text-ink-3">
+                <li className="px-2 py-3 text-sm text-ink-3">
                   {filter !== 'all'
                     ? 'Tidak ada yang cocok dengan saringan ini.'
                     : current && !current.active
@@ -291,7 +289,7 @@ function DomainHeader({ domain, onBack }: { domain: CoopDomain; onBack: () => vo
         >
           <ArrowLeft />
         </button>
-        <h3 className="min-w-0 flex-1 truncate text-[15px] font-medium">{domain.label}</h3>
+        <h3 className="min-w-0 flex-1 truncate text-base font-medium">{domain.label}</h3>
       </div>
       {domain.stats.length > 0 && (
         <dl className="grid grid-cols-2 gap-x-3 gap-y-2 rounded-2xl bg-surface-2 p-3">
@@ -365,14 +363,9 @@ function ActionRow({
       : undefined;
   const body = (
     <>
-      <span className="line-clamp-2 text-[13.5px] leading-snug">{record.title}</span>
-      <span
-        className={cn(
-          'line-clamp-2 text-xs',
-          record.level === 'urgent' ? 'text-late-ink' : 'text-ink-3',
-        )}
-      >
-        {record.note}
+      <span className="line-clamp-2 text-sm leading-5 font-medium">{record.title}</span>
+      <span className="line-clamp-2 text-xs leading-4 text-ink-3">
+        <span className={cn(record.level === 'urgent' && 'text-late-ink')}>{record.note}</span>
         {domain && ` · ${domain.label}`}
       </span>
     </>
@@ -380,22 +373,24 @@ function ActionRow({
   return (
     <li
       onPointerEnter={onHover}
-      className="group flex items-center gap-2 rounded-2xl py-1.5 pr-1 pl-2 transition-colors hover:bg-surface-2"
+      className="group flex min-h-12 items-center gap-3 rounded-xl px-2 py-1.5 transition-colors hover:bg-surface-2"
     >
       {task ? (
         <Check
+          size="sm"
           checked={task.data.status === 'selesai'}
           onChange={() => void toggleTaskDone(task, refresh)}
           label={`Tandai selesai: ${record.title}`}
         />
       ) : (
-        <span
-          className={cn(
-            'mx-1.5 size-2 shrink-0 rounded-full',
-            record.level === 'urgent' ? 'bg-late-bar' : 'bg-action',
-          )}
-          aria-hidden="true"
-        />
+        <span className="grid size-5 shrink-0 place-items-center" aria-hidden="true">
+          <span
+            className={cn(
+              'size-2 rounded-full',
+              record.level === 'urgent' ? 'bg-late-bar' : 'bg-action',
+            )}
+          />
+        </span>
       )}
       {task ? (
         <button

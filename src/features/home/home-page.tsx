@@ -195,7 +195,7 @@ export function HomePage() {
         onChange={(event) => setQuick(event.target.value)}
         maxLength={200}
         icon={<ListPlus />}
-        placeholder="Tugas cepat: Cek stok @Budi besok"
+        placeholder="Tambah: Cek stok @Budi besok"
         className={cn('h-11 rounded-full border-line-strong bg-surface-2', quick.trim() && 'pr-28')}
       />
       {quick.trim() && (
@@ -294,51 +294,43 @@ export function HomePage() {
           aria-labelledby="today-title"
           className={cn(PANEL, 'flex flex-col gap-4 xl:col-span-6')}
         >
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-            <h2 id="today-title" className="mr-auto text-lg font-medium">
+          <div className="panel-head">
+            <h2 id="today-title" className="text-base font-medium">
               {day === date ? 'Hari ini' : formatDate(day)}
             </h2>
-            <Link
-              href="/agenda"
-              aria-label="Buka Agenda"
-              className={cn(OPEN_LINK, 'md:order-last')}
-            >
+            <Link href="/agenda" aria-label="Buka Agenda" className={OPEN_LINK}>
               <ArrowUpRight />
             </Link>
-            <div
-              className="grid w-full grid-cols-7 gap-1 md:w-[24rem]"
-              role="group"
-              aria-label="Pilih hari"
-            >
-              {week.map((value, index) => {
-                const busy =
-                  tasks.some((t) => t.data.due_date === value && isActiveTask(t.data.status)) ||
-                  meetings.some((m) => m.data.date === value);
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    aria-pressed={value === day}
-                    onClick={() => setDay(value)}
+          </div>
+          <div className="grid grid-cols-7 gap-1" role="group" aria-label="Pilih hari">
+            {week.map((value, index) => {
+              const busy =
+                tasks.some((t) => t.data.due_date === value && isActiveTask(t.data.status)) ||
+                meetings.some((m) => m.data.date === value);
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={value === day}
+                  onClick={() => setDay(value)}
+                  className={cn(
+                    'flex flex-col items-center rounded-2xl py-1 transition-colors duration-200',
+                    value === day ? 'bg-accent text-accent-ink' : 'text-ink-2 hover:bg-surface-2',
+                  )}
+                >
+                  <span className="text-xs opacity-80">{DAY_SHORT[index]}</span>
+                  <span className="tabular text-sm leading-5 font-medium">
+                    {Number(value.slice(8))}
+                  </span>
+                  <span
                     className={cn(
-                      'flex flex-col items-center rounded-2xl py-1 transition-colors duration-200',
-                      value === day ? 'bg-accent text-accent-ink' : 'text-ink-2 hover:bg-surface-2',
+                      'mt-0.5 size-1 rounded-full',
+                      busy ? 'bg-current' : 'bg-transparent',
                     )}
-                  >
-                    <span className="text-[11px] opacity-80">{DAY_SHORT[index]}</span>
-                    <span className="tabular text-[15px] leading-5 font-medium">
-                      {Number(value.slice(8))}
-                    </span>
-                    <span
-                      className={cn(
-                        'mt-0.5 size-1 rounded-full',
-                        busy ? 'bg-current' : 'bg-transparent',
-                      )}
-                    />
-                  </button>
-                );
-              })}
-            </div>
+                  />
+                </button>
+              );
+            })}
           </div>
           <DayAgenda
             date={day}
@@ -356,8 +348,8 @@ export function HomePage() {
           aria-labelledby="deadline-title"
           className={cn(PANEL, 'flex flex-col gap-2 xl:col-span-6')}
         >
-          <div className="flex items-center justify-between gap-2">
-            <h2 id="deadline-title" className="text-lg font-medium">
+          <div className="panel-head">
+            <h2 id="deadline-title" className="text-base font-medium">
               Tenggat berikutnya
             </h2>
             <Link href="/tasks" aria-label="Buka Tugas" className={OPEN_LINK}>
@@ -392,15 +384,15 @@ export function HomePage() {
         )}
       >
         <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="text-[15px] font-medium">Progres tugas</h2>
+          <div className="panel-head">
+            <h2 className="text-base font-medium">Progres tugas</h2>
             <Link href="/tasks" aria-label="Buka Tugas" className={OPEN_LINK}>
               <ArrowUpRight />
             </Link>
           </div>
-          <p className="text-[34px] leading-none font-normal tracking-tight">
+          <p className="big-number">
             <CountUp value={Math.round(doneRate)} />%
-            <span className="ml-2 text-[13px] tracking-normal text-ink-3">selesai</span>
+            <span className="ml-2 text-sm font-normal tracking-normal text-ink-3">selesai</span>
           </p>
           <StackBar
             label={`${counts.selesai} selesai, ${counts.proses} dikerjakan, ${counts.rencana} belum dikerjakan`}
@@ -433,8 +425,8 @@ export function HomePage() {
         </div>
 
         <div className="flex min-w-0 flex-col gap-3 border-line max-md:border-t max-md:pt-5 md:border-l md:pl-8">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-[15px] font-medium">Tugas selesai</h2>
+          <div className="panel-head">
+            <h2 className="text-base font-medium">Tugas selesai</h2>
             <div className="flex items-center gap-1">
               <Tabs
                 label="Rentang waktu"
@@ -455,10 +447,10 @@ export function HomePage() {
             </div>
           </div>
           <p className="flex flex-wrap items-baseline gap-x-2.5">
-            <span className="text-[34px] leading-none font-normal tracking-tight">
+            <span className="big-number">
               <CountUp value={weekTotal} />
             </span>
-            <span className="text-[13px] text-ink-3">
+            <span className="text-sm text-ink-3">
               dalam {span} minggu, rata-rata{' '}
               {(weekTotal / Number(span)).toLocaleString('id-ID', { maximumFractionDigits: 1 })} per
               minggu
@@ -480,8 +472,8 @@ export function HomePage() {
         </div>
 
         <div className="flex min-w-0 flex-col gap-3 border-t border-line pt-5 md:col-span-2 xl:col-span-1 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-8">
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="text-[15px] font-medium">
+          <div className="panel-head">
+            <h2 className="text-base font-medium">
               Proyek berjalan
               <span className="tabular ml-2 font-normal text-ink-3">{runningProjects.length}</span>
             </h2>

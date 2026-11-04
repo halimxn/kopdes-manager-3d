@@ -42,7 +42,9 @@ export function DayAgenda({
   return (
     <div className="flex flex-col gap-4">
       <div className="min-w-0">
-        <h3 className="pb-1.5 text-xs font-medium text-ink-3">Jadwal ({sorted.length})</h3>
+        {!isToday && (
+          <h3 className="pb-1.5 text-xs font-medium text-ink-3">Jadwal ({sorted.length})</h3>
+        )}
         {sorted.length ? (
           <ul className="flex flex-col">
             {sorted.map((meeting) => {
@@ -58,21 +60,21 @@ export function DayAgenda({
                   <button
                     type="button"
                     onClick={() => onOpenMeeting(meeting.id)}
-                    className="flex min-w-0 flex-1 items-baseline gap-3 rounded-xl px-2 py-2 text-left transition-colors hover:bg-surface-2"
+                    className="flex min-w-0 flex-1 items-baseline gap-3 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-surface-2"
                   >
-                    <span className="tabular w-11 shrink-0 text-[13px] text-ink-3">
+                    <span className="tabular w-11 shrink-0 text-sm leading-5 text-ink-3">
                       {timed ? start.replace(':', '.') : 'Bebas'}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span
                         className={cn(
-                          'block truncate text-[14.5px] font-medium text-ink',
-                          past && 'font-normal text-ink-3',
+                          'block truncate text-sm leading-5 font-medium text-ink',
+                          past && 'text-ink-3',
                         )}
                       >
                         {String(meeting.data.title)}
                       </span>
-                      <span className="block truncate text-xs text-ink-3">
+                      <span className="block truncate text-xs leading-4 text-ink-3">
                         {running ? (
                           <span className="font-medium text-accent-ink">Sedang berjalan</span>
                         ) : (
@@ -91,7 +93,7 @@ export function DayAgenda({
                       target="_blank"
                       rel="noreferrer"
                       aria-label={`Gabung: ${String(meeting.data.title)}`}
-                      className="mr-1 inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-[13px] text-ink-2 ring-1 ring-line-strong transition hover:bg-surface-2 hover:text-ink max-sm:h-11"
+                      className="mr-1 inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm text-ink-2 ring-1 ring-line-strong transition hover:bg-surface-2 hover:text-ink max-sm:h-11"
                     >
                       <Video className="size-4" />
                       Gabung

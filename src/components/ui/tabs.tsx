@@ -56,7 +56,7 @@ export function Tabs({
               {item.count !== undefined && (
                 <span
                   className={cn(
-                    'tabular rounded-full px-1.5 text-[11px]',
+                    'tabular rounded-full px-1.5 text-xs',
                     active ? 'bg-surface-2' : 'bg-surface-3',
                   )}
                 >

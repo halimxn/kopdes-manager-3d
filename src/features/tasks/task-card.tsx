@@ -228,20 +228,21 @@ export function TaskRow({
     >
       <Check
         checked={done}
+        size={plain ? 'sm' : 'md'}
         onChange={() => void toggleTaskDone(task, refresh)}
         label={`${done ? 'Buka lagi' : 'Tandai selesai'}: ${String(task.data.title)}`}
       />
-      <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />
+      {!plain && <span className="size-2 shrink-0 rounded-full bg-tone-bar" aria-hidden="true" />}
       <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left">
         <span
           className={cn(
-            'block truncate text-[14.5px] font-medium text-ink',
+            'block truncate text-sm leading-5 font-medium text-ink',
             done && 'text-ink-3 line-through',
           )}
         >
           {String(task.data.title)}
         </span>
-        <span className="flex items-center gap-2 text-xs text-ink-3">
+        <span className="flex items-center gap-2 text-xs leading-4 text-ink-3">
           <span className="truncate">{project ? String(project.data.title) : 'Tanpa proyek'}</span>
           {!plain && subtasks.length > 0 && (
             <span className="tabular">
@@ -252,8 +253,8 @@ export function TaskRow({
       </button>
       <span
         className={cn(
-          'shrink-0 text-xs font-medium',
-          !plain && 'hidden sm:block',
+          'shrink-0 text-xs',
+          !plain && 'hidden font-medium sm:block',
           due.late ? 'text-late-ink' : 'text-ink-3',
         )}
       >
